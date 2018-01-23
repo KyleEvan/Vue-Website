@@ -1,0 +1,33 @@
+{
+  "name": "index",
+  "version": "1.0.0",
+  "description": "personal website",
+  "main": "index.js",
+  "scripts": {
+    "dev": "webpack-dev-server --history-api-fallback --inline --progress --watch --hot",
+    "prod": "webpack --config webpack.config.js"
+  },
+  "author": "Kyle Peterson",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-preset-env": "^1.6.1",
+    "css-loader": "^0.28.8",
+    "extract-text-webpack-plugin": "^3.0.2",
+    "html-webpack-plugin": "^2.30.1",
+    "node-sass": "^4.7.2",
+    "sass-loader": "^6.0.6",
+    "style-loader": "^0.19.1",
+    "vue-hot-reload-api": "^2.2.4",
+    "vue-html-loader": "^1.2.4",
+    "vue-loader": "^13.7.0",
+    "vue-template-compiler": "^2.5.13",
+    "webpack-dev-server": "^2.10.1"
+  },
+  "dependencies": {
+    "charming": "^2.0.1",
+    "vue": "^2.5.13",
+    "webpack": "^3.10.0"
+  }
+}

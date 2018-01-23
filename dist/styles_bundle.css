@@ -1,0 +1,36 @@
+* {
+  box-sizing: border-box; }
+
+body {
+  margin: 0;
+  color: #2e878a; }
+
+#scene {
+  width: 100vw;
+  height: 100vh;
+  display: none;
+  align-items: center;
+  justify-content: center; }
+  #scene svg {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0; }
+  #scene #name {
+    margin: 0;
+    font-size: 50px;
+    text-transform: uppercase;
+    font-size: 12vw; }
+    #scene #name span {
+      display: inline-block;
+      position: relative;
+      opacity: 0;
+      line-height: .8;
+      transform: translateY(100%); }
+
+@supports (display: flex) {
+  #scene {
+    display: flex; } }
+
+/*# sourceMappingURL=styles_bundle.css.map*/

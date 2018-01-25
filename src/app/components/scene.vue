@@ -19,13 +19,13 @@
 	import { initShapes } from '../shapes.js';
 	export default{
 		data(){
-			console.log(this);
+			// console.log(this);
 			return this;
 		},
 		mounted(){
 			let scene = document.getElementById('scene');
 			let name = document.getElementById('name');
-			
+
 			initShapes(scene, name);
 		}
 	}
@@ -48,12 +48,14 @@
 		display: none;
 		align-items: center;
 		justify-content: center;
+
 		/deep/ svg{
 			position:absolute;
 			width:100%;
 			height:100%;
 			top:0;
 			left:0;
+
 			/deep/ *{
 				opacity:0;
 			}
@@ -66,6 +68,7 @@
 			font-size:12vw;
 			font-family: 'Montserrat', sans-serif;
 			font-weight:700;
+
 			/deep/ span{
 				display:inline-block;
 				position:relative;

@@ -70,11 +70,16 @@ function throttle(fn, threshhold, scope) {
 
 // Assigns the passed element a new width and height attribute
 // equal to that of the window. After returns the element
-function setWindowDimensions(el){
-  el.setAttribute('width', window.innerWidth);
-  el.setAttribute('height', window.innerHeight);
-  if(el.tagName === 'svg') el.setAttribute('viewbox', `0 0 ${window.innerWidth} ${window.innerHeight}`);
-  return el;
+function setWindowDimensions(obj){
+
+
+	if(obj instanceof Element || obj.ownerDocument == document){
+		obj.setAttribute('width', window.innerWidth);
+	  obj.setAttribute('height', window.innerHeight);
+	  if(obj.tagName === 'svg') obj.setAttribute('viewbox', `0 0 ${window.innerWidth} ${window.innerHeight}`);
+	}
+
+  return obj;
 }
 
 function randomIndex(length){
@@ -101,22 +106,40 @@ class Scene{ // #scene
         el: document.createElementNS("http://www.w3.org/2000/svg", "svg"),
         class: "shapes"
       }
-    }
+    };
 
 		this.camera = {
 			perspective: 500,
+			fov:{
+				width: window.innerWidth,
+				height: window.innerHeight
+			},
 			center:{
 				x: undefined,
 				y: undefined
 			},
 			location:{
-				x: undefined,
-				y: undefined
+				x: window.innerWidth/2,
+				y: window.innerHeight/2
+			},
+			init: function(){
+				console.log("initializing Camera");
+			},
+			updateLoc: function(newX, newY){
+				this.location.x = newX;
+				this.location.y = newY;
+			},
+			updateFov: function(){
+				this.fov.width = window.innerWidth;
+				this.fov.height = window.innerHeight;
+				this.center.x = window.innerWidth/2;
+				this.center.y = window.innerHeight/2;
 			}
-		}
+		};
+		console.log(this.camera);
 
     this.init();
-		this.initEvents(this.children.name.obj, this.children.svg.el);
+		this.initEvents(this.children.name.obj, this.children.svg.el, this.camera);
   }
   init(){
     this.createScene();
@@ -124,23 +147,27 @@ class Scene{ // #scene
     this.children.name.obj = new Name(this.children.name.el);
 		// console.log(this.children.name.obj);
   }
-  initEvents(name, svg){
+  initEvents(name, svg, camera){
     // Resize Event
     // Debounces resize event every 50ms
     let handleResize = debounce(function(){
       setWindowDimensions(svg);
+			camera.updateFov();
     }, 50);
     window.addEventListener('resize', handleResize);
 
-		name.shapes.forEach(function(shape){
-			shape.updateShapeXY();
-		});
+
 
 		let handleMouseMove = throttle(function(e){
-			// console.log(e);
-			// console.log(Shape.prototype.updateShapeXY());
 
+			camera.updateLoc(e.screenX, e.screenY);
+			name.shapes.forEach(function(shape){
 
+				shape.updateShapeXY();
+			});
+			console.log(camera);
+
+			// transition shapes ====> transition: 2s cubic-bezier(0.02, 0.1, 0.15, 1);
 		}, 200);
 		this.el.addEventListener('mousemove', handleMouseMove);
 		// this.el.addEventListener('mouseenter', this.handleMouseEnter);
@@ -152,6 +179,7 @@ class Scene{ // #scene
     this.children.svg.el.classList.add(this.children.svg.class);
     this.el.insertBefore(this.children.svg.el, this.children.name.el);
     setWindowDimensions(this.children.svg.el);
+		this.camera.updateFov();
   }
 	handleMouseEnter(){
 		console.log('mousing over nigg');
@@ -244,13 +272,13 @@ class Name { // #name
 		});
 		this.shapes = shapes;
 		this.shapes.sort(function(a, b){
-			return a.x - b.x;
+			return a.z - b.z;
 		});
 
 		this.shapes.forEach(function(shape){
 			shape.parent.appendChild(shape.el);
 		})
-
+		console.log(this.shapes);
 		let shapeAnimations = Object.assign(shapeTargetsArray, this.animations.shapes);
 
 
@@ -306,10 +334,10 @@ class Shape {
 			el: letter,
 			props: letterProps
 		};
+		this.scale = anime.random(letterProps.width*.1, letterProps.width*.75); // scale will be 10% and 75% of the letter's width
 		this.x = anime.random(letterProps.x, letterProps.x + letterProps.width);
 		this.y = anime.random(letterProps.y - letterProps.height, letterProps.y);
-		this.z = undefined;
-		this.scale = anime.random(letterProps.width*.1, letterProps.width*.75); // scale will be 10% and 75% of the letter's width
+		this.z = this.scale/letterProps.width;
 		this.relativeProps = { // Properties relative to their associated letter, values are percentage based
 			x: (this.x - letterProps.x)/letterProps.width,
 			y: (this.y - (letterProps.y - letterProps.height))/letterProps.height,
@@ -394,7 +422,7 @@ class Shape {
 		return `${x} ${y} ${x+scale*.5} ${y+scale} ${x-scale*.5} ${y+scale}`
 	}
 	updateShapeXY(){
-		console.log(this.el);
+
 	}
 
 

@@ -2,6 +2,7 @@
 
 import anime from 'animejs';
 import charming from 'charming';
+// import createCSSSelector from 'createCSSSelector.js';
 
 /*
 
@@ -79,10 +80,16 @@ function setWindowDimensions(obj) {
   return obj;
 }
 
+
+
 function randomIndex(length) {
   let item = Math.floor(Math.random() * length);
   return item;
 }
+
+
+
+
 
 /*
 
@@ -104,9 +111,8 @@ class Scene { // #scene
         class: "shapes"
       }
     };
-
+    this.interactive = false;
     this.camera = {
-			active:false,
       perspective: 500,
 			maxZ: 100,
       fov: {
@@ -118,12 +124,12 @@ class Scene { // #scene
         y: undefined
       },
       location: {
-        x: window.innerWidth / 2,
-        y: window.innerHeight / 2
+        x: undefined,
+        y: undefined
       },
-      init: function() {
-        this.active = true;
-				console.log("Camera is active"+ this.active);
+      config: function() {
+        this.updateFov();
+        this.updateLoc(this.center.x, this.center.y);
       },
       updateLoc: function(newX, newY) {
         this.location.x = newX;
@@ -132,45 +138,46 @@ class Scene { // #scene
       updateFov: function() {
         this.fov.width = window.innerWidth;
         this.fov.height = window.innerHeight;
-        this.center.x = window.innerWidth / 2;
-        this.center.y = window.innerHeight / 2;
+        this.center.x = this.fov.width / 2;
+        this.center.y = this.fov.height / 2;
       }
     };
 
     this.init();
-    this.initEvents(this.children.name.obj, this.children.svg.el, this.camera);
+    this.initEvents(this);
   }
   init() {
     this.createScene();
     // Initialize Name object
-    this.children.name.obj = new Name(this.children.name.el, this);
+    this.children.name.obj = new Name(this, this.children.name.el);
     // console.log(this.children.name.obj);
   }
-  initEvents(name, svg, camera) {
+  initEvents(scene) {
     // Resize Event
     // Debounces resize event every 50ms
+
     let handleResize = debounce(function() {
-      setWindowDimensions(svg);
-      camera.updateFov();
+      setWindowDimensions(scene.children.svg.el);
+      scene.camera.config();
     }, 50);
     window.addEventListener('resize', handleResize);
 
     let handleMouseMove = throttle(function(e) {
 
-			if(camera.active){
-				camera.updateLoc(e.screenX, e.screenY);
-				name.shapes.forEach(function(shape) {
-					let newX = shape.x - shape.calc3DLocation(camera);
+			if(scene.interactive){
+				scene.camera.updateLoc(e.clientX, e.clientY);
+				scene.children.name.obj.shapes.forEach(function(shape) {
 
-					shape.el.style.removeProperty("transform");
-					shape.el.style.transform = `translateY(40px) translateX(${newX}px)`;
-					// console.log(`${shape.el.style.transform} translateX(${newX})`);
+          let newX = shape.projectedX - shape.calc3DLocation(scene.camera) ;
+
+          shape.getsetTransform(newX);
+
 	      });
 			}
-
       // transition shapes ====> transition: 2s cubic-bezier(0.02, 0.1, 0.15, 1);
     }, 200);
     this.el.addEventListener('mousemove', handleMouseMove);
+
     // this.el.addEventListener('mouseenter', this.handleMouseEnter);
     // this.el.addEventListener('mouseleave', this.handleMouseLeave);
   }
@@ -180,7 +187,12 @@ class Scene { // #scene
     this.children.svg.el.classList.add(this.children.svg.class);
     this.el.insertBefore(this.children.svg.el, this.children.name.el);
     setWindowDimensions(this.children.svg.el);
-    this.camera.updateFov();
+    this.camera.config();
+  }
+  toggleInteractive(){
+    this.interactive = !this.interactive;
+    window.focus();
+    this.children.svg.el.classList.add("transition");
   }
   handleMouseEnter() {
     console.log('mousing over nigg');
@@ -190,10 +202,14 @@ class Scene { // #scene
   }
 }
 
+
+
+
+
 class Name { // #name
-  constructor(el, scene) {
+  constructor(scene, el) {
     this.el = el;
-		this.parent = scene;
+		this.scene = scene;
     this.letters = [];
     this.shapes = [];
     this.animations = {
@@ -249,10 +265,10 @@ class Name { // #name
       }
     }
 
-    this.init(this.parent);
+    this.init(this.scene);
 
   }
-  init(parent) {
+  init(scene) {
     // Wraps each letter in a span with a new class 'letter#'
     charming(this.el, {classPrefix: 'letter'});
 
@@ -266,7 +282,7 @@ class Name { // #name
     };
     Array.from(this.el.querySelectorAll('span')).forEach(function(element) {
       letterTargetsArray.targets.push(element);
-      letters.push(new Letter(element));
+      letters.push(new Letter(scene, element));
     });
     this.letters = letters;
     let letterAnimations = Object.assign(letterTargetsArray, this.animations.letters.show)
@@ -290,38 +306,38 @@ class Name { // #name
 
 
     this.shapes.forEach(function(shape) {
-			let newX = shape.calc3DLocation(parent.camera);
-			shape.updateShapeXY(newX);
-			console.log("updating 3d location of shape");
       shape.parent.appendChild(shape.el);
     });
 
     // Animate after timeout/this.animations.delay
-    this.playAnimation(parent, letterAnimations, shapeAnimations);
+    this.playAnimation(this, letterAnimations, shapeAnimations);
     console.log("Name created");
   }
-  playAnimation(scene, letterAnimations, shapeAnimations) {
+  playAnimation(name, letterAnimations, shapeAnimations) {
+
     setTimeout(function() {
 
       let animation = anime.timeline();
 
       animation.add(letterAnimations).add(shapeAnimations);
-
-      animation.complete = function(anim) {
-				scene.camera.init();
-        console.log("animation completed");
-      }
-
+      animation.complete = function(anim){
+        name.shapes.forEach(function(shape){
+          shape.getsetTransform();
+        });
+        name.scene.toggleInteractive();
+      };
     }, this.animations.delay);
   }
+
 }
 
 class Letter {
-  constructor(el) {
+  constructor(scene, el) {
     this.el = el;
+    this.scene = scene;
     this.shapes = [];
     this.totalShapes = 10;
-    this.init();
+    this.init(scene);
   }
   init() {
     this.createShapes();
@@ -330,14 +346,15 @@ class Letter {
   createShapes() {
 
     for (let i = 0; i < this.totalShapes; i++) {
-      this.shapes.push(new Shape(this.el, this.el.getBoundingClientRect()));
+      this.shapes.push(new Shape(this.scene, this.el, this.el.getBoundingClientRect()));
     }
 
   }
 }
 
 class Shape {
-  constructor(letter, letterProps) {
+  constructor(scene, letter, letterProps) {
+    this.scene = scene;
     this.el = undefined;
     this.parent = document.querySelector('.shapes');
     this.letter = {
@@ -348,16 +365,20 @@ class Shape {
     this.x = anime.random(letterProps.x, letterProps.x + letterProps.width);
     this.y = anime.random(letterProps.y - letterProps.height, letterProps.y);
     this.z = this.scale / letterProps.width;
+    this.projectedX = this.calc3DLocation(this.scene.camera);
+
     this.relativeProps = { // Properties relative to their associated letter, values are percentage based
       x: (this.x - letterProps.x) / letterProps.width,
       y: (this.y - (letterProps.y - letterProps.height)) / letterProps.height,
       scale: this.scale / letterProps.width
     };
+
+    this.transform = undefined;
     this.colors = colors;
     this.types = [
       {
         el: 'circle',
-        cx: this.x,
+        cx: this.projectedX,
         cy: this.y,
         r: this.scale / 2,
         stroke: undefined,
@@ -376,7 +397,7 @@ class Shape {
       // },
       {
         el: 'polygon',
-        points: this.getPoints(this.x, this.y, this.scale),
+        points: this.getPoints(this.projectedX, this.y, this.scale),
         stroke: undefined,
         strokeWidth: undefined,
         fill: this.colors[randomIndex(this.colors.length)]
@@ -395,6 +416,7 @@ class Shape {
     observer.observe(this.parent, {attributes: true});
   }
   init() {
+
     // shape is randomly selected from the array of different shapes (this.types)
     let shape = this.types[randomIndex(this.types.length)];
     // Shape element is created and assigned attributes
@@ -413,6 +435,9 @@ class Shape {
         }
       }
     }
+    console.log(this.el);
+    console.log("this.x = "+this.x +", projectedX = "+this.projectedX+", Camera perspective = "+this.scene.camera.perspective+", this.z = "+(this.scene.camera.perspective - this.z*this.scene.camera.maxZ)+", Camera Location X = "+this.scene.camera.location.x);
+
     // this.parent.appendChild(this.el);
     console.log("shape created");
 
@@ -421,48 +446,49 @@ class Shape {
 		/*
 				Bx = Ax*(Bz/Az)
 		*/
-		let oldX = this.x;
 		let Bx, Bz, Ax, Az, newX;
 		Bx = this.x - camera.location.x;
-
 		Bz = camera.perspective;
-
 		Az = camera.perspective - (this.z*camera.maxZ);
 		Ax = Bx/(Bz/Az);
 		newX = camera.location.x + Ax;
-		// let newX = this.x/(scene.camera.perspective/(scene.camera.perspective-(this.z*scene.camera.maxZ)));
 		return newX;
 	}
+
   updateShape() {
+    this.getsetTransform('0');
     let letter = this.letter.el.getBoundingClientRect();
     this.letter.props = letter;
     this.x = letter.x + (letter.width * this.relativeProps.x);
     this.y = letter.y + (letter.height * this.relativeProps.y);
     this.scale = letter.width * this.relativeProps.scale;
-
+    this.projectedX = this.calc3DLocation(this.scene.camera);
     // If this Shape element has points, recalculate those values
     // Otherwise, its a circle and the attributes can be outright updated with
     // the Shape's new coordinates and scale values
     if (this.el.hasAttribute("points")) {
-      let points = this.getPoints(this.x, this.y, this.scale);
+      let points = this.getPoints(this.projectedX, this.y, this.scale);
       this.el.setAttribute("points", points);
     } else if (this.el.hasAttribute("cx", "cy")) {
-      this.el.setAttribute("cx", this.x);
+      this.el.setAttribute("cx", this.projectedX);
       this.el.setAttribute("cy", this.y);
       this.el.setAttribute("r", this.scale / 2);
     } else {
-      this.el.setAttribute("x", this.x);
+      this.el.setAttribute("x", this.projectedX);
       this.el.setAttribute("y", this.y);
     }
   }
   getPoints(x, y, scale) {
     // This configuration of points creates a triangle shape
-    return `${x} ${y} ${x + scale * .5} ${y + scale} ${x - scale * .5} ${y + scale}`
+    return `${x} ${y} ${x + scale * .5} ${y + scale} ${x - scale * .5} ${y + scale}`;
   }
-  updateShapeXY(x) {
-		this.x = x;
-		// this.y = y;
-	}
+  getsetTransform(x){
+    if(this.transform === undefined) this.transform = this.el.style.transform;
+    if(x){
+      this.el.style.transform = `${this.transform} translateX(${x}px)`;
+    }
+  }
+
 
 }
 

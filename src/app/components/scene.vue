@@ -37,7 +37,7 @@
 	Styles/SCSS
 
  -->
-<style lang="scss" scoped>
+<style lang="scss">
 
 	$primary-color: #63676C;
 
@@ -77,6 +77,9 @@
 				padding: 0 .05em;
 				transform:translateY(100%);
 			}
+		}
+		.transition > *{
+			transition: 2s cubic-bezier(0.02, 0.1, 0.15, 1);
 		}
 	}
 

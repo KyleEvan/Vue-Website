@@ -2,7 +2,7 @@
 
 import anime from 'animejs';
 import charming from 'charming';
-// import createCSSSelector from 'createCSSSelector.js';
+
 
 /*
 
@@ -13,6 +13,8 @@ const colors = [
   '#7EDAD4', '#FF9393', '#FFEC94'
   // '#F9FFF9'
 ];
+
+
 
 /*
 
@@ -114,7 +116,7 @@ class Scene { // #scene
     this.interactive = false;
     this.camera = {
       perspective: 500,
-			maxZ: 100,
+			maxZ: 300,
       fov: {
         width: window.innerWidth,
         height: window.innerHeight
@@ -168,9 +170,9 @@ class Scene { // #scene
 				scene.camera.updateLoc(e.clientX, e.clientY);
 				scene.children.name.obj.shapes.forEach(function(shape) {
 
-          let newX = shape.projectedX - shape.calc3DLocation(scene.camera) ;
+          let projectedXY =  [(shape.projectedXY[0] - shape.calc3DLocation(scene.camera)[0]), (shape.projectedXY[1] - shape.calc3DLocation(scene.camera)[1])];
 
-          shape.getsetTransform(newX);
+          shape.getsetTransform(projectedXY);
 
 	      });
 			}
@@ -365,7 +367,8 @@ class Shape {
     this.x = anime.random(letterProps.x, letterProps.x + letterProps.width);
     this.y = anime.random(letterProps.y - letterProps.height, letterProps.y);
     this.z = this.scale / letterProps.width;
-    this.projectedX = this.calc3DLocation(this.scene.camera);
+    this.projectedXY = this.calc3DLocation(this.scene.camera);
+
 
     this.relativeProps = { // Properties relative to their associated letter, values are percentage based
       x: (this.x - letterProps.x) / letterProps.width,
@@ -373,13 +376,13 @@ class Shape {
       scale: this.scale / letterProps.width
     };
 
-    this.transform = undefined;
+    this.transforms = undefined;
     this.colors = colors;
     this.types = [
       {
         el: 'circle',
-        cx: this.projectedX,
-        cy: this.y,
+        cx: this.projectedXY[0],
+        cy: this.projectedXY[1],
         r: this.scale / 2,
         stroke: undefined,
         strokeWidth: undefined,
@@ -397,7 +400,7 @@ class Shape {
       // },
       {
         el: 'polygon',
-        points: this.getPoints(this.projectedX, this.y, this.scale),
+        points: this.getPoints(this.projectedXY[0], this.projectedXY[1], this.scale),
         stroke: undefined,
         strokeWidth: undefined,
         fill: this.colors[randomIndex(this.colors.length)]
@@ -435,57 +438,75 @@ class Shape {
         }
       }
     }
-    console.log(this.el);
-    console.log("this.x = "+this.x +", projectedX = "+this.projectedX+", Camera perspective = "+this.scene.camera.perspective+", this.z = "+(this.scene.camera.perspective - this.z*this.scene.camera.maxZ)+", Camera Location X = "+this.scene.camera.location.x);
-
-    // this.parent.appendChild(this.el);
+    // console.log(this.el);
+    // console.log("this.x = "+this.x +", projectedX = "+this.projectedXY.x+", Camera perspective = "+this.scene.camera.perspective+", this.z = "+(this.scene.camera.perspective - this.z*this.scene.camera.maxZ)+", Camera Location X = "+this.scene.camera.location.x);
     console.log("shape created");
-
   }
 	calc3DLocation(camera){
 		/*
 				Bx = Ax*(Bz/Az)
 		*/
-		let Bx, Bz, Ax, Az, newX;
-		Bx = this.x - camera.location.x;
+		let Bx, Bz, Ax, Az, By, Ay, newX, newY;
+
 		Bz = camera.perspective;
 		Az = camera.perspective - (this.z*camera.maxZ);
+
+    Bx = this.x - camera.location.x;
 		Ax = Bx/(Bz/Az);
 		newX = camera.location.x + Ax;
-		return newX;
+
+    By = this.y - camera.location.y;
+    Ay = By/(Bz/Az);
+    newY = camera.location.y + Ay;
+
+		return [newX, newY];
 	}
 
   updateShape() {
-    this.getsetTransform('0');
+    this.getsetTransform([0,0]);
     let letter = this.letter.el.getBoundingClientRect();
     this.letter.props = letter;
     this.x = letter.x + (letter.width * this.relativeProps.x);
     this.y = letter.y + (letter.height * this.relativeProps.y);
     this.scale = letter.width * this.relativeProps.scale;
-    this.projectedX = this.calc3DLocation(this.scene.camera);
+    this.projectedXY = this.calc3DLocation(this.scene.camera);
     // If this Shape element has points, recalculate those values
     // Otherwise, its a circle and the attributes can be outright updated with
     // the Shape's new coordinates and scale values
     if (this.el.hasAttribute("points")) {
-      let points = this.getPoints(this.projectedX, this.y, this.scale);
+      let points = this.getPoints(this.projectedXY[0], this.projectedXY[1], this.scale);
       this.el.setAttribute("points", points);
     } else if (this.el.hasAttribute("cx", "cy")) {
-      this.el.setAttribute("cx", this.projectedX);
-      this.el.setAttribute("cy", this.y);
+      this.el.setAttribute("cx", this.projectedXY[0]);
+      this.el.setAttribute("cy", this.projectedXY[1]);
       this.el.setAttribute("r", this.scale / 2);
     } else {
-      this.el.setAttribute("x", this.projectedX);
-      this.el.setAttribute("y", this.y);
+      this.el.setAttribute("x", this.projectedXY[0]);
+      this.el.setAttribute("y", this.projectedXY[1]);
     }
   }
   getPoints(x, y, scale) {
     // This configuration of points creates a triangle shape
     return `${x} ${y} ${x + scale * .5} ${y + scale} ${x - scale * .5} ${y + scale}`;
   }
-  getsetTransform(x){
-    if(this.transform === undefined) this.transform = this.el.style.transform;
-    if(x){
-      this.el.style.transform = `${this.transform} translateX(${x}px)`;
+  getsetTransform(projectedXY){
+    if(!this.transforms){
+      let computedStyle = window.getComputedStyle(this.el, null); // "null" means this is not a pesudo style.
+      // You can retrieve the CSS3 matrix string by the following method.
+      let matrix = computedStyle.getPropertyValue('transform')
+          || computedStyle.getPropertyValue('-moz-transform')
+          || computedStyle.getPropertyValue('-webkit-transform')
+          || computedStyle.getPropertyValue('-ms-transform')
+          || computedStyle.getPropertyValue('-o-transform');
+      let matrixValue = [];
+      let matrixCopy = matrix.replace(/^\w*\(/, '').replace(')', '');
+      matrixValue = matrixCopy.split(/\s*,\s*/).map(Number);
+      this.transforms = matrixValue.slice(4);
+    }
+    if(projectedXY){
+      let newProjectedXY = [];
+      this.transforms.forEach( (transform, index) => newProjectedXY.push(transform + projectedXY[index]));
+      this.el.style.transform = `translateX(${newProjectedXY[0]}px) translateY(${newProjectedXY[1]}px)`;
     }
   }
 

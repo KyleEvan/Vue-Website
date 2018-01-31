@@ -17,6 +17,7 @@
 -->
 <script>
 	import { initShapes } from '../shapes.js';
+	console.log("imported the file");
 	export default{
 		data(){
 			// console.log(this);
@@ -49,14 +50,14 @@
 		align-items: center;
 		justify-content: center;
 
-		/deep/ svg{
+		svg{
 			position:absolute;
 			width:100%;
 			height:100%;
 			top:0;
 			left:0;
 
-			/deep/ *{
+			*{
 				opacity:0;
 			}
 		}
@@ -69,7 +70,7 @@
 			font-family: 'Montserrat', sans-serif;
 			font-weight:700;
 
-			/deep/ span{
+			span{
 				display:inline-block;
 				position:relative;
 				opacity:0;
@@ -79,7 +80,7 @@
 			}
 		}
 		.transition > *{
-			transition: 2s cubic-bezier(0.02, 0.1, 0.15, 1);
+			transition: 5s cubic-bezier(0.02, 0.1, 0.15, 1);
 		}
 	}
 

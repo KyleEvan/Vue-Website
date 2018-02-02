@@ -69,6 +69,7 @@
 			font-size:12vw;
 			font-family: 'Montserrat', sans-serif;
 			font-weight:700;
+			user-select: none;
 
 			span{
 				display:inline-block;
@@ -81,6 +82,9 @@
 		}
 		.transition > *{
 			transition: 5s cubic-bezier(0.02, 0.1, 0.15, 1);
+		}
+		.opacity > *{
+			opacity:1 !important;
 		}
 	}
 

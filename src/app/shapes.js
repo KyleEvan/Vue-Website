@@ -113,10 +113,14 @@ class Scene { // #scene
         class: "shapes"
       }
     };
+    // scene.ready is true after the initial animation has fully completed
+    this.ready = false;
+    // scene.interactive dictates whether mousemove events should be tracked for shape translations
     this.interactive = false;
+    // virtual camera of the scene, used for calculating 3d perspectives
     this.camera = {
-      perspective: 500,
-			maxZ: 300,
+      perspective: 1000,
+			maxZ: 500,
       fov: {
         width: window.innerWidth,
         height: window.innerHeight
@@ -152,7 +156,6 @@ class Scene { // #scene
     this.createScene();
     // Initialize Name object
     this.children.name.obj = new Name(this, this.children.name.el);
-    // console.log(this.children.name.obj);
   }
   initEvents(scene) {
     // Resize Event
@@ -165,23 +168,42 @@ class Scene { // #scene
     window.addEventListener('resize', handleResize);
 
     let handleMouseMove = throttle(function(e) {
-
 			if(scene.interactive){
+
 				scene.camera.updateLoc(e.clientX, e.clientY);
+        console.log(scene.camera.location);
+
 				scene.children.name.obj.shapes.forEach(function(shape) {
-
           let projectedXY =  [(shape.projectedXY[0] - shape.calc3DLocation(scene.camera)[0]), (shape.projectedXY[1] - shape.calc3DLocation(scene.camera)[1])];
-
           shape.getsetTransform(projectedXY);
-
+          shape.el.style.opacity = .75;
+          // if(shape.el.style.opacity != ".75") console.log("different bitch");
 	      });
 			}
-      // transition shapes ====> transition: 2s cubic-bezier(0.02, 0.1, 0.15, 1);
     }, 200);
     this.el.addEventListener('mousemove', handleMouseMove);
 
-    // this.el.addEventListener('mouseenter', this.handleMouseEnter);
-    // this.el.addEventListener('mouseleave', this.handleMouseLeave);
+
+    let handleMouseEnter = function(e){
+      if(scene.ready){
+        if(!scene.interactive) scene.toggleInteractive();
+        console.log("mouse entered");
+      }
+    }
+    this.el.addEventListener('mouseenter', handleMouseEnter);
+
+
+    let handleMouseLeave = function(e){
+      if(scene.ready){
+        if(scene.interactive){
+          scene.toggleInteractive();
+          scene.camera.updateLoc(scene.camera.center.x, scene.camera.center.y);
+          console.log(scene.camera.location);
+          scene.children.name.obj.shapes.forEach( shape => shape.getsetTransform([0,0]) );
+        }
+      }
+    }
+    this.el.addEventListener('mouseleave', handleMouseLeave);
   }
   createScene() {
     // Add class to svg
@@ -193,14 +215,16 @@ class Scene { // #scene
   }
   toggleInteractive(){
     this.interactive = !this.interactive;
-    window.focus();
-    this.children.svg.el.classList.add("transition");
+    if(this.interactive){
+      window.focus();
+    }
+    else{
+      window.blur();
+    }
   }
-  handleMouseEnter() {
-    console.log('mousing over nigg');
-  }
-  handleMouseLeave() {
-    console.log('mouse damn left');
+  toggleScene(){
+    this.toggleInteractive();
+    this.ready = !this.ready;
   }
 }
 
@@ -243,12 +267,16 @@ class Name { // #name
         }
       },
       shapes: {
-        duration: 400,
+        duration: 800,
         delay: (t, i) => i * 16 + 200,
-        easing: 'easeOutQuad',
+        easing: [0.02, 0.1, 0.15, 1],
         translateY: () => [
-          anime.random(-15, 15),
-          anime.random(-200, 200)
+          anime.random(-50, 50),
+          anime.random( (window.innerHeight * -.45), (window.innerHeight * .45))
+        ],
+        translateX: () => [
+          anime.random(-50, 50),
+          anime.random( (window.innerWidth * -.45), (window.innerWidth * .45) )
         ],
         offset: 0,
         // scale: () => [0.2,randomBetween(0.5,1)],
@@ -258,7 +286,7 @@ class Name { // #name
             duration: 1,
             delay: (t, i) => i * 16 + 200
           }, {
-            value: .75,
+            value: 0,
             duration: 200,
             delay: 200,
             easing: 'linear'
@@ -326,7 +354,8 @@ class Name { // #name
         name.shapes.forEach(function(shape){
           shape.getsetTransform();
         });
-        name.scene.toggleInteractive();
+        name.scene.children.svg.el.classList.add("transition");
+        name.scene.toggleScene();
       };
     }, this.animations.delay);
   }
@@ -338,7 +367,7 @@ class Letter {
     this.el = el;
     this.scene = scene;
     this.shapes = [];
-    this.totalShapes = 10;
+    this.totalShapes = 5;
     this.init(scene);
   }
   init() {
@@ -358,14 +387,16 @@ class Shape {
   constructor(scene, letter, letterProps) {
     this.scene = scene;
     this.el = undefined;
-    this.parent = document.querySelector('.shapes');
+    this.parent = document.querySelector(`.${scene.children.svg.class}`);
     this.letter = {
       el: letter,
       props: letterProps
     };
-    this.scale = anime.random(letterProps.width * .1, letterProps.width * .75); // scale will be 10% and 75% of the letter's width
-    this.x = anime.random(letterProps.x, letterProps.x + letterProps.width);
-    this.y = anime.random(letterProps.y - letterProps.height, letterProps.y);
+    this.scale = anime.random(letterProps.width * .1, letterProps.width * 1); // scale will be 10% and 75% of the letter's width
+    // this.x = anime.random(letterProps.x, letterProps.x + letterProps.width);
+    // this.y = anime.random(letterProps.y - letterProps.height, letterProps.y);
+    this.x = (letterProps.x + letterProps.width/2);
+    this.y = (letterProps.y - letterProps.height/2);
     this.z = this.scale / letterProps.width;
     this.projectedXY = this.calc3DLocation(this.scene.camera);
 
@@ -419,7 +450,6 @@ class Shape {
     observer.observe(this.parent, {attributes: true});
   }
   init() {
-
     // shape is randomly selected from the array of different shapes (this.types)
     let shape = this.types[randomIndex(this.types.length)];
     // Shape element is created and assigned attributes
@@ -491,6 +521,7 @@ class Shape {
   }
   getsetTransform(projectedXY){
     if(!this.transforms){
+      // https://stackoverflow.com/questions/3432446/how-to-read-individual-transform-values-in-javascript
       let computedStyle = window.getComputedStyle(this.el, null); // "null" means this is not a pesudo style.
       // You can retrieve the CSS3 matrix string by the following method.
       let matrix = computedStyle.getPropertyValue('transform')

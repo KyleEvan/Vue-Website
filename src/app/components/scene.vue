@@ -19,10 +19,10 @@
 	import { initShapes } from '../shapes.js';
 	console.log("imported the file");
 	export default{
-		data(){
+		// data(){
 			// console.log(this);
-			return this;
-		},
+		// 	return this;
+		// },
 		mounted(){
 			let scene = document.getElementById('scene');
 			let name = document.getElementById('name');
@@ -43,6 +43,10 @@
 	$primary-color: #63676C;
 
 	#scene{
+	  position:fixed;
+		z-index:-1;
+		top:0;
+		left:0;
 		width: 100%;
 		height: 100vh;
 		background:#F9FFF9;
@@ -83,9 +87,7 @@
 		.transition > *{
 			transition: 5s cubic-bezier(0.02, 0.1, 0.15, 1);
 		}
-		.opacity > *{
-			opacity:1 !important;
-		}
+
 	}
 
 	/****************************************************************

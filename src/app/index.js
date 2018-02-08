@@ -1,10 +1,14 @@
 import '../style/app.scss';
 import Vue from 'vue';
-import Scene from './components/scene.vue';
+import TopNav from './components/TopNav.vue';
+import Scene from './components/Scene.vue';
 
 
 
 var app = new Vue({
 	el: '#app',
-	components: { Scene }
+	components: {
+		"top-nav": TopNav,
+		"scene": Scene
+	}
 });

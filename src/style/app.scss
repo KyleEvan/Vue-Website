@@ -1,6 +1,44 @@
+@font-face {
+  font-family: "InterUI";
+  src: url("../fonts/Inter-UI-Regular.woff2") format("woff2"),
+    url("../fonts/Inter-UI-Regular.woff") format("woff"),
+    url("../fonts/Inter-UI-Regular.ttf") format("truetype");
+    font-weight: 500;
+    font-style: normal;
+}
+@font-face {
+  font-family: "InterUI";
+  src: url("../fonts/Inter-UI-Medium.woff2") format("woff2"),
+    url("../fonts/Inter-UI-Medium.woff") format("woff"),
+    url("../fonts/Inter-UI-Medium.ttf") format("truetype");
+    font-weight: 600;
+    font-style: normal;
+}
+@font-face {
+  font-family: "InterUI";
+  src: url("../fonts/Inter-UI-Bold.woff2") format("woff2"),
+    url("../fonts/Inter-UI-Bold.woff") format("woff"),
+    url("../fonts/Inter-UI-Bold.ttf") format("truetype");
+    font-weight: 700;
+    font-style: normal;
+}
 
 *{
   box-sizing: border-box;
+}
+html{
+  font-size:14px;
+  font-family: 'Roboto', sans-serif;
+  line-height:22px;
+
+  @media (min-width: 720px){
+    font-size:16px;
+    line-height:26px;
+  }
+  @media (min-width: 992px){
+    font-size:18px;
+    line-height: 30px;
+  }
 }
 body {
   margin: 0;
@@ -8,7 +46,23 @@ body {
   #app{
 
     .main{
-      margin: 0 8%;
-    }
-  }
-}
+      padding: 100vh 8% 3em 8%;
+
+      .work{
+        height:80vh;
+
+        div:first-child{
+          width: 46%;
+          display: inline-block;
+          padding: 2em;
+          background: rgba(255,255,255,.5);
+
+          h2{
+            font-family: 'Roboto Slab', serif;
+          }
+        }
+
+      }/* end of work */
+    }/* end of main */
+  }/* end of app */
+}/* end of body */

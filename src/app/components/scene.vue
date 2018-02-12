@@ -17,6 +17,8 @@
 -->
 <script>
 	import { initShapes } from '../shapes.js';
+	import '../../style/app.scss';
+
 	console.log("imported the file");
 	export default{
 		// data(){
@@ -27,7 +29,8 @@
 			let scene = document.getElementById('scene');
 			let name = document.getElementById('name');
 
-			initShapes(scene, name);
+			let Shapes = initShapes(scene, name);
+			// console.log(initShapes(scene, name));
 		}
 	}
 </script>
@@ -71,7 +74,8 @@
 			font-size:50px;
 			text-transform:uppercase;
 			font-size:12vw;
-			font-family: 'Montserrat', sans-serif;
+			// font-family: 'Montserrat', sans-serif;
+			font-family: 'InterUI', sans-serif;
 			font-weight:700;
 			user-select: none;
 

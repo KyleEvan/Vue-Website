@@ -5,8 +5,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin'); // Require  html-webpa
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 
-var env = process.env.WEBPACK_ENV;
-console.log(env);
+// var env = process.env.WEBPACK_ENV;
+// console.log(env);
 
 module.exports = {
   entry: __dirname + "/src/app/index.js", // webpack entry point. Module to start building dependency graph
@@ -34,6 +34,13 @@ module.exports = {
                 { loader: 'sass-loader'}
               ],
             })
+        },
+        {
+          test:/\.(ttf|woff|woff2)$/,
+          loader: "file-loader",
+          options: {
+            name: "fonts/[name].[ext]"
+          }
         },
         {
           test: /\.vue$/,

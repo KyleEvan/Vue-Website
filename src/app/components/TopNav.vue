@@ -4,82 +4,136 @@
 
 -->
 <template>
-		<div id="navbar">
-			<a href="#" tabindex="0">
-				<h1>
-					home
-				</h1>
-			</a>
-			<ul>
-				<li>
-					work
-				</li>
-				<li>
-					about
-				</li>
-				<li>
-					contact
-				</li>
-			</ul>
-		</div>
+	<div id="nav">
+	  <a class="nav-home" tabindex="1" href="#">
+	    home
+	  </a>
+	  <ul class="nav-items" :class="{expanded}">
+	    <li>
+	      <a tabindex="3" href="#">
+	        work
+	      </a>
+	    </li>
+	    <li>
+	      <a tabindex="4" href="#">
+	        about
+	      </a>
+	    </li>
+	    <li>
+	      <a tabindex="5  " href="#">
+	        contact
+	      </a>
+	    </li>
+	  </ul>
+	  <a class="nav-menu" tabindex="2" href="#" @click.prevent="handleToggle"></a>
+	</div>
 </template>
 
+<!--
+
+	JS
+
+-->
 <script>
 	export default{
 		data(){
-			// console.log(this);
-			return this;
+        return {
+          expanded: false
+        }
+    },
+    methods:{
+			handleToggle: function(e){
+		    this.expanded = !this.expanded;
+		  }
 		}
 	}
 </script>
 
+<!--
+
+	Styles
+
+-->
 <style lang="scss" scoped>
+
 	$break-small: 480px;
 	$break-medium: 720px;
 	$break-large: 1200px;
 
-	#navbar{
-		position: fixed;
-		top: 0;
-		left: 0;
-		width: 100%;
-		padding: 3% 6% 0;
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
+	#nav{
+      width: 100%;
+      position: fixed;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 40px 6%;
+      font-size: 18px;
+      font-family: 'InterUI', sans-serif;
+			a, a:visited, a:active{
+	      display: inline-block;
+	      text-decoration: none;
+	    }
+			.nav-menu{
+	      display: none;
+	    }
+			.nav-items{
+	      list-style: none;
+	      display:flex;
+	      align-items: center;
+	      margin:0 -10px 0 0;
+	      padding:0;
+	    }
+			.nav-items{
+	      list-style: none;
+	      display:flex;
+	      align-items: center;
+	      margin:0 -10px 0 0;
+	      padding:0;
+	    }
+			.nav-items a,
+	    .nav-home {
+	      padding:10px;
+	    }
 
-		h1{
-
-		}
-		ul{
-			padding: 1rem;
-			margin: 0 -1rem 0 0;
-			list-style: none;
-			font-family: 'DopeIcons';
-			cursor:pointer;
-
-			@media screen and (min-width: $break-medium) {
-				cursor:default;
-				margin: 0;
-				padding: 0;
-			}
-
-			&:before{
-				content: "\f00a";
-				font-size: 24px;
-				display: block;
-				@media screen and (min-width: $break-medium) {
-					display: none;
+			@media (max-width:720px){
+	      .nav-menu{
+	        position: relative;
+	        display:block;
+	        padding:10px;
+	        z-index: 1;
+	      }
+	      .nav-menu::before{
+	        content:'menu';
+	      }
+	      .nav-items.expanded + .nav-menu::before{
+	        content:'close';
+	      }
+	      .nav-items{
+	        width:100%;
+	        height:100vh;
+					flex-direction: column;
+					justify-content: center;
+					align-items: unset;
+	        background:#FF9393;
+					padding-left: 2.5rem;
+    			font-size: 30px;
+	        position:absolute;
+	        top:0;
+	        left:100%;
+	        visibility: hidden;
+	        transform:translateX(0%);
+					transition: visibility 0s linear 0.8s, transform .3s ease-out;
+	      }
+	      .nav-items.expanded{
+	        visibility: visible;
+	        transform:translateX(-100%);
+					transition: visibility 0s linear 0.6s, transform .8s cubic-bezier(0,.86,1,1);
+					transition-delay: 0s;
+	      }
+				.nav-items a{
+					color:#F9FFF9;
 				}
-			}
-			li{
-				font-family:'InterUI', sans-serif;
-				display:none;
-				@media screen and (min-width: $break-medium) {
-					display:inline-block;
-				}
-			}
-		}
+	    }
+  }
 
-	}
 </style>

@@ -1,44 +1,44 @@
 <!--
 
-	HTML
+HTML
 
 -->
 <template>
-	<div id="scene">
-	  <h1 id="name">Kyle</h1>
-	</div>
+<div id="scene">
+ <h1 id="name">Kyle</h1>
+</div>
 </template>
 
 
 <!--
 
-	JS
+JS
 
 -->
 <script>
-	import {initShapes} from '../shapes.js';
-	import '../../style/app.scss';
+import {ShapeScene} from '../shapes.js';
+import '../../style/app.scss';
 
-	console.log("imported the file");
-	export default {
-	  // data(){
-	  // console.log(this);
-	  // 	return this;
-	  // },
-	  mounted() {
-	    let scene = document.getElementById('scene');
-	    let name = document.getElementById('name');
+console.log("imported the file");
+export default {
+ // data(){
+ // console.log(this);
+ // return this;
+ // },
+ mounted() {
+   let scene = document.getElementById('scene');
+   let name = document.getElementById('name');
 
-	    let Shapes = initShapes(scene, name);
-	    // console.log(initShapes(scene, name));
-	  }
-	}
+   ShapeScene(scene, name);
+   // console.log(initShapes(scene, name));
+ }
+}
 </script>
 
 
 <!--
 
-	Styles/SCSS
+Styles/SCSS
 
  -->
 <style lang="scss">
@@ -51,7 +51,7 @@ $primary-color: #63676C;
     left: 0;
     width: 100%;
     height: 100vh;
-    display: none;
+    display: flex;
     align-items: center;
     justify-content: center;
 
@@ -94,13 +94,13 @@ $primary-color: #63676C;
 
 /****************************************************************
 
-		Fallback:
-		If the broser doesn't support flexbox, don't display the scene
+Fallback:
+If the broser doesn't support flexbox, don't display the scene
 
-	****************************************************************/
-@supports (display:flex) {
+****************************************************************/
+@supports not (display:flex) {
     #scene {
-        display: flex;
+        display: none;
     }
 }
 </style>

@@ -5,7 +5,7 @@ import charming from 'charming';
 
 /*
 
-	Color Palette
+Color Palette
   https://coolors.co/7edad4-ff9393-ffec94-f9fff9-63676c
 
 */
@@ -13,6 +13,63 @@ const colors = [
   '#7EDAD4', '#FF9393', '#FFEC94'
   // '#F9FFF9' '#63676c'
 ];
+
+const animations = {
+  delay: 1000,
+  letters: {
+    show: {
+      targets: undefined,
+      duration: 1000,
+      delay: (t, i) => i * 40,
+      easing: 'easeOutElastic',
+      opacity: [ 0, 1 ],
+      translateY: [ '100%', '0%' ],
+      offset: 0
+    },
+    hide: {
+      targets: undefined,
+      duration: 1000,
+      delay: (t, i) => i * 40,
+      easing: 'easeOutExpo',
+      opacity: {
+        value: 0,
+        duration: 100,
+        delay: (t, i) => i * 40,
+        easing: 'linear'
+      },
+      translateY: ['0%', '100%']
+    }
+  },
+  shapes: {
+    targets: undefined,
+    duration: 800,
+    delay: (t, i) => i * 16 + 200,
+    easing: [ 0.02, 0.1, 0.15, 1 ],
+    translateY: () => [
+      anime.random(-50, 50),
+      anime.random((window.innerHeight * -.45), (window.innerHeight * .45))
+    ],
+    translateX: () => [
+      anime.random(-50, 50),
+      anime.random((window.innerWidth * -.45), (window.innerWidth * .45))
+    ],
+    offset: 0,
+    opacity: [
+      {
+        value: 1,
+        duration: 1,
+        delay: (t, i) => i * 16 + 200
+      }, {
+        value: 0,
+        duration: 200,
+        delay: 200,
+        easing: 'linear'
+      }
+    ]
+  }
+}
+
+
 
 /*
 
@@ -70,13 +127,12 @@ function throttle(fn, threshhold, scope) {
 // equal to that of the window. After returns the element
 function setWindowDimensions(obj) {
 
-  if (obj instanceof Element || obj.ownerDocument == document) {
+  // if (obj instanceof Element || obj.ownerDocument == document) {
     obj.setAttribute('width', window.innerWidth);
     obj.setAttribute('height', window.innerHeight);
     if (obj.tagName === 'svg')
       obj.setAttribute('viewbox', `0 0 ${window.innerWidth} ${window.innerHeight}`);
-    }
-
+    // }
   return obj;
 }
 
@@ -94,6 +150,11 @@ function randomIndex(length) {
 
 class Scene { // #scene
   constructor(scene, name) {
+    // scene.ready is true after the initial animation has fully completed
+    this.ready = false;
+    // scene.interactive dictates whether mousemove events should be tracked for shape translations
+    this.interactive = false;
+    // DOM element references
     this.DOM = {
       el: scene,
       children:{
@@ -108,15 +169,10 @@ class Scene { // #scene
       },
       parent: scene.parentNode
     };
-
-    // scene.ready is true after the initial animation has fully completed
-    this.ready = false;
-    // scene.interactive dictates whether mousemove events should be tracked for shape translations
-    this.interactive = false;
     // virtual camera of the scene, used for calculating 3d perspectives
     this.camera = {
-      perspective: 1000,
-      maxZ: 500,
+      perspective: 500,
+      maxZ: 400,
       fov: {
         width: window.innerWidth,
         height: window.innerHeight
@@ -146,23 +202,28 @@ class Scene { // #scene
     };
 
     this.init();
-    this.initEvents(this);
+    this.initEvents();
   }
+
   init() {
     this.createScene();
-    // Initialize Name object
     this.DOM.children.name.obj = new Name(this);
+    this.playScene();
+    console.log("Scene created");
   }
-  initEvents(scene) {
-    // Resize Event
-    //Debounces resize event every 50ms
 
+  initEvents() {
+    let scene = this;
+    // Resize event:
+    // Debounces event every 100ms, resizes scene element to window size
     let handleResize = debounce(function() {
       setWindowDimensions(scene.DOM.children.svg.el);
       scene.camera.config();
     }, 100);
     window.addEventListener('resize', handleResize);
 
+    // Mousemove event:
+    // Tracks mouse to calculate projection perspective of svg shapes
     let handleMouseMove = throttle(function(e) {
       if (scene.interactive) {
         scene.camera.updateLoc(e.clientX, e.clientY);
@@ -173,12 +234,13 @@ class Scene { // #scene
           ];
           shape.getsetTransform(projectedXY);
           shape.el.style.opacity = .75;
-          // if(shape.el.style.opacity != ".75") console.log("different bitch");
         });
       }
     }, 200);
     window.addEventListener('mousemove', handleMouseMove, false);
 
+    // Mouseenter event:
+    // Toggle scene interactivity
     let handleMouseEnter = function(e) {
       if (scene.ready) {
         if (!scene.interactive) scene.toggleInteractive();
@@ -186,6 +248,8 @@ class Scene { // #scene
     }
     this.DOM.parent.addEventListener('mouseenter', handleMouseEnter);
 
+    // Mouseleave event:
+    // Toggle scene interactivity and reset shapes to original positions
     let handleMouseLeave = function(e) {
       if (scene.ready) {
         if (scene.interactive) {
@@ -206,6 +270,22 @@ class Scene { // #scene
     setWindowDimensions(scene.children.svg.el);
     this.camera.config();
   }
+  playScene() {
+    let name = this.DOM.children.name.obj;
+    let animation = anime.timeline();
+
+    setTimeout(function() {
+
+      animation.add(animations.letters.show).add(animations.shapes);
+      animation.complete = function(anim) {
+        name.shapes.forEach(function(shape) {
+          shape.getsetTransform();
+        });
+        name.scene.DOM.children.svg.el.classList.add("transition");
+        name.scene.toggleScene();
+      };
+    }, animations.delay);
+  }
   toggleInteractive() {
     this.interactive = !this.interactive;
     if (this.interactive) {
@@ -217,7 +297,6 @@ class Scene { // #scene
   toggleScene() {
     this.toggleInteractive();
     this.ready = !this.ready;
-
   }
 }
 
@@ -227,128 +306,42 @@ class Name { // #name
     this.el = scene.DOM.children.name.el;
     this.letters = [];
     this.shapes = [];
-    this.animations = {
-      delay: 1000,
-      letters: {
-        show: {
-          duration: 1000,
-          delay: (t, i) => i * 40,
-          easing: 'easeOutElastic',
-          opacity: [
-            0, 1
-          ],
-          translateY: [
-            '100%', '0%'
-          ],
-          offset: 0
-        },
-        hide: {
-          duration: 1000,
-          delay: (t, i) => i * 40,
-          easing: 'easeOutExpo',
-          opacity: {
-            value: 0,
-            duration: 100,
-            delay: (t, i) => i * 40,
-            easing: 'linear'
-          },
-          translateY: ['0%', '100%']
-        }
-      },
-      shapes: {
-        duration: 800,
-        delay: (t, i) => i * 16 + 200,
-        easing: [
-          0.02, 0.1, 0.15, 1
-        ],
-        translateY: () => [
-          anime.random(-50, 50),
-          anime.random((window.innerHeight * -.45), (window.innerHeight * .45))
-        ],
-        translateX: () => [
-          anime.random(-50, 50),
-          anime.random((window.innerWidth * -.45), (window.innerWidth * .45))
-        ],
-        offset: 0,
-        // scale: () => [0.2,randomBetween(0.5,1)],
-        opacity: [
-          {
-            value: 1,
-            duration: 1,
-            delay: (t, i) => i * 16 + 200
-          }, {
-            value: 0,
-            duration: 200,
-            delay: 200,
-            easing: 'linear'
-          }
-        ]
-      }
-    }
 
     this.init(this.scene);
-
   }
   init(scene) {
     // Wraps each letter in a span with a new class 'letter#'
     charming(this.el, {classPrefix: 'letter'});
-
-    // Create array of letters and an array to store the dom elements to be used
-    // as references for animations. Update this.letters to the newly created array
-    // of letter dom references.  After, assign the appropriate animation to
-    // the letterTargetsArray to create a valid anime object
-    let letters = [];
-    let letterTargetsArray = {
-      targets: []
-    };
-    Array.from(this.el.querySelectorAll('span')).forEach(function(element) {
-      letterTargetsArray.targets.push(element);
-      letters.push(new Letter(scene, element));
-    });
-    this.letters = letters;
-    let letterAnimations = Object.assign(letterTargetsArray, this.animations.letters.show)
+    // Create letters and assign the elements to animations
+    this.createLetters(scene);
+  }
+  createLetters(scene){
+    let letters = scene.DOM.children.name.el.childNodes;
+    animations.letters.show.targets = animations.letters.hide.targets = letters;
+    letters = Array.from(letters);
 
     let shapes = [];
-    let shapeTargetsArray = {
-      targets: []
-    };
-    this.letters.forEach(function(letter) {
-      for (let i = 0; i < letter.shapes.length; i++) {
-        shapeTargetsArray.targets.push(letter.shapes[i].el);
+    letters.forEach(function(el, index){
+      letters[index] = new Letter(scene, el);
+
+      let letter = letters[index];
+      for(let i = 0; i < letter.totalShapes; i++){
         shapes.push(letter.shapes[i]);
       }
     });
-    this.shapes = shapes;
-    let shapeAnimations = Object.assign(shapeTargetsArray, this.animations.shapes);
+    animations.shapes.targets = shapes.map(s => s.el);
 
+    this.letters = letters;
+    this.shapes = shapes;
+
+    // Sort shapes array order based on z axis location and add them to the dom
     this.shapes.sort(function(a, b) {
       return a.z - b.z;
     });
-
     this.shapes.forEach(function(shape) {
       shape.parent.appendChild(shape.el);
     });
-
-    // Animate after timeout/this.animations.delay
-    this.playAnimation(this, letterAnimations, shapeAnimations);
-    console.log("Name created");
   }
-  playAnimation(name, letterAnimations, shapeAnimations) {
-    setTimeout(function() {
-
-      let animation = anime.timeline();
-
-      animation.add(letterAnimations).add(shapeAnimations);
-      animation.complete = function(anim) {
-        name.shapes.forEach(function(shape) {
-          shape.getsetTransform();
-        });
-        name.scene.DOM.children.svg.el.classList.add("transition");
-        name.scene.toggleScene();
-      };
-    }, this.animations.delay);
-  }
-
 }
 
 class Letter {
@@ -379,18 +372,15 @@ class Shape {
       el: letter,
       props: letterProps
     };
-    this.scale = anime.random(letterProps.width * .1, letterProps.width * 1); // scale will be 10% and 100% of the letter's width
-    // this.x = anime.random(letterProps.x, letterProps.x + letterProps.width);
-    // this.y = anime.random(letterProps.y - letterProps.height, letterProps.y);
-    this.x = (letterProps.x + letterProps.width / 2);
-    this.y = (letterProps.y - letterProps.height / 2);
+    this.scale = anime.random(letterProps.width * .1, letterProps.width * .75); // scale will be 10% and 100% of the letter's width
+    this.x = (letterProps.left + letterProps.width / 2);
+    this.y = (letterProps.top - letterProps.height / 2);
     this.z = this.scale / letterProps.width;
     this.projectedXY = this.calc3DLocation(this.scene.camera);
-
     this.relationalValues = {
       // Properties relative to their associated letter, values are percentage based
-      x: (this.x - letterProps.x) / letterProps.width,
-      y: (this.y - (letterProps.y - letterProps.height)) / letterProps.height,
+      x: (this.x - letterProps.left) / letterProps.width,
+      y: (this.y - (letterProps.top - letterProps.height)) / letterProps.height,
       scale: this.scale / letterProps.width,
       // Properties relative to the window window dimensions
       translateX: undefined,
@@ -408,6 +398,13 @@ class Shape {
         strokeWidth: undefined,
         fill: this.colors[randomIndex(this.colors.length)]
       },
+      {
+        el: 'polygon',
+        points: this.getPoints(this.projectedXY[0], this.projectedXY[1], this.scale),
+        stroke: undefined,
+        strokeWidth: undefined,
+        fill: this.colors[randomIndex(this.colors.length)]
+      }
       // {
       //   el: 'rect',
       //   x: this.x,
@@ -418,13 +415,6 @@ class Shape {
       //   strokeWidth: undefined,
       //   fill: this.colors[randomIndex(this.colors.length)]
       // },
-      {
-        el: 'polygon',
-        points: this.getPoints(this.projectedXY[0], this.projectedXY[1], this.scale),
-        stroke: undefined,
-        strokeWidth: undefined,
-        fill: this.colors[randomIndex(this.colors.length)]
-      }
     ];
 
     this.init();
@@ -458,12 +448,12 @@ class Shape {
       }
     }
     // console.log("this.x = "+this.x +", projectedX = "+this.projectedXY.x+", Camera perspective = "+this.scene.camera.perspective+", this.z = "+(this.scene.camera.perspective - this.z*this.scene.camera.maxZ)+", Camera Location X = "+this.scene.camera.location.x);
-    console.log("shape created");
+    console.log("Shape created");
   }
   calc3DLocation(camera) {
     /*
-				Bx = Ax*(Bz/Az)
-		*/
+Bx = Ax*(Bz/Az)
+*/
     let Bx,
       Bz,
       Ax,
@@ -491,8 +481,8 @@ class Shape {
     if(this.scene.ready){
       let letter = this.letter.el.getBoundingClientRect();
       this.letter.props = letter;
-      this.x = letter.x + (letter.width * this.relationalValues.x);
-      this.y = letter.y + (letter.height * this.relationalValues.y);
+      this.x = letter.left + (letter.width * this.relationalValues.x);
+      this.y = letter.top + (letter.height * this.relationalValues.y);
       this.scale = letter.width * this.relationalValues.scale;
       this.transforms = [this.relationalValues.translateX*(window.innerWidth*.45), this.relationalValues.translateY*(window.innerHeight*.45)];
       this.projectedXY = this.calc3DLocation(this.scene.camera);
@@ -544,15 +534,10 @@ class Shape {
   }
 }
 
-exports.initShapes = function(scene, name) {
-  let shapesScene;
+exports.ShapeScene = function(scene, name) {
+  let shapeScene;
 
   document.addEventListener('readystatechange', function(){
-    // if (document.readyState == undefined){
-    //   console.log("loading");
-    // }
-    // else
-
     if (document.readyState == "interactive"){
       console.log("interactive");
     }
@@ -561,7 +546,7 @@ exports.initShapes = function(scene, name) {
     }
   });
 
-  document.addEventListener('DOMContentLoaded', () => shapesScene = new Scene(scene, name));
+  document.addEventListener('DOMContentLoaded', () => shapeScene = new Scene(scene, name));
 
-  return shapesScene;
+  return shapeScene;
 }

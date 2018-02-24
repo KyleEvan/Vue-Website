@@ -9,7 +9,7 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 // console.log(env);
 
 module.exports = {
-  entry: __dirname + "/src/app/index.js", // webpack entry point. Module to start building dependency graph
+  entry: ["babel-polyfill", __dirname + "/src/app/index.js"], // webpack entry point. Module to start building dependency graph
   devtool: 'source-map',
   output: {
     path: path.resolve(__dirname, 'dist'), // Folder to store generated bundle

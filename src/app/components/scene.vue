@@ -4,9 +4,9 @@ HTML
 
 -->
 <template>
-<div id="scene">
- <h1 id="name">Kyle</h1>
-</div>
+  <div id="scene">
+    <h1 id="name">Kyle</h1>
+  </div>
 </template>
 
 
@@ -17,7 +17,6 @@ JS
 -->
 <script>
 import {ShapeScene} from '../shapes.js';
-import '../../style/app.scss';
 
 console.log("imported the file");
 export default {
@@ -42,7 +41,7 @@ Styles/SCSS
 
  -->
 <style lang="scss">
-$primary-color: #63676C;
+@import '../../style/global.scss';
 
 #scene {
     position: fixed;
@@ -67,7 +66,7 @@ $primary-color: #63676C;
         }
     }
     #name {
-        color: $primary-color;
+        color: $primary-gray;
         margin: 0;
         font-size: 50px;
         text-transform: uppercase;
@@ -98,9 +97,9 @@ Fallback:
 If the broser doesn't support flexbox, don't display the scene
 
 ****************************************************************/
-@supports not (display:flex) {
-    #scene {
-        display: none;
-    }
-}
+// @supports not (display:flex) {
+//     #scene {
+//         display: none;
+//     }
+// }
 </style>

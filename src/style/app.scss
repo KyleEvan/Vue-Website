@@ -1,3 +1,5 @@
+@import 'global.scss';
+
 @font-face {
   font-family: "InterUI";
   src: url("../fonts/Inter-UI-Regular.woff2") format("woff2"),
@@ -23,14 +25,21 @@
     font-style: normal;
 }
 
+
+
+
+
+
+
 *{
   box-sizing: border-box;
 }
 html{
+  height: 100%; overflow:auto;
   font-size:14px;
   font-family: 'Roboto', sans-serif;
   line-height:22px;
-  background: #F9FFF9;
+  background: $primary-white;
 
   @media (min-width: 720px){
     font-size:16px;
@@ -42,28 +51,16 @@ html{
   }
 }
 body {
+  height:100%;
   margin: 0;
-  color: #63676C;
+  color: $primary-gray;
+
   #app{
 
     .main{
       padding: 100vh 8% 3em 8%;
 
-      .work{
-        height:80vh;
 
-        div:first-child{
-          width: 46%;
-          display: inline-block;
-          padding: 2em;
-          background: rgba(255,255,255,.5);
-
-          h2{
-            font-family: 'Roboto Slab', serif;
-          }
-        }
-
-      }/* end of work */
     }/* end of main */
   }/* end of app */
 }/* end of body */

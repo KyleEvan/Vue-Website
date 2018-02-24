@@ -55,10 +55,9 @@
 
 -->
 <style lang="scss" scoped>
+	@import '../../style/global.scss';
 
-	$break-small: 480px;
-	$break-medium: 720px;
-	$break-large: 1200px;
+
 
 	#nav{
       width: 100%;
@@ -95,7 +94,7 @@
 	      padding:10px;
 	    }
 
-			@media (max-width:720px){
+			@media (max-width:$break-medium){
 	      .nav-menu{
 	        position: relative;
 	        display:block;
@@ -114,7 +113,7 @@
 					flex-direction: column;
 					justify-content: center;
 					align-items: unset;
-	        background:#FF9393;
+	        background: $primary-red;
 					padding-left: 2.5rem;
     			font-size: 30px;
 	        position:absolute;
@@ -123,6 +122,7 @@
 	        visibility: hidden;
 	        transform:translateX(0%);
 					transition: visibility 0s linear 0.8s, transform .3s ease-out;
+					will-change: transform;
 	      }
 	      .nav-items.expanded{
 	        visibility: visible;
@@ -131,7 +131,7 @@
 					transition-delay: 0s;
 	      }
 				.nav-items a{
-					color:#F9FFF9;
+					color: $primary-white;
 				}
 	    }
   }

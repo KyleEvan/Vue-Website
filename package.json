@@ -27,7 +27,9 @@
     "webpack-dev-server": "^2.10.1"
   },
   "dependencies": {
+    "babel-polyfill": "^6.26.0",
     "charming": "^2.0.1",
+    "classlist-polyfill": "^1.2.0",
     "vue": "^2.5.13",
     "webpack": "^3.10.0"
   }

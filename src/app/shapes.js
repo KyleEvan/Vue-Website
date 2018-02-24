@@ -236,7 +236,7 @@ class Scene { // #scene
           shape.el.style.opacity = .75;
         });
       }
-    }, 200);
+    }, 150);
     window.addEventListener('mousemove', handleMouseMove, false);
 
     // Mouseenter event:

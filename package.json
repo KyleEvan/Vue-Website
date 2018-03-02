@@ -13,6 +13,7 @@
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
     "babel-preset-env": "^1.6.1",
+    "copy-webpack-plugin": "^4.4.2",
     "css-loader": "^0.28.8",
     "extract-text-webpack-plugin": "^3.0.2",
     "file-loader": "^1.1.6",
@@ -30,7 +31,9 @@
     "babel-polyfill": "^6.26.0",
     "charming": "^2.0.1",
     "classlist-polyfill": "^1.2.0",
+    "php-array-loader": "^1.0.1",
     "vue": "^2.5.13",
+    "vue-router": "^3.0.1",
     "webpack": "^3.10.0"
   }
 }

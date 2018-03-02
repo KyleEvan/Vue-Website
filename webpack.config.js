@@ -3,6 +3,7 @@ const path = require('path');
 
 const HtmlWebpackPlugin = require('html-webpack-plugin'); // Require  html-webpack-plugin plugin
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 
 // var env = process.env.WEBPACK_ENV;
@@ -43,6 +44,10 @@ module.exports = {
           }
         },
         {
+          test: /\.php$/,
+          use: 'php-loader'
+        },
+        {
           test: /\.vue$/,
           loader: 'vue-loader'
         }
@@ -60,7 +65,10 @@ module.exports = {
         inject: 'body'
         // hash:true
       }),
-      new ExtractTextPlugin("styles_bundle.css") // extract css to a separate file called styles.css
+      new ExtractTextPlugin("styles_bundle.css"), // extract css to a separate file called styles.css
+      new CopyWebpackPlugin([
+        { from: 'src/php', to: 'php' }
+      ])
   ],
   devServer: {  // configuration for webpack-dev-server
       contentBase: './src/public',  //source of static assets

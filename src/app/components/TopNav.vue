@@ -10,19 +10,19 @@
 	  </a>
 	  <ul class="nav-items" :class="{expanded}">
 	    <li>
-	      <a tabindex="3" href="#">
+	      <router-link to="/work">
 	        work
-	      </a>
+	      </router-link>
 	    </li>
 	    <li>
-	      <a tabindex="4" href="#">
+				<router-link to="/about">
 	        about
-	      </a>
+	      </router-link>
 	    </li>
 	    <li>
-	      <a tabindex="5  " href="#">
+				<router-link to="/contact">
 	        contact
-	      </a>
+	      </router-link>
 	    </li>
 	  </ul>
 	  <a class="nav-menu" tabindex="2" href="#" @click.prevent="handleToggle"></a>
@@ -121,13 +121,13 @@
 	        left:100%;
 	        visibility: hidden;
 	        transform:translateX(0%);
-					transition: visibility 0s linear 0.8s, transform .3s ease-out;
+					transition: visibility 0s linear 0.6s, transform .3s ease-in;
 					will-change: transform;
 	      }
 	      .nav-items.expanded{
 	        visibility: visible;
 	        transform:translateX(-100%);
-					transition: visibility 0s linear 0.6s, transform .8s cubic-bezier(0,.86,1,1);
+					transition: visibility 0s linear 0.6s, transform .6s cubic-bezier(0,.86,1,1);
 					transition-delay: 0s;
 	      }
 				.nav-items a{

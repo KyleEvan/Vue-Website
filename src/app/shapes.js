@@ -1,6 +1,6 @@
 "use strict";
 
-import anime from 'animejs';
+import { TimelineLite } from "gsap";
 import charming from 'charming';
 
 /*
@@ -13,61 +13,6 @@ const colors = [
   '#7EDAD4', '#FF9393', '#FFEC94'
   // '#F9FFF9' '#63676c'
 ];
-
-const animations = {
-  delay: 1000,
-  letters: {
-    show: {
-      targets: undefined,
-      duration: 1000,
-      delay: (t, i) => i * 40,
-      easing: 'easeOutElastic',
-      opacity: [ 0, 1 ],
-      translateY: [ '100%', '0%' ],
-      offset: 0
-    },
-    hide: {
-      targets: undefined,
-      duration: 1000,
-      delay: (t, i) => i * 40,
-      easing: 'easeOutExpo',
-      opacity: {
-        value: 0,
-        duration: 100,
-        delay: (t, i) => i * 40,
-        easing: 'linear'
-      },
-      translateY: ['0%', '100%']
-    }
-  },
-  shapes: {
-    targets: undefined,
-    duration: 800,
-    delay: (t, i) => i * 16 + 200,
-    easing: [ 0.02, 0.1, 0.15, 1 ],
-    translateY: () => [
-      anime.random(-50, 50),
-      anime.random((window.innerHeight * -.45), (window.innerHeight * .45))
-    ],
-    translateX: () => [
-      anime.random(-50, 50),
-      anime.random((window.innerWidth * -.45), (window.innerWidth * .45))
-    ],
-    offset: 0,
-    opacity: [
-      {
-        value: 1,
-        duration: 1,
-        delay: (t, i) => i * 16 + 200
-      }, {
-        value: 0,
-        duration: 200,
-        delay: 200,
-        easing: 'linear'
-      }
-    ]
-  }
-}
 
 
 
@@ -136,6 +81,10 @@ function setWindowDimensions(obj) {
   return obj;
 }
 
+function getRandomInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 function randomIndex(length) {
   let item = Math.floor(Math.random() * length);
   return item;
@@ -154,13 +103,13 @@ class Scene { // #scene
     this.ready = false;
     // scene.interactive dictates whether mousemove events should be tracked for shape translations
     this.interactive = false;
+    this.name = undefined;
     // DOM element references
     this.DOM = {
       el: scene,
       children:{
         name: {
-          el: name,
-          obj: undefined
+          el: name
         },
         svg: {
           el: document.createElementNS("http://www.w3.org/2000/svg", "svg"),
@@ -201,13 +150,71 @@ class Scene { // #scene
       }
     };
 
+
+    // GSAP TimelineLite
+    this.animations = {
+      scene: this,
+      initDelay: 1000,
+      tl: new TimelineLite(), //{ paused: true }
+      showLetters: function(targets){
+        // this.tl.eventCallback("onUpdate", this.update);
+        this.tl.staggerFromTo(targets, 1, {
+          opacity: 0,
+          y: "100%"
+        },
+        {
+          opacity: 1,
+          y: "0%",
+          ease: Elastic.easeOut.config(1, 0.4)
+        }, .1);
+      },
+      showShapes: function(targets){
+        for(let i = 0; i < targets.length; i++){
+          let target = targets[i];
+          this.tl.to(target, .9, {
+            opacity: .75,
+            x: getRandomInt((window.innerWidth * -.5), (window.innerWidth * .5)),
+            y: getRandomInt((window.innerHeight * -.5), (window.innerHeight * .5)),
+            scale: 1,
+            ease: Expo.easeOut
+          }, "-=.895");
+          if(i == (targets.length - 1)) {
+            let scene = this.scene;
+            setTimeout(function(){
+              scene.animationCompleted();
+            }, 900);
+          }
+        }
+      },
+      moveShapes: function(shapes){
+        shapes.reverse();
+        for(let i = 0; i < shapes.length; i++){
+          let shape = shapes[i];
+
+          TweenLite.to(shape.target, 7, {
+            opacity: 1,
+            x: shape.newX,
+            y: shape.newY,
+            ease: Expo.easeOut
+          }).delay(i*.0085).smoothChildTiming = true;
+        }
+      },
+      explodeShapes: function(targets){
+        for(let i = 0; i < targets.length; i++){
+          let target = targets[i];
+          console.log(target);
+        }
+      }
+    };
+
     this.init();
     this.initEvents();
   }
 
   init() {
     this.createScene();
-    this.DOM.children.name.obj = new Name(this);
+    this.name = new Name(this);
+    console.log(this.name);
     this.playScene();
     console.log("Scene created");
   }
@@ -227,14 +234,21 @@ class Scene { // #scene
     let handleMouseMove = throttle(function(e) {
       if (scene.interactive) {
         scene.camera.updateLoc(e.clientX, e.clientY);
-        scene.DOM.children.name.obj.shapes.forEach(function(shape) {
+
+        let updatedShapes = [];
+        scene.name.shapes.forEach(function(shape) {
           let projectedXY = [
-            (shape.projectedXY[0] - shape.calc3DLocation(scene.camera)[0]),
-            (shape.projectedXY[1] - shape.calc3DLocation(scene.camera)[1])
+            (shape.calc3DLocation(scene.camera)[0] - shape.projectedXY[0]),
+            (shape.calc3DLocation(scene.camera)[1] - shape.projectedXY[1])
           ];
-          shape.getsetTransform(projectedXY);
-          shape.el.style.opacity = .75;
+          updatedShapes.push({
+            target: shape.el,
+            newX: shape.getsetTransform(projectedXY)[0],
+            newY: shape.getsetTransform(projectedXY)[1]
+          });
         });
+
+        scene.animations.moveShapes(updatedShapes);
       }
     }, 150);
     window.addEventListener('mousemove', handleMouseMove, false);
@@ -255,11 +269,20 @@ class Scene { // #scene
         if (scene.interactive) {
           scene.toggleInteractive();
           scene.camera.updateLoc(scene.camera.center.x, scene.camera.center.y);
-          scene.DOM.children.name.obj.shapes.forEach(shape => shape.getsetTransform([0, 0]));
+          scene.name.shapes.forEach(shape => shape.getsetTransform([0, 0]));
         }
       }
     }
     this.DOM.parent.addEventListener('mouseleave', handleMouseLeave);
+
+    // Click event:
+    let handleClick = function(e){
+      if (scene.ready) {
+        if (scene.interactive) {
+          console.log("clicking!");
+        }
+      }
+    }
   }
   createScene() {
     // Add class to svg
@@ -271,20 +294,26 @@ class Scene { // #scene
     this.camera.config();
   }
   playScene() {
-    let name = this.DOM.children.name.obj;
-    let animation = anime.timeline();
+    let scene = this;
+    console.log(scene);
+    let name = this.name;
+    // let animation = anime.timeline();
+    let animations = this.animations;
 
     setTimeout(function() {
 
-      animation.add(animations.letters.show).add(animations.shapes);
-      animation.complete = function(anim) {
-        name.shapes.forEach(function(shape) {
-          shape.getsetTransform();
-        });
-        name.scene.DOM.children.svg.el.classList.add("transition");
-        name.scene.toggleScene();
-      };
-    }, animations.delay);
+      animations.showLetters(name.letterEls);
+      animations.showShapes(name.shapeEls);
+
+    }, animations.initDelay);
+  }
+  animationCompleted(){
+    console.log("animation completed!");
+    console.log(this);
+    this.name.shapes.forEach(function(shape){
+      shape.getsetTransform();
+    });
+    this.toggleScene();
   }
   toggleInteractive() {
     this.interactive = !this.interactive;
@@ -297,6 +326,7 @@ class Scene { // #scene
   toggleScene() {
     this.toggleInteractive();
     this.ready = !this.ready;
+    console.log("scene is ready");
   }
 }
 
@@ -304,6 +334,8 @@ class Name { // #name
   constructor(scene) {
     this.scene = scene;
     this.el = scene.DOM.children.name.el;
+    this.letterEls = undefined;
+    this.shapeEls = undefined;
     this.letters = [];
     this.shapes = [];
 
@@ -317,7 +349,10 @@ class Name { // #name
   }
   createLetters(scene){
     let letters = scene.DOM.children.name.el.childNodes;
-    animations.letters.show.targets = animations.letters.hide.targets = letters;
+
+    this.letterEls = letters;
+    // animations.letters.show.targets = animations.letters.hide.targets = letters;
+
     letters = Array.from(letters);
 
     let shapes = [];
@@ -329,7 +364,10 @@ class Name { // #name
         shapes.push(letter.shapes[i]);
       }
     });
-    animations.shapes.targets = shapes.map(s => s.el);
+
+    this.shapeEls = shapes.map(s => s.el);
+    // animations.shapes.targets = shapes.map(s => s.el);
+
 
     this.letters = letters;
     this.shapes = shapes;
@@ -349,7 +387,7 @@ class Letter {
     this.el = el;
     this.scene = scene;
     this.shapes = [];
-    this.totalShapes = 5;
+    this.totalShapes = 6;
     this.init(scene);
   }
   init() {
@@ -372,7 +410,7 @@ class Shape {
       el: letter,
       props: letterProps
     };
-    this.scale = anime.random(letterProps.width * .1, letterProps.width * .75); // scale will be 10% and 100% of the letter's width
+    this.scale = getRandomInt(letterProps.width * .1, letterProps.width * .8); // scale will be 10% and 100% of the letter's width
     this.x = (letterProps.left + letterProps.width / 2);
     this.y = (letterProps.top - letterProps.height / 2);
     this.z = this.scale / letterProps.width;
@@ -440,6 +478,7 @@ class Shape {
           this.el = document.createElementNS("http://www.w3.org/2000/svg", shape[prop]);
         } else {
           if (this.el) {
+            console.log(shape[prop]);
             this.el.setAttribute(prop, shape[prop]);
           } else {
             console.log("Element is undefined");
@@ -507,46 +546,64 @@ Bx = Ax*(Bz/Az)
   }
   getPoints(x, y, scale) {
     // This configuration of points creates a triangle shape
-    return `${x} ${y} ${x + scale * .5} ${y + scale} ${x - scale * .5} ${y + scale}`;
+    let points = `${x} ${y} ${x + scale * .5} ${y + scale} ${x - scale * .5} ${y + scale}`;
+    return points;
   }
   getsetTransform(projectedXY) {
     if (!this.transforms) {
-      // https://stackoverflow.com/questions/3432446/how-to-read-individual-transform-values-in-javascript
-      let computedStyle = window.getComputedStyle(this.el, null); // "null" means this is not a pesudo style.
-      // You can retrieve the CSS3 matrix string by the following method.
-      let matrix = computedStyle.getPropertyValue('transform')
-      || computedStyle.getPropertyValue('-moz-transform')
-      || computedStyle.getPropertyValue('-webkit-transform')
-      || computedStyle.getPropertyValue('-ms-transform')
-      || computedStyle.getPropertyValue('-o-transform');
-      let matrixValue = [];
+
+      console.log("setting initial transform");
+
+      // if(this.el.hasAttribute("transform")){
+      let matrix = this.el.getAttribute("transform");
+
+      // let matrixCopy = matrix.replace(/^\w+\(/,"[").replace(/\)$/,"]");
       let matrixCopy = matrix.replace(/^\w*\(/, '').replace(')', '');
-      matrixValue = matrixCopy.split(/\s*,\s*/).map(Number);
+      let matrixValue = [];
+      matrixValue = matrixCopy.split(/[ ,]+/).map(Number);
       this.transforms = matrixValue.slice(4);
-      this.relationalValues.translateX = this.transforms[0]/(window.innerWidth*.45);
-      this.relationalValues.translateY = this.transforms[1]/(window.innerHeight*.45);
+      console.log(this.transforms);
+
+      // KEEP FOR REFERENCE (Converts computedStyle of element and turns into translateX translateY values)
+            // https://stackoverflow.com/questions/3432446/how-to-read-individual-transform-values-in-javascript
+            // let computedStyle = window.getComputedStyle(this.el, null); // "null" means this is not a pesudo style.
+            // You can retrieve the CSS3 matrix string by the following method.
+            // let matrix = computedStyle.getPropertyValue('transform')
+            // || computedStyle.getPropertyValue('-moz-transform')
+            // || computedStyle.getPropertyValue('-webkit-transform')
+            // || computedStyle.getPropertyValue('-ms-transform')
+            // || computedStyle.getPropertyValue('-o-transform');
+            // let matrixValue = [];
+            // let matrixCopy = matrix.replace(/^\w*\(/, '').replace(')', '');
+            // matrixValue = matrixCopy.split(/\s*,\s*/).map(Number);
+            // this.transforms = matrixValue.slice(4);
+            // this.relationalValues.translateX = this.transforms[0]/(window.innerWidth*.45);
+            // this.relationalValues.translateY = this.transforms[1]/(window.innerHeight*.45);
+      //
     }
     if (projectedXY) {
       let newProjectedXY = [];
       this.transforms.forEach((transform, index) => newProjectedXY.push(transform + projectedXY[index]));
-      this.el.style.transform = `translateX(${newProjectedXY[0]}px) translateY(${newProjectedXY[1]}px)`;
+      return newProjectedXY;
+
     }
   }
 }
 
 exports.ShapeScene = function(scene, name) {
   let shapeScene;
-
-  document.addEventListener('readystatechange', function(){
-    if (document.readyState == "interactive"){
-      console.log("interactive");
-    }
-    else if (document.readyState == "complete"){
-      console.log("complete");
-    }
-  });
-
-  document.addEventListener('DOMContentLoaded', () => shapeScene = new Scene(scene, name));
+  shapeScene = new Scene(scene, name);
+  console.log(shapeScene);
+  // document.addEventListener('readystatechange', function(){
+  //   if (document.readyState == "interactive"){
+  //     console.log("interactive");
+  //   }
+  //   else if (document.readyState == "complete"){
+  //     console.log("document ready complete");
+  //   }
+  // });
+  //
+  // document.addEventListener('DOMContentLoaded', () => shapeScene = new Scene(scene, name));
 
   return shapeScene;
 }

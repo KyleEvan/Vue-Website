@@ -4,8 +4,8 @@ HTML
 
 -->
 <template>
-  <div id="scene">
-    <h1 id="name">Kyle</h1>
+  <div id="scene" ref="scene">
+    <h1 id="name" ref="name">Kyle</h1>
   </div>
 </template>
 
@@ -16,19 +16,19 @@ JS
 
 -->
 <script>
-import {ShapeScene} from '../shapes.js';
+import { ShapeScene } from '../shapes.js';
 
-console.log("imported the file");
 export default {
  // data(){
  // console.log(this);
  // return this;
  // },
  mounted() {
-   let scene = document.getElementById('scene');
-   let name = document.getElementById('name');
+   console.log(this.$refs.name)
+   // let scene = document.getElementById('scene');
+   // let name = document.getElementById('name');
 
-   ShapeScene(scene, name);
+   ShapeScene(this.$refs.scene, this.$refs.name);
    // console.log(initShapes(scene, name));
  }
 }
@@ -85,9 +85,9 @@ Styles/SCSS
             transform: translateY(100%);
         }
     }
-    .transition > * {
-        transition: 5s cubic-bezier(0.02, 0.1, 0.15, 1);
-    }
+    // .transition > * {
+    //     transition: 5s cubic-bezier(0.02, 0.1, 0.15, 1);
+    // }
 
 }
 

@@ -9,9 +9,18 @@ import App from './components/App.vue';
 
 // Vue.config.productionTip = false
 
+Vue.mixin({
+  data: function () {
+    return {
+      navExpanded: false,
+    }
+  }
+});
+
 new Vue({
   el: '#app',
   router,
   template: '<App/>',
   components: { App }
+  // mixins: [mixins]
 });

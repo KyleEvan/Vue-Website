@@ -10,7 +10,7 @@
 	  </a>
 	  <ul class="nav-items" :class="{expanded}">
 	    <li>
-	      <router-link to="/work">
+	      <router-link to="/">
 	        work
 	      </router-link>
 	    </li>
@@ -43,9 +43,15 @@
     },
     methods:{
 			handleToggle: function(e){
-		    this.expanded = !this.expanded;
+				this.expanded = !this.expanded;
+		    this.navExpanded = !this.navExpanded;
+				console.log(this.$data)
+
 		  }
-		}
+		},
+		created: function () {
+    	console.log(this.$data)
+	  }
 	}
 </script>
 
@@ -71,6 +77,7 @@
 			a, a:visited, a:active{
 	      display: inline-block;
 	      text-decoration: none;
+				color: #717C89;
 	    }
 			.nav-menu{
 	      display: none;
@@ -113,7 +120,7 @@
 					flex-direction: column;
 					justify-content: center;
 					align-items: unset;
-	        background: $primary-red;
+	        background: #FFA69E;
 					padding-left: 2.5rem;
     			font-size: 30px;
 	        position:absolute;

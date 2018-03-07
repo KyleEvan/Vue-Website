@@ -1,5 +1,5 @@
 <template>
-  <div class="main work">
+  <div class="main">
     <project title="Careers Redesign" href="something.com">
       <p>
         {{ msg }}

@@ -1,8 +1,9 @@
 <template>
-  <h1>About</h1>
-  <p>
-    {{ msg }}
-  </p>
+
+  <div>
+    <h1>About</h1>
+    <p> {{ msg }} </p>
+  </div>
 </template>
 
 <script>

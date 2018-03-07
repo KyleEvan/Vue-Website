@@ -7,11 +7,13 @@ import charming from 'charming';
 
 Color Palette
   https://coolors.co/7edad4-ff9393-ffec94-f9fff9-63676c
+  https://coolors.co/7edad4-ffa69e-ffec94-707c89-f9fff9
 
+  https://coolors.co/85e5e0-ffa69e-ffeb93-7b8a96-ffe5e5
 */
 const colors = [
-  '#7EDAD4', '#FF9393', '#FFEC94'
-  // '#F9FFF9' '#63676c'
+  '#ACE7E3', '#FFC6C1', '#FFF2BA'
+  // '#F9FFF9' '#63676c' '#FFA69E'
 ];
 
 
@@ -104,7 +106,7 @@ class Scene { // #scene
     // scene.interactive dictates whether mousemove events should be tracked for shape translations
     this.interactive = false;
 
-    this.sceneSize = 1;
+    this.sceneSize = 2;
     this.bounds = undefined;
 
     this.name = undefined;
@@ -172,6 +174,15 @@ class Scene { // #scene
           ease: Elastic.easeOut.config(1, 0.4)
         }, .1);
       },
+      hideLetters: function(){
+        let targets = this.scene.name.letterEls;
+        targets = Array.from(targets).reverse();
+        this.tl.staggerTo(targets, .6, {
+          opacity: 0,
+          y: "100%",
+          ease: Elastic.easeIn.config(1, 0.75)
+        }, .1);
+      },
       showShapes: function(targets){
         for(let i = 0; i < targets.length; i++){
           let target = targets[i];
@@ -180,13 +191,14 @@ class Scene { // #scene
             x: getRandomInt(this.scene.bounds.left, this.scene.bounds.right),
             y: getRandomInt(this.scene.bounds.top, this.scene.bounds.bottom),
             scale: 1,
+            onComplete: console.log("fukcing completed showing shapes bich"),
             ease: Expo.easeOut
-          }, "-=.895");
+          }, "-=.89");
           if(i == (targets.length - 1)) {
             let scene = this.scene;
             setTimeout(function(){
               scene.animationCompleted();
-            }, 900);
+            }, 1000);
           }
         }
       },
@@ -194,7 +206,7 @@ class Scene { // #scene
 
         let scene = this.scene;
         let shapes = scene.name.shapes;
-        // shapes.reverse();
+        shapes = Array.from(shapes).reverse();
 
         shapes.forEach(function(shape, index) {
           let projectedXY, newX, newY;
@@ -216,19 +228,9 @@ class Scene { // #scene
             x: newX,
             y: newY,
             ease: Expo.easeOut
-          }).delay(index*.0085).smoothChildTiming = true;
+          }).delay(index*.02).smoothChildTiming = true;
 
         });
-        // shapes.reverse();
-        // for(let i = 0; i < shapes.length; i++){
-        //   let shape = shapes[i];
-        //   TweenLite.to(shape.target, 7, {
-        //     opacity: 1,
-        //     x: shape.newX,
-        //     y: shape.newY,
-        //     ease: Expo.easeOut
-        //   }).delay(i*.0085).smoothChildTiming = true;
-        // }
       },
       explodeShapes: function(targets){
         for(let i = 0; i < targets.length; i++){
@@ -254,7 +256,7 @@ class Scene { // #scene
     let scene = this;
     // Resize event:
     // Debounces event every 100ms, resizes scene element to window size
-    let handleResize = debounce(function() {
+    const handleResize = debounce(function() {
       setWindowDimensions(scene.DOM.children.svg.el);
       scene.setBoundaries();
       scene.camera.config();
@@ -265,23 +267,9 @@ class Scene { // #scene
 
     // Mousemove event:
     // Tracks mouse to calculate projection perspective of svg shapes
-    let handleMouseMove = throttle(function(e) {
+    const handleMouseMove = throttle(function(e) {
       if (scene.interactive) {
         scene.camera.updateLoc(e.clientX, e.clientY);
-
-        // let updatedShapes = [];
-        // scene.name.shapes.forEach(function(shape) {
-        //   let projectedXY = [
-        //     (shape.calc3DLocation(scene.camera)[0] - shape.projectedXY[0]),
-        //     (shape.calc3DLocation(scene.camera)[1] - shape.projectedXY[1])
-        //   ];
-        //   updatedShapes.push({
-        //     target: shape.el,
-        //     newX: shape.getsetTransform(projectedXY)[0],
-        //     newY: shape.getsetTransform(projectedXY)[1]
-        //   });
-        // });
-        // scene.animations.moveShapes(updatedShapes);
         scene.animations.moveShapes(true);
       }
     }, 150);
@@ -289,7 +277,7 @@ class Scene { // #scene
 
     // Mouseenter event:
     // Toggle scene interactivity
-    let handleMouseEnter = function(e) {
+    const handleMouseEnter = function(e) {
       if (scene.ready) {
         if (!scene.interactive) scene.toggleInteractive();
       }
@@ -298,22 +286,11 @@ class Scene { // #scene
 
     // Mouseleave event:
     // Toggle scene interactivity and reset shapes to original positions
-    let handleMouseLeave = function(e) {
+    const handleMouseLeave = function(e) {
       if (scene.ready) {
         if (scene.interactive) {
           scene.toggleInteractive();
           scene.camera.updateLoc(scene.camera.center.x, scene.camera.center.y);
-          // scene.name.shapes.forEach(shape => shape.getsetTransform([0, 0]));
-          // let updatedShapes = [];
-          // scene.name.shapes.forEach(function(shape){
-            // shape => shape.getsetTransform([0, 0])
-          //   updatedShapes.push({
-          //     target: shape.el,
-          //     newX: shape.getsetTransform([0,0])[0],
-          //     newY: shape.getsetTransform([0,0])[1]
-          //   });
-          //
-          // });
           scene.animations.moveShapes(false);
         }
       }
@@ -321,13 +298,16 @@ class Scene { // #scene
     this.DOM.parent.addEventListener('mouseleave', handleMouseLeave);
 
     // Click event:
-    let handleClick = function(e){
+    const handleClick = function(e){
       if (scene.ready) {
         if (scene.interactive) {
           console.log("clicking!");
+          scene.animations.hideLetters();
         }
       }
     }
+    this.DOM.parent.addEventListener('click', handleClick);
+
   }
   setBoundaries(){
     let el = this.DOM.el;
@@ -608,7 +588,7 @@ Bx = Ax*(Bz/Az)
 
       // if(this.el.hasAttribute("transform")){
       let matrix = this.el.getAttribute("transform");
-
+      console.log(matrix);
       // let matrixCopy = matrix.replace(/^\w+\(/,"[").replace(/\)$/,"]");
       let matrixCopy = matrix.replace(/^\w*\(/, '').replace(')', '');
       let matrixValue = [];

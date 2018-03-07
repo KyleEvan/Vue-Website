@@ -24,7 +24,6 @@ export default {
  // return this;
  // },
  mounted() {
-   console.log(this.$refs.name)
    // let scene = document.getElementById('scene');
    // let name = document.getElementById('name');
 

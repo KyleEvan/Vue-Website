@@ -70,15 +70,15 @@ function throttle(fn, threshhold, scope) {
 
 // Assigns the passed element a new width and height attribute
 // equal to that of the window. After returns the element
-function setWindowDimensions(obj) {
+function setWindowDimensions(el) {
 
   // if (obj instanceof Element || obj.ownerDocument == document) {
-    obj.setAttribute('width', window.innerWidth);
-    obj.setAttribute('height', window.innerHeight);
-    if (obj.tagName === 'svg')
-      obj.setAttribute('viewbox', `0 0 ${window.innerWidth} ${window.innerHeight}`);
+    el.setAttribute('width', window.innerWidth);
+    el.setAttribute('height', window.innerHeight);
+    if (el.tagName === 'svg')
+      el.setAttribute('viewbox', `0 0 ${window.innerWidth} ${window.innerHeight}`);
     // }
-  return obj;
+  return el;
 }
 
 function getRandomInt(min, max) {
@@ -103,6 +103,10 @@ class Scene { // #scene
     this.ready = false;
     // scene.interactive dictates whether mousemove events should be tracked for shape translations
     this.interactive = false;
+
+    this.sceneSize = 1;
+    this.bounds = undefined;
+
     this.name = undefined;
     // DOM element references
     this.DOM = {
@@ -173,8 +177,8 @@ class Scene { // #scene
           let target = targets[i];
           this.tl.to(target, .9, {
             opacity: .75,
-            x: getRandomInt((window.innerWidth * -.5), (window.innerWidth * .5)),
-            y: getRandomInt((window.innerHeight * -.5), (window.innerHeight * .5)),
+            x: getRandomInt(this.scene.bounds.left, this.scene.bounds.right),
+            y: getRandomInt(this.scene.bounds.top, this.scene.bounds.bottom),
             scale: 1,
             ease: Expo.easeOut
           }, "-=.895");
@@ -186,18 +190,45 @@ class Scene { // #scene
           }
         }
       },
-      moveShapes: function(shapes){
-        shapes.reverse();
-        for(let i = 0; i < shapes.length; i++){
-          let shape = shapes[i];
+      moveShapes: function(mouseMove){
 
-          TweenLite.to(shape.target, 7, {
+        let scene = this.scene;
+        let shapes = scene.name.shapes;
+        // shapes.reverse();
+
+        shapes.forEach(function(shape, index) {
+          let projectedXY, newX, newY;
+          if(mouseMove){
+            projectedXY = [
+              (shape.calc3DLocation(scene.camera)[0] - shape.projectedXY[0]),
+              (shape.calc3DLocation(scene.camera)[1] - shape.projectedXY[1])
+            ];
+            newX = shape.getsetTransform(projectedXY)[0];
+            newY = shape.getsetTransform(projectedXY)[1];
+          }
+          else{
+            newX = shape.getsetTransform([0,0])[0];
+            newY = shape.getsetTransform([0,0])[1];
+          }
+
+          TweenLite.to(shape.el, 10, {
             opacity: 1,
-            x: shape.newX,
-            y: shape.newY,
+            x: newX,
+            y: newY,
             ease: Expo.easeOut
-          }).delay(i*.0085).smoothChildTiming = true;
-        }
+          }).delay(index*.0085).smoothChildTiming = true;
+
+        });
+        // shapes.reverse();
+        // for(let i = 0; i < shapes.length; i++){
+        //   let shape = shapes[i];
+        //   TweenLite.to(shape.target, 7, {
+        //     opacity: 1,
+        //     x: shape.newX,
+        //     y: shape.newY,
+        //     ease: Expo.easeOut
+        //   }).delay(i*.0085).smoothChildTiming = true;
+        // }
       },
       explodeShapes: function(targets){
         for(let i = 0; i < targets.length; i++){
@@ -225,8 +256,11 @@ class Scene { // #scene
     // Debounces event every 100ms, resizes scene element to window size
     let handleResize = debounce(function() {
       setWindowDimensions(scene.DOM.children.svg.el);
+      scene.setBoundaries();
       scene.camera.config();
-    }, 100);
+      scene.animations.moveShapes(false);
+
+    }, 50);
     window.addEventListener('resize', handleResize);
 
     // Mousemove event:
@@ -235,20 +269,20 @@ class Scene { // #scene
       if (scene.interactive) {
         scene.camera.updateLoc(e.clientX, e.clientY);
 
-        let updatedShapes = [];
-        scene.name.shapes.forEach(function(shape) {
-          let projectedXY = [
-            (shape.calc3DLocation(scene.camera)[0] - shape.projectedXY[0]),
-            (shape.calc3DLocation(scene.camera)[1] - shape.projectedXY[1])
-          ];
-          updatedShapes.push({
-            target: shape.el,
-            newX: shape.getsetTransform(projectedXY)[0],
-            newY: shape.getsetTransform(projectedXY)[1]
-          });
-        });
-
-        scene.animations.moveShapes(updatedShapes);
+        // let updatedShapes = [];
+        // scene.name.shapes.forEach(function(shape) {
+        //   let projectedXY = [
+        //     (shape.calc3DLocation(scene.camera)[0] - shape.projectedXY[0]),
+        //     (shape.calc3DLocation(scene.camera)[1] - shape.projectedXY[1])
+        //   ];
+        //   updatedShapes.push({
+        //     target: shape.el,
+        //     newX: shape.getsetTransform(projectedXY)[0],
+        //     newY: shape.getsetTransform(projectedXY)[1]
+        //   });
+        // });
+        // scene.animations.moveShapes(updatedShapes);
+        scene.animations.moveShapes(true);
       }
     }, 150);
     window.addEventListener('mousemove', handleMouseMove, false);
@@ -269,7 +303,18 @@ class Scene { // #scene
         if (scene.interactive) {
           scene.toggleInteractive();
           scene.camera.updateLoc(scene.camera.center.x, scene.camera.center.y);
-          scene.name.shapes.forEach(shape => shape.getsetTransform([0, 0]));
+          // scene.name.shapes.forEach(shape => shape.getsetTransform([0, 0]));
+          // let updatedShapes = [];
+          // scene.name.shapes.forEach(function(shape){
+            // shape => shape.getsetTransform([0, 0])
+          //   updatedShapes.push({
+          //     target: shape.el,
+          //     newX: shape.getsetTransform([0,0])[0],
+          //     newY: shape.getsetTransform([0,0])[1]
+          //   });
+          //
+          // });
+          scene.animations.moveShapes(false);
         }
       }
     }
@@ -284,6 +329,16 @@ class Scene { // #scene
       }
     }
   }
+  setBoundaries(){
+    let el = this.DOM.el;
+    el = el.getBoundingClientRect();
+    this.bounds = {
+      top: el.bottom/-2,
+      right: el.right/2,
+      bottom: el.bottom/2,
+      left: el.right/-2
+    };
+  }
   createScene() {
     // Add class to svg
     // Insert svg scene before h1#name to ensure the name is layered on top
@@ -291,13 +346,12 @@ class Scene { // #scene
     scene.children.svg.el.classList.add(scene.children.svg.class);
     scene.el.insertBefore(scene.children.svg.el, scene.children.name.el);
     setWindowDimensions(scene.children.svg.el);
+    this.setBoundaries();
     this.camera.config();
   }
   playScene() {
     let scene = this;
-    console.log(scene);
     let name = this.name;
-    // let animation = anime.timeline();
     let animations = this.animations;
 
     setTimeout(function() {
@@ -308,7 +362,7 @@ class Scene { // #scene
     }, animations.initDelay);
   }
   animationCompleted(){
-    console.log("animation completed!");
+    console.log("scene animation completed");
     console.log(this);
     this.name.shapes.forEach(function(shape){
       shape.getsetTransform();
@@ -322,6 +376,7 @@ class Scene { // #scene
     } else {
       window.blur();
     }
+
   }
   toggleScene() {
     this.toggleInteractive();
@@ -387,7 +442,7 @@ class Letter {
     this.el = el;
     this.scene = scene;
     this.shapes = [];
-    this.totalShapes = 6;
+    this.totalShapes = 5;
     this.init(scene);
   }
   init() {
@@ -478,7 +533,6 @@ class Shape {
           this.el = document.createElementNS("http://www.w3.org/2000/svg", shape[prop]);
         } else {
           if (this.el) {
-            console.log(shape[prop]);
             this.el.setAttribute(prop, shape[prop]);
           } else {
             console.log("Element is undefined");
@@ -523,7 +577,7 @@ Bx = Ax*(Bz/Az)
       this.x = letter.left + (letter.width * this.relationalValues.x);
       this.y = letter.top + (letter.height * this.relationalValues.y);
       this.scale = letter.width * this.relationalValues.scale;
-      this.transforms = [this.relationalValues.translateX*(window.innerWidth*.45), this.relationalValues.translateY*(window.innerHeight*.45)];
+      this.transforms = [this.relationalValues.translateX*this.scene.bounds.right, this.relationalValues.translateY*this.scene.bounds.bottom];
       this.projectedXY = this.calc3DLocation(this.scene.camera);
       // If this Shape element has points, recalculate those values
       // Otherwise, its a circle and the attributes can be outright updated with
@@ -552,8 +606,6 @@ Bx = Ax*(Bz/Az)
   getsetTransform(projectedXY) {
     if (!this.transforms) {
 
-      console.log("setting initial transform");
-
       // if(this.el.hasAttribute("transform")){
       let matrix = this.el.getAttribute("transform");
 
@@ -562,9 +614,10 @@ Bx = Ax*(Bz/Az)
       let matrixValue = [];
       matrixValue = matrixCopy.split(/[ ,]+/).map(Number);
       this.transforms = matrixValue.slice(4);
-      console.log(this.transforms);
-
-      // KEEP FOR REFERENCE (Converts computedStyle of element and turns into translateX translateY values)
+      this.relationalValues.translateX = this.transforms[0]/this.scene.bounds.right;
+      this.relationalValues.translateY = this.transforms[1]/this.scene.bounds.bottom;
+      // KEEP FOR REFERENCE & Potential future application
+      // (Converts computedStyle of element and turns into translateX translateY values)
             // https://stackoverflow.com/questions/3432446/how-to-read-individual-transform-values-in-javascript
             // let computedStyle = window.getComputedStyle(this.el, null); // "null" means this is not a pesudo style.
             // You can retrieve the CSS3 matrix string by the following method.
@@ -594,6 +647,7 @@ exports.ShapeScene = function(scene, name) {
   let shapeScene;
   shapeScene = new Scene(scene, name);
   console.log(shapeScene);
+
   // document.addEventListener('readystatechange', function(){
   //   if (document.readyState == "interactive"){
   //     console.log("interactive");

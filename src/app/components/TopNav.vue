@@ -4,7 +4,7 @@
 
 -->
 <template>
-	<div id="nav">
+	<nav>
 	  <a class="nav-home" tabindex="1" href="#">
 	    home
 	  </a>
@@ -26,7 +26,7 @@
 	    </li>
 	  </ul>
 	  <a class="nav-menu" tabindex="2" href="#" @click.prevent="handleToggle"></a>
-	</div>
+	</nav>
 </template>
 
 <!--
@@ -44,14 +44,8 @@
     methods:{
 			handleToggle: function(e){
 				this.expanded = !this.expanded;
-		    this.navExpanded = !this.navExpanded;
-				console.log(this.$data)
-
 		  }
-		},
-		created: function () {
-    	console.log(this.$data)
-	  }
+		}
 	}
 </script>
 
@@ -65,7 +59,7 @@
 
 
 
-	#nav{
+	nav{
       width: 100%;
       position: fixed;
       display: flex;

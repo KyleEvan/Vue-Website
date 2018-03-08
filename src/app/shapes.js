@@ -191,7 +191,6 @@ class Scene { // #scene
             x: getRandomInt(this.scene.bounds.left, this.scene.bounds.right),
             y: getRandomInt(this.scene.bounds.top, this.scene.bounds.bottom),
             scale: 1,
-            onComplete: console.log("fukcing completed showing shapes bich"),
             ease: Expo.easeOut
           }, "-=.89");
           if(i == (targets.length - 1)) {
@@ -344,7 +343,8 @@ class Scene { // #scene
   animationCompleted(){
     console.log("scene animation completed");
     console.log(this);
-    this.name.shapes.forEach(function(shape){
+    this.name.shapes.forEach(function(shape, i){
+      console.log("created: "+i)
       shape.getsetTransform();
     });
     this.toggleScene();
@@ -525,8 +525,8 @@ class Shape {
   }
   calc3DLocation(camera) {
     /*
-Bx = Ax*(Bz/Az)
-*/
+        Bx = Ax*(Bz/Az)
+    */
     let Bx,
       Bz,
       Ax,
@@ -588,31 +588,37 @@ Bx = Ax*(Bz/Az)
 
       // if(this.el.hasAttribute("transform")){
       let matrix = this.el.getAttribute("transform");
-      console.log(matrix);
-      // let matrixCopy = matrix.replace(/^\w+\(/,"[").replace(/\)$/,"]");
-      let matrixCopy = matrix.replace(/^\w*\(/, '').replace(')', '');
-      let matrixValue = [];
-      matrixValue = matrixCopy.split(/[ ,]+/).map(Number);
-      this.transforms = matrixValue.slice(4);
-      this.relationalValues.translateX = this.transforms[0]/this.scene.bounds.right;
-      this.relationalValues.translateY = this.transforms[1]/this.scene.bounds.bottom;
-      // KEEP FOR REFERENCE & Potential future application
-      // (Converts computedStyle of element and turns into translateX translateY values)
-            // https://stackoverflow.com/questions/3432446/how-to-read-individual-transform-values-in-javascript
-            // let computedStyle = window.getComputedStyle(this.el, null); // "null" means this is not a pesudo style.
-            // You can retrieve the CSS3 matrix string by the following method.
-            // let matrix = computedStyle.getPropertyValue('transform')
-            // || computedStyle.getPropertyValue('-moz-transform')
-            // || computedStyle.getPropertyValue('-webkit-transform')
-            // || computedStyle.getPropertyValue('-ms-transform')
-            // || computedStyle.getPropertyValue('-o-transform');
-            // let matrixValue = [];
-            // let matrixCopy = matrix.replace(/^\w*\(/, '').replace(')', '');
-            // matrixValue = matrixCopy.split(/\s*,\s*/).map(Number);
-            // this.transforms = matrixValue.slice(4);
-            // this.relationalValues.translateX = this.transforms[0]/(window.innerWidth*.45);
-            // this.relationalValues.translateY = this.transforms[1]/(window.innerHeight*.45);
-      //
+      if(matrix){
+        // let matrixCopy = matrix.replace(/^\w+\(/,"[").replace(/\)$/,"]");
+        let matrixCopy = matrix.replace(/^\w*\(/, '').replace(')', '');
+        let matrixValue = [];
+        matrixValue = matrixCopy.split(/[ ,]+/).map(Number);
+        this.transforms = matrixValue.slice(4);
+        this.relationalValues.translateX = this.transforms[0]/this.scene.bounds.right;
+        this.relationalValues.translateY = this.transforms[1]/this.scene.bounds.bottom;
+        // KEEP FOR REFERENCE & Potential future application
+        // (Converts computedStyle of element and turns into translateX translateY values)
+              // https://stackoverflow.com/questions/3432446/how-to-read-individual-transform-values-in-javascript
+              // let computedStyle = window.getComputedStyle(this.el, null); // "null" means this is not a pesudo style.
+              // You can retrieve the CSS3 matrix string by the following method.
+              // let matrix = computedStyle.getPropertyValue('transform')
+              // || computedStyle.getPropertyValue('-moz-transform')
+              // || computedStyle.getPropertyValue('-webkit-transform')
+              // || computedStyle.getPropertyValue('-ms-transform')
+              // || computedStyle.getPropertyValue('-o-transform');
+              // let matrixValue = [];
+              // let matrixCopy = matrix.replace(/^\w*\(/, '').replace(')', '');
+              // matrixValue = matrixCopy.split(/\s*,\s*/).map(Number);
+              // this.transforms = matrixValue.slice(4);
+              // this.relationalValues.translateX = this.transforms[0]/(window.innerWidth*.45);
+              // this.relationalValues.translateY = this.transforms[1]/(window.innerHeight*.45);
+        //
+      }
+      else{
+        console.log("! Error: Matrix Returned:")
+        console.log(matrix);
+      }
+
     }
     if (projectedXY) {
       let newProjectedXY = [];
@@ -626,8 +632,6 @@ Bx = Ax*(Bz/Az)
 exports.ShapeScene = function(scene, name) {
   let shapeScene;
   shapeScene = new Scene(scene, name);
-  console.log(shapeScene);
-
   // document.addEventListener('readystatechange', function(){
   //   if (document.readyState == "interactive"){
   //     console.log("interactive");

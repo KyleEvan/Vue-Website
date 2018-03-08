@@ -9,13 +9,13 @@ import App from './components/App.vue';
 
 // Vue.config.productionTip = false
 
-Vue.mixin({
-  data: function () {
-    return {
-      navExpanded: false,
-    }
-  }
-});
+// Vue.mixin({
+//   data: function () {
+//     return {
+//
+//     }
+//   }
+// });
 
 new Vue({
   el: '#app',

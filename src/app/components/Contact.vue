@@ -1,5 +1,6 @@
 <template>
-  <div class="main contact">
+
+  <div>
 
     <h1>Contact</h1>
 

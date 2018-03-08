@@ -19,16 +19,13 @@ JS
 import { ShapeScene } from '../shapes.js';
 
 export default {
- // data(){
- // console.log(this);
- // return this;
- // },
+ data(){
+   return{
+     shapeScene: undefined
+   }
+ },
  mounted() {
-   // let scene = document.getElementById('scene');
-   // let name = document.getElementById('name');
-
-   ShapeScene(this.$refs.scene, this.$refs.name);
-   // console.log(initShapes(scene, name));
+   this.shapeScene = ShapeScene(this.$refs.scene, this.$refs.name);
  }
 }
 </script>

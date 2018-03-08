@@ -13,7 +13,11 @@ export default new Router({
     {
       path: '/',
       name: 'Work',
-      component: Work
+      component: Work,
+      // children:[
+      //   path: 'Careers-Redesign',
+      //   component: Project
+      // ]
     },
     {
       path: '/about',

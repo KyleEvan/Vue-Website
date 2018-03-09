@@ -10,6 +10,7 @@
 
   export default {
     name: 'about',
+
     data () {
       return {
         msg: 'about me and shit'

@@ -5,7 +5,7 @@
     <section>
       <h2>Careers Redesign</h2>
       <p>
-        Lorem Ipsum
+        Lorem Ipsum Blurb
       </p>
       <router-link to="work/careers-redesign">View Project</router-link>
       <!-- <project title="Careers Redesign" href="something.com">
@@ -13,6 +13,7 @@
           {{ msg }}
         </p>
       </project> -->
+
     </section>
   </div>
 </template>

@@ -4,7 +4,7 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin'); // Require  html-webpack-plugin plugin
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const WriteFilePlugin = require('write-file-webpack-plugin');
+// const WriteFilePlugin = require('write-file-webpack-plugin');
 
 // var env = process.env.WEBPACK_ENV;
 // console.log(env);
@@ -43,7 +43,14 @@ module.exports = {
             name: "fonts/[name].[ext]"
           }
         },
-
+        {
+          // test:/\.(jpg|png|gif|svg|ico)$/,
+          test: /\.(png|jpg|gif)$/,
+          loader: "file-loader",
+          options: {
+            name: "images/[name]-[hash].[ext]"
+          }
+        },
         {
           test: /\.vue$/,
           loader: 'vue-loader'
@@ -57,20 +64,21 @@ module.exports = {
   },
   plugins: [  // Array of plugins to apply to build chunk
       new HtmlWebpackPlugin({
-        title: 'Kyle Peterson',
+        // title: 'Kyle Peterson',
         template: __dirname + "/src/public/index.html",
         inject: 'body'
         // hash:true
       }),
       new ExtractTextPlugin("styles_bundle.css"), // extract css to a separate file called styles.css
-      new WriteFilePlugin(),
+      // new WriteFilePlugin(),
       new CopyWebpackPlugin([
-        { from: 'src/php', to: 'php' }
+        { from: 'src/php' }
       ])
 
   ],
   devServer: {  // configuration for webpack-dev-server
       contentBase: './src/public',  //source of static assets
+      historyApiFallback: true,
       port: 3000, // port to run dev-server
   }
 };

@@ -1,7 +1,7 @@
 <template>
   <div id="app">
 
-    <top-nav></top-nav>
+    <navigation></navigation>
 
     <!-- Top navigation -->
 
@@ -22,8 +22,10 @@
 
 <script>
   import { TimelineLite } from "gsap";
+  // import router from './router.js'
+
   // Components
-  import TopNav from './TopNav.vue';
+  import Nav from './Nav.vue';
   import Scene from './Scene.vue';
 
   export default {
@@ -34,12 +36,12 @@
       }
     },
     components: {
-      "top-nav": TopNav,
+      "navigation": Nav,
       "scene": Scene
     },
     methods:{
       beforeEnter: function (el){
-        console.log(this.$route)
+
       },
       enter: function(el, done){
         console.log("transition entering");
@@ -54,8 +56,28 @@
 
       }
     },
+    created(){
+      console.log("Hello App created!");
+      console.log(this.$route);
+      document.title = this.$route.meta.title;
+
+    },
     mounted(){
       this.tl.paused(true);
+    },
+    watch: {
+      $route: function(to, from){
+        document.title = to.meta.title;
+
+        const toDepth = to.path.split('/').length;
+        const fromDepth = from.path.split('/').length;
+        console.log(to);
+        // console.log(fromDepth);
+        if(toDepth < fromDepth) console.log('higher level');
+        if(toDepth > fromDepth) console.log('lower level');
+        if(toDepth == fromDepth) console.log('same level');
+        // toDepth < fromDepth ? console.log('higher level') : console.log('lower level');
+      }
     }
   }
 </script>

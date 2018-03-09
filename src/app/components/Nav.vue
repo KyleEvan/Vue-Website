@@ -5,12 +5,12 @@
 -->
 <template>
 	<nav>
-	  <a class="nav-home" tabindex="1" href="#">
+		<router-link to="/">
 	    home
-	  </a>
+	  </router-link>
 	  <ul class="nav-items" :class="{expanded}">
 	    <li>
-	      <router-link to="/">
+	      <router-link to="/work">
 	        work
 	      </router-link>
 	    </li>
@@ -37,9 +37,9 @@
 <script>
 	export default{
 		data(){
-        return {
-          expanded: false
-        }
+      return {
+        expanded: false
+      }
     },
     methods:{
 			handleToggle: function(e){

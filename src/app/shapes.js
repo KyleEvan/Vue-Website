@@ -187,7 +187,7 @@ class Scene { // #scene
         for(let i = 0; i < targets.length; i++){
           let target = targets[i];
           this.tl.to(target, .9, {
-            opacity: .75,
+            opacity: 1,
             x: getRandomInt(this.scene.bounds.left, this.scene.bounds.right),
             y: getRandomInt(this.scene.bounds.top, this.scene.bounds.bottom),
             scale: 1,

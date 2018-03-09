@@ -106,7 +106,7 @@ class Scene { // #scene
     // scene.interactive dictates whether mousemove events should be tracked for shape translations
     this.interactive = false;
 
-    this.sceneSize = 2;
+    this.sceneSize = 1.2;
     this.bounds = undefined;
 
     this.name = undefined;
@@ -312,11 +312,12 @@ class Scene { // #scene
     let el = this.DOM.el;
     el = el.getBoundingClientRect();
     this.bounds = {
-      top: el.bottom/-2,
-      right: el.right/2,
-      bottom: el.bottom/2,
-      left: el.right/-2
+      top: (el.bottom/-2)*this.sceneSize,
+      right: (el.right/2)*this.sceneSize,
+      bottom: (el.bottom/2)*this.sceneSize,
+      left: (el.right/-2)*this.sceneSize
     };
+    console.log(this.bounds)
   }
   createScene() {
     // Add class to svg

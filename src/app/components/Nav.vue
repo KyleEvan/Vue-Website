@@ -64,14 +64,18 @@
       position: fixed;
       display: flex;
       align-items: center;
+			z-index: 1;
       justify-content: space-between;
       padding: 40px 6%;
       font-size: 18px;
       font-family: 'InterUI', sans-serif;
+			pointer-events: none;
 			a, a:visited, a:active{
 	      display: inline-block;
 	      text-decoration: none;
 				color: #717C89;
+				padding: 10px;
+				pointer-events: auto;
 	    }
 			.nav-menu{
 	      display: none;
@@ -90,10 +94,10 @@
 	      margin:0 -10px 0 0;
 	      padding:0;
 	    }
-			.nav-items a,
-	    .nav-home {
-	      padding:10px;
-	    }
+			// .nav-items a,
+	    // .nav-home {
+	    //   padding:10px;
+	    // }
 
 			@media (max-width:$break-medium){
 	      .nav-menu{

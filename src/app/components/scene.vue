@@ -16,18 +16,18 @@ JS
 
 -->
 <script>
-import { ShapeScene } from '../shapes.js';
+  import { ShapeScene } from '../shapes.js';
 
-export default {
- data(){
-   return{
-     shapeScene: undefined
+  export default {
+   data(){
+     return{
+       shapeScene: undefined
+     }
+   },
+   mounted() {
+     this.shapeScene = ShapeScene(this.$refs.scene, this.$refs.name);
    }
- },
- mounted() {
-   this.shapeScene = ShapeScene(this.$refs.scene, this.$refs.name);
- }
-}
+  }
 </script>
 
 

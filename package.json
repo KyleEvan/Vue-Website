@@ -33,6 +33,7 @@
     "charming": "^2.0.1",
     "classlist-polyfill": "^1.2.0",
     "php-array-loader": "^1.0.1",
+    "scrollmagic": "^2.0.5",
     "vue": "^2.5.13",
     "vue-router": "^3.0.1",
     "webpack": "^3.10.0"

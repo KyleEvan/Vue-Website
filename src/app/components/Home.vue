@@ -8,14 +8,14 @@
         <p>
           Careers Website Redesign for Excellus BCBS and Univera Healthcare. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Varius quam quisque id diam vel quam elementum pulvinar. Purus ut faucibus pulvinar elementum integer enim neque.
         </p>
-        <!-- <router-link to="/work/careers-redesign">View Project</router-link> -->
-        <a href="#" @click.prevent="something">View Project</a>
+        <router-link @click.native="transitionToProject" to="/work/careers-redesign">View Project</router-link>
+        <!-- <a href="#" @click.prevent="transitionToProject">View Project</a> -->
       </div>
       <div class="image">
         <svg>
           <defs>
             <clipPath id="clip">
-              <rect ref="clippedRect" x="0" y="0" width="100%" height="100%"/>
+              <rect class="clipRect" ref="clippedRect" x="0" y="0" width="100%" height="100%"/>
             </clipPath>
           </defs>
           <rect x="0" y="0" width="100%" height="100%" fill="#FFA69E" clip-path="url(#clip)" />
@@ -40,30 +40,88 @@
 
 <script>
   // import Project from './Project.vue';
-  // import careerareasPNG from '../../images/career- areas-mobile.png';
   import { TimelineLite } from "gsap";
   import ScrollMagic from "scrollmagic";
+  import anime from 'animejs';
   import careersPNG from '../../images/career-areas-mobile.png';
 
   export default {
-    name: 'work',
+    name: 'home',
     data () {
       return {
-        img: careersPNG,
+        img: careersPNG
       }
     },
     methods:{
-      something: function(e){
-        // alert('Hello!');
-        // console.log(e);
+      transitionToProject: function(e){
+
+        // MDN Polyfill for closest()
+        if (window.Element && !Element.prototype.closest) {
+          Element.prototype.closest =
+          function(s) {
+              var matches = (this.document || this.ownerDocument).querySelectorAll(s),
+                  i,
+                  el = this;
+              do {
+                  i = matches.length;
+                  while (--i >= 0 && matches.item(i) !== el) {};
+              } while ((i < 0) && (el = el.parentElement));
+              return el;
+          };
+        }
+
+
+
+
+
         let svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
         let scene = document.getElementById("scene");
         console.log(this.$root.$el);
-        console.log(svg);
-        console.log(scene);
+        // console.log(svg);
+        // console.log(scene);
         this.$root.$el.insertBefore(svg, scene);
         svg.setAttribute("id", "transition");
+        svg.setAttribute("width", window.innerWidth);
+        svg.setAttribute("height", window.innerHeight);
         svg.setAttribute("viewBox", `0 0 ${window.innerWidth} ${window.innerHeight}`);
+        // console.log(e.target);
+        let project = e.target.closest('.project');
+        let svgTarget = project.querySelector('svg');
+        console.log(svgTarget);
+        let svgTargetClipRect = project.querySelector('.clipRect');
+        let svgTargetBounds = svgTargetClipRect.getBoundingClientRect();
+        console.log(svgTarget);
+        console.log(svgTargetBounds);
+        let transitionSVG = document.createElementNS("http://www.w3.org/2000/svg", 'polygon');
+        transitionSVG.setAttribute('points', `${svgTargetBounds.left} ${svgTargetBounds.top} ${svgTargetBounds.right} ${svgTargetBounds.top} ${svgTargetBounds.right} ${svgTargetBounds.bottom} ${svgTargetBounds.left} ${svgTargetBounds.bottom}`);
+        transitionSVG.setAttribute("fill", "#FFA69E");
+        svg.appendChild(transitionSVG);
+        svgTarget.style.display = "none";
+        console.log(project.querySelector('image'));
+        console.log(this.$data);
+
+        // var fontSize = window.getComputedStyle(document.body, null).getPropertyValue('font-size');
+        // fontSize = parseFloat(fontSize);
+        // let height = 20*fontSize;
+
+        let height = window.innerWidth*.35;
+
+        let finishedSVGPoints = `0 0 ${window.innerWidth} 0 ${window.innerWidth} ${height} 0 ${height}`;
+        setTimeout(function(){
+
+          anime({
+            targets: transitionSVG,
+            points: [
+              { value: finishedSVGPoints }
+            ],
+            easing: 'easeOutQuad',
+            duration: 500
+          });
+        }, 1000);
+        // console.log(window.scrollY);
+
+
+
       }
     },
     mounted(){
@@ -81,9 +139,9 @@
         const controller = new ScrollMagic.Controller();
         const ourScene = new ScrollMagic.Scene({
           triggerElement: '.project',
-          triggerHook: .6,
+          triggerHook: .7,
           duration: '30%',
-          reverse: true,
+          reverse: false,
         })
          // .setClassToggle('img', 'in-scene')
          // .setPin('.image')
@@ -143,13 +201,15 @@
   }
   rect{
     // transition: transform .3s;
-    transition: transform .4s cubic-bezier(0.02, 0.1, 0.15, 1);
+    transition: transform .6s cubic-bezier(.34,.77,.51,1);
     transform-origin: 100% 0%;
   }
   svg#transition{
-    position:absolute;
-    left:0;
-    top:0;
+    position:fixed;
+    top: 0;
+    left: 0;
+    // height: 100%;
+    // z-index: -1;
   }
   // .project .text button{
   //   background: #FF9393;

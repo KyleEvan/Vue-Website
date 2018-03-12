@@ -13,10 +13,10 @@ export default new Router({
   mode: 'history',
   routes: [
     {
-      path: '/',
+      path: '*',
       name: 'Home',
       component: Home,
-      meta: { title: 'Home | KP' }
+      meta: { title: 'Kyle Peterson' }
     },
     {
       path: '/work',
@@ -27,7 +27,7 @@ export default new Router({
         {
           path: 'careers-redesign',
           component: WorkCareers,
-          meta: { title: 'Work | KP' }
+          meta: { title: 'Careers Redesign | KP' }
         }
       ]
     },
@@ -43,13 +43,17 @@ export default new Router({
       component: Contact,
       meta: { title: 'Contact | KP' }
     },
-    {
-      path: '*',
-      name: 'NotFound',
-      component: NotFound
-    }
+    // {
+    //   path: '*',
+    //   name: 'NotFound',
+    //   component: NotFound
+    // }
   ],
   scrollBehavior (to, from, savedPosition) {
-    return { x: 0, y: 0 }
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve({ x: 0, y: 0 })
+      }, 1000)
+    })
   }
 })

@@ -6,9 +6,10 @@
     <!-- Top navigation -->
 
     <!-- Main website content -->
-    <transition
+    <transition :duration="1000" mode="out-in"
       v-on:before-enter="beforeEnter"
       v-on:enter="enter"
+      v-on:before-leave="beforeLeave"
       v-on:leave="leave"
       v-bind:css="false"
     >
@@ -16,43 +17,56 @@
     </transition>
 
     <!-- Background shapes scene -->
-    <scene></scene>
+    <!-- <scene></scene> -->
+
+    <div id="scene" ref="scene">
+      <h1 id="name" ref="name">{{ name }}</h1>
+    </div>
+
+
   </div>
 </template>
 
 <script>
   import { TimelineLite } from "gsap";
-  // import router from './router.js'
-
+  import { ShapeScene } from '../shapes.js';
   // Components
   import Nav from './Nav.vue';
-  import Scene from './Scene.vue';
+  // import Scene from './Scene.vue';
 
   export default {
     name: 'app',
     data(){
       return {
+        name: 'Kyle',
+        displayName: true,
+        scene: undefined,
         tl: new TimelineLite({ paused: true })
       }
     },
     components: {
       "navigation": Nav,
-      "scene": Scene
+      // "scene": Scene
     },
     methods:{
-      beforeEnter: function (el){
-
+      beforeEnter: function(el){
+        console.log("before enter")
+        console.log(this.scene);
       },
       enter: function(el, done){
         console.log("transition entering");
+        setTimeout(function(){
+          done();
+        }, 2000);
+      },
+      beforeLeave: function(el){
+        console.log("before leaving");
       },
       leave: function(el, done){
         console.log("transition leaving");
-        // this.tl.to({
-        //
-        // })
-        // this.tl.onComplete = console.log("heyhey");
-        done();
+        setTimeout(function(){
+          done();
+        }, 1000)
 
       }
     },
@@ -63,7 +77,8 @@
 
     },
     mounted(){
-      this.tl.paused(true);
+      // this.tl.paused(true);
+      this.scene = ShapeScene(this.$refs.scene, this.$refs.name);
     },
     watch: {
       $route: function(to, from){
@@ -72,7 +87,6 @@
         const toDepth = to.path.split('/').length;
         const fromDepth = from.path.split('/').length;
         console.log(to);
-        // console.log(fromDepth);
         if(toDepth < fromDepth) console.log('higher level');
         if(toDepth > fromDepth) console.log('lower level');
         if(toDepth == fromDepth) console.log('same level');
@@ -81,3 +95,68 @@
     }
   }
 </script>
+
+<style lang="scss">
+@import '../../style/global.scss';
+
+#scene {
+    position: fixed;
+    z-index: -2;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    svg {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+
+        * {
+            opacity: 0;
+        }
+    }
+    #name {
+        // color: #FF9A91;
+        color: #7B8A96;
+        margin: 0;
+        font-size: 50px;
+        text-transform: uppercase;
+        font-size: 12vw;
+        // font-family: 'Montserrat', sans-serif;
+        font-family: 'InterUI', sans-serif;
+        font-weight: 700;
+        user-select: none;
+
+        span {
+            display: inline-block;
+            position: relative;
+            opacity: 0;
+            line-height: 0.8;
+            padding: 0 0.05em;
+            transform: translateY(100%);
+        }
+    }
+    // .transition > * {
+    //     transition: 5s cubic-bezier(0.02, 0.1, 0.15, 1);
+    // }
+
+}
+
+/****************************************************************
+
+Fallback:
+If the broser doesn't support flexbox, don't display the scene
+
+****************************************************************/
+// @supports not (display:flex) {
+//     #scene {
+//         display: none;
+//     }
+// }
+</style>

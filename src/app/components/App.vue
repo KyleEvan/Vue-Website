@@ -55,18 +55,24 @@
       },
       enter: function(el, done){
         console.log("transition entering");
-        setTimeout(function(){
-          done();
-        }, 2000);
+        // setTimeout(function(){
+        //   done();
+        // }, 1000);
       },
       beforeLeave: function(el){
         console.log("before leaving");
+        let main = document.querySelector('.main');
+        TweenLite.to(main, .5, { y: 50, opacity: 0, ease: Expo.easeIn });
+
       },
       leave: function(el, done){
         console.log("transition leaving");
+
         setTimeout(function(){
+
           done();
-        }, 1000)
+        }, 1200);
+
 
       }
     },

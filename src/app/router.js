@@ -13,7 +13,7 @@ export default new Router({
   mode: 'history',
   routes: [
     {
-      path: '*',
+      path: '/',
       name: 'Home',
       component: Home,
       meta: { title: 'Kyle Peterson' }
@@ -43,11 +43,11 @@ export default new Router({
       component: Contact,
       meta: { title: 'Contact | KP' }
     },
-    // {
-    //   path: '*',
-    //   name: 'NotFound',
-    //   component: NotFound
-    // }
+    {
+      path: '*',
+      name: 'NotFound',
+      component: NotFound
+    }
   ],
   scrollBehavior (to, from, savedPosition) {
     return new Promise((resolve, reject) => {

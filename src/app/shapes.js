@@ -106,7 +106,7 @@ class Scene { // #scene
     // scene.interactive dictates whether mousemove events should be tracked for shape translations
     this.interactive = false;
 
-    this.sceneSize = 1.2;
+    this.sceneSize = 1.5;
     this.bounds = undefined;
 
     this.name = undefined;

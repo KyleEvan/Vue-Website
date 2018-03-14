@@ -24,15 +24,16 @@ const supportsCSSTransformsOnSVG = (() => {
   document.body.appendChild(svg);
   const result = document.elementFromPoint(1, 1) !== svg;
   svg.parentNode.removeChild(svg);
-  console.log("SVG feature detection:");
-  console.log(result);
+  // console.log("SVG feature detection:");
+  // console.log(result);
   return result;
 })();
 
 Vue.mixin({
   data: function () {
     return {
-      supportsSVGCSSTransforms: supportsCSSTransformsOnSVG
+      supportsSVGCSSTransforms: supportsCSSTransformsOnSVG,
+      transitionTime: 1000
     }
   }
 });
@@ -41,6 +42,9 @@ new Vue({
   el: '#app',
   router,
   template: '<App/>',
-  components: { App }
+  components: { App },
+  created(){
+    console.log('app created');
+  }
   // mixins: [mixins]
 });

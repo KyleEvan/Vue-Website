@@ -1,62 +1,59 @@
 <template>
-  <div class="view">
+  <div>
 
 
-    <section class="project">
+    <section class="project" data-align="rtl">
       <div class="text">
         <h2>Careers Redesign</h2>
         <p>
           Careers Website Redesign for Excellus BCBS and Univera Healthcare. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Varius quam quisque id diam vel quam elementum pulvinar. Purus ut faucibus pulvinar elementum integer enim neque.
         </p>
-        <router-link @click.native="transitionToProject" to="/work/careers-redesign">View Project</router-link>
-        <!-- <a href="#" @click.prevent="transitionToProject">View Project</a> -->
+        <router-link @click.native="handleClick" to="/work/careers-redesign">View Project</router-link>
       </div>
       <div class="image">
-        <svg class="careers-redesign" ref="svg">
-          <!-- <defs>
-            <clipPath id="clip">
-              <rect class="clipRect" ref="clippedRect" x="0" y="0" width="100%" height="100%"/>
-            </clipPath>
-          </defs> -->
-          <rect class="clipRect" ref="clippedRect" x="0" y="0" width="100%" height="100%" fill="#FFA69E" clip-path="url(#clip)" />
-          <image ref="img" x="0" y="0" width="100%" height="100%" v-bind:xlink:href='img' clip-path="url(#clip)" />
+        <svg>
+          <rect x="0" y="0" width="100%" height="100%" fill="#FFA69E" />
+          <image x="0" y="0" width="100%" height="100%" v-bind:xlink:href='img' />
         </svg>
       </div>
     </section>
 
-    <section class="project">
+    <!-- <section class="project">
 
       <div class="image">
+        <svg class="project-image">
+
+        </svg>
       </div>
       <div class="text">
         <h2>Another Project</h2>
       </div>
 
-    </section>
+    </section> -->
 
 
   </div>
 </template>
 
 <script>
-  // import Project from './Project.vue';
   import { TimelineLite } from "gsap";
   import ScrollMagic from "scrollmagic";
   import anime from 'animejs';
+
+  // Images
   import careersPNG from '../../images/career-areas-mobile.png';
 
   export default {
     name: 'home',
     data () {
       return {
-        img: careersPNG,
-        svg: this.$refs.svg
+        img: careersPNG
       }
     },
     methods:{
-      transitionToProject: function(e){
+      handleClick: function(e){
 
-        // MDN Polyfill for closest()
+        // MDN Polyfill for closest() to support IE 11
         if (window.Element && !Element.prototype.closest) {
           Element.prototype.closest =
           function(s) {
@@ -77,8 +74,7 @@
 
         let svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
         let scene = document.getElementById("scene");
-        // console.log(svg);
-        // console.log(scene);
+
         this.$root.$el.insertBefore(svg, scene);
         svg.setAttribute("id", "transition");
         svg.setAttribute("width", window.innerWidth);
@@ -88,8 +84,8 @@
         let project = e.target.closest('.project');
         let svgTarget = project.querySelector('svg');
         let svgTargetImage = svgTarget.querySelector('image');
+
         let svgTargetBounds = svgTarget.getBoundingClientRect();
-        console.log(svgTargetBounds);
         svgTargetImage.setAttribute('x', svgTargetBounds.x);
         svgTargetImage.setAttribute('y', svgTargetBounds.y);
         svgTargetImage.setAttribute('width', svgTargetBounds.width);
@@ -101,80 +97,130 @@
         svg.appendChild(svgTargetImage);
         svgTarget.style.display = "none";
 
-        // var fontSize = window.getComputedStyle(document.body, null).getPropertyValue('font-size');
-        // fontSize = parseFloat(fontSize);
-        // let height = 20*fontSize;
 
         let height = window.innerWidth*.35;
-
         let finishedSVGPoints = `0 0 ${window.innerWidth} 0 ${window.innerWidth} ${height} 0 ${height}`;
+
+        // let imageLoc = svgTargetImage.getAttribute('data-svg-origin').split(" ").map(Number);
+        // imageLoc = [(imageLoc[0] + svgTargetBounds.x), (imageLoc[1] + svgTargetBounds.y) ];
+
+
+        let scale = (height/svgTargetBounds.height);
+        let newImageWidth = scale*svgTargetBounds.width;
+
+        let imageLoc = {
+          x: svgTargetBounds.x,
+          y: svgTargetBounds.y
+        }
+
+        let newImageLoc = {
+          x: (window.innerWidth/2) - (newImageWidth/2),
+          y: 0
+        }
+
+        let transform = {
+          x: (newImageLoc.x - imageLoc.x),
+          y: (newImageLoc.y - imageLoc.y),
+          scale: scale
+        }
+        console.log(transform);
 
         setTimeout(function(){
 
-          let tl = anime.timeline();
-          tl
+          anime.timeline()
           .add({
             targets: transitionSVG,
             points: [
               { value: finishedSVGPoints }
             ],
-            easing: 'easeOutQuad',
-            duration: 500
+            easing: 'easeOutQuint',
+            duration: 700
           })
+          .add({
+            targets: svgTargetImage,
+            translateX: transform.x,
+            translateY: transform.y,
+            // scale: transform.scale,
+            easing: 'easeOutQuint',
+            duration: 700,
+            offset: 0
+          })
+
+          // TweenLite.to(svgTargetImage, .5,
+          // {
+          //   x: transform.x,
+          //   y: transform.y,
+          //   scale: 1,
+          //   ease: 'Sine.easeOut'
+          // })
           // .add({
           //   targets: svgTargetImage,
-          //   translateX: window.innerWidth/2,
-          //   translateY: ,
+          //   translateX: transform.x,
+          //   translateY: transform.y,
+          //   scale: transform.scale,
           //   easing: 'easeOutQuad',
           //   duration: 500,
           //   offset: 0
           // })
-          // anime.timeline({
-          //   targets: transitionSVG,
-          //   points: [
-          //     { value: finishedSVGPoints }
-          //   ],
-          //   easing: 'easeOutQuad',
-          //   duration: 500
-          // });
-
 
         }, 1000);
-        // console.log(window.scrollY);
-
-
-
       }
     },
     mounted(){
-      // console.log(this.supportsSVGCSSTransforms);
-      let rect = this.$refs.clippedRect;
-      let image = this.$refs.img;
-      let svg = this.$refs.svg
 
-      const tl = new TimelineLite({ paused:true });
+      let projects = document.querySelectorAll('.project');
+
       if(this.supportsSVGCSSTransforms){
-        TweenLite.set(image, { transformOrigin:'50% 50%' });
-        // tl.fromTo(rect, 4, { scaleX: .075}, { scaleX: 1, ease: Circ.easeIn });
-        // tl.fromTo(rect, 4, { scaleY: .1 }, { scaleY: 1, ease: Circ.easeIn });
-        // tl.fromTo(image, 2, { opacity: 0, scale: 1.2, ease: Power4.easeOut }, { opacity: 1, scale: 1 });
-        // tl.fromTo(svg, 1, {opacity: 0, x: '100%'}, {opacity: 1, x: '0%', ease: Power4.easeOut });
-
         const controller = new ScrollMagic.Controller();
-        const ourScene = new ScrollMagic.Scene({
-          triggerElement: '.project',
-          triggerHook: .55,
-          // duration: '50%',
-          reverse: true,
-        })
-         .setClassToggle(svg, 'in-scene')
-         // .setPin('.image')
-        // .addIndicators({
-        //   name: 'fade scene',
-        //   colorTrigger: 'black',
-        //   colorStart: '#756C95'
-        // })
-        .addTo(controller);
+        const tl = new TimelineLite();
+        for(let i = 0; i < projects.length; i++){
+          let project = projects[i];
+          let alignment = project.getAttribute('data-align');
+          let svg = project.querySelector('.image > svg');
+          let image = project.querySelector('.image > svg > image');
+
+          if(svg || image){
+            tl.set([svg, image], { opacity: 0 });
+          }
+          else{
+            console.log("Project has no svg or image");
+          }
+
+          if(alignment == 'ltr'){
+            tl.set(svg, { x: '100%' });
+            tl.set(image, { x: '100%' });
+          }
+          else if(alignment == 'rtl'){
+            tl.set(svg, { x: '-100%' });
+            tl.set(image, { x: '-100%' });
+          }
+          else{
+            console.log("Project has no alignment");
+          }
+
+
+          let projectScene = new ScrollMagic.Scene({
+            triggerElement: project,
+            triggerHook: .55,
+            reverse: false
+          })
+          .on('start', () => {
+            console.log("starting animation " + i);
+            tl.to(svg, 1,
+            {
+              opacity: 1,
+              x: '0%',
+              ease: Expo.easeInOut
+            })
+            .to(image, 1,
+            {
+              opacity: 1,
+              x: '0%',
+              ease: Circ.easeInOut
+            }, 0)
+          })
+          .addTo(controller);
+        }
 
         // ourScene.on("progress", function (event) {
           // let progress = event.progress
@@ -185,7 +231,6 @@
       else{
         console.log("doesn't support svg transformations, no animation")
       }
-
     }
   }
 
@@ -208,7 +253,6 @@
   .project{
     position: relative;
     width: 100%;
-    // height: 80vh; /* ugly IE workaround.. */
     min-height: 70vh;
     display: flex;
     align-items: center;
@@ -218,6 +262,7 @@
       width:34%;
       margin-left:6rem;
     }
+
     .image{
       display: flex;
       overflow: hidden;
@@ -226,29 +271,13 @@
         position:relative;
         width: 42vw;
         height: 31vw;
-        transition: .6s cubic-bezier(0.770, 0.000, 0.175, 1.000);
-        transform: translateX(100%);
-        opacity: 0;
-      }
-      svg.in-scene{
-        transform: translateX(0%);
-        opacity: 1;
       }
     }
-  }
-  .project
-
-  rect{
-    // transition: transform .3s;
-    transition: transform .6s cubic-bezier(.34,.77,.51,1);
-    transform-origin: 100% 0%;
   }
   svg#transition{
     position:fixed;
     top: 0;
     left: 0;
-    // height: 100%;
-    // z-index: -1;
   }
   // .project .text button{
   //   background: #FF9393;

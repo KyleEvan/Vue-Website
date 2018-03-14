@@ -6,8 +6,9 @@ import About from './components/About.vue';
 import Contact from './components/Contact.vue';
 import NotFound from './components/NotFound.vue';
 import WorkCareers from './components/Work-Careers.vue';
+import { transitions } from './transitions.js';
 
-Vue.use(Router)
+Vue.use(Router);
 
 export default new Router({
   mode: 'history',
@@ -53,7 +54,7 @@ export default new Router({
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         resolve({ x: 0, y: 0 })
-      }, 1000)
+      }, transitions.duration)
     })
   }
 })

@@ -223,7 +223,7 @@ class Scene { // #scene
           }
 
           TweenLite.to(shape.el, 10, {
-            opacity: 1,
+            opacity: .4,
             x: newX,
             y: newY,
             ease: Expo.easeOut

@@ -73,7 +73,7 @@
 			a, a:visited, a:active{
 	      display: inline-block;
 	      text-decoration: none;
-				color: #717C89;
+				color: #f9fff9;
 				padding: 10px;
 				pointer-events: auto;
 	    }

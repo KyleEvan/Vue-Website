@@ -129,7 +129,7 @@
     }
     #name {
         // color: #FF9A91;
-        color: #7B8A96;
+        color: #f9fff9;
         margin: 0;
         font-size: 50px;
         text-transform: uppercase;

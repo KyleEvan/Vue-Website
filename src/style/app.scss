@@ -40,7 +40,6 @@ html{
   font-size: 14px;
   font-family: 'Roboto', sans-serif;
   line-height: 22px;
-  background: #FFE5E5;
 
   @media (min-width: 720px){
     font-size: 16px;
@@ -54,7 +53,8 @@ html{
 body {
   width: 100%;
   margin: 0;
-  color: #717C89;
+  background: #423E37;
+  color: #f9fff9;
 
   #app{
     width: 100%;

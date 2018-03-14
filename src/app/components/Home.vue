@@ -12,7 +12,7 @@
         <!-- <a href="#" @click.prevent="transitionToProject">View Project</a> -->
       </div>
       <div class="image">
-        <svg ref="svg">
+        <svg class="careers-redesign" ref="svg">
           <!-- <defs>
             <clipPath id="clip">
               <rect class="clipRect" ref="clippedRect" x="0" y="0" width="100%" height="100%"/>
@@ -49,7 +49,8 @@
     name: 'home',
     data () {
       return {
-        img: careersPNG
+        img: careersPNG,
+        svg: this.$refs.svg
       }
     },
     methods:{
@@ -166,7 +167,7 @@
           // duration: '50%',
           reverse: true,
         })
-         .setClassToggle('svg', 'in-scene')
+         .setClassToggle(svg, 'in-scene')
          // .setPin('.image')
         // .addIndicators({
         //   name: 'fade scene',

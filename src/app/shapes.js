@@ -162,8 +162,8 @@ class Scene { // #scene
       scene: this,
       initDelay: 1000,
       tl: new TimelineLite(), //{ paused: true }
-      showLetters: function(targets){
-        // this.tl.eventCallback("onUpdate", this.update);
+      showLetters: function(){
+        let targets = this.scene.name.letterEls;
         this.tl.staggerFromTo(targets, 1, {
           opacity: 0,
           y: "100%"
@@ -223,7 +223,7 @@ class Scene { // #scene
           }
 
           TweenLite.to(shape.el, 10, {
-            opacity: .4,
+            opacity: .3,
             x: newX,
             y: newY,
             ease: Expo.easeOut
@@ -336,7 +336,7 @@ class Scene { // #scene
 
     setTimeout(function() {
 
-      animations.showLetters(name.letterEls);
+      animations.showLetters();
       animations.showShapes(name.shapeEls);
 
     }, animations.initDelay);
@@ -423,7 +423,7 @@ class Letter {
     this.el = el;
     this.scene = scene;
     this.shapes = [];
-    this.totalShapes = 5;
+    this.totalShapes = 4;
     this.init(scene);
   }
   init() {

@@ -36,7 +36,6 @@
 }
 html{
   width: 100%;
-  overflow: auto;
   font-size: 14px;
   font-family: 'Roboto', sans-serif;
   line-height: 22px;
@@ -55,6 +54,7 @@ body {
   margin: 0;
   background: #423E37;
   color: #f9fff9;
+  overflow: auto;
 
   #app{
     width: 100%;

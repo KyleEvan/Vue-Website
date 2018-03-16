@@ -39,6 +39,16 @@
       "navigation": Nav,
       "scene": Scene
     },
+    created(){
+      console.log("Hello App created!");
+      console.log(this.$route);
+      document.title = this.$route.meta.title;
+
+    },
+    mounted(){
+      this.scene = this.$refs.scene;
+      this.scene.init();
+    },
     methods:{
       beforeEnter: function(el){
         console.log("before enter")
@@ -66,16 +76,6 @@
 
 
       }
-    },
-    created(){
-      console.log("Hello App created!");
-      console.log(this.$route);
-      document.title = this.$route.meta.title;
-
-    },
-    mounted(){
-      this.scene = this.$refs.scene;
-      this.scene.init();
     },
     watch: {
       $route: function(to, from){

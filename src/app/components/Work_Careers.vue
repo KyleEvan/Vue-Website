@@ -5,6 +5,9 @@
     <p>
       {{msg}}
     </p>
+    <p>
+      {{ saying }}
+    </p>
 
   </div>
 </template>
@@ -13,10 +16,10 @@
   // import Project from './Project.vue';
 
   export default {
-    name: 'work-careers',
+    props: ['msg'],
     data () {
       return {
-        msg: 'hey im content'
+        sayig: 'hey im content'
       }
     }
 

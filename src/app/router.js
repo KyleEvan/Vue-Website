@@ -5,7 +5,7 @@ import Work from './components/Work.vue';
 import About from './components/About.vue';
 import Contact from './components/Contact.vue';
 import NotFound from './components/NotFound.vue';
-import WorkCareers from './components/Work-Careers.vue';
+import WorkCareers from './components/Work_Careers.vue';
 import { transitions } from './transitions.js';
 
 Vue.use(Router);
@@ -27,7 +27,9 @@ export default new Router({
       children:[
         {
           path: 'careers-redesign',
+          name: 'Careers-Redesign',
           component: WorkCareers,
+          props: true,
           meta: { title: 'Careers Redesign | KP' }
         }
       ]
@@ -54,6 +56,8 @@ export default new Router({
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         resolve({ x: 0, y: 0 })
+        let body = document.body;
+        body.removeAttribute("style");
       }, transitions.duration)
     })
   }

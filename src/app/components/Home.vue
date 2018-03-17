@@ -30,7 +30,7 @@
         <p>
           Careers Website Redesign for Excellus BCBS and Univera Healthcare. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Varius quam quisque id diam vel quam elementum pulvinar. Purus ut faucibus pulvinar elementum integer enim neque.
         </p>
-        <router-link @click.native="handleClick" to="/work/careers-redesign">View Project</router-link>
+        <a href="#" @click.prevent="handleClick">View Project</a>
       </div>
     </section>
     <!-- <section class="project">
@@ -67,15 +67,17 @@
       }
     },
     methods:{
+      navigateToCareers: function(){
+        console.log("fired!");
+        console.log(this.$router);
+        this.$router.push({name: 'Careers-Redesign', params: { msg:'ello ello' }});
+      },
       handleClick: function(e){
 
 
-
         let body = document.body;
+        body.style.top = `${-(window.scrollY || window.pageYOffset || document.body.scrollTop + (document.documentElement && document.documentElement.scrollTop || 0))}px`;
 
-        body.style.top = `${-document.documentElement.scrollTop}px`;
-        body.style.position = 'fixed';
-        body.style.overflowY = "scroll";
 
 
 
@@ -125,7 +127,7 @@
         let fragment = document.createDocumentFragment();
         let defs = document.createElementNS (xmlns, "defs");
         let clipPath = document.createElementNS (xmlns, "clipPath");
-        clipPath.setAttributeNS(null, 'clipPathUnits', 'userSpaceOnUse');
+        // clipPath.setAttributeNS(null, 'clipPathUnits', 'userSpaceOnUse');
         let clipPathID = 'polyClip';
         clipPath.setAttributeNS(null, 'id', clipPathID);
         let polygon = document.createElementNS(xmlns, 'polygon');
@@ -140,11 +142,13 @@
         let g = document.createElementNS(xmlns, 'g');
         g.setAttributeNS(null, 'clip-path', `url(#${clipPathID})`);
         let image = svgTarget.querySelector('image');
-        image.setAttributeNS(null, 'x', svgTargetBounds.x);
-        image.setAttributeNS(null, 'y', svgTargetBounds.y);
+        image.setAttributeNS(null, 'x', svgTargetBounds.left);
+        image.setAttributeNS(null, 'y', svgTargetBounds.top);
         image.setAttributeNS(null, 'width', svgTargetBounds.width);
         image.setAttributeNS(null, 'height', svgTargetBounds.height);
-        // image.setAttributeNS(null, 'clip-path', `url(#${clipPathID})`);
+        console.log(svgTargetBounds);
+        console.log(image);
+
         clipPath.appendChild(polygon);
         defs.appendChild(clipPath);
         g.appendChild(image);
@@ -175,24 +179,26 @@
         let polygonCenterY = polygonTransformed.height/2;
         let translateX = polygonCenterX - imageCenter[0];
         let translateY = polygonCenterY - imageCenter[1];
-        let scale = (polygonTransformed.height/svgTargetBounds.height) + .15;
+        let scale = (polygonTransformed.height/svgTargetBounds.height) + .2;
 
+        let callback = this.navigateToCareers;
 
-
+        let duration = 1000;
         setTimeout(function(){
-          let bezier = [0.230, 1.000, 0.320, 1.000];
-          let easing = BezierEasing(bezier[0], bezier[1], bezier[2], bezier[3]);
+          let easing =  Power3.easeOut;
 
-          TweenLite.to(image, 1, {
+          TweenLite.to(image, (duration/1000), {
             x: translateX,
             y: translateY,
             scale: scale,
             ease: easing,
             onComplete: () => {
-              // console.log(svgTransition.innerHTML);
+              console.log("callback!");
+              body.style.top = "0"
+              callback();
+              console.log(svgTransition.innerHTML);
               svgTransition.outerHTML = "";
               svgTransition = null;
-              body.removeAttribute("style");
             }
           });
 
@@ -201,26 +207,26 @@
             points: [
               { value: polygonTransformedPoints }
             ],
-            easing: bezier,
-            duration: 1000
+            easing: 'easeOutQuart',
+            duration: (duration - 50)
           });
 
 
 
-        }, 1000);
+        }, 0);
       },
-      toggleScroll: function(){
-        let body = document.body;
-        this.freezeScroll = !this.freezeScroll;
-        if(this.freezeScroll){
-          body.style.top = `${-document.documentElement.scrollTop}px`;
-          body.style.position = 'fixed';
-          body.style.overflowY = "scroll";
-        }
-        else{
-          body.removeAttribute("style");
-        }
-      }
+      // toggleScroll: function(){
+      //   let body = document.body;
+      //   this.freezeScroll = !this.freezeScroll;
+      //   if(this.freezeScroll){
+      //     body.style.top = `${-document.documentElement.scrollTop}px`;
+      //     body.style.position = 'fixed';
+      //     body.style.overflowY = "scroll";
+      //   }
+      //   else{
+      //     body.removeAttribute("style");
+      //   }
+      // }
     },
     mounted(){
 

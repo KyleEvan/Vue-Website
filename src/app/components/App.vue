@@ -56,9 +56,9 @@
       },
       enter: function(el, done){
         console.log("transition entering");
-        // setTimeout(function(){
-        //   done();
-        // }, 1000);
+        setTimeout(function(){
+          done();
+        }, 1000);
       },
       beforeLeave: function(el){
         console.log("before leaving");
@@ -69,8 +69,10 @@
       leave: function(el, done){
         console.log("transition leaving");
 
+        let body = document.body;
+        body.style.position = 'fixed';
+        body.style.overflowY = "scroll";
         setTimeout(function(){
-
           done();
         }, 1200);
 

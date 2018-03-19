@@ -62,6 +62,8 @@
 	nav{
       width: 100%;
       position: fixed;
+			top:0px;
+			left:0px;
       display: flex;
       align-items: center;
 			z-index: 1;

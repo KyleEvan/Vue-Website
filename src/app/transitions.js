@@ -1,3 +1,3 @@
 exports.transitions = {
-  duration: 1300
+  duration: 1000
 }

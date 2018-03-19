@@ -23,16 +23,14 @@ export default new Router({
       path: '/work',
       name: 'Work',
       component: Work,
-      meta: { title: 'Work | KP' },
-      children:[
-        {
-          path: 'careers-redesign',
-          name: 'Careers-Redesign',
-          component: WorkCareers,
-          props: true,
-          meta: { title: 'Careers Redesign | KP' }
-        }
-      ]
+      meta: { title: 'Work | KP' }
+    },
+    {
+      path: '/careers-redesign',
+      name: 'Careers-Redesign',
+      component: WorkCareers,
+      props: true,
+      meta: { title: 'Careers Redesign | KP' }
     },
     {
       path: '/about',
@@ -55,9 +53,8 @@ export default new Router({
   scrollBehavior (to, from, savedPosition) {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
+
         resolve({ x: 0, y: 0 })
-        let body = document.body;
-        body.removeAttribute("style");
       }, transitions.duration)
     })
   }

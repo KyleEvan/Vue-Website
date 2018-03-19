@@ -1,14 +1,14 @@
 <template>
-  <div>
+  <div class="home">
 
 
-    <section class="project" data-align="rtl">
+    <section class="project" data-align="ltr" data-color="red">
       <div class="text">
         <h2>Careers Redesign</h2>
         <p>
           Careers Website Redesign for Excellus BCBS and Univera Healthcare. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Varius quam quisque id diam vel quam elementum pulvinar. Purus ut faucibus pulvinar elementum integer enim neque.
         </p>
-        <router-link @click.native="handleClick" to="/work/careers-redesign">View Project</router-link>
+        <a href="Careers-Redesign" @click.prevent="handleClick">View Project</a>
       </div>
       <div class="image">
         <svg>
@@ -18,7 +18,7 @@
       </div>
     </section>
 
-    <section class="project" data-align="ltr">
+    <section class="project" data-align="rtl">
       <div class="image">
         <svg>
           <rect x="0" y="0" width="100%" height="100%" fill="#FFA69E" />
@@ -67,21 +67,16 @@
       }
     },
     methods:{
-      navigateToCareers: function(){
-        console.log("fired!");
-        console.log(this.$router);
-        this.$router.push({name: 'Careers-Redesign', params: { msg:'ello ello' }});
-      },
       handleClick: function(e){
 
 
-        let body = document.body;
-        body.style.top = `${-(window.scrollY || window.pageYOffset || document.body.scrollTop + (document.documentElement && document.documentElement.scrollTop || 0))}px`;
+        // let body = document.body;
 
 
 
 
 
+        if(e.target.getAttribute("href")) this.$router.push({name: e.target.getAttribute("href"), params: { msg:'ello ello' }});
 
         // MDN Polyfill for closest() to support IE 11
         if (window.Element && !Element.prototype.closest) {
@@ -101,7 +96,6 @@
 
 
 
-        const tl = new TimelineLite();
         const xmlns = "http://www.w3.org/2000/svg";
 
         let svgTransition = document.createElementNS(xmlns, "svg");
@@ -161,7 +155,7 @@
         svgTarget.style.display = "none";
 
         // Set the transform origin for the image to the center of the element
-        tl.set(image, {transformOrigin: '50% 50%'});
+        this.tl.set(image, {transformOrigin: '50% 50%'});
         let imageCenter = image.getAttribute('data-svg-origin').split(" ").map(Number);
 
 
@@ -181,11 +175,12 @@
         let translateY = polygonCenterY - imageCenter[1];
         let scale = (polygonTransformed.height/svgTargetBounds.height) + .2;
 
-        let callback = this.navigateToCareers;
+        // this.navigateToCareers();
+        // let callback = this.navigateToCareers;
 
         let duration = 1000;
         setTimeout(function(){
-          let easing =  Power3.easeOut;
+          let easing =  Expo.easeOut;
 
           TweenLite.to(image, (duration/1000), {
             x: translateX,
@@ -193,9 +188,8 @@
             scale: scale,
             ease: easing,
             onComplete: () => {
-              console.log("callback!");
-              body.style.top = "0"
-              callback();
+              // console.log("callback!");
+              // callback();
               console.log(svgTransition.innerHTML);
               svgTransition.outerHTML = "";
               svgTransition = null;
@@ -207,13 +201,13 @@
             points: [
               { value: polygonTransformedPoints }
             ],
-            easing: 'easeOutQuart',
-            duration: (duration - 50)
+            easing: 'easeOutExpo',
+            duration: (duration - 10)
           });
 
 
 
-        }, 0);
+        }, 700);
       },
       // toggleScroll: function(){
       //   let body = document.body;
@@ -229,7 +223,7 @@
       // }
     },
     mounted(){
-
+      this.tl = new TimelineLite();
       let projects = document.querySelectorAll('.project');
 
       if(this.supportsSVGCSSTransforms){
@@ -299,19 +293,25 @@
 
 <style lang="scss">
   @import '../../style/global.scss';
-
+  .home{
+    padding: 100vh 8% 3em 8% !important;
+  }
   .project a{
     display: inline-block;
     padding: 1rem;
-    background: #FFA69E;
-    color: $primary-white;
     border-radius: 3px;
     font-weight: 600;
     letter-spacing: .5px;
     text-decoration: none;
   }
 
-  .project{
+  .project[data-color="red"] a{
+    background: #FFA69E;
+    color: #F9FFF9;
+  }
+
+
+  .project[data-align="ltr"]{
     position: relative;
     width: 100%;
     min-height: 90vh;
@@ -321,7 +321,7 @@
 
     .text{
       width:34%;
-      margin-left:6rem;
+      margin-left:8%;
     }
 
     .image{
@@ -335,6 +335,24 @@
       }
     }
   }
+
+  .project[data-align="rtl"]{
+    .text{
+      width: 34%;
+      margin-right: 8%;
+    }
+    .image{
+      display: flex;
+      overflow: hidden;
+
+      svg{
+        position:relative;
+        width: 42vw;
+        height: 31vw;
+      }
+    }
+  }
+
   svg#transition{
     position:fixed;
     top: 0;

@@ -1,14 +1,15 @@
 <template>
   <div>
-
-    <h2>Careers Redesign</h2>
-    <p>
-      {{msg}}
-    </p>
-    <p>
-      {{ saying }}
-    </p>
-
+    <div id="banner"></div>
+    <div class="content">
+      <h2>Careers Redesign</h2>
+      <p>
+        {{msg}}
+      </p>
+      <p>
+        {{ saying }}
+      </p>
+    </div>
   </div>
 </template>
 
@@ -19,7 +20,7 @@
     props: ['msg'],
     data () {
       return {
-        sayig: 'hey im content'
+        saying: 'hey im content'
       }
     }
 
@@ -28,5 +29,12 @@
 
 <style lang="scss" scoped>
   // @import '../../style/global.scss';
-
+  #banner{
+    height: 35vw;
+    width: 100%;
+    background: #FFA69E;
+  }
+  .content{
+    padding: 5em 8% 3em 8%;
+  }
 </style>

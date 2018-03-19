@@ -80,5 +80,9 @@ module.exports = {
       contentBase: './src/public',  //source of static assets
       historyApiFallback: true,
       port: 3000, // port to run dev-server
+      watchOptions: {
+        aggregateTimeout: 300,
+        poll: true
+      }
   }
 };

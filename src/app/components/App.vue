@@ -4,7 +4,7 @@
     <navigation />
 
     <!-- Main website content -->
-    <transition
+    <transition mode="out-in"
       v-on:before-enter="beforeEnter"
       v-on:enter="enter"
       v-on:before-leave="beforeLeave"
@@ -53,28 +53,32 @@
       beforeEnter: function(el){
         console.log("before enter")
         console.log(this.scene);
+
       },
       enter: function(el, done){
-        console.log("transition entering");
         setTimeout(function(){
-          done();
-        }, 1000);
+          console.log("transition entering");
+        }, 1000)
       },
       beforeLeave: function(el){
         console.log("before leaving");
+
+        let body = document.body;
+        body.style.top = `${-(window.scrollY || window.pageYOffset || document.body.scrollTop + (document.documentElement && document.documentElement.scrollTop || 0))}px`;
+        body.style.position = 'fixed';
+        body.style.overflowY = "scroll";
+
         let main = document.querySelector('.main');
         TweenLite.to(main, .5, { y: 50, opacity: 0, ease: Expo.easeIn });
 
       },
       leave: function(el, done){
         console.log("transition leaving");
-
-        let body = document.body;
-        body.style.position = 'fixed';
-        body.style.overflowY = "scroll";
         setTimeout(function(){
+          let body = document.body;
+          body.removeAttribute("style");
           done();
-        }, 1200);
+        }, 1600);
 
 
       }

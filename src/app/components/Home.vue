@@ -76,7 +76,8 @@
 
 
 
-        if(e.target.getAttribute("href")) this.$router.push({name: e.target.getAttribute("href"), params: { msg:'ello ello' }});
+        // if(e.target.getAttribute("href")) this.$router.push({name: e.target.getAttribute("href"), params: { msg:'ello ello' }});
+
 
         // MDN Polyfill for closest() to support IE 11
         if (window.Element && !Element.prototype.closest) {
@@ -163,7 +164,7 @@
           x: 0,
           y: 0,
           width: window.innerWidth,
-          height: window.innerWidth*.35 // 35vw essentially
+          height: window.innerWidth*.35// 35vw essentially
         }
 
         let polygonTransformedPoints = `${polygonTransformed.x} ${polygonTransformed.y} ${polygonTransformed.width} ${polygonTransformed.y} ${polygonTransformed.width} ${polygonTransformed.height} ${polygonTransformed.x} ${polygonTransformed.height}`;
@@ -173,14 +174,14 @@
         let polygonCenterY = polygonTransformed.height/2;
         let translateX = polygonCenterX - imageCenter[0];
         let translateY = polygonCenterY - imageCenter[1];
-        let scale = (polygonTransformed.height/svgTargetBounds.height) + .2;
+        let scale = (polygonTransformed.height/svgTargetBounds.height);
 
         // this.navigateToCareers();
         // let callback = this.navigateToCareers;
 
-        let duration = 1000;
+        let duration = 500;
         setTimeout(function(){
-          let easing =  Expo.easeOut;
+          let easing =  Power1.easeOut;
 
           TweenLite.to(image, (duration/1000), {
             x: translateX,
@@ -191,8 +192,8 @@
               // console.log("callback!");
               // callback();
               console.log(svgTransition.innerHTML);
-              svgTransition.outerHTML = "";
-              svgTransition = null;
+              // svgTransition.outerHTML = "";
+              // svgTransition = null;
             }
           });
 
@@ -201,26 +202,15 @@
             points: [
               { value: polygonTransformedPoints }
             ],
-            easing: 'easeOutExpo',
-            duration: (duration - 10)
+            easing: 'easeOutQuad',
+            duration: duration
           });
 
 
 
         }, 700);
-      },
-      // toggleScroll: function(){
-      //   let body = document.body;
-      //   this.freezeScroll = !this.freezeScroll;
-      //   if(this.freezeScroll){
-      //     body.style.top = `${-document.documentElement.scrollTop}px`;
-      //     body.style.position = 'fixed';
-      //     body.style.overflowY = "scroll";
-      //   }
-      //   else{
-      //     body.removeAttribute("style");
-      //   }
-      // }
+      }
+
     },
     mounted(){
       this.tl = new TimelineLite();

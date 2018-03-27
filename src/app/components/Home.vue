@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div ref="main" class="home">
 
 
     <section class="project" data-align="ltr" data-color="red">
@@ -61,9 +61,12 @@
 
   export default {
     name: 'home',
+
     data () {
       return {
-        img: careersPNG
+        img: careersPNG,
+        tl: new TimelineLite()
+
       }
     },
     methods:{
@@ -213,12 +216,23 @@
 
     },
     mounted(){
-      this.tl = new TimelineLite();
       let projects = document.querySelectorAll('.project');
 
       if(this.supportsSVGCSSTransforms){
         const controller = new ScrollMagic.Controller();
         const tl = new TimelineLite();
+
+        let nameScene = new ScrollMagic.Scene({
+          triggerElement: this.$refs.main,
+          triggerHook: 0,
+          duration: .05,
+          reverse: true
+        })
+        .on('end', () => {
+          console.log("name scene ended")
+        })
+        .addTo(controller);
+
         for(let i = 0; i < projects.length; i++){
           let project = projects[i];
           let alignment = project.getAttribute('data-align');
@@ -251,13 +265,13 @@
             reverse: false
           })
           .on('start', () => {
-            tl.to(svg, 1,
+            tl.to(svg, 1.3,
             {
               opacity: 1,
               x: '0%',
               ease: Expo.easeInOut
             })
-            .to(image, 1,
+            .to(image, 1.3,
             {
               opacity: 1,
               x: '0%',

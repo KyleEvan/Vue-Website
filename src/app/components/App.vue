@@ -47,6 +47,7 @@
     },
     mounted(){
       this.scene = this.$refs.scene;
+      console.log(Scene);
       this.scene.init();
     },
     methods:{
@@ -59,6 +60,10 @@
         setTimeout(function(){
           console.log("transition entering");
         }, 1000)
+        if(this.$route.meta.showName){
+          console.log("Show Name");
+          
+        }
       },
       beforeLeave: function(el){
         console.log("before leaving");

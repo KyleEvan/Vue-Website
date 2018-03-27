@@ -105,10 +105,11 @@ class Scene { // #scene
     this.ready = false;
     // scene.interactive dictates whether mousemove events should be tracked for shape translations
     this.interactive = false;
-
-    this.sceneSize = 1.5;
+    // Max boundaries of the scene in relation to the window. 1 = window size
+    this.sceneSize = 1.3;
     this.bounds = undefined;
 
+    this.showLetters = true;
     this.name = undefined;
     // DOM element references
     this.DOM = {
@@ -183,16 +184,17 @@ class Scene { // #scene
           ease: Elastic.easeIn.config(1, 0.75)
         }, .1);
       },
-      showShapes: function(targets){
+      showShapes: function(){
+        let targets = this.scene.name.shapeEls;
         for(let i = 0; i < targets.length; i++){
           let target = targets[i];
-          this.tl.to(target, .9, {
+          this.tl.to(target, 1, {
             opacity: 1,
             x: getRandomInt(this.scene.bounds.left, this.scene.bounds.right),
             y: getRandomInt(this.scene.bounds.top, this.scene.bounds.bottom),
             scale: 1,
             ease: Expo.easeOut
-          }, "-=.89");
+          }, "-=.98");
           if(i == (targets.length - 1)) {
             let scene = this.scene;
             setTimeout(function(){
@@ -200,6 +202,8 @@ class Scene { // #scene
             }, 1000);
           }
         }
+
+
       },
       moveShapes: function(mouseMove){
 
@@ -227,7 +231,7 @@ class Scene { // #scene
             x: newX,
             y: newY,
             ease: Expo.easeOut
-          }).delay(index*.02).smoothChildTiming = true;
+          }).delay(index*.06).smoothChildTiming = true;
 
         });
       },
@@ -317,7 +321,6 @@ class Scene { // #scene
       bottom: (el.bottom/2)*this.sceneSize,
       left: (el.right/-2)*this.sceneSize
     };
-    console.log(this.bounds)
   }
   createScene() {
     // Add class to svg
@@ -335,8 +338,7 @@ class Scene { // #scene
     let animations = this.animations;
 
     setTimeout(function() {
-
-      animations.showLetters();
+      if(scene.showLetters) animations.showLetters();
       animations.showShapes(name.shapeEls);
 
     }, animations.initDelay);
@@ -423,7 +425,7 @@ class Letter {
     this.el = el;
     this.scene = scene;
     this.shapes = [];
-    this.totalShapes = 4;
+    this.totalShapes = 3;
     this.init(scene);
   }
   init() {
@@ -446,7 +448,7 @@ class Shape {
       el: letter,
       props: letterProps
     };
-    this.scale = getRandomInt(letterProps.width * .1, letterProps.width * .8); // scale will be 10% and 100% of the letter's width
+    this.scale = getRandomInt(letterProps.width * .1, letterProps.width * .5); // scale will be 10% and 100% of the letter's width
     this.x = (letterProps.left + letterProps.width / 2);
     this.y = (letterProps.top - letterProps.height / 2);
     this.z = this.scale / letterProps.width;

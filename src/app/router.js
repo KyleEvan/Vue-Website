@@ -17,7 +17,7 @@ export default new Router({
       path: '/',
       name: 'Home',
       component: Home,
-      meta: { title: 'Kyle Peterson' }
+      meta: { title: 'Kyle Peterson', showName: true }
     },
     {
       path: '/work',

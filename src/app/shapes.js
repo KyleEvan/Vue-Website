@@ -106,7 +106,7 @@ class Scene { // #scene
     // scene.interactive dictates whether mousemove events should be tracked for shape translations
     this.interactive = false;
     // Max boundaries of the scene in relation to the window. 1 = window size
-    this.sceneSize = 1.3;
+    this.sceneSize = 1.1;
     this.bounds = undefined;
 
     this.showLetters = true;
@@ -227,7 +227,7 @@ class Scene { // #scene
           }
 
           TweenLite.to(shape.el, 10, {
-            opacity: .3,
+            opacity: .4,
             x: newX,
             y: newY,
             ease: Expo.easeOut

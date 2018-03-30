@@ -62,7 +62,7 @@
         }, 1000)
         if(this.$route.meta.showName){
           console.log("Show Name");
-          
+
         }
       },
       beforeLeave: function(el){
@@ -73,8 +73,8 @@
         body.style.position = 'fixed';
         body.style.overflowY = "scroll";
 
-        let main = document.querySelector('.main');
-        TweenLite.to(main, .5, { y: 50, opacity: 0, ease: Expo.easeIn });
+        let content = document.querySelector('.content');
+        TweenLite.to(content, .5, { y: 50, opacity: 0, ease: Expo.easeIn });
 
       },
       leave: function(el, done){

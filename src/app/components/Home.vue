@@ -1,5 +1,5 @@
 <template>
-  <div ref="main" class="home">
+  <div ref="main" class="content">
 
 
     <section class="project" data-align="ltr" data-color="red">
@@ -12,8 +12,8 @@
       </div>
       <div class="image">
         <svg>
-          <rect x="0" y="0" width="100%" height="100%" fill="#FFA69E" />
-          <image x="0" y="0" width="100%" height="100%" v-bind:xlink:href='img' />
+          <rect x="0" y="0" width="100%" height="100%" fill="#FF9A91" />
+          <image x="0" y="0" width="100%" height="120%" v-bind:xlink:href='img' />
         </svg>
       </div>
     </section>
@@ -21,7 +21,7 @@
     <section class="project" data-align="rtl">
       <div class="image">
         <svg>
-          <rect x="0" y="0" width="100%" height="100%" fill="#FFA69E" />
+          <rect x="0" y="0" width="100%" height="100%" fill="#FF9A91" />
           <image x="0" y="0" width="100%" height="100%" v-bind:xlink:href='img' />
         </svg>
       </div>
@@ -54,32 +54,28 @@
   import { TimelineLite } from "gsap";
   import ScrollMagic from "scrollmagic";
   import anime from 'animejs';
-  import BezierEasing from 'bezier-easing';
 
   // Images
   import careersPNG from '../../images/career-areas-mobile.png';
+  import careersScreensPNG from '../../images/careers_screens.png';
 
   export default {
     name: 'home',
 
     data () {
       return {
-        img: careersPNG,
+        bannerHeight: (window.innerWidth*.3),
+        img: careersScreensPNG,
         tl: new TimelineLite()
 
       }
     },
+
     methods:{
+
       handleClick: function(e){
 
-
-        // let body = document.body;
-
-
-
-
-
-        // if(e.target.getAttribute("href")) this.$router.push({name: e.target.getAttribute("href"), params: { msg:'ello ello' }});
+        if(e.target.getAttribute("href")) this.$router.push({name: e.target.getAttribute("href"), params: { msg:'ello ello' }});
 
 
         // MDN Polyfill for closest() to support IE 11
@@ -120,6 +116,9 @@
         let svgTarget = project.querySelector('svg');
         let svgTargetBounds = svgTarget.getBoundingClientRect();
 
+        let imageTarget = svgTarget.querySelector('image');
+        let imageTargetBounds = imageTarget.getBoundingClientRect();
+
 
         // Create Transition SVG DOM structure and then append to svg#transition
         let fragment = document.createDocumentFragment();
@@ -131,7 +130,7 @@
         let polygon = document.createElementNS(xmlns, 'polygon');
         polygon.setAttributeNS(null, 'points', `${svgTargetBounds.left} ${svgTargetBounds.top} ${svgTargetBounds.right} ${svgTargetBounds.top} ${svgTargetBounds.right} ${svgTargetBounds.bottom} ${svgTargetBounds.left} ${svgTargetBounds.bottom}`);
         let rect = document.createElementNS(xmlns, 'rect');
-        rect.setAttributeNS(null, "fill", "#FFA69E");
+        rect.setAttributeNS(null, "fill", "#FF9A91");
         rect.setAttributeNS(null, "x", "0");
         rect.setAttributeNS(null, "y", "0");
         rect.setAttributeNS(null, "width", window.innerWidth);
@@ -139,17 +138,15 @@
         rect.setAttributeNS(null, 'clip-path', `url(#${clipPathID})`);
         let g = document.createElementNS(xmlns, 'g');
         g.setAttributeNS(null, 'clip-path', `url(#${clipPathID})`);
-        let image = svgTarget.querySelector('image');
-        image.setAttributeNS(null, 'x', svgTargetBounds.left);
-        image.setAttributeNS(null, 'y', svgTargetBounds.top);
-        image.setAttributeNS(null, 'width', svgTargetBounds.width);
-        image.setAttributeNS(null, 'height', svgTargetBounds.height);
-        console.log(svgTargetBounds);
-        console.log(image);
+        // let image = svgTarget.querySelector('image');
+        imageTarget.setAttributeNS(null, 'x', imageTargetBounds.left);
+        imageTarget.setAttributeNS(null, 'y', imageTargetBounds.top);
+        imageTarget.setAttributeNS(null, 'width', imageTargetBounds.width);
+        imageTarget.setAttributeNS(null, 'height', imageTargetBounds.height);
 
         clipPath.appendChild(polygon);
         defs.appendChild(clipPath);
-        g.appendChild(image);
+        g.appendChild(imageTarget);
         fragment.appendChild(defs);
         fragment.appendChild(rect);
         fragment.appendChild(g);
@@ -159,59 +156,75 @@
         svgTarget.style.display = "none";
 
         // Set the transform origin for the image to the center of the element
-        this.tl.set(image, {transformOrigin: '50% 50%'});
-        let imageCenter = image.getAttribute('data-svg-origin').split(" ").map(Number);
+        this.tl.set(imageTarget, {transformOrigin: '50% 50%'});
+        let imageCenter = imageTarget.getAttribute('data-svg-origin').split(" ").map(Number);
 
 
         let polygonTransformed = {
           x: 0,
           y: 0,
           width: window.innerWidth,
-          height: window.innerWidth*.35// 35vw essentially
-        }
+          height: this.bannerHeight // 35vw essentially
+        };
 
         let polygonTransformedPoints = `${polygonTransformed.x} ${polygonTransformed.y} ${polygonTransformed.width} ${polygonTransformed.y} ${polygonTransformed.width} ${polygonTransformed.height} ${polygonTransformed.x} ${polygonTransformed.height}`;
 
 
         let polygonCenterX = polygonTransformed.width/2;
         let polygonCenterY = polygonTransformed.height/2;
+        console.log(polygonCenterX);
+        console.log(polygonCenterY);
         let translateX = polygonCenterX - imageCenter[0];
         let translateY = polygonCenterY - imageCenter[1];
-        let scale = (polygonTransformed.height/svgTargetBounds.height);
+        console.log(imageCenter[0]);
 
-        // this.navigateToCareers();
-        // let callback = this.navigateToCareers;
 
-        let duration = 500;
+
+        let scale = (this.bannerHeight*1.2)/imageTargetBounds.height;
+
+        // console.log("w: "+polygonTransformed.width);
+        // console.log("w: "+imageTargetBounds.width);
+        //
+        // console.log("h: "+polygonTransformed.height);
+        // console.log("h: "+imageTargetBounds.height);
+
+        // let scale = ( imageTargetBounds.height/polygonTransformed.height );
+
+
+
+        let duration = 800;
         setTimeout(function(){
-          let easing =  Power1.easeOut;
+          let easing =  Power2.easeInOut;
 
-          TweenLite.to(image, (duration/1000), {
+          TweenLite.to(imageTarget, (duration/1000), {
             x: translateX,
             y: translateY,
             scale: scale,
             ease: easing,
             onComplete: () => {
               // console.log("callback!");
-              // callback();
               console.log(svgTransition.innerHTML);
               // svgTransition.outerHTML = "";
-              // svgTransition = null;
+              svgTransition = null;
             }
           });
+          // TweenLite.to(rect, (duration/1000), {
+          //   opacity: 0,
+          //   ease: easing
+          // })
 
           anime({
             targets: polygon,
             points: [
               { value: polygonTransformedPoints }
             ],
-            easing: 'easeOutQuad',
-            duration: duration
+            easing: 'easeInOutCubic',
+            duration: duration - 60
           });
 
 
 
-        }, 700);
+        }, 900);
       }
 
     },
@@ -222,16 +235,16 @@
         const controller = new ScrollMagic.Controller();
         const tl = new TimelineLite();
 
-        let nameScene = new ScrollMagic.Scene({
-          triggerElement: this.$refs.main,
-          triggerHook: 0,
-          duration: .05,
-          reverse: true
-        })
-        .on('end', () => {
-          console.log("name scene ended")
-        })
-        .addTo(controller);
+        // let nameScene = new ScrollMagic.Scene({
+        //   triggerElement: this.$refs.main,
+        //   triggerHook: 0,
+        //   duration: .05,
+        //   reverse: true
+        // })
+        // .on('end', () => {
+        //   console.log("name scene ended")
+        // })
+        // .addTo(controller);
 
         for(let i = 0; i < projects.length; i++){
           let project = projects[i];
@@ -297,8 +310,8 @@
 
 <style lang="scss">
   @import '../../style/global.scss';
-  .home{
-    padding: 100vh 8% 3em 8% !important;
+  .content{
+    padding: 100vh 8% 3em 8%;
   }
   .project a{
     display: inline-block;
@@ -310,7 +323,7 @@
   }
 
   .project[data-color="red"] a{
-    background: #FFA69E;
+    background: #FF9A91;
     color: #F9FFF9;
   }
 
@@ -335,7 +348,9 @@
       svg{
         position:relative;
         width: 42vw;
-        height: 31vw;
+        height: 25.2vw;
+
+
       }
     }
   }

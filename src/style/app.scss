@@ -52,12 +52,17 @@ html{
 body {
   width: 100%;
   margin: 0;
-  background: #423E37;
-  color: #f9fff9;
+  background: #f9fff9;
+  color: #423A2F;
   overflow: auto;
+  font-family: 'InterUI', sans-serif;
+
 
   #app{
     width: 100%;
-    
+
   }/* end of app */
 }/* end of body */
+/* h2{
+  font-size: 1..6em;
+} */

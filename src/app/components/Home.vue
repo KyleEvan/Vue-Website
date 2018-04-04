@@ -2,37 +2,39 @@
   <div>
 
     <div class="container">
-      <section class="project" data-align="ltr" data-color="red">
-        <div class="text">
-          <h2>Careers Redesign</h2>
-          <p>
-            Careers Website Redesign for Excellus BCBS and Univera Healthcare. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Varius quam quisque id diam vel quam elementum pulvinar. Purus ut faucibus pulvinar elementum integer enim neque.
-          </p>
-          <a href="Careers-Redesign" @click.prevent="handleClick">View Project</a>
-        </div>
-        <div class="image">
-          <svg>
-            <rect class="background" x="0" y="0" width="100%" height="100%" :fill="projectColors[0]" />
-            <image x="0" y="0" width="100%" height="120%" v-bind:xlink:href='img' />
-          </svg>
-        </div>
-      </section>
+      <div class="content">
+        <section class="project" data-align="ltr" data-color="red">
+          <div class="text">
+            <h2>Careers Redesign</h2>
+            <p>
+              Careers Website Redesign for Excellus BCBS and Univera Healthcare. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Varius quam quisque id diam vel quam elementum pulvinar. Purus ut faucibus pulvinar elementum integer enim neque.
+            </p>
+            <a href="Careers-Redesign" @click.prevent="handleClick">View Project</a>
+          </div>
+          <div class="image">
+            <svg>
+              <rect class="background" x="0" y="0" width="100%" height="100%" :fill="projectColors[0]" />
+              <image x="0" y="0" width="100%" height="120%" v-bind:xlink:href='img' />
+            </svg>
+          </div>
+        </section>
 
-      <section class="project" data-align="rtl">
-        <div class="image">
-          <svg>
-            <rect class="background" x="0" y="0" width="100%" height="100%" :fill="projectColors[0]" />
-            <image x="0" y="0" width="100%" height="100%" v-bind:xlink:href='img' />
-          </svg>
-        </div>
-        <div class="text">
-          <h2>Careers Redesign</h2>
-          <p>
-            Careers Website Redesign for Excellus BCBS and Univera Healthcare. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Varius quam quisque id diam vel quam elementum pulvinar. Purus ut faucibus pulvinar elementum integer enim neque.
-          </p>
-          <a href="#" @click.prevent="handleClick">View Project</a>
-        </div>
-      </section>
+        <section class="project" data-align="rtl">
+          <div class="image">
+            <svg>
+              <rect class="background" x="0" y="0" width="100%" height="100%" :fill="projectColors[0]" />
+              <image x="0" y="0" width="100%" height="100%" v-bind:xlink:href='img' />
+            </svg>
+          </div>
+          <div class="text">
+            <h2>Careers Redesign</h2>
+            <p>
+              Careers Website Redesign for Excellus BCBS and Univera Healthcare. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Varius quam quisque id diam vel quam elementum pulvinar. Purus ut faucibus pulvinar elementum integer enim neque.
+            </p>
+            <a href="#" @click.prevent="handleClick">View Project</a>
+          </div>
+        </section>
+      </div>
     </div>
 
 
@@ -329,7 +331,8 @@
 
 <style lang="scss" scoped>
   @import '../../style/global.scss';
-  .container{
+
+  .content{
     padding: 100vh 8% 3em 8%;
   }
 

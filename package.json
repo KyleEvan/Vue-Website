@@ -27,14 +27,14 @@
     "vue-html-loader": "^1.2.4",
     "vue-loader": "^13.7.0",
     "vue-template-compiler": "^2.5.13",
-    "webpack-dev-server": "^2.10.1",
-    "write-file-webpack-plugin": "^4.2.0"
+    "webpack-dev-server": "^2.10.1"
   },
   "dependencies": {
     "animejs": "^2.2.0",
     "babel-polyfill": "^6.26.0",
     "charming": "^2.0.1",
     "classlist-polyfill": "^1.2.0",
+    "element-closest": "^2.0.2",
     "flickity": "^2.1.1",
     "scrollmagic": "^2.0.5",
     "vue": "^2.5.13",

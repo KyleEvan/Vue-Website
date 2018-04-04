@@ -73,8 +73,8 @@
         body.style.position = 'fixed';
         body.style.overflowY = "scroll";
 
-        let content = document.querySelector('.content');
-        TweenLite.to(content, .5, { y: 50, opacity: 0, ease: Expo.easeIn });
+        let container = document.querySelector('.container');
+        TweenLite.to(container, .5, { y: 50, opacity: 0, ease: Expo.easeIn });
 
       },
       leave: function(el, done){

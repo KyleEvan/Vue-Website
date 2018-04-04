@@ -1,50 +1,53 @@
 <template>
-  <div ref="main" class="content">
+  <div>
+
+    <div class="container">
+      <section class="project" data-align="ltr" data-color="red">
+        <div class="text">
+          <h2>Careers Redesign</h2>
+          <p>
+            Careers Website Redesign for Excellus BCBS and Univera Healthcare. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Varius quam quisque id diam vel quam elementum pulvinar. Purus ut faucibus pulvinar elementum integer enim neque.
+          </p>
+          <a href="Careers-Redesign" @click.prevent="handleClick">View Project</a>
+        </div>
+        <div class="image">
+          <svg>
+            <rect class="background" x="0" y="0" width="100%" height="100%" :fill="projectColors[0]" />
+            <image x="0" y="0" width="100%" height="120%" v-bind:xlink:href='img' />
+          </svg>
+        </div>
+      </section>
+
+      <section class="project" data-align="rtl">
+        <div class="image">
+          <svg>
+            <rect class="background" x="0" y="0" width="100%" height="100%" :fill="projectColors[0]" />
+            <image x="0" y="0" width="100%" height="100%" v-bind:xlink:href='img' />
+          </svg>
+        </div>
+        <div class="text">
+          <h2>Careers Redesign</h2>
+          <p>
+            Careers Website Redesign for Excellus BCBS and Univera Healthcare. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Varius quam quisque id diam vel quam elementum pulvinar. Purus ut faucibus pulvinar elementum integer enim neque.
+          </p>
+          <a href="#" @click.prevent="handleClick">View Project</a>
+        </div>
+      </section>
+    </div>
 
 
-    <section class="project" data-align="ltr" data-color="red">
-      <div class="text">
-        <h2>Careers Redesign</h2>
-        <p>
-          Careers Website Redesign for Excellus BCBS and Univera Healthcare. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Varius quam quisque id diam vel quam elementum pulvinar. Purus ut faucibus pulvinar elementum integer enim neque.
-        </p>
-        <a href="Careers-Redesign" @click.prevent="handleClick">View Project</a>
-      </div>
-      <div class="image">
-        <svg>
-          <rect x="0" y="0" width="100%" height="100%" fill="#FF9A91" />
-          <image x="0" y="0" width="100%" height="120%" v-bind:xlink:href='img' />
-        </svg>
-      </div>
-    </section>
-
-    <section class="project" data-align="rtl">
-      <div class="image">
-        <svg>
-          <rect x="0" y="0" width="100%" height="100%" fill="#FF9A91" />
-          <image x="0" y="0" width="100%" height="100%" v-bind:xlink:href='img' />
-        </svg>
-      </div>
-      <div class="text">
-        <h2>Careers Redesign</h2>
-        <p>
-          Careers Website Redesign for Excellus BCBS and Univera Healthcare. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Varius quam quisque id diam vel quam elementum pulvinar. Purus ut faucibus pulvinar elementum integer enim neque.
-        </p>
-        <a href="#" @click.prevent="handleClick">View Project</a>
-      </div>
-    </section>
-    <!-- <section class="project">
-
-      <div class="image">
-        <svg class="project-image">
-
-        </svg>
-      </div>
-      <div class="text">
-        <h2>Another Project</h2>
-      </div>
-
-    </section> -->
+    <!-- <svg id="transitionLayer" ref="transitionSVG" width="{{ transitionSVG.width }}" height="{{ transitionSVG.height }}" viewBox="{{ transitionSVG.x transitionSVG.y transitionSVG.width transitionSVG.height }}"> -->
+    <svg id="transitionLayer" ref="transitionSVG" :width="transitionSVG.width" :height="transitionSVG.height" :viewBox="viewbox">
+      <defs>
+        <clipPath id="polyClip">
+          <polygon :points="transitionSVG.polygon.points"></polygon>
+        </clipPath>
+      </defs>
+      <rect :fill="transitionSVG.image.backgroundColor" :x="transitionSVG.x" :y="transitionSVG.y" :width="transitionSVG.width" :height="transitionSVG.height" clip-path="url(#polyClip)"></rect>
+      <g clip-path="url(#polyClip)">
+        <image ref="transitionImage" :x="transitionSVG.image.x" :y="transitionSVG.image.y" :width="transitionSVG.image.width" :height="transitionSVG.image.height" xmlns:xlink="http://www.w3.org/1999/xlink" :xlink:href="transitionSVG.image.src"></image>
+      </g>
+    </svg>
 
 
   </div>
@@ -64,148 +67,140 @@
 
     data () {
       return {
+        projectColors: ['#FF9A91'],
         bannerHeight: (window.innerWidth*.3),
+        images: [],
         img: careersScreensPNG,
-        tl: new TimelineLite()
+        tl: new TimelineLite(),
+
+        transitioning: false,
+        transitionSVG: {
+          x: 0,
+          y: 0,
+          width: document.documentElement.clientWidth,
+          height: document.documentElement.clientHeight,
+          polygon: {
+            points: '0 0 0 0 0 0 0 0'
+          },
+          image: {
+            x: 0,
+            y: 0,
+            width: 0,
+            height: 0,
+            src: '',
+            backgroundColor: 'fff',
+            transform: {
+              translateX: undefined,
+              translateY: undefined,
+              scale: undefined
+            },
+            container: undefined
+          },
+        }
 
       }
     },
-
+    computed:{
+      viewbox(){
+        return `${this.transitionSVG.x} ${this.transitionSVG.y} ${this.transitionSVG.width} ${this.transitionSVG.height}`;
+      }
+    },
     methods:{
+      navigate: function(e){
+        if(e.target.getAttribute("href")) this.$router.push({name: e.target.getAttribute("href"), params: { msg:'ello ello' }});
+      },
+
+      assignAttributes: function(el){
+
+        // reference activated project image
+        let activeProject = el.closest('.project');
+        let activeImage = activeProject.querySelector('image');
+
+        // Filter images array to get image object
+        let matchedImage = this.images.filter((image) => {
+            return image.el === activeImage;
+        })[0];
+
+        this.transitionSVG.image = Object.assign({}, this.transitionSVG.image, matchedImage);
+
+        this.transitionSVG.el = this.$refs.transitionSVG;
+        this.transitionSVG.image.el = this.$refs.transitionImage;
+
+        let containerClientRect = this.transitionSVG.image.referencedSVG.getBoundingClientRect();
+        this.transitionSVG.image.container = containerClientRect;
+        console.log(containerClientRect);
+
+        let imageClientRect = matchedImage.el.getBoundingClientRect();
+        this.transitionSVG.image.x = imageClientRect.left;
+        this.transitionSVG.image.y = imageClientRect.top;
+        console.log(imageClientRect);
+
+      },
 
       handleClick: function(e){
-
-        if(e.target.getAttribute("href")) this.$router.push({name: e.target.getAttribute("href"), params: { msg:'ello ello' }});
-
-
-        // MDN Polyfill for closest() to support IE 11
-        if (window.Element && !Element.prototype.closest) {
-          Element.prototype.closest =
-          function(s) {
-              var matches = (this.document || this.ownerDocument).querySelectorAll(s),
-                  i,
-                  el = this;
-              do {
-                  i = matches.length;
-                  while (--i >= 0 && matches.item(i) !== el) {};
-              } while ((i < 0) && (el = el.parentElement));
-              return el;
-          };
-        }
+        console.log(this.transitionSVG);
 
 
 
+        this.assignAttributes(e.target);
 
-        const xmlns = "http://www.w3.org/2000/svg";
-
-        let svgTransition = document.createElementNS(xmlns, "svg");
-        let scene = document.getElementById("scene");
-        this.$root.$el.insertBefore(svgTransition, scene);
-
-
-        svgTransition.setAttribute("id", "transition");
-        svgTransition.setAttribute("width", window.innerWidth);
-        svgTransition.setAttribute("height", window.innerHeight);
-        svgTransition.setAttribute("viewBox", `0 0 ${window.innerWidth} ${window.innerHeight}`);
-
-
-        // Get the currently selected project,
-        // capture reference to its accompanying svg image,
-        // and get the client rect bounds of the svg image
-        let project = e.target.closest('.project');
-        let svgTarget = project.querySelector('svg');
-        let svgTargetBounds = svgTarget.getBoundingClientRect();
-
-        let imageTarget = svgTarget.querySelector('image');
-        let imageTargetBounds = imageTarget.getBoundingClientRect();
-
-
-        // Create Transition SVG DOM structure and then append to svg#transition
-        let fragment = document.createDocumentFragment();
-        let defs = document.createElementNS (xmlns, "defs");
-        let clipPath = document.createElementNS (xmlns, "clipPath");
-        // clipPath.setAttributeNS(null, 'clipPathUnits', 'userSpaceOnUse');
-        let clipPathID = 'polyClip';
-        clipPath.setAttributeNS(null, 'id', clipPathID);
-        let polygon = document.createElementNS(xmlns, 'polygon');
-        polygon.setAttributeNS(null, 'points', `${svgTargetBounds.left} ${svgTargetBounds.top} ${svgTargetBounds.right} ${svgTargetBounds.top} ${svgTargetBounds.right} ${svgTargetBounds.bottom} ${svgTargetBounds.left} ${svgTargetBounds.bottom}`);
-        let rect = document.createElementNS(xmlns, 'rect');
-        rect.setAttributeNS(null, "fill", "#FF9A91");
-        rect.setAttributeNS(null, "x", "0");
-        rect.setAttributeNS(null, "y", "0");
-        rect.setAttributeNS(null, "width", window.innerWidth);
-        rect.setAttributeNS(null, "height", window.innerHeight);
-        rect.setAttributeNS(null, 'clip-path', `url(#${clipPathID})`);
-        let g = document.createElementNS(xmlns, 'g');
-        g.setAttributeNS(null, 'clip-path', `url(#${clipPathID})`);
-        // let image = svgTarget.querySelector('image');
-        imageTarget.setAttributeNS(null, 'x', imageTargetBounds.left);
-        imageTarget.setAttributeNS(null, 'y', imageTargetBounds.top);
-        imageTarget.setAttributeNS(null, 'width', imageTargetBounds.width);
-        imageTarget.setAttributeNS(null, 'height', imageTargetBounds.height);
-
-        clipPath.appendChild(polygon);
-        defs.appendChild(clipPath);
-        g.appendChild(imageTarget);
-        fragment.appendChild(defs);
-        fragment.appendChild(rect);
-        fragment.appendChild(g);
-        svgTransition.appendChild(fragment);
-
-        // Hide the original svg image
-        svgTarget.style.display = "none";
-
-        // Set the transform origin for the image to the center of the element
-        this.tl.set(imageTarget, {transformOrigin: '50% 50%'});
-        let imageCenter = imageTarget.getAttribute('data-svg-origin').split(" ").map(Number);
-
-
-        let polygonTransformed = {
-          x: 0,
-          y: 0,
-          width: window.innerWidth,
-          height: this.bannerHeight // 35vw essentially
+        // this.tl.set(this.transitionSVG.image.el, {transformOrigin: '50% 50%'});
+        // const transitionImageCenter = this.transitionSVG.image.el.getAttribute('data-svg-origin').split(" ").map(Number);
+        const centers = {
+          center: {
+            x: this.transitionSVG.image.x + this.transitionSVG.image.width/2,
+            y: this.transitionSVG.image.y + this.transitionSVG.image.height/2
+          },
+          newCenter: {
+            x: this.transitionSVG.width/2,
+            y: this.bannerHeight/2
+          }
+        };
+        this.transitionSVG.image = Object.assign({}, this.transitionSVG.image, centers);
+        const imageToContainer_Ratio = this.transitionSVG.image.height/this.transitionSVG.image.container.height;
+        this.transitionSVG.image.transform = {
+          scale: (this.bannerHeight*imageToContainer_Ratio)/this.transitionSVG.image.height,
+          translateX: this.transitionSVG.image.newCenter.x - this.transitionSVG.image.center.x,
+          translateY: this.transitionSVG.image.newCenter.y - this.transitionSVG.image.center.y
         };
 
-        let polygonTransformedPoints = `${polygonTransformed.x} ${polygonTransformed.y} ${polygonTransformed.width} ${polygonTransformed.y} ${polygonTransformed.width} ${polygonTransformed.height} ${polygonTransformed.x} ${polygonTransformed.height}`;
+
+        this.transitionSVG.polygon.el = this.transitionSVG.el.querySelector('polygon');
+
+        const polygon = this.transitionSVG.image.container;
+        this.transitionSVG.polygon.points = `${polygon.left} ${polygon.top} ${polygon.right} ${polygon.top} ${polygon.right} ${polygon.bottom} ${polygon.left} ${polygon.bottom}`;
+
+        const polygonTransformedPoints = `${this.transitionSVG.x} ${this.transitionSVG.y} ${this.transitionSVG.width} ${this.transitionSVG.y} ${this.transitionSVG.width} ${this.bannerHeight} ${this.transitionSVG.x} ${this.bannerHeight}`;
 
 
-        let polygonCenterX = polygonTransformed.width/2;
-        let polygonCenterY = polygonTransformed.height/2;
-        console.log(polygonCenterX);
-        console.log(polygonCenterY);
-        let translateX = polygonCenterX - imageCenter[0];
-        let translateY = polygonCenterY - imageCenter[1];
-        console.log(imageCenter[0]);
-
-
-
-        let scale = (this.bannerHeight*1.2)/imageTargetBounds.height;
-
-        // console.log("w: "+polygonTransformed.width);
-        // console.log("w: "+imageTargetBounds.width);
-        //
-        // console.log("h: "+polygonTransformed.height);
-        // console.log("h: "+imageTargetBounds.height);
-
-        // let scale = ( imageTargetBounds.height/polygonTransformed.height );
+        // Hide referenced image
+        this.transitionSVG.image.referencedSVG.style.display = "none";
 
 
 
-        let duration = 800;
-        setTimeout(function(){
-          let easing =  Power2.easeInOut;
 
-          TweenLite.to(imageTarget, (duration/1000), {
-            x: translateX,
-            y: translateY,
-            scale: scale,
-            ease: easing,
+
+
+
+
+        const duration = 800; // temporary
+        const transitionSVG = this.transitionSVG;
+        const vue = this;
+        setTimeout(() => {
+          let image = transitionSVG.image;
+          let polygon = transitionSVG.polygon
+          TweenLite.to(image.el, (duration/1000), {
+            x: image.transform.translateX,
+            y: image.transform.translateY,
+            scale: image.transform.scale,
+            ease: Power2.easeOut,
+            transformOrigin: '50% 50%',
             onComplete: () => {
+              vue.navigate(e);
               // console.log("callback!");
-              console.log(svgTransition.innerHTML);
+              // console.log(svgTransition.innerHTML);
               // svgTransition.outerHTML = "";
-              svgTransition = null;
+              // svgTransition = null;
             }
           });
           // TweenLite.to(rect, (duration/1000), {
@@ -214,12 +209,12 @@
           // })
 
           anime({
-            targets: polygon,
+            targets: polygon.el,
             points: [
               { value: polygonTransformedPoints }
             ],
-            easing: 'easeInOutCubic',
-            duration: duration - 60
+            easing: 'easeOutCubic',
+            duration: duration - 100
           });
 
 
@@ -229,9 +224,12 @@
 
     },
     mounted(){
+      this.transitionSVG.width = document.documentElement.clientWidth;
+      this.transitionSVG.height = document.documentElement.clientHeight;
+
       let projects = document.querySelectorAll('.project');
 
-      if(this.supportsSVGCSSTransforms){
+      // if(this.supportsSVGCSSTransforms){
         const controller = new ScrollMagic.Controller();
         const tl = new TimelineLite();
 
@@ -249,8 +247,26 @@
         for(let i = 0; i < projects.length; i++){
           let project = projects[i];
           let alignment = project.getAttribute('data-align');
+
           let svg = project.querySelector('.image > svg');
+          let svgBounds = svg.getBoundingClientRect();
+          let background = project.querySelector('.background').getAttribute('fill');
           let image = project.querySelector('.image > svg > image');
+          let imageSrc = image.getAttribute('xlink:href');
+          let imageBounds = image.getBoundingClientRect();
+
+          let imageObject = {
+            el: image,
+            width: imageBounds.width,
+            height: imageBounds.height,
+            // clientRect: imageBounds,
+            // containerClientRect: svgBounds,
+            referencedSVG: svg,
+            src: imageSrc,
+            backgroundColor: background
+          };
+          this.images.push(imageObject);
+
 
           if(svg || image){
             tl.set([svg, image], { opacity: 0 });
@@ -288,7 +304,7 @@
             {
               opacity: 1,
               x: '0%',
-              ease: Circ.easeInOut
+              ease: Circ.easeOut
             }, 0)
           })
           .addTo(controller);
@@ -299,20 +315,24 @@
           // tl.progress(progress);
           // tl.progress(event.progress);
         // });
-      }
-      else{
-        console.log("doesn't support svg transformations, no animation")
-      }
+      // }
+      // else{
+      //   console.log("doesn't support svg transformations, no animation")
+      // }
+
+      console.log("Images: ");
+      console.log(this.images);
     }
   }
 
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   @import '../../style/global.scss';
-  .content{
+  .container{
     padding: 100vh 8% 3em 8%;
   }
+
   .project a{
     display: inline-block;
     padding: 1rem;
@@ -371,8 +391,15 @@
       }
     }
   }
-
+  svg#transitionLayer{
+    position:fixed;
+    top: 0;
+    left: 0;
+    z-index: -1;
+  }
   svg#transition{
+    // width: 100%;
+    // height:100vh;
     position:fixed;
     top: 0;
     left: 0;

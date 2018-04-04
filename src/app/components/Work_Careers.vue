@@ -1,5 +1,21 @@
 <template>
   <div>
+    <!-- <div style="
+      width: 100%;
+      height: 30vw;
+      position: fixed;
+      top: 0;
+      left: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: blue;
+      z-index: 2;
+    ">
+      <img :src="imgB" style="
+        height: 100%;
+      " />
+    </div> -->
     <div id="flickityContainer" >
       <div class="carousel-cell"><img :src="imgB" alt="" /></div>
       <div class="carousel-cell"><img :src="imgA" alt="" /></div>
@@ -7,8 +23,8 @@
       <div class="carousel-cell"><img :src="imgA" alt="" /></div>
       <!-- <img :src="img" alt="" /> -->
     </div>
-    <div class="content">
-      <div ref="innerContent">
+    <div class="container">
+      <div ref="content">
         <h2>Careers Redesign</h2>
         <p>
           {{msg}}
@@ -73,7 +89,7 @@
       // });
 
       let tl = new TimelineLite();
-      tl.fromTo(this.$refs.innerContent, .6, {
+      tl.fromTo(this.$refs.content, .6, {
         opacity: 0,
         y: 50
       },
@@ -88,8 +104,6 @@
 </script>
 
 <style lang="scss">
-  // @import '../../style/global.scss';
-
   #flickityContainer{
     position: relative;
     height: 30vw;
@@ -139,13 +153,17 @@
     }
 
   }
-  .content{
+</style>
+
+<style lang="scss" scoped>
+  // @import '../../style/global.scss';
+  .container{
     padding: 5em 8% 3em 8%;
     color: #4B4742;
-    background: #F9FFF9;
+    background: #f9fff9;
     z-index: 1;
-
   }
+
   #bkg{
     position:absolute;
     top: 0;

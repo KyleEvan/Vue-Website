@@ -32,6 +32,7 @@ const supportsCSSTransformsOnSVG = (() => {
 Vue.mixin({
   data: function () {
     return {
+      devmode: true,
       supportsSVGCSSTransforms: supportsCSSTransformsOnSVG
     }
   }

@@ -1,15 +1,19 @@
 <template>
 
-  <div>
+  <div id="carousel">
 
     <div id="flickityContainer" ref="carousel">
       <slot></slot>
     </div>
 
-    <svg id="progressBar" :width="progressBar.width" :height="progressBar.height">
-      <path :stroke="data.progressBar.background" d="M0 10, 200 10"></path>
-      <path :stroke="data.progressBar.color" d="M0 10, 200 10" style="stroke-dasharray: 200; stroke-dashoffset: 200;"></path>
+    <svg id="progressBar" :width="progressBar.width" :height="progressBar.height" :viewBox="viewBox" :style="{bottom: -progressBar.height}">
+      <path :stroke="progressBar.background" :stroke-width="progressBar.height" :d="path"></path>
+      <path :stroke="data.progressBar.color" :stroke-width="progressBar.height" :d="path" :style="{strokeDasharray: progressBar.width, strokeDashoffset: progressBar.progress}"></path>
     </svg>
+
+    <div class="debug progressBar progress" v-if="devmode" style="color: red;">
+      {{ progressBar.width - progressBar.progress }}
+    </div>
 
   </div>
 
@@ -26,13 +30,48 @@
       return {
         progressBar: {
           width: 0,
-          height: 50,
-          progress: 0
+          height: 10,
+          progress: 0,
+          background: '#E3E8E3'
         }
       }
     },
+    computed: {
+      viewBox: function(){
+        return `0 0 ${this.progressBar.width} ${this.progressBar.height}`;
+      },
+      path: function(){
+        return `M0 0, ${this.progressBar.width} 0`;
+      }
+    },
+    methods: {
+      updateProgress: function(progress){
+        this.progressBar.progress = this.progressBar.width - (progress * this.progressBar.width);
+        return this.progressBar.progress;
+      },
+      updateWidth: function(width){
+        this.progressBar.width = width;
+      },
+      debounce: function(func, wait, immediate) {
+        var timeout;
+        return function() {
+          var context = this,
+            args = arguments;
+          var later = function() {
+            timeout = null;
+            if (!immediate)
+              func.apply(context, args);
+            };
+          var callNow = immediate && !timeout;
+          clearTimeout(timeout);
+          timeout = setTimeout(later, wait);
+          if (callNow)
+            func.apply(context, args);
+          };
+      }
+    },
     mounted() {
-      this.progressBar.width = document.documentElement.clientWidth;
+      this.progressBar.width = this.progressBar.progress = document.documentElement.clientWidth;
       console.log(this.$props.data);
       // console.log(this.$refs.carousel);
       // this.$refs.carousel.addEventListener("mousedown", this.handleMouseDown );
@@ -46,13 +85,18 @@
         setGallerySize: false
       });
 
-      let currentProgress;
+      const carousel = this;
       flkty.on( 'scroll', ( progress ) => {
         progress = Math.max( 0, Math.min( 1, progress ) );
-        currentProgress = ( progress * 100 );
+        carousel.updateProgress(progress);
       });
-      console.log(currentProgress);
-      this.progressBar.progress = currentProgress;
+
+      const handleResize = this.debounce(function() {
+        console.log("handling resize");
+        carousel.updateWidth(document.documentElement.clientWidth);
+      }, 50);
+      window.addEventListener('resize', handleResize);
+
 
     }
   }
@@ -60,55 +104,65 @@
 </script>
 
 <style lang="scss">
-  #flickityContainer{
+  #carousel{
     position: relative;
-    height: 30vw;
-    width: 100%;
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    z-index: 2;
 
-    .flickity-viewport{
+    #flickityContainer{
+      position: relative;
+      height: 30vw;
       width: 100%;
-      height: 100%;
-      cursor: move; /* fallback if grab cursor is unsupported */
-      cursor: grab;
-      cursor: -moz-grab;
-      cursor: -webkit-grab;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
 
-      &.is-pointer-down {
-        cursor: grabbing !important;
-        cursor: -moz-grabbing !important;
-        cursor: -webkit-grabbing !important;
-      }
-
-      .flickity-slider{
+      .flickity-viewport{
         width: 100%;
         height: 100%;
+        cursor: move; /* fallback if grab cursor is unsupported */
+        cursor: grab;
+        cursor: -moz-grab;
+        cursor: -webkit-grab;
 
-        .carousel-cell{
-          display: flex;
-          justify-content: center;
+        &.is-pointer-down {
+          cursor: grabbing !important;
+          cursor: -moz-grabbing !important;
+          cursor: -webkit-grabbing !important;
+        }
+
+        .flickity-slider{
           width: 100%;
           height: 100%;
 
-          img{
-            height:100%;
+          .carousel-cell{
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+
+            img{
+              height:100%;
+            }
           }
         }
       }
+      .flickity-button{
+        position: absolute;
+        bottom: 0;
+      }
+      .flickity-page-dots{
+        position: absolute;
+        bottom: 0;
+      }
     }
-    .flickity-button{
+
+    #progressBar, .debug.progressBar.progress{
+      width: 100%;
       position: absolute;
-      bottom: 0;
-    }
-    .flickity-page-dots{
-      position: absolute;
-      bottom: 0;
+      left: 0;
     }
   }
-  #progressBar{
-    position: absolute;
-  }
+
+
 </style>

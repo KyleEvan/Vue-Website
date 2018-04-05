@@ -50,8 +50,7 @@
         saying: 'hey im content',
         carouselProps:{
           progressBar: {
-            color: '#6EE5DF',
-            background: '#DCDBD9'
+            color: '#E88278'
           }
         }
 
@@ -82,12 +81,12 @@
 <style lang="scss" scoped>
   // @import '../../style/global.scss';
   .container{
+    position: relative;
     color: #4B4742;
     background: #f9fff9;
     z-index: 1;
 
     .content{
-      position:relative;
       padding: 5em 8% 3em 8%;
     }
   }

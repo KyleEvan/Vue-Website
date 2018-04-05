@@ -62,11 +62,11 @@
 	nav{
       width: 100%;
       position: fixed;
-			top:0px;
-			left:0px;
+			top: 0;
+			left: 0;
       display: flex;
       align-items: center;
-			z-index: 1;
+			z-index: 3;
       justify-content: space-between;
       padding: 40px 6%;
       font-size: 18px;

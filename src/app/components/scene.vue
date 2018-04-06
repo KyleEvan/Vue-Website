@@ -71,7 +71,7 @@ Styles/SCSS
      }
      #name {
          // color: #FF9A91;
-         color: #f9fff9;
+         color: #645D54;
          margin: 0;
          font-size: 50px;
          text-transform: uppercase;

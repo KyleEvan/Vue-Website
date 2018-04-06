@@ -11,11 +11,15 @@ Color Palette
 
   https://coolors.co/85e5e0-ffa69e-ffeb93-7b8a96-ffe5e5
 */
+// const colors = [
+//   '#ACE7E3', '#FFC6C1', '#FFF2BA'
+// ];
+// const colors = [
+//   '#7BE7E1', '#88E9E4', '#95ECE7', '#A2EEEA', '#AFF0ED', '#BDF3F0'
+// ];
 const colors = [
-  '#ACE7E3', '#FFC6C1', '#FFF2BA'
-  // '#F9FFF9' '#63676c' '#FFA69E'
+  '#E2E2E2', '#D3D3D4', '#C5C5C6'
 ];
-
 
 
 /*
@@ -194,7 +198,7 @@ class Scene { // #scene
             y: getRandomInt(this.scene.bounds.top, this.scene.bounds.bottom),
             scale: 1,
             ease: Expo.easeOut
-          }, "-=.98");
+          }, "-=.998");
           if(i == (targets.length - 1)) {
             let scene = this.scene;
             setTimeout(function(){
@@ -227,11 +231,11 @@ class Scene { // #scene
           }
 
           TweenLite.to(shape.el, 10, {
-            opacity: .4,
+            opacity: .5,
             x: newX,
             y: newY,
-            ease: Expo.easeOut
-          }).delay(index*.06).smoothChildTiming = true;
+            ease: Elastic.easeOut.config(1, 0.5)
+          }).delay(index*.01).smoothChildTiming = true;
 
         });
       },
@@ -425,7 +429,7 @@ class Letter {
     this.el = el;
     this.scene = scene;
     this.shapes = [];
-    this.totalShapes = 3;
+    this.totalShapes = 5;
     this.init(scene);
   }
   init() {
@@ -448,7 +452,7 @@ class Shape {
       el: letter,
       props: letterProps
     };
-    this.scale = getRandomInt(letterProps.width * .1, letterProps.width * .5); // scale will be 10% and 100% of the letter's width
+    this.scale = getRandomInt(letterProps.width * .05, letterProps.width * .35); // scale will be 10% and 100% of the letter's width
     this.x = (letterProps.left + letterProps.width / 2);
     this.y = (letterProps.top - letterProps.height / 2);
     this.z = this.scale / letterProps.width;

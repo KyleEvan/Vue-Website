@@ -14,7 +14,7 @@
           <div class="image">
             <svg>
               <rect class="background" x="0" y="0" width="100%" height="100%" :fill="projectColors[0]" />
-              <image x="0" y="0" width="100%" height="120%" v-bind:xlink:href='img' />
+              <image x="0" y="0" width="100%" height="115%" v-bind:xlink:href='img' />
             </svg>
           </div>
         </section>
@@ -109,6 +109,7 @@
     },
     methods:{
       navigate: function(e){
+        console.log(this.$router);
         if(e.target.getAttribute("href")) this.$router.push({name: e.target.getAttribute("href"), params: { msg:'ello ello' }});
       },
 
@@ -173,7 +174,6 @@
         this.transitionSVG.polygon.points = `${polygon.left} ${polygon.top} ${polygon.right} ${polygon.top} ${polygon.right} ${polygon.bottom} ${polygon.left} ${polygon.bottom}`;
 
         const polygonTransformedPoints = `${this.transitionSVG.x} ${this.transitionSVG.y} ${this.transitionSVG.width} ${this.transitionSVG.y} ${this.transitionSVG.width} ${this.bannerHeight} ${this.transitionSVG.x} ${this.bannerHeight}`;
-
 
         // Hide referenced image
         this.transitionSVG.image.referencedSVG.style.display = "none";
@@ -249,7 +249,7 @@
         for(let i = 0; i < projects.length; i++){
           let project = projects[i];
           let alignment = project.getAttribute('data-align');
-
+          let container = project.querySelector('.image');
           let svg = project.querySelector('.image > svg');
           let svgBounds = svg.getBoundingClientRect();
           let background = project.querySelector('.background').getAttribute('fill');
@@ -270,15 +270,16 @@
           this.images.push(imageObject);
 
 
-          if(svg || image){
-            tl.set([svg, image], { opacity: 0 });
-          }
-          else{
-            console.log("Project has no svg or image");
-          }
+          // if(svg || image){
+          //   tl.set([svg, image], { opacity: 0 });
+          // }
+          // else{
+          //   console.log("Project has no svg or image");
+          // }
 
           if(alignment == 'ltr'){
-            tl.set(svg, { x: '100%' });
+            tl.set(container, { scale: 1.8 });
+            tl.set(svg, { x: '100%', opacity: 0 });
             tl.set(image, { x: '100%' });
           }
           else if(alignment == 'rtl'){
@@ -296,15 +297,22 @@
             reverse: false
           })
           .on('start', () => {
-            tl.to(svg, 1.3,
+            tl.to(container, 1,
+            {
+              scale: 1,
+              // opacity: 1,
+              ease: Power2.easeOut
+            }, 0)
+            .to(svg, .9,
             {
               opacity: 1,
               x: '0%',
-              ease: Expo.easeInOut
-            })
-            .to(image, 1.3,
+              scale: 1,
+              ease: Expo.easeOut
+            }, 0)
+            .to(image, .9,
             {
-              opacity: 1,
+              // opacity: 1,
               x: '0%',
               ease: Circ.easeOut
             }, 0)
@@ -321,9 +329,14 @@
       // else{
       //   console.log("doesn't support svg transformations, no animation")
       // }
+      if(this.$data.devmode){
+        console.log("********************");
+        console.log("Images: ");
+        console.log(this.images);
+        console.log("********************");
 
-      console.log("Images: ");
-      console.log(this.images);
+      }
+
     }
   }
 
@@ -343,6 +356,10 @@
     font-weight: 600;
     letter-spacing: .5px;
     text-decoration: none;
+  }
+
+  .text p{
+    color: #645D54;
   }
 
   .project[data-color="red"] a{

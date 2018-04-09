@@ -21,7 +21,7 @@ JS
   export default {
    data(){
      return{
-       shapeScene: undefined,
+       scene: undefined,
        initialized: false
      }
    },
@@ -32,8 +32,11 @@ JS
    methods:{
      init: function(){
        // this.initialized = true;
-       this.shapeScene = ShapeScene(this.$refs.scene, this.$refs.name);
+       this.scene = ShapeScene(this.$refs.scene, this.$refs.name, this.$data.devmode);
      }
+   },
+   mounted(){
+     this.init();
    }
   }
 </script>

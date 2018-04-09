@@ -3,46 +3,30 @@
 
     <div class="container">
       <div class="content">
-        <section class="project" data-align="ltr" data-color="red">
+
+        <section v-for="project in projects" :class="project.align" class="project">
           <div class="text">
-            <h2>Careers Redesign</h2>
+            <h2>{{project.title}}</h2>
             <p>
-              Careers Website Redesign for Excellus BCBS and Univera Healthcare. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Varius quam quisque id diam vel quam elementum pulvinar. Purus ut faucibus pulvinar elementum integer enim neque.
+              {{project.summary}}
             </p>
-            <a href="Careers-Redesign" @click.prevent="handleClick">View Project</a>
+            <a :href="project.href" @click.prevent="handleClick" :style="{color: project.secondaryColor, backgroundColor: project.primaryColor}">View Project</a>
           </div>
           <div class="image">
-            <svg>
-              <rect class="background" x="0" y="0" width="100%" height="100%" :fill="projectColors[0]" />
-              <image x="0" y="0" width="100%" height="115%" v-bind:xlink:href='img' />
+            <svg :style="{width: project.image.style.width, height: project.image.style.height}">
+              <rect class="background" x="0" y="0" width="100%" height="100%" :fill="project.primaryColor" />
+              <image x="0" y="0" :width="project.image.width" :height="project.image.height" v-bind:xlink:href='project.image.src' />
             </svg>
           </div>
         </section>
 
-        <section class="project" data-align="rtl">
-          <div class="image">
-            <svg>
-              <rect class="background" x="0" y="0" width="100%" height="100%" :fill="projectColors[0]" />
-              <image x="0" y="0" width="100%" height="100%" v-bind:xlink:href='img' />
-            </svg>
-          </div>
-          <div class="text">
-            <h2>Careers Redesign</h2>
-            <p>
-              Careers Website Redesign for Excellus BCBS and Univera Healthcare. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Varius quam quisque id diam vel quam elementum pulvinar. Purus ut faucibus pulvinar elementum integer enim neque.
-            </p>
-            <a href="#" @click.prevent="handleClick">View Project</a>
-          </div>
-        </section>
       </div>
     </div>
 
-
-    <!-- <svg id="transitionLayer" ref="transitionSVG" width="{{ transitionSVG.width }}" height="{{ transitionSVG.height }}" viewBox="{{ transitionSVG.x transitionSVG.y transitionSVG.width transitionSVG.height }}"> -->
-    <svg id="transitionLayer" ref="transitionSVG" :width="transitionSVG.width" :height="transitionSVG.height" :viewBox="viewbox">
+    <svg id="transitionLayer" ref="transitionSVG" :width="transitionSVG.width" :height="transitionSVG.height" :viewBox="viewbox" v-show="transitioning">
       <defs>
         <clipPath id="polyClip">
-          <polygon :points="transitionSVG.polygon.points"></polygon>
+          <polygon ref="transitionPolygon" :points="transitionSVG.polygon.points"></polygon>
         </clipPath>
       </defs>
       <rect :fill="transitionSVG.image.backgroundColor" :x="transitionSVG.x" :y="transitionSVG.y" :width="transitionSVG.width" :height="transitionSVG.height" clip-path="url(#polyClip)"></rect>
@@ -51,47 +35,84 @@
       </g>
     </svg>
 
-
   </div>
 </template>
 
 <script>
-  import { TimelineLite } from "gsap";
   import ScrollMagic from "scrollmagic";
+
+  import { TimelineLite } from "gsap";
   import anime from 'animejs';
 
-  // Images
+  // Images:
   import careersPNG from '../../images/career-areas-mobile.png';
   import careersScreensPNG from '../../images/careers_screens.png';
+
+  // Color Themes
+  // https://coolors.co/616163-44ffd2-ffbfa0-87f6ff-f2545b
+  const colors = {
+    turquoise: '#44FFD2',
+    darkTurquoise: '#2CA386',
+    peach: '#FFBFA0',
+    darkPeach: '#A37A66',
+    blue: '#87F6FF',
+    darkBlue: '#569DA3'
+  };
 
   export default {
     name: 'home',
 
     data () {
       return {
-        projectColors: ['#FF9A91'],
-        bannerHeight: (window.innerWidth*.3),
         images: [],
-        img: careersScreensPNG,
-        tl: new TimelineLite(),
+        projects: [
+          {
+            align: 'ltr',
+            title: 'Careers Redesign',
+            summary: 'Careers Website Redesign for Excellus BCBS and Univera Healthcare. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Varius quam quisque id diam vel quam elementum pulvinar. Purus ut faucibus pulvinar elementum integer enim neque.',
+            href: 'Careers-Redesign',
+            image: {
+              width: '100%',
+              height: '115%',
+              src: careersScreensPNG,
+              style: {
+                width: '42vw',
+                height: '25.2vw'
+              }
+            },
+            primaryColor: colors.peach,
+            secondaryColor: colors.darkPeach
+          }
+        ],
 
+
+
+        // projectColors: ['#FF9A91'],
+        bannerHeight: (window.innerWidth*.3),
+        // img: careersScreensPNG,
+
+
+
+
+        tl: new TimelineLite(),
         transitioning: false,
-        transitionSVG: {
+        transitionSVG:{
           x: 0,
           y: 0,
           width: document.documentElement.clientWidth,
           height: document.documentElement.clientHeight,
-          polygon: {
-            points: '0 0 0 0 0 0 0 0'
+          polygon:{
+            points: '0 0 0 0 0 0 0 0',
+            pointsTransformed: undefined
           },
-          image: {
+          image:{
             x: 0,
             y: 0,
             width: 0,
             height: 0,
             src: '',
             backgroundColor: 'fff',
-            transform: {
+            transform:{
               translateX: undefined,
               translateY: undefined,
               scale: undefined
@@ -109,46 +130,34 @@
     },
     methods:{
       navigate: function(e){
-        console.log(this.$router);
-        if(e.target.getAttribute("href")) this.$router.push({name: e.target.getAttribute("href"), params: { msg:'ello ello' }});
+        const href = e.target.getAttribute("href");
+        if(href){
+          this.$router.push({name: href, params: { msg:'ello ello' }});
+        }
       },
-
-      assignAttributes: function(el){
-
-        // reference activated project image
-        let activeProject = el.closest('.project');
-        let activeImage = activeProject.querySelector('image');
-
+      setData: function(el){
+        // Reference original project image
+        const activeProject = el.closest('.project');
+        const activeImage = activeProject.querySelector('image');
         // Filter images array to get image object
         let matchedImage = this.images.filter((image) => {
             return image.el === activeImage;
         })[0];
-
+        // Combine matched image properties with transitionSVG data
         this.transitionSVG.image = Object.assign({}, this.transitionSVG.image, matchedImage);
-
         this.transitionSVG.el = this.$refs.transitionSVG;
         this.transitionSVG.image.el = this.$refs.transitionImage;
-
-        let containerClientRect = this.transitionSVG.image.referencedSVG.getBoundingClientRect();
+        // Assign image container bounding rect to data
+        const containerClientRect = this.transitionSVG.image.referencedSVG.getBoundingClientRect();
         this.transitionSVG.image.container = containerClientRect;
-        console.log(containerClientRect);
-
-        let imageClientRect = matchedImage.el.getBoundingClientRect();
+        // Update transitionSVG data with bounding rect properties
+        const imageClientRect = matchedImage.el.getBoundingClientRect();
         this.transitionSVG.image.x = imageClientRect.left;
         this.transitionSVG.image.y = imageClientRect.top;
-        console.log(imageClientRect);
-
+        this.transitionSVG.image.width = imageClientRect.width;
+        this.transitionSVG.image.height = imageClientRect.height;
       },
-
-      handleClick: function(e){
-        console.log(this.transitionSVG);
-
-
-
-        this.assignAttributes(e.target);
-
-        // this.tl.set(this.transitionSVG.image.el, {transformOrigin: '50% 50%'});
-        // const transitionImageCenter = this.transitionSVG.image.el.getAttribute('data-svg-origin').split(" ").map(Number);
+      calcImageTransforms: function(){
         const centers = {
           center: {
             x: this.transitionSVG.image.x + this.transitionSVG.image.width/2,
@@ -166,37 +175,39 @@
           translateX: this.transitionSVG.image.newCenter.x - this.transitionSVG.image.center.x,
           translateY: this.transitionSVG.image.newCenter.y - this.transitionSVG.image.center.y
         };
-
-
-        this.transitionSVG.polygon.el = this.transitionSVG.el.querySelector('polygon');
+      },
+      calcBackgroundPoints: function(){
+        this.transitionSVG.polygon.el = this.$refs.transitionPolygon;
 
         const polygon = this.transitionSVG.image.container;
         this.transitionSVG.polygon.points = `${polygon.left} ${polygon.top} ${polygon.right} ${polygon.top} ${polygon.right} ${polygon.bottom} ${polygon.left} ${polygon.bottom}`;
 
         const polygonTransformedPoints = `${this.transitionSVG.x} ${this.transitionSVG.y} ${this.transitionSVG.width} ${this.transitionSVG.y} ${this.transitionSVG.width} ${this.bannerHeight} ${this.transitionSVG.x} ${this.bannerHeight}`;
-
-        // Hide referenced image
-        this.transitionSVG.image.referencedSVG.style.display = "none";
-
-
-
-
-
-
-
+        this.transitionSVG.polygon.pointsTransformed = polygonTransformedPoints;
+      },
+      handleClick: function(e){
+        this.transitioning = true;
+        this.setData(e.target);
+        this.calcImageTransforms();
+        this.calcBackgroundPoints();
 
         const duration = 800; // temporary
         const transitionSVG = this.transitionSVG;
         const vue = this;
         setTimeout(() => {
           let image = transitionSVG.image;
-          let polygon = transitionSVG.polygon
+          let polygon = transitionSVG.polygon;
           TweenLite.to(image.el, (duration/1000), {
             x: image.transform.translateX,
             y: image.transform.translateY,
             scale: image.transform.scale,
             ease: Power2.easeOut,
             transformOrigin: '50% 50%',
+            onStart: () => {
+              // Hide original image
+              image.referencedSVG.style.display = "none";
+              console.log('starting animation');
+            },
             onComplete: () => {
               vue.navigate(e);
               // console.log("callback!");
@@ -213,7 +224,7 @@
           anime({
             targets: polygon.el,
             points: [
-              { value: polygonTransformedPoints }
+              { value: polygon.pointsTransformed }
             ],
             easing: 'easeOutCubic',
             duration: duration - 100
@@ -229,11 +240,9 @@
       this.transitionSVG.width = document.documentElement.clientWidth;
       this.transitionSVG.height = document.documentElement.clientHeight;
 
-      let projects = document.querySelectorAll('.project');
-
-      // if(this.supportsSVGCSSTransforms){
-        const controller = new ScrollMagic.Controller();
-        const tl = new TimelineLite();
+      const projects = document.querySelectorAll('.project');
+      const controller = new ScrollMagic.Controller();
+      const tl = new TimelineLite();
 
         // let nameScene = new ScrollMagic.Scene({
         //   triggerElement: this.$refs.main,
@@ -248,71 +257,56 @@
 
         for(let i = 0; i < projects.length; i++){
           let project = projects[i];
-          let alignment = project.getAttribute('data-align');
-          let container = project.querySelector('.image');
-          let svg = project.querySelector('.image > svg');
-          let svgBounds = svg.getBoundingClientRect();
-          let background = project.querySelector('.background').getAttribute('fill');
-          let image = project.querySelector('.image > svg > image');
-          let imageSrc = image.getAttribute('xlink:href');
-          let imageBounds = image.getBoundingClientRect();
+          const imageContainer = project.querySelector('.image');
+          const image = project.querySelector('.image > svg > image');
+          const imageSrc = image.getAttribute('xlink:href');
+          const svg = project.querySelector('.image > svg');
+          const background = project.querySelector('.background').getAttribute('fill');
 
           let imageObject = {
             el: image,
-            width: imageBounds.width,
-            height: imageBounds.height,
-            // clientRect: imageBounds,
-            // containerClientRect: svgBounds,
-            referencedSVG: svg,
             src: imageSrc,
+            referencedSVG: svg,
             backgroundColor: background
           };
           this.images.push(imageObject);
 
-
-          // if(svg || image){
-          //   tl.set([svg, image], { opacity: 0 });
-          // }
-          // else{
-          //   console.log("Project has no svg or image");
-          // }
-
-          if(alignment == 'ltr'){
-            tl.set(container, { scale: 1.8 });
-            tl.set(svg, { x: '100%', opacity: 0 });
-            tl.set(image, { x: '100%' });
-          }
-          else if(alignment == 'rtl'){
-            tl.set(svg, { x: '-100%' });
-            tl.set(image, { x: '-100%' });
-          }
-          else{
-            console.log("Project has no alignment");
+          // Convert classnames into array
+          const classes = project.className.match(/\S+/g) || [];
+          // Set initial values for transforms according to project alignment
+          for(let name of classes){
+            if(name == 'ltr'){
+              tl.set(svg, { x: '100%', opacity: 0 });
+              tl.set(image, { x: '100%' });
+              tl.set(imageContainer, { scale: 1.4 });
+            }
+            else if(name == 'rtl'){
+              tl.set(svg, { x: '-100%' });
+              tl.set(image, { x: '-100%' });
+            }
           }
 
 
-          let projectScene = new ScrollMagic.Scene({
+          const projectScene = new ScrollMagic.Scene({
             triggerElement: project,
             triggerHook: .4,
             reverse: false
           })
           .on('start', () => {
-            tl.to(container, 1,
+            tl.to(imageContainer, 1,
             {
               scale: 1,
-              // opacity: 1,
               ease: Power2.easeOut
             }, 0)
-            .to(svg, .9,
+            .to(svg, 1,
             {
               opacity: 1,
               x: '0%',
               scale: 1,
               ease: Expo.easeOut
             }, 0)
-            .to(image, .9,
+            .to(image, 1,
             {
-              // opacity: 1,
               x: '0%',
               ease: Circ.easeOut
             }, 0)
@@ -320,22 +314,19 @@
           .addTo(controller);
         }
 
-        // ourScene.on("progress", function (event) {
-          // let progress = event.progress
-          // tl.progress(progress);
-          // tl.progress(event.progress);
-        // });
-      // }
-      // else{
-      //   console.log("doesn't support svg transformations, no animation")
-      // }
       if(this.$data.devmode){
         console.log("********************");
         console.log("Images: ");
         console.log(this.images);
         console.log("********************");
-
       }
+
+      // ourScene.on("progress", function (event) {
+        // let progress = event.progress
+        // tl.progress(progress);
+        // tl.progress(event.progress);
+      // });
+    // }
 
     }
   }
@@ -345,94 +336,57 @@
 <style lang="scss" scoped>
   @import '../../style/global.scss';
 
-  .content{
-    padding: 100vh 8% 3em 8%;
-  }
+  .container{
+    background: transparent;
 
-  .project a{
-    display: inline-block;
-    padding: 1rem;
-    border-radius: 3px;
-    font-weight: 600;
-    letter-spacing: .5px;
-    text-decoration: none;
-  }
+    .content{
+      padding: 100vh 8% 3em 8%;
 
-  .text p{
-    color: #645D54;
-  }
+      .project{
+        position: relative;
+        width: 100%;
+        min-height: 80vh;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
 
-  .project[data-color="red"] a{
-    background: #FF9A91;
-    color: #F9FFF9;
-  }
+        .text{
+          width:34%;
+          margin-left:8%;
 
-
-  .project[data-align="ltr"]{
-    position: relative;
-    width: 100%;
-    min-height: 90vh;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    .text{
-      width:34%;
-      margin-left:8%;
-    }
-
-    .image{
-      display: flex;
-      overflow: hidden;
-
-      svg{
-        position:relative;
-        width: 42vw;
-        height: 25.2vw;
-
+          h2{
+            margin-top: 0;
+          }
+          p{
+            color: #645D54;
+          }
+          a{
+            display: inline-block;
+            padding: 1rem;
+            border-radius: 6px;
+            font-weight: 700;
+            letter-spacing: .5px;
+            text-decoration: none;
+          }
+        }
+        .image{
+          display: flex;
+          overflow: hidden;
+          svg{
+            position:relative;
+          }
+        }
 
       }
     }
   }
 
-  .project[data-align="rtl"]{
-    .text{
-      width: 34%;
-      margin-right: 8%;
-    }
-    .image{
-      display: flex;
-      overflow: hidden;
 
-      svg{
-        position:relative;
-        width: 42vw;
-        height: 31vw;
-      }
-    }
-  }
   svg#transitionLayer{
     position:fixed;
     top: 0;
     left: 0;
     z-index: -1;
   }
-  svg#transition{
-    // width: 100%;
-    // height:100vh;
-    position:fixed;
-    top: 0;
-    left: 0;
-  }
-  // .project .text button{
-  //   background: #FF9393;
-  //   outline: none;
-  //   border: none;
-  //   padding: 15px;
-  //   border-radius: 4px;
-  //   color:inherit;
-  //   font-weight: 600;
-  //   font-size: 18px;
-  //   cursor:pointer;
-  // }
+
 </style>

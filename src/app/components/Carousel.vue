@@ -56,11 +56,7 @@
     },
     mounted() {
       this.progressBar.width = this.progressBar.progress = document.documentElement.clientWidth;
-      console.log(this.$props.data);
-      // console.log(this.$refs.carousel);
-      // this.$refs.carousel.addEventListener("mousedown", this.handleMouseDown );
 
-      // let carousel = document.getElementById('flickityContainer');
       let flkty = new Flickity( this.$refs.carousel, {
         imagesLoaded: true,
         draggable: true,
@@ -95,8 +91,8 @@
     #flickityContainer{
       position: relative;
       height: 30vw;
+      min-height: 300px;
       width: 100%;
-      overflow: hidden;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -134,10 +130,62 @@
       .flickity-button{
         position: absolute;
         bottom: 0;
+
+        svg{
+          fill: #f9fff9;
+          height: 3rem;
+        }
+      }
+      .flickity-prev-next-button{
+        position: absolute;
+        top: 0;
+        width: 6%;
+        height: 100%;
+        background: none;
+        outline: none;
+        border: none;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        opacity: .4;
+        cursor: pointer;
+
+        &:hover{
+          opacity: 1;
+        }
+      }
+
+      .flickity-button.previous{
+        left: 0;
+      }
+      .flickity-button.next{
+        right: 0;
       }
       .flickity-page-dots{
         position: absolute;
-        bottom: 0;
+        bottom: -50px;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        height: auto;
+      }
+      .flickity-page-dots{
+        .dot{
+          display: inline-block;
+          width: .5rem;
+          height: .5rem;
+          margin: .5rem;
+          background: #E3E8E3;
+          border-radius: 50%;
+          z-index: 5;
+          position: relative;
+          cursor: pointer;
+          transition: transform .2s cubic-bezier(0.02, 0.1, 0.15, 1);
+        }
+        .dot.is-selected{
+          transform: scale(1.5);
+        }
       }
     }
 
@@ -147,6 +195,14 @@
       left: 0;
     }
   }
+
+  /* Increase contrast of shapes in scene */
+  @supports (filter: contrast(100%)){
+    #scene{
+      filter: contrast(200%);
+    }
+  }
+
 
 
 </style>

@@ -104,7 +104,8 @@ function randomIndex(length) {
 */
 
 class Scene { // #scene
-  constructor(scene, name) {
+  constructor(scene, name, devmode) {
+    this.devmode = devmode;
     // scene.ready is true after the initial animation has fully completed
     this.ready = false;
     // scene.interactive dictates whether mousemove events should be tracked for shape translations
@@ -636,9 +637,9 @@ class Shape {
   }
 }
 
-exports.ShapeScene = function(scene, name) {
+exports.ShapeScene = function(scene, name, devmode) {
   let shapeScene;
-  shapeScene = new Scene(scene, name);
+  shapeScene = new Scene(scene, name, devmode);
   // document.addEventListener('readystatechange', function(){
   //   if (document.readyState == "interactive"){
   //     console.log("interactive");

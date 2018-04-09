@@ -47,13 +47,12 @@
     },
     mounted(){
       this.scene = this.$refs.scene;
-      console.log(Scene);
-      this.scene.init();
+      // console.log(Scene);
+      // this.scene.init();
     },
     methods:{
       beforeEnter: function(el){
         console.log("before enter")
-        console.log(this.scene);
 
       },
       enter: function(el, done){

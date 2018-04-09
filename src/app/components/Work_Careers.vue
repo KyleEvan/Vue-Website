@@ -35,6 +35,8 @@
 <script>
   // import Project from './Project.vue';
   import { TimelineLite } from "gsap";
+
+  // Images
   import careersPNG from '../../images/career-areas-mobile.png';
   import careersScreensPNG from '../../images/careers_screens.png';
 
@@ -44,8 +46,6 @@
     props: ['msg'],
     data () {
       return {
-        imgA: careersPNG,
-        imgB: careersScreensPNG,
         images: [careersScreensPNG, careersPNG, careersPNG, careersPNG],
         saying: 'hey im content',
         carouselProps:{
@@ -80,6 +80,9 @@
 
 <style lang="scss" scoped>
   // @import '../../style/global.scss';
+  .main{
+    overflow-x: hidden;
+  }
   .container{
     position: relative;
     color: #4B4742;

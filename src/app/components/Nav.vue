@@ -75,7 +75,7 @@
 			a, a:visited, a:active{
 	      display: inline-block;
 	      text-decoration: none;
-				color: #f9fff9;
+				color: #645d54;
 				padding: 10px;
 				pointer-events: auto;
 	    }

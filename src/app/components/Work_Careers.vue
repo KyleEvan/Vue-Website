@@ -80,9 +80,7 @@
 
 <style lang="scss" scoped>
   // @import '../../style/global.scss';
-  .main{
-    overflow-x: hidden;
-  }
+
   .container{
     position: relative;
     color: #4B4742;

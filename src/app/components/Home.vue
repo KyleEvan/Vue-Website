@@ -87,9 +87,7 @@
 
 
 
-        // projectColors: ['#FF9A91'],
-        bannerHeight: (window.innerWidth*.3),
-        // img: careersScreensPNG,
+        bannerHeight: (window.innerWidth*.3) > 300 ? (window.innerWidth*.3) : 300,
 
 
 
@@ -349,7 +347,12 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-
+        @include small {
+          flex-direction: column-reverse;
+        }
+        @include medium {
+          flex-direction: row;
+        }
         .text{
           width:34%;
           margin-left:8%;
@@ -368,6 +371,7 @@
             letter-spacing: .5px;
             text-decoration: none;
           }
+
         }
         .image{
           display: flex;

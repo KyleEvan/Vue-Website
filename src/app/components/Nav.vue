@@ -78,6 +78,10 @@
 				color: #645d54;
 				padding: 10px;
 				pointer-events: auto;
+
+				&:hover{
+					color: #F69296;
+				}
 	    }
 			.nav-menu{
 	      display: none;
@@ -127,7 +131,7 @@
 	        top:0;
 	        left:100%;
 	        visibility: hidden;
-	        transform:translateX(0%);
+	        transform:translateX(0%) translateZ(0);
 					transition: visibility 0s linear 0.6s, transform .3s ease-in;
 					will-change: transform;
 	      }

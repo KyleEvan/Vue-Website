@@ -104,7 +104,7 @@ function randomIndex(length) {
 */
 
 class Scene { // #scene
-  constructor(scene, name, devmode) {
+  constructor(scene, name, devmode, showLetters) {
     this.devmode = devmode;
     // scene.ready is true after the initial animation has fully completed
     this.ready = false;
@@ -113,8 +113,9 @@ class Scene { // #scene
     // Max boundaries of the scene in relation to the window. 1 = window size
     this.sceneSize = 1.1;
     this.bounds = undefined;
-
-    this.showLetters = true;
+    console.log(showLetters);
+    this.showLetters = showLetters;
+    console.log(this.showLetters);
     this.name = undefined;
     // DOM element references
     this.DOM = {

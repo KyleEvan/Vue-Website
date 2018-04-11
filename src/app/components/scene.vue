@@ -22,20 +22,28 @@ JS
    data(){
      return{
        scene: undefined,
-       initialized: false
+       initialized: false,
+       showName: false
      }
    },
    props: ['name'],
-   // mounted() {
-   //
-   // },
    methods:{
      init: function(){
        // this.initialized = true;
-       this.scene = ShapeScene(this.$refs.scene, this.$refs.name, this.$data.devmode);
+       const showName = this.showName;
+       this.scene = ShapeScene(this.$refs.scene, this.$refs.name, this.$data.devmode, showName);
      }
    },
+   beforeMount(){
+     console.log("Should show Name?");
+     console.log(this.$route);
+
+   },
    mounted(){
+     if(this.$route.name == "Home") {
+       this.showName = true;
+       console.log(this.showName);
+     }
      this.init();
    }
   }

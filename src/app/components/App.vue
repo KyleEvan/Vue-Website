@@ -15,7 +15,7 @@
     </transition>
 
     <!-- Background shapes scene -->
-    <scene ref="scene" name="Kyle" />
+    <scene ref="scene" name="Kyle" :showName="showName" />
 
   </div>
 </template>
@@ -31,8 +31,12 @@
     name: 'app',
     data(){
       return {
-        scene: undefined,
         tl: new TimelineLite({ paused: true })
+      }
+    },
+    computed: {
+      showName: function(){
+        return this.$route.meta.showName;
       }
     },
     components: {
@@ -41,16 +45,22 @@
     },
     created(){
       console.log("Hello App created!");
-      console.log(this.$route);
+      // console.log(this.$route);
       document.title = this.$route.meta.title;
 
     },
     mounted(){
-      this.scene = this.$refs.scene;
+      // this.scene = this.$refs.scene;
       // console.log(Scene);
       // this.scene.init();
     },
     methods:{
+      bodyNoScroll: function(){
+        const body = document.body;
+        body.style.top = `${-(window.scrollY || window.pageYOffset || document.body.scrollTop + (document.documentElement && document.documentElement.scrollTop || 0))}px`;
+        body.style.position = 'fixed';
+        body.style.overflowY = "scroll";
+      },
       beforeEnter: function(el){
         console.log("before enter")
 
@@ -59,18 +69,16 @@
         setTimeout(function(){
           console.log("transition entering");
         }, 1000)
-        if(this.$route.meta.showName){
-          console.log("Show Name");
 
-        }
       },
       beforeLeave: function(el){
         console.log("before leaving");
 
-        let body = document.body;
-        body.style.top = `${-(window.scrollY || window.pageYOffset || document.body.scrollTop + (document.documentElement && document.documentElement.scrollTop || 0))}px`;
-        body.style.position = 'fixed';
-        body.style.overflowY = "scroll";
+        // let body = document.body;
+        // body.style.top = `${-(window.scrollY || window.pageYOffset || document.body.scrollTop + (document.documentElement && document.documentElement.scrollTop || 0))}px`;
+        // body.style.position = 'fixed';
+        // body.style.overflowY = "scroll";
+        this.bodyNoScroll();
 
         let container = document.querySelector('.container');
         TweenLite.to(container, .5, { y: 50, opacity: 0, ease: Expo.easeIn });
@@ -79,12 +87,10 @@
       leave: function(el, done){
         console.log("transition leaving");
         setTimeout(function(){
-          let body = document.body;
+          const body = document.body;
           body.removeAttribute("style");
           done();
         }, 1600);
-
-
       }
     },
     watch: {

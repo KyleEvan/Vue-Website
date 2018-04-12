@@ -1,38 +1,40 @@
 <template>
+  <div class="container">
+    <div class="content">
 
-  <div class="content">
+      <h1>Contact</h1>
 
-    <h1>Contact</h1>
+      <div class="form-container">
+        <form method="post" id="reused_form" v-on:submit.prevent="submit($event)">
+            <label for="name">Your Name:</label>
+            <input id="name" type="text" name="Name" maxlength="50" required>
 
-    <div class="form-container">
-      <form method="post" id="reused_form" v-on:submit.prevent="submit($event)">
-          <label for="name">Your Name:</label>
-          <input id="name" type="text" name="Name" maxlength="50" required>
+            <label for="email">Email Address:</label>
+            <input id="email" type="email" name="Email" maxlength="50" required>
 
-          <label for="email">Email Address:</label>
-          <input id="email" type="email" name="Email" maxlength="50" required>
+            <label for="message">Message:</label>
+            <textarea id="message" name="Message" rows="10" maxlength="6000" required></textarea>
 
-          <label for="message">Message:</label>
-          <textarea id="message" name="Message" rows="10" maxlength="6000" required></textarea>
+            <button class="button-primary" type="submit">{{ buttonText }}</button>
+        </form>
 
-          <button class="button-primary" type="submit">{{ buttonText }}</button>
-      </form>
+        <div id="message" v-if="message">
+          <template v-if="success">
+            <h3>Submitted the form successfully!</h3>
+            <p>
+              We will get back to you soon.
+            </p>
+          </template>
+          <template v-else>
+            <h3>Error</h3>
+            <p>
+              Sorry there was an error sending your form.
+            </p>
+          </template>
+        </div>
 
-      <div id="message" v-if="message">
-        <template v-if="success">
-          <h3>Submitted the form successfully!</h3>
-          <p>
-            We will get back to you soon.
-          </p>
-        </template>
-        <template v-else>
-          <h3>Error</h3>
-          <p>
-            Sorry there was an error sending your form.
-          </p>
-        </template>
       </div>
-
+      
     </div>
   </div>
 </template>

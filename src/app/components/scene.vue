@@ -16,6 +16,7 @@ JS
 
 -->
 <script>
+  import ScrollMagic from "scrollmagic";
   import { ShapeScene } from '../shapes.js';
 
   export default {
@@ -23,28 +24,56 @@ JS
      return{
        scene: undefined,
        initialized: false,
-       showName: false
+       showname: false
      }
    },
-   props: ['name'],
+   props: ['name', 'showName'],
    methods:{
      init: function(){
-       // this.initialized = true;
-       const showName = this.showName;
-       this.scene = ShapeScene(this.$refs.scene, this.$refs.name, this.$data.devmode, showName);
+       this.scene = ShapeScene(this.$refs.scene, this.$refs.name, this.devmode, this.showname);
+     },
+     hideName: function(){
+       this.scene.animations.hideLetters();
      }
    },
    beforeMount(){
-     console.log("Should show Name?");
-     console.log(this.$route);
+     this.showname = this.$props.showName;
 
+     if(this.devmode){
+       console.log(' ******************** ');
+       console.log(` SHOW NAME: ${this.showname}`);
+       console.log(' ******************** ');
+     }
    },
    mounted(){
-     if(this.$route.name == "Home") {
-       this.showName = true;
-       console.log(this.showName);
-     }
      this.init();
+
+     // const controller = new ScrollMagic.Controller();
+     // const projectScene = new ScrollMagic.Scene({
+     //   triggerElement: project,
+     //   triggerHook: .4,
+     //   reverse: false
+     // })
+     // .on('start', () => {
+     //   tl.to(imageContainer, 1,
+     //   {
+     //     scale: 1,
+     //     ease: Power2.easeOut
+     //   }, 0)
+     //   .to(svg, 1,
+     //   {
+     //     opacity: 1,
+     //     x: '0%',
+     //     scale: 1,
+     //     ease: Expo.easeOut
+     //   }, 0)
+     //   .to(image, 1,
+     //   {
+     //     x: '0%',
+     //     ease: Circ.easeOut
+     //   }, 0)
+     // })
+     // .addTo(controller);
    }
   }
 </script>
@@ -87,7 +116,6 @@ Styles/SCSS
          font-size: 50px;
          text-transform: uppercase;
          font-size: 12vw;
-         // font-family: 'Montserrat', sans-serif;
          font-family: 'InterUI', sans-serif;
          font-weight: 700;
          user-select: none;
@@ -95,10 +123,10 @@ Styles/SCSS
          span {
              display: inline-block;
              position: relative;
-             opacity: 0;
+             // opacity: 0;
              line-height: 0.8;
              padding: 0 0.05em;
-             transform: translateY(100%);
+             // transform: translateY(100%);
          }
      }
      // .transition > * {

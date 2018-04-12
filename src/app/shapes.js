@@ -104,18 +104,34 @@ function randomIndex(length) {
 */
 
 class Scene { // #scene
-  constructor(scene, name, devmode, showLetters) {
+  constructor(scene, name, devmode, showName) {
     this.devmode = devmode;
+    this.devConfig = {
+      console: {
+        aquaText: 'color: #6FCAB1; background: #000000',
+        yellowText: 'color: #fff589; background: #000000',
+        greenText: 'color: green; background: #000000',
+        redText: 'color: red; background: #000000',
+        grayText: 'color: #6A706E; background: #000000'
+      }
+    }
+    // this.devConsole = {
+    //   color: '#fff589',
+    //   background: '#000000'
+    // };
+    // this.devConsoleStyle = `color: ${this.devConsole.color}; background: ${this.devConsole.background}`;
+
     // scene.ready is true after the initial animation has fully completed
     this.ready = false;
-    // scene.interactive dictates whether mousemove events should be tracked for shape translations
+    // scene.interactive, if true mousemove events will be tracked for shape translations
     this.interactive = false;
     // Max boundaries of the scene in relation to the window. 1 = window size
     this.sceneSize = 1.1;
+
     this.bounds = undefined;
-    console.log(showLetters);
-    this.showLetters = showLetters;
-    console.log(this.showLetters);
+
+    this.showName = showName || false;
+
     this.name = undefined;
     // DOM element references
     this.DOM = {
@@ -134,7 +150,7 @@ class Scene { // #scene
     // virtual camera of the scene, used for calculating 3d perspectives
     this.camera = {
       perspective: 500,
-      maxZ: 400,
+      maxZ: 490,
       fov: {
         width: window.innerWidth,
         height: window.innerHeight
@@ -169,12 +185,16 @@ class Scene { // #scene
       scene: this,
       initDelay: 1000,
       tl: new TimelineLite(), //{ paused: true }
+      setLetters: function(targets){
+        // let targets = this.scene.name.letterEls;
+        this.tl.set(targets, {
+          opacity: 0,
+          y: '100%'
+        });
+      },
       showLetters: function(){
         let targets = this.scene.name.letterEls;
-        this.tl.staggerFromTo(targets, 1, {
-          opacity: 0,
-          y: "100%"
-        },
+        this.tl.staggerTo(targets, 1,
         {
           opacity: 1,
           y: "0%",
@@ -203,7 +223,7 @@ class Scene { // #scene
           }, "-=.998");
           if(i == (targets.length - 1)) {
             let scene = this.scene;
-            setTimeout(function(){
+            setTimeout(() => {
               scene.animationCompleted();
             }, 1000);
           }
@@ -256,15 +276,20 @@ class Scene { // #scene
   init() {
     this.createScene();
     this.name = new Name(this);
-    console.log(this.name);
     this.playScene();
-    console.log("Scene created");
+
+    if(this.devmode){
+      console.log('%c ---------------------------------------- ', this.devConfig.console.grayText);
+      console.log('%c SCENE INITIALIZED: ', this.devConfig.console.aquaText);
+      console.log(this);
+      console.log('%c ---------------------------------------- ', this.devConfig.console.grayText);
+    }
   }
 
   initEvents() {
     let scene = this;
     // Resize event:
-    // Debounces event every 100ms, resizes scene element to window size
+    // Debounces event every 50ms, resizes scene element to window size
     const handleResize = debounce(function() {
       setWindowDimensions(scene.DOM.children.svg.el);
       scene.setBoundaries();
@@ -344,16 +369,19 @@ class Scene { // #scene
     let animations = this.animations;
 
     setTimeout(function() {
-      if(scene.showLetters) animations.showLetters();
+      if(scene.showName) animations.showLetters();
       animations.showShapes(name.shapeEls);
 
     }, animations.initDelay);
   }
   animationCompleted(){
-    console.log("scene animation completed");
-    console.log(this);
+    console.log('%c ---------------------------- ', this.devConfig.console.grayText);
+    console.log('%c SCENE ANIMATION COMPLETED ');
+    console.log('%c ---------------------------- ', this.devConfig.console.grayText);
+
+
     this.name.shapes.forEach(function(shape, i){
-      console.log("created: "+i)
+      // console.log("created: "+i);
       shape.getsetTransform();
     });
     this.toggleScene();
@@ -366,11 +394,34 @@ class Scene { // #scene
       window.blur();
     }
 
+    if(this.devmode){
+      let style;
+      console.log('%c ######################################## ', this.devConfig.console.grayText);
+      if(this.interactive){
+        style = this.devConfig.console.greenText;
+      }else{
+        style = this.devConfig.console.redText;
+      }
+      console.log(`%c SCENE INTERACTIVE: %c${this.interactive} `, this.devConfig.console.aquaText, style);
+      console.log('%c ######################################## ', this.devConfig.console.grayText);
+    }
   }
   toggleScene() {
     this.toggleInteractive();
     this.ready = !this.ready;
-    console.log("scene is ready");
+
+    if(this.devmode){
+      let style;
+      console.log('%c ######################################## ', this.devConfig.console.grayText);
+      if(this.ready){
+        style = this.devConfig.console.greenText;
+      }else{
+        style = this.devConfig.console.redText;
+      }
+      console.log(`%c SCENE READY: %c${this.ready} `, this.devConfig.console.aquaText, style);
+      console.log('%c ######################################## ', this.devConfig.console.grayText);
+    }
+
   }
 }
 
@@ -392,12 +443,9 @@ class Name { // #name
     this.createLetters(scene);
   }
   createLetters(scene){
-    let letters = scene.DOM.children.name.el.childNodes;
+    const letters = Array.from(scene.DOM.children.name.el.childNodes);
 
-    this.letterEls = letters;
-    // animations.letters.show.targets = animations.letters.hide.targets = letters;
-
-    letters = Array.from(letters);
+    // letters = Array.from(letters);
 
     let shapes = [];
     letters.forEach(function(el, index){
@@ -409,9 +457,11 @@ class Name { // #name
       }
     });
 
+    // Map letter and shape DOM elements to arrays for reference
+    this.letterEls = letters.map(l => l.el);
     this.shapeEls = shapes.map(s => s.el);
-    // animations.shapes.targets = shapes.map(s => s.el);
-
+    // Set initial animation attributes/styles
+    this.scene.animations.setLetters(this.letterEls);
 
     this.letters = letters;
     this.shapes = shapes;
@@ -513,6 +563,7 @@ class Shape {
   init() {
     // shape is randomly selected from the array of different shapes (this.types)
     let shape = this.types[randomIndex(this.types.length)];
+
     // Shape element is created and assigned attributes
     // corresponding to the props of the type of shape
     // if a prop is undefined it is not added to the element
@@ -529,8 +580,16 @@ class Shape {
         }
       }
     }
-    // console.log("this.x = "+this.x +", projectedX = "+this.projectedXY.x+", Camera perspective = "+this.scene.camera.perspective+", this.z = "+(this.scene.camera.perspective - this.z*this.scene.camera.maxZ)+", Camera Location X = "+this.scene.camera.location.x);
-    console.log("Shape created");
+
+    if(this.scene.devmode){
+      console.log('%c ---------------------------------------- ', this.scene.devConfig.console.grayText);
+      console.log('%c SHAPE CREATED: ', this.scene.devConfig.console.aquaText)
+      console.log(`%c X: %c${this.x} `, this.scene.devConfig.console.aquaText, this.scene.devConfig.console.yellowText);
+      console.log(`%c Y: %c${this.y} `, this.scene.devConfig.console.aquaText, this.scene.devConfig.console.yellowText);
+      console.log(`%c Z: %c${this.scene.camera.perspective - (this.z * this.scene.camera.maxZ)} `, this.scene.devConfig.console.aquaText, this.scene.devConfig.console.yellowText);
+      console.log('%c ---------------------------------------- ', this.scene.devConfig.console.grayText);
+    }
+
   }
   calc3DLocation(camera) {
     /*
@@ -638,9 +697,9 @@ class Shape {
   }
 }
 
-exports.ShapeScene = function(scene, name, devmode) {
+exports.ShapeScene = function(scene, name, devmode, showName) {
   let shapeScene;
-  shapeScene = new Scene(scene, name, devmode);
+  shapeScene = new Scene(scene, name, devmode, showName);
   // document.addEventListener('readystatechange', function(){
   //   if (document.readyState == "interactive"){
   //     console.log("interactive");

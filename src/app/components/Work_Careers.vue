@@ -2,7 +2,7 @@
   <div>
     <!-- <Carousel /> -->
 
-    <carousel :data="carouselProps">
+    <carousel :progressColor="progressColor">
 
       <div class="carousel-cell" v-for="image in images">
         <img :src="image" alt="" />
@@ -11,12 +11,8 @@
     </carousel>
 
     <div class="container">
-
       <div class="content" ref="content">
         <h2>Careers Redesign</h2>
-        <p>
-          {{msg}}
-        </p>
         <p>
           {{saying}}
         </p>
@@ -27,7 +23,8 @@
         <p>Sed lacinia, urna non tincidunt mattis, tortor neque adipiscing diam, a cursus ipsum ante quis turpis. Nulla facilisi. Ut fringilla. Suspendisse potenti. Nunc feugiat mi a tellus consequat imperdiet. Vestibulum sapien. Proin quam. Etiam ultrices. Suspendisse in justo eu magna luctus suscipit. Sed lectus. Integer euismod lacus luctus magna. Quisque cursus, metus vitae pharetra auctor, sem massa mattis sem, at interdum magna augue eget diam. </p>
       </div>
     </div>
-    <div id="bkg"></div>
+
+    <div :style="{background: backgroundColor}" class="background"></div>
 
   </div>
 </template>
@@ -43,23 +40,31 @@
   import Carousel from './Carousel.vue';
 
   export default {
-    props: ['msg'],
+    props: ['project'],
     data () {
       return {
         images: [careersScreensPNG, careersPNG, careersPNG, careersPNG],
         saying: 'hey im content',
-        carouselProps:{
-          progressBar: {
-            color: '#E88278'
-          }
-        }
+        defaultProgressColor: '#E88278',
+        defaultBackgroundColor: '#F69296'
 
+      }
+    },
+    computed: {
+      progressColor: function(){
+        let color = this.$props.project ? this.$props.project.mediumColor : this.defaultProgressColor;
+        return color;
+      },
+      backgroundColor: function(){
+        let color = this.$props.project ? this.$props.project.primaryColor : this.defaultBackgroundColor;
+        return color;
       }
     },
     components: {
       carousel: Carousel
     },
     mounted(){
+      console.log(this.$props);
 
       let tl = new TimelineLite();
       tl.fromTo(this.$refs.content, .6, {
@@ -92,13 +97,13 @@
     }
   }
 
-  #bkg{
+  .background{
     position:absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: #FF9A91;
+    background: #F69296;
     z-index: -2;
   }
 </style>

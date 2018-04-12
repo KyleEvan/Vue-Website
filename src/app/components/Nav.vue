@@ -68,7 +68,7 @@
       align-items: center;
 			z-index: 3;
       justify-content: space-between;
-      padding: 40px 6%;
+      padding: 3%;
       font-size: 18px;
       font-family: 'InterUI', sans-serif;
 			pointer-events: none;

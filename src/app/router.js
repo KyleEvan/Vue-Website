@@ -23,37 +23,37 @@ export default new Router({
       path: '/work',
       name: 'Work',
       component: Work,
-      meta: { title: 'Work | KP' }
+      meta: { title: 'Work | KP', showName: false }
     },
     {
       path: '/careers-redesign',
       name: 'Careers-Redesign',
       component: WorkCareers,
       props: true,
-      meta: { title: 'Careers Redesign | KP' }
+      meta: { title: 'Careers Redesign | KP', showName: false }
     },
     {
       path: '/about',
       name: 'About',
       component: About,
-      meta: { title: 'About | KP' }
+      meta: { title: 'About | KP', showName: false }
     },
     {
       path: '/contact',
       name: 'Contact',
       component: Contact,
-      meta: { title: 'Contact | KP' }
+      meta: { title: 'Contact | KP', showName: false }
     },
     {
       path: '*',
       name: 'NotFound',
-      component: NotFound
+      component: NotFound,
+      meta: { title: 'Not Found | KP', showName: false }
     }
   ],
   scrollBehavior (to, from, savedPosition) {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-
         resolve({ x: 0, y: 0 })
       }, transitions.duration)
     })

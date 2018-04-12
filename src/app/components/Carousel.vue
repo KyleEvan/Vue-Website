@@ -2,17 +2,18 @@
 
   <div id="carousel">
 
-    <div id="flickityContainer" ref="carousel">
+    <div id="flickityContainer" ref="carousel" :style="minHeight">
       <slot></slot>
     </div>
 
     <svg id="progressBar" :width="progressBar.width" :height="progressBar.height" :viewBox="viewBox" :style="{bottom: -progressBar.height}">
       <path :stroke="progressBar.background" :stroke-width="progressBar.height" :d="path"></path>
-      <path :stroke="data.progressBar.color" :stroke-width="progressBar.height" :d="path" :style="{strokeDasharray: progressBar.width, strokeDashoffset: progressBar.progress}"></path>
+      <path :stroke="progressColor" :stroke-width="progressBar.height" :d="path" :style="{strokeDasharray: progressBar.width, strokeDashoffset: progressBar.progress}"></path>
     </svg>
 
+    <!-- For Development -->
     <div class="debug progressBar progress" v-if="devmode" style="color: red;">
-      {{ progressBar.width - progressBar.progress }}
+      {{progressBar.width - progressBar.progress}}
     </div>
 
   </div>
@@ -25,9 +26,12 @@
 
 
   export default {
-    props: ['data'],
-    data () {
+    props: ['progressColor'],
+    data(){
       return {
+        minHeight: {
+          'min-height': '400px'
+        },
         progressBar: {
           width: 0,
           height: 10,
@@ -36,7 +40,7 @@
         }
       }
     },
-    computed: {
+    computed:{
       viewBox: function(){
         return `0 0 ${this.progressBar.width} ${this.progressBar.height}`;
       },
@@ -49,7 +53,7 @@
         this.progressBar.progress = this.progressBar.width - (progress * this.progressBar.width);
         return this.progressBar.progress;
       },
-      updateWidth: function(width){
+      setWidth: function(width){
         this.progressBar.width = width;
       }
 
@@ -57,6 +61,11 @@
     mounted() {
       this.progressBar.width = this.progressBar.progress = document.documentElement.clientWidth;
 
+      /*
+
+        Initialize Carousel with flickity
+
+      */
       let flkty = new Flickity( this.$refs.carousel, {
         imagesLoaded: true,
         draggable: true,
@@ -65,6 +74,12 @@
         setGallerySize: false
       });
 
+
+      /*
+
+        Events
+
+      */
       const carousel = this;
       flkty.on( 'scroll', ( progress ) => {
         progress = Math.max( 0, Math.min( 1, progress ) );
@@ -73,7 +88,7 @@
 
       const handleResize = this.debounce(function() {
         console.log("handling resize");
-        carousel.updateWidth(document.documentElement.clientWidth);
+        carousel.setWidth(document.documentElement.clientWidth);
       }, 50);
       window.addEventListener('resize', handleResize);
 
@@ -91,7 +106,6 @@
     #flickityContainer{
       position: relative;
       height: 30vw;
-      min-height: 300px;
       width: 100%;
       display: flex;
       justify-content: center;
@@ -100,6 +114,7 @@
       .flickity-viewport{
         width: 100%;
         height: 100%;
+        overflow-x: hidden;
         cursor: move; /* fallback if grab cursor is unsupported */
         cursor: grab;
         cursor: -moz-grab;

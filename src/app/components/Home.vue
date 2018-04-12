@@ -10,13 +10,14 @@
             <p>
               {{project.summary}}
             </p>
-            <a :href="project.href" @click.prevent="handleClick" :style="{color: project.secondaryColor, backgroundColor: project.primaryColor}">View Project</a>
+            <a class="link" :href="project.href" @click.prevent="handleClick" :style="{color: project.secondaryColor, backgroundColor: project.primaryColor}">View Project</a>
           </div>
-          <div class="image">
-            <svg :style="{width: project.image.style.width, height: project.image.style.height}">
+          <div class="image" :style="{width: project.image.width, background: project.primaryColor}">
+            <img :src="project.image.src" />
+            <!-- <svg :style="{width: project.image.style.width, height: project.image.style.height}">
               <rect class="background" x="0" y="0" width="100%" height="100%" :fill="project.primaryColor" />
               <image x="0" y="0" :width="project.image.width" :height="project.image.height" v-bind:xlink:href='project.image.src' />
-            </svg>
+            </svg> -->
           </div>
         </section>
 
@@ -34,6 +35,11 @@
         <image ref="transitionImage" :x="transitionSVG.image.x" :y="transitionSVG.image.y" :width="transitionSVG.image.width" :height="transitionSVG.image.height" xmlns:xlink="http://www.w3.org/1999/xlink" :xlink:href="transitionSVG.image.src"></image>
       </g>
     </svg>
+
+    <div id="transitionImage">
+
+    </div>
+
 
   </div>
 </template>
@@ -54,6 +60,7 @@
     turquoise: '#44FFD2',
     darkTurquoise: '#2CA386',
     peach: '#FFBFA0',
+    mediumPeach: '#E8AE92',
     darkPeach: '#A37A66',
     blue: '#87F6FF',
     darkBlue: '#569DA3'
@@ -64,6 +71,10 @@
 
     data () {
       return {
+        bannerWidth: document.documentElement.clientWidth,
+        bannerHeightVW: .3,   // 30vw
+        bannerMinHeight: 400, // px
+
         images: [],
         projects: [
           {
@@ -71,24 +82,21 @@
             title: 'Careers Redesign',
             summary: 'Careers Website Redesign for Excellus BCBS and Univera Healthcare. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Varius quam quisque id diam vel quam elementum pulvinar. Purus ut faucibus pulvinar elementum integer enim neque.',
             href: 'Careers-Redesign',
-            image: {
-              width: '100%',
-              height: '115%',
+            image:{
+              width: '60%',
+              // width: '100%',
+              // height: '100%',
               src: careersScreensPNG,
-              style: {
-                width: '42vw',
-                height: '25.2vw'
-              }
+              // style:{
+              //   width: '42vw',
+              //   height: '25.2vw'
+              // }
             },
             primaryColor: colors.peach,
+            mediumColor: colors.mediumPeach,
             secondaryColor: colors.darkPeach
           }
         ],
-
-
-
-        bannerHeight: (window.innerWidth*.3) > 300 ? (window.innerWidth*.3) : 300,
-
 
 
 
@@ -101,7 +109,7 @@
           height: document.documentElement.clientHeight,
           polygon:{
             points: '0 0 0 0 0 0 0 0',
-            pointsTransformed: undefined
+            pointsTransformed: '0 0 0 0 0 0 0 0'
           },
           image:{
             x: 0,
@@ -109,7 +117,7 @@
             width: 0,
             height: 0,
             src: '',
-            backgroundColor: 'fff',
+            backgroundColor: '#ffffff',
             transform:{
               translateX: undefined,
               translateY: undefined,
@@ -124,14 +132,70 @@
     computed:{
       viewbox(){
         return `${this.transitionSVG.x} ${this.transitionSVG.y} ${this.transitionSVG.width} ${this.transitionSVG.height}`;
+      },
+      bannerHeight(){
+        // Check bannerHeight to make sure its not lower than the minimum height
+        return (window.innerWidth*this.bannerHeightVW) >= this.bannerMinHeight ? (window.innerWidth*this.bannerHeightVW) : this.bannerMinHeight;
       }
     },
     methods:{
-      navigate: function(e){
+      getPoints: function(l, t, r, b){
+        return `${l} ${t} ${r} ${t} ${r} ${b} ${l} ${b}`;
+      },
+      navigate: function(e, index){
         const href = e.target.getAttribute("href");
         if(href){
-          this.$router.push({name: href, params: { msg:'ello ello' }});
+          this.$router.push({
+            name: href,
+            params: {project: this.projects[index]}
+          });
         }
+      },
+      getProjectData: function(target){
+        const projects = document.querySelectorAll('.project');
+        for (var i = projects.length-1; i >= 0; i--){
+          let project = projects[i];
+          if( project.querySelector('.link') == target){
+            return {
+              el: projects[i],
+              image: project.querySelector('.image > img'),
+              imageContainer: project.querySelector('.image'),
+              data: this.projects[i]
+            }
+          }
+          else{
+            console.log('Something went wrong, no project matches');
+          }
+        }
+      },
+      calcTransforms: function(data){
+        const container = data.imageContainer.getBoundingClientRect();
+        const containerCenter = {
+          x: container.left + container.width/2,
+          y: container.top + container.height/2
+        };
+        const newCenter = {
+          x: this.bannerWidth/2,
+          y: this.bannerHeight/2
+        };
+        // Translations
+        return {
+          scale: this.bannerHeight/container.height,
+          translateX: newCenter.x - containerCenter.x,
+          translateY: newCenter.y - containerCenter.y
+        };
+      },
+      createBackground: function(data){
+        const container = data.imageContainer.getBoundingClientRect();
+        const SVGContainer = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        SVGContainer.setAttribute('viewBox', `${0} ${0} ${document.documentElement.clientWidth} ${document.documentElement.clientHeight}`);
+
+        const background = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+        background.setAttribute('fill', data.primaryColor);
+        background.setAttribute('points', this.getPoints(container.left, container.top, container.right, container.bottom));
+        SVGContainer.appendChild(background);
+        document.querySelector('.main').insertBefore(SVGContainer, data.image);
+        data.imageContainer.style.background = 'transparent';
       },
       setData: function(el){
         // Reference original project image
@@ -154,6 +218,8 @@
         this.transitionSVG.image.y = imageClientRect.top;
         this.transitionSVG.image.width = imageClientRect.width;
         this.transitionSVG.image.height = imageClientRect.height;
+        console.log(containerClientRect);
+        console.log(imageClientRect);
       },
       calcImageTransforms: function(){
         const centers = {
@@ -178,55 +244,63 @@
         this.transitionSVG.polygon.el = this.$refs.transitionPolygon;
 
         const polygon = this.transitionSVG.image.container;
-        this.transitionSVG.polygon.points = `${polygon.left} ${polygon.top} ${polygon.right} ${polygon.top} ${polygon.right} ${polygon.bottom} ${polygon.left} ${polygon.bottom}`;
+        this.transitionSVG.polygon.points = this.getPoints(polygon.left, polygon.top, polygon.right, polygon.bottom);
 
-        const polygonTransformedPoints = `${this.transitionSVG.x} ${this.transitionSVG.y} ${this.transitionSVG.width} ${this.transitionSVG.y} ${this.transitionSVG.width} ${this.bannerHeight} ${this.transitionSVG.x} ${this.bannerHeight}`;
-        this.transitionSVG.polygon.pointsTransformed = polygonTransformedPoints;
+        this.transitionSVG.polygon.pointsTransformed = this.getPoints(this.transitionSVG.x, this.transitionSVG.y, this.transitionSVG.width, this.bannerHeight);
+
+        console.log(this.transitionSVG.polygon.pointsTransformed);
       },
       handleClick: function(e){
         this.transitioning = true;
-        this.setData(e.target);
-        this.calcImageTransforms();
-        this.calcBackgroundPoints();
+        const project = this.getProjectData(e.target);
+        const transforms = this.calcTransforms(project);
+        console.log(project);
+        console.log(transforms);
+        this.createBackground(project);
+
+        // console.log(transforms);
+
+        // this.setData(e.target);
+        // this.calcImageTransforms();
+        // this.calcBackgroundPoints();
 
         const duration = 800; // temporary
-        const transitionSVG = this.transitionSVG;
+        // const transitionSVG = this.transitionSVG;
         const vue = this;
+        // const projectIndex = this.transitionSVG.image.index;
         setTimeout(() => {
-          let image = transitionSVG.image;
-          let polygon = transitionSVG.polygon;
-          TweenLite.to(image.el, (duration/1000), {
-            x: image.transform.translateX,
-            y: image.transform.translateY,
-            scale: image.transform.scale,
-            ease: Power2.easeOut,
+          // let image = transitionSVG.image;
+          // let polygon = transitionSVG.polygon;
+          TweenLite.to(project.imageContainer, (duration/1000), {
+            x: transforms.translateX,
+            y: transforms.translateY,
+            scale: transforms.scale,
+            ease: Power2.easeInOut,
             transformOrigin: '50% 50%',
             onStart: () => {
               // Hide original image
-              image.referencedSVG.style.display = "none";
+              // image.referencedSVG.style.display = "none";
               console.log('starting animation');
             },
             onComplete: () => {
-              vue.navigate(e);
+              // vue.navigate(e, projectIndex);
+
               // console.log("callback!");
               // console.log(svgTransition.innerHTML);
               // svgTransition.outerHTML = "";
               // svgTransition = null;
             }
           });
-          // TweenLite.to(rect, (duration/1000), {
-          //   opacity: 0,
-          //   ease: easing
-          // })
 
-          anime({
-            targets: polygon.el,
-            points: [
-              { value: polygon.pointsTransformed }
-            ],
-            easing: 'easeOutCubic',
-            duration: duration - 100
-          });
+
+          // anime({
+          //   targets: polygon.el,
+          //   points: [
+          //     { value: polygon.pointsTransformed }
+          //   ],
+          //   easing: 'easeInOutCubic',
+          //   duration: duration - 80
+          // });
 
 
 
@@ -235,51 +309,52 @@
 
     },
     mounted(){
+      // Set transitionLayer data attributes (width and height) to window dimensions excluding scrollbar
       this.transitionSVG.width = document.documentElement.clientWidth;
       this.transitionSVG.height = document.documentElement.clientHeight;
+
+      // Initialize Events
+      const handleResize = this.debounce(() => {
+        this.transitionSVG.width = document.documentElement.clientWidth;
+        this.transitionSVG.height = document.documentElement.clientHeight;
+      }, 50);
+      window.addEventListener('resize', handleResize);
+
 
       const projects = document.querySelectorAll('.project');
       const controller = new ScrollMagic.Controller();
       const tl = new TimelineLite();
 
-        // let nameScene = new ScrollMagic.Scene({
-        //   triggerElement: this.$refs.main,
-        //   triggerHook: 0,
-        //   duration: .05,
-        //   reverse: true
-        // })
-        // .on('end', () => {
-        //   console.log("name scene ended")
-        // })
-        // .addTo(controller);
-
         for(let i = 0; i < projects.length; i++){
           let project = projects[i];
           const imageContainer = project.querySelector('.image');
-          const image = project.querySelector('.image > svg > image');
-          const imageSrc = image.getAttribute('xlink:href');
-          const svg = project.querySelector('.image > svg');
-          const background = project.querySelector('.background').getAttribute('fill');
+          const image = project.querySelector('.image > img');
+          // const imageSrc = image.getAttribute('src');
+          // const svg = project.querySelector('.image > svg');
+          // const background = imageContainer.style.background;
+          // const background = project.querySelector('.background').getAttribute('fill');
+          // let imageObject = {
+          //   el: image,
+          //   index: i,
+          //   src: imageSrc,
+            // referencedSVG: svg,
+          //   backgroundColor: background
+          // };
+          // this.images.push(imageObject);
 
-          let imageObject = {
-            el: image,
-            src: imageSrc,
-            referencedSVG: svg,
-            backgroundColor: background
-          };
-          this.images.push(imageObject);
+
 
           // Convert classnames into array
           const classes = project.className.match(/\S+/g) || [];
           // Set initial values for transforms according to project alignment
           for(let name of classes){
             if(name == 'ltr'){
-              tl.set(svg, { x: '100%', opacity: 0 });
+              // tl.set(svg, { x: '100%', opacity: 0 });
               tl.set(image, { x: '100%' });
               tl.set(imageContainer, { scale: 1.4 });
             }
             else if(name == 'rtl'){
-              tl.set(svg, { x: '-100%' });
+              // tl.set(svg, { x: '-100%' });
               tl.set(image, { x: '-100%' });
             }
           }
@@ -287,7 +362,7 @@
 
           const projectScene = new ScrollMagic.Scene({
             triggerElement: project,
-            triggerHook: .4,
+            triggerHook: .8,
             reverse: false
           })
           .on('start', () => {
@@ -296,13 +371,13 @@
               scale: 1,
               ease: Power2.easeOut
             }, 0)
-            .to(svg, 1,
-            {
-              opacity: 1,
-              x: '0%',
-              scale: 1,
-              ease: Expo.easeOut
-            }, 0)
+            // .to(svg, 1,
+            // {
+            //   opacity: 1,
+            //   x: '0%',
+            //   scale: 1,
+            //   ease: Expo.easeOut
+            // }, 0)
             .to(image, 1,
             {
               x: '0%',
@@ -314,7 +389,7 @@
 
       if(this.$data.devmode){
         console.log("********************");
-        console.log("Images: ");
+        console.log("IMAGES: ");
         console.log(this.images);
         console.log("********************");
       }
@@ -343,25 +418,36 @@
       .project{
         position: relative;
         width: 100%;
-        min-height: 80vh;
+        min-height: auto;
         display: flex;
         align-items: center;
         justify-content: space-between;
+
         @include small {
           flex-direction: column-reverse;
         }
         @include medium {
+          min-height: 80vh;
           flex-direction: row;
         }
         .text{
-          width:34%;
-          margin-left:8%;
+          @include small {
+            width: 100%;
+            margin: 0%;
+          }
+          @include medium {
+            width: 34%;
+            margin: 0% 0% 0% 8%;
+          }
 
           h2{
             margin-top: 0;
+            margin-bottom: .75rem;
           }
           p{
             color: #645D54;
+            margin-top: 0;
+            margin-bottom: 1.5rem;
           }
           a{
             display: inline-block;
@@ -375,9 +461,33 @@
         }
         .image{
           display: flex;
+          align-items: center;
           overflow: hidden;
+
+
+          @include small {
+            width: 100%;
+            padding-bottom: 1.5rem;
+          }
+          @include medium {
+            width: auto;
+            padding-bottom: 0;
+          }
+
+          img{
+            width: 100%
+          }
+
           svg{
-            position:relative;
+            position: relative;
+            @include small {
+              width: 100% !important;
+              height: 34vw !important;
+            }
+            @include medium {
+              width: auto;
+              height: auto;
+            }
           }
         }
 

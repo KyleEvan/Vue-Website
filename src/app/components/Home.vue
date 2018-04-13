@@ -4,7 +4,7 @@
     <div class="container">
       <div class="content">
 
-        <section v-for="project in projects" :class="project.align" class="project">
+        <section v-for="project in projects" :data-align="project.align" class="project">
           <div class="text">
             <h2>{{project.title}}</h2>
             <p>
@@ -14,29 +14,11 @@
           </div>
           <div class="image" :style="{width: project.image.width, background: project.primaryColor}">
             <img :src="project.image.src" />
-            <!-- <svg :style="{width: project.image.style.width, height: project.image.style.height}">
-              <rect class="background" x="0" y="0" width="100%" height="100%" :fill="project.primaryColor" />
-              <image x="0" y="0" :width="project.image.width" :height="project.image.height" v-bind:xlink:href='project.image.src' />
-            </svg> -->
           </div>
         </section>
 
       </div>
     </div>
-
-    <!-- <svg id="transitionLayer" ref="transitionSVG" :width="transitionSVG.width" :height="transitionSVG.height" :viewBox="viewbox" v-show="transitioning">
-      <defs>
-        <clipPath id="polyClip">
-          <polygon ref="transitionPolygon" :points="transitionSVG.polygon.points"></polygon>
-        </clipPath>
-      </defs>
-      <rect :fill="transitionSVG.image.backgroundColor" :x="transitionSVG.x" :y="transitionSVG.y" :width="transitionSVG.width" :height="transitionSVG.height" clip-path="url(#polyClip)"></rect>
-      <g clip-path="url(#polyClip)">
-        <image ref="transitionImage" :x="transitionSVG.image.x" :y="transitionSVG.image.y" :width="transitionSVG.image.width" :height="transitionSVG.image.height" xmlns:xlink="http://www.w3.org/1999/xlink" :xlink:href="transitionSVG.image.src"></image>
-      </g>
-    </svg> -->
-
-
 
 
   </div>
@@ -69,11 +51,15 @@
 
     data () {
       return {
-        bannerWidth: document.documentElement.clientWidth,
+        bannerWidth: undefined,
         bannerHeightVW: .3,   // 30vw
         bannerMinHeight: 400, // px
 
-        images: [],
+        background: undefined,
+        project: undefined,
+        transforms: undefined,
+        transitioning: false,
+
         projects: [
           {
             align: 'ltr',
@@ -82,13 +68,7 @@
             href: 'Careers-Redesign',
             image:{
               width: '60%',
-              // width: '100%',
-              // height: '100%',
-              src: careersScreensPNG,
-              // style:{
-              //   width: '42vw',
-              //   height: '25.2vw'
-              // }
+              src: careersScreensPNG
             },
             primaryColor: colors.peach,
             mediumColor: colors.mediumPeach,
@@ -97,40 +77,9 @@
         ],
 
 
-
-        tl: new TimelineLite(),
-        transitioning: false,
-        transitionSVG:{
-          x: 0,
-          y: 0,
-          width: document.documentElement.clientWidth,
-          height: document.documentElement.clientHeight,
-          polygon:{
-            points: '0 0 0 0 0 0 0 0',
-            pointsTransformed: '0 0 0 0 0 0 0 0'
-          },
-          image:{
-            x: 0,
-            y: 0,
-            width: 0,
-            height: 0,
-            src: '',
-            backgroundColor: '#ffffff',
-            transform:{
-              translateX: undefined,
-              translateY: undefined,
-              scale: undefined
-            },
-            container: undefined
-          },
-        }
-
       }
     },
     computed:{
-      viewbox(){
-        return `${this.transitionSVG.x} ${this.transitionSVG.y} ${this.transitionSVG.width} ${this.transitionSVG.height}`;
-      },
       bannerHeight(){
         // Check bannerHeight to make sure its not lower than the minimum height
         return (window.innerWidth*this.bannerHeightVW) >= this.bannerMinHeight ? (window.innerWidth*this.bannerHeightVW) : this.bannerMinHeight;
@@ -144,18 +93,21 @@
       getPoints: function(l, t, r, b){
         return `${l} ${t} ${r} ${t} ${r} ${b} ${l} ${b}`;
       },
-      navigate: function(e, index){
+      navigate: function(e, project, background){
         const href = e.target.getAttribute("href");
         if(href){
+          background.parentNode.outerHTML = "";
+          background = null;
+
           this.$router.push({
             name: href,
-            params: {project: this.projects[index]}
+            params: {project: project}
           });
         }
       },
       getProjectData: function(target){
         const projects = document.querySelectorAll('.project');
-        for (var i = projects.length-1; i >= 0; i--){
+        for (let i = projects.length-1; i >= 0; i--){
           let project = projects[i];
           if( project.querySelector('.link') == target){
             return {
@@ -180,7 +132,6 @@
           x: this.bannerWidth/2,
           y: this.bannerHeight/2
         };
-        // Translations
         // New Points
         return {
           scale: this.bannerHeight/container.height,
@@ -188,7 +139,6 @@
           translateY: newCenter.y - containerCenter.y,
           newPoints: this.newPoints
         };
-
       },
       createBackground: function(project){
         const container = project.imageContainer.getBoundingClientRect();
@@ -212,144 +162,57 @@
         project.imageContainer.style.background = 'transparent';
         return background;
       },
-      setData: function(el){
-        // Reference original project image
-        const activeProject = el.closest('.project');
-        const activeImage = activeProject.querySelector('image');
-        // Filter images array to get image object
-        let matchedImage = this.images.filter((image) => {
-            return image.el === activeImage;
-        })[0];
-        // Combine matched image properties with transitionSVG data
-        this.transitionSVG.image = Object.assign({}, this.transitionSVG.image, matchedImage);
-        this.transitionSVG.el = this.$refs.transitionSVG;
-        this.transitionSVG.image.el = this.$refs.transitionImage;
-        // Assign image container bounding rect to data
-        const containerClientRect = this.transitionSVG.image.referencedSVG.getBoundingClientRect();
-        this.transitionSVG.image.container = containerClientRect;
-        // Update transitionSVG data with bounding rect properties
-        const imageClientRect = matchedImage.el.getBoundingClientRect();
-        this.transitionSVG.image.x = imageClientRect.left;
-        this.transitionSVG.image.y = imageClientRect.top;
-        this.transitionSVG.image.width = imageClientRect.width;
-        this.transitionSVG.image.height = imageClientRect.height;
-        console.log(containerClientRect);
-        console.log(imageClientRect);
-      },
-      calcImageTransforms: function(){
-        const centers = {
-          center: {
-            x: this.transitionSVG.image.x + this.transitionSVG.image.width/2,
-            y: this.transitionSVG.image.y + this.transitionSVG.image.height/2
-          },
-          newCenter: {
-            x: this.transitionSVG.width/2,
-            y: this.bannerHeight/2
-          }
-        };
-        this.transitionSVG.image = Object.assign({}, this.transitionSVG.image, centers);
-        const imageToContainer_Ratio = this.transitionSVG.image.height/this.transitionSVG.image.container.height;
-        this.transitionSVG.image.transform = {
-          scale: (this.bannerHeight*imageToContainer_Ratio)/this.transitionSVG.image.height,
-          translateX: this.transitionSVG.image.newCenter.x - this.transitionSVG.image.center.x,
-          translateY: this.transitionSVG.image.newCenter.y - this.transitionSVG.image.center.y
-        };
-      },
-      calcBackgroundPoints: function(){
-        this.transitionSVG.polygon.el = this.$refs.transitionPolygon;
-
-        const polygon = this.transitionSVG.image.container;
-        this.transitionSVG.polygon.points = this.getPoints(polygon.left, polygon.top, polygon.right, polygon.bottom);
-
-        this.transitionSVG.polygon.pointsTransformed = this.getPoints(this.transitionSVG.x, this.transitionSVG.y, this.transitionSVG.width, this.bannerHeight);
-
-        console.log(this.transitionSVG.polygon.pointsTransformed);
-      },
-      handleClick: function(e){
-        this.transitioning = true;
-        const project = this.getProjectData(e.target);
-        const transforms = this.calcTransforms(project);
-        console.log(project);
-        console.log(transforms);
-
-        // console.log(transforms);
-
-        // this.setData(e.target);
-        // this.calcImageTransforms();
-        // this.calcBackgroundPoints();
-
-        const duration = 500; // temporary
-        // const transitionSVG = this.transitionSVG;
-        // const vue = this;
-        // const projectIndex = this.transitionSVG.image.index;
-        // setTimeout(() => {
-          // let image = transitionSVG.image;
-          // let polygon = transitionSVG.polygon;
+      animateImage: function(e, project, transforms){
         const tl = new TimelineLite();
+        const duration = 700; // temporary
 
-          // this.createBackground(project);
         const morphBackground = () => {
-          let background = this.createBackground(project);
-          let newPoints = this.newPoints;
-
+          const background = this.createBackground(project);
+          console.log(background);
           anime({
             targets: background,
             points: [
-              { value: newPoints }
+              { value: this.newPoints }
             ],
-            easing: 'easeInCirc',
-            duration: 400
-          });
-        }
-          tl.to(project.imageContainer, (duration/1000), {
-            x: transforms.translateX,
-            y: transforms.translateY,
-            scale: transforms.scale,
-            ease: Power2.easeOut,
-            transformOrigin: '50% 50%',
-            onStart: () => {
-              // Hide original image
-              // image.referencedSVG.style.display = "none";
-              console.log('starting animation');
-            },
-            onComplete: () => {
-              morphBackground();
-
-              // vue.navigate(e, projectIndex);
-
-              // console.log("callback!");
-              // console.log(svgTransition.innerHTML);
-              // svgTransition.outerHTML = "";
-              // svgTransition = null;
+            easing: 'easeOutQuad',
+            duration: 400,
+            complete: () => {
+              console.log("Transition Completed");
+              this.transitioning = false;
+              this.navigate(e, project.data, background);
             }
           });
+        };
 
-
-
-          // anime({
-          //   targets: polygon.el,
-          //   points: [
-          //     { value: polygon.pointsTransformed }
-          //   ],
-          //   easing: 'easeInOutCubic',
-          //   duration: duration - 80
-          // });
-
-
-
-        // }, 900);
+        tl.to(project.imageContainer, (duration/1000), {
+          x: transforms.translateX,
+          y: transforms.translateY,
+          scale: transforms.scale,
+          ease: Power1.easeInOut,
+          transformOrigin: '50% 50%',
+          onStart: () => {
+            console.log('starting animation');
+          },
+          onComplete: () => {
+            morphBackground();
+          }
+        });
+      },
+      handleClick: function(e){
+        this.transitioning = true;
+        this.project = this.getProjectData(e.target);
+        this.transforms = this.calcTransforms(this.project);
+        this.animateImage(e, this.project, this.transforms);
       }
 
     },
     mounted(){
-      // Set transitionLayer data attributes (width and height) to window dimensions excluding scrollbar
-      this.transitionSVG.width = document.documentElement.clientWidth;
-      this.transitionSVG.height = document.documentElement.clientHeight;
+      // Initially bannerWidth to window width
+      this.bannerWidth = document.documentElement.clientWidth;
 
       // Initialize Events
       const handleResize = this.debounce(() => {
-        this.transitionSVG.width = document.documentElement.clientWidth;
-        this.transitionSVG.height = document.documentElement.clientHeight;
+        this.bannerWidth = document.documentElement.clientWidth;
       }, 50);
       window.addEventListener('resize', handleResize);
 
@@ -362,35 +225,17 @@
           let project = projects[i];
           const imageContainer = project.querySelector('.image');
           const image = project.querySelector('.image > img');
-          // const imageSrc = image.getAttribute('src');
-          // const svg = project.querySelector('.image > svg');
-          // const background = imageContainer.style.background;
-          // const background = project.querySelector('.background').getAttribute('fill');
-          // let imageObject = {
-          //   el: image,
-          //   index: i,
-          //   src: imageSrc,
-            // referencedSVG: svg,
-          //   backgroundColor: background
-          // };
-          // this.images.push(imageObject);
+          const alignment = project.getAttribute('data-align');
 
-
-
-          // Convert classnames into array
-          const classes = project.className.match(/\S+/g) || [];
           // Set initial values for transforms according to project alignment
-          for(let name of classes){
-            if(name == 'ltr'){
-              // tl.set(svg, { x: '100%', opacity: 0 });
-              tl.set(image, { x: '100%' });
-              tl.set(imageContainer, { scale: 1.4 });
-            }
-            else if(name == 'rtl'){
-              // tl.set(svg, { x: '-100%' });
-              tl.set(image, { x: '-100%' });
-            }
+          if(alignment == 'ltr'){
+            tl.set(image, { x: '100%' });
           }
+          else if(alignment == 'rtl'){
+            tl.set(image, { x: '-100%' });
+          }
+          tl.set(imageContainer, { scale: 1.4 });
+
 
 
           const projectScene = new ScrollMagic.Scene({
@@ -404,13 +249,6 @@
               scale: 1,
               ease: Power2.easeOut
             }, 0)
-            // .to(svg, 1,
-            // {
-            //   opacity: 1,
-            //   x: '0%',
-            //   scale: 1,
-            //   ease: Expo.easeOut
-            // }, 0)
             .to(image, 1,
             {
               x: '0%',
@@ -420,12 +258,7 @@
           .addTo(controller);
         }
 
-      if(this.$data.devmode){
-        console.log("********************");
-        console.log("IMAGES: ");
-        console.log(this.images);
-        console.log("********************");
-      }
+
 
       // ourScene.on("progress", function (event) {
         // let progress = event.progress
@@ -451,10 +284,10 @@
       .project{
         position: relative;
         width: 100%;
-        min-height: auto;
+        min-height: 60vh;
         display: flex;
         align-items: center;
-        justify-content: space-between;
+        justify-content: center;
 
         @include small {
           flex-direction: column-reverse;
@@ -494,21 +327,22 @@
         }
         .image{
           display: flex;
-          align-items: center;
+          justify-content: center;
           overflow: hidden;
 
-
-          @include small {
-            width: 100%;
-            padding-bottom: 1.5rem;
+          @include small{
+            width: 100% !important;
+            height: 34vw !important;
+            margin-bottom: 1.5rem;
           }
-          @include medium {
+          @include medium{
             width: auto;
-            padding-bottom: 0;
+            height: auto;
+            margin-bottom: 0;
           }
 
           img{
-            width: 100%
+            height: 100%
           }
 
           svg{
@@ -528,12 +362,5 @@
     }
   }
 
-
-  svg#transitionLayer{
-    position:fixed;
-    top: 0;
-    left: 0;
-    z-index: -1;
-  }
 
 </style>

@@ -196,10 +196,10 @@
           z-index: 5;
           position: relative;
           cursor: pointer;
-          transition: transform .2s cubic-bezier(0.02, 0.1, 0.15, 1);
+          transition: transform 0.5s cubic-bezier(0.52, 2, 0.33, 0.915);
         }
         .dot.is-selected{
-          transform: scale(1.5);
+          transform: scale(1.8);
         }
       }
     }

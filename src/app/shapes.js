@@ -18,7 +18,7 @@ Color Palette
 //   '#7BE7E1', '#88E9E4', '#95ECE7', '#A2EEEA', '#AFF0ED', '#BDF3F0'
 // ];
 const colors = [
-  '#E2E2E2', '#D3D3D4', '#C5C5C6'
+  '#E2E2E2', '#A8A8A9', '#C5C5C6'
 ];
 
 
@@ -396,14 +396,12 @@ class Scene { // #scene
 
     if(this.devmode){
       let style;
-      console.log('%c ######################################## ', this.devConfig.console.grayText);
       if(this.interactive){
         style = this.devConfig.console.greenText;
       }else{
         style = this.devConfig.console.redText;
       }
       console.log(`%c SCENE INTERACTIVE: %c${this.interactive} `, this.devConfig.console.aquaText, style);
-      console.log('%c ######################################## ', this.devConfig.console.grayText);
     }
   }
   toggleScene() {

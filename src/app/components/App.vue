@@ -4,7 +4,7 @@
     <navigation />
 
     <!-- Main website content -->
-    <transition mode="out-in"
+    <transition mode="in-out"
       v-on:before-enter="beforeEnter"
       v-on:enter="enter"
       v-on:before-leave="beforeLeave"
@@ -66,9 +66,12 @@
 
       },
       enter: function(el, done){
-        setTimeout(function(){
-          console.log("transition entering");
-        }, 1000)
+        console.log("transition entering");
+
+        // setTimeout(function(){
+        //   console.log("transition entering");
+        // }, 1000)
+        done();
 
       },
       beforeLeave: function(el){
@@ -78,19 +81,19 @@
         // body.style.top = `${-(window.scrollY || window.pageYOffset || document.body.scrollTop + (document.documentElement && document.documentElement.scrollTop || 0))}px`;
         // body.style.position = 'fixed';
         // body.style.overflowY = "scroll";
-        this.bodyNoScroll();
+        // this.bodyNoScroll();
 
-        let container = document.querySelector('.container');
-        TweenLite.to(container, .5, { y: 50, opacity: 0, ease: Expo.easeIn });
+        // let container = document.querySelector('.container');
+        // TweenLite.to(container, .5, { y: 50, opacity: 0, ease: Expo.easeIn });
 
       },
       leave: function(el, done){
         console.log("transition leaving");
-        setTimeout(function(){
-          const body = document.body;
-          body.removeAttribute("style");
+        // setTimeout(function(){
+          // const body = document.body;
+          // body.removeAttribute("style");
           done();
-        }, 1600);
+        // }, 1600);
       }
     },
     watch: {

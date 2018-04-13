@@ -24,7 +24,7 @@
       </div>
     </div>
 
-    <svg id="transitionLayer" ref="transitionSVG" :width="transitionSVG.width" :height="transitionSVG.height" :viewBox="viewbox" v-show="transitioning">
+    <!-- <svg id="transitionLayer" ref="transitionSVG" :width="transitionSVG.width" :height="transitionSVG.height" :viewBox="viewbox" v-show="transitioning">
       <defs>
         <clipPath id="polyClip">
           <polygon ref="transitionPolygon" :points="transitionSVG.polygon.points"></polygon>
@@ -34,11 +34,9 @@
       <g clip-path="url(#polyClip)">
         <image ref="transitionImage" :x="transitionSVG.image.x" :y="transitionSVG.image.y" :width="transitionSVG.image.width" :height="transitionSVG.image.height" xmlns:xlink="http://www.w3.org/1999/xlink" :xlink:href="transitionSVG.image.src"></image>
       </g>
-    </svg>
+    </svg> -->
 
-    <div id="transitionImage">
 
-    </div>
 
 
   </div>
@@ -136,6 +134,10 @@
       bannerHeight(){
         // Check bannerHeight to make sure its not lower than the minimum height
         return (window.innerWidth*this.bannerHeightVW) >= this.bannerMinHeight ? (window.innerWidth*this.bannerHeightVW) : this.bannerMinHeight;
+      },
+      newPoints(){
+        let points = this.getPoints(0, 0, document.documentElement.clientWidth, this.bannerHeight);
+        return points;
       }
     },
     methods:{
@@ -168,8 +170,8 @@
           }
         }
       },
-      calcTransforms: function(data){
-        const container = data.imageContainer.getBoundingClientRect();
+      calcTransforms: function(project){
+        const container = project.imageContainer.getBoundingClientRect();
         const containerCenter = {
           x: container.left + container.width/2,
           y: container.top + container.height/2
@@ -179,23 +181,36 @@
           y: this.bannerHeight/2
         };
         // Translations
+        // New Points
         return {
           scale: this.bannerHeight/container.height,
           translateX: newCenter.x - containerCenter.x,
-          translateY: newCenter.y - containerCenter.y
+          translateY: newCenter.y - containerCenter.y,
+          newPoints: this.newPoints
         };
+
       },
-      createBackground: function(data){
-        const container = data.imageContainer.getBoundingClientRect();
+      createBackground: function(project){
+        const container = project.imageContainer.getBoundingClientRect();
         const SVGContainer = document.createElementNS("http://www.w3.org/2000/svg", "svg");
         SVGContainer.setAttribute('viewBox', `${0} ${0} ${document.documentElement.clientWidth} ${document.documentElement.clientHeight}`);
+        SVGContainer.setAttribute('style',`
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          z-index: -3;`
+        );
 
         const background = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
-        background.setAttribute('fill', data.primaryColor);
-        background.setAttribute('points', this.getPoints(container.left, container.top, container.right, container.bottom));
+        background.setAttribute('fill', project.data.primaryColor);
+        const points = this.getPoints(container.left, container.top, container.right, container.bottom);
+        background.setAttribute('points', points);
         SVGContainer.appendChild(background);
-        document.querySelector('.main').insertBefore(SVGContainer, data.image);
-        data.imageContainer.style.background = 'transparent';
+        document.getElementById('app').appendChild(SVGContainer);
+        project.imageContainer.style.background = 'transparent';
+        return background;
       },
       setData: function(el){
         // Reference original project image
@@ -256,7 +271,6 @@
         const transforms = this.calcTransforms(project);
         console.log(project);
         console.log(transforms);
-        this.createBackground(project);
 
         // console.log(transforms);
 
@@ -264,18 +278,34 @@
         // this.calcImageTransforms();
         // this.calcBackgroundPoints();
 
-        const duration = 800; // temporary
+        const duration = 500; // temporary
         // const transitionSVG = this.transitionSVG;
-        const vue = this;
+        // const vue = this;
         // const projectIndex = this.transitionSVG.image.index;
-        setTimeout(() => {
+        // setTimeout(() => {
           // let image = transitionSVG.image;
           // let polygon = transitionSVG.polygon;
-          TweenLite.to(project.imageContainer, (duration/1000), {
+        const tl = new TimelineLite();
+
+          // this.createBackground(project);
+        const morphBackground = () => {
+          let background = this.createBackground(project);
+          let newPoints = this.newPoints;
+
+          anime({
+            targets: background,
+            points: [
+              { value: newPoints }
+            ],
+            easing: 'easeInCirc',
+            duration: 400
+          });
+        }
+          tl.to(project.imageContainer, (duration/1000), {
             x: transforms.translateX,
             y: transforms.translateY,
             scale: transforms.scale,
-            ease: Power2.easeInOut,
+            ease: Power2.easeOut,
             transformOrigin: '50% 50%',
             onStart: () => {
               // Hide original image
@@ -283,6 +313,8 @@
               console.log('starting animation');
             },
             onComplete: () => {
+              morphBackground();
+
               // vue.navigate(e, projectIndex);
 
               // console.log("callback!");
@@ -291,6 +323,7 @@
               // svgTransition = null;
             }
           });
+
 
 
           // anime({
@@ -304,7 +337,7 @@
 
 
 
-        }, 900);
+        // }, 900);
       }
 
     },

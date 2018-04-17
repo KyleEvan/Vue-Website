@@ -15,7 +15,7 @@
     </transition>
 
     <!-- Background shapes scene -->
-    <scene ref="scene" name="Kyle" :showName="showName" />
+    <scene ref="scene" />
 
   </div>
 </template>
@@ -34,18 +34,13 @@
         tl: new TimelineLite({ paused: true })
       }
     },
-    computed: {
-      showName: function(){
-        return this.$route.meta.showName;
-      }
-    },
     components: {
       "navigation": Nav,
       "scene": Scene
     },
     created(){
       console.log("Hello App created!");
-      // console.log(this.$route);
+      // Initially set title when app is first created
       document.title = this.$route.meta.title;
 
     },
@@ -63,15 +58,16 @@
       },
       beforeEnter: function(el){
         console.log("before enter")
-
+        console.log()
       },
       enter: function(el, done){
         console.log("transition entering");
 
         // setTimeout(function(){
-        //   console.log("transition entering");
+          console.log("transition entering");
+          done();
         // }, 1000)
-        done();
+
 
       },
       beforeLeave: function(el){

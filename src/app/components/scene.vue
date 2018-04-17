@@ -17,17 +17,20 @@ JS
 -->
 <script>
   import ScrollMagic from "scrollmagic";
+  import { TimelineLite } from "gsap";
+
   import { ShapeScene } from '../shapes.js';
 
   export default {
    data(){
      return{
-       scene: undefined,
-       initialized: false,
+       name: 'Kyle',
+       scene: {},
+       // initialized: false,
        showname: false
      }
    },
-   props: ['name', 'showName'],
+   // props: ['name', 'showName'],
    methods:{
      init: function(){
        this.scene = ShapeScene(this.$refs.scene, this.$refs.name, this.devmode, this.showname);
@@ -36,8 +39,12 @@ JS
        this.scene.animations.hideLetters();
      }
    },
+   created(){
+     // Check if route displays the name
+     this.showname = this.$route.meta.showName;
+   },
    beforeMount(){
-     this.showname = this.$props.showName;
+
 
      if(this.devmode){
        console.log(' ******************** ');
@@ -47,33 +54,38 @@ JS
    },
    mounted(){
      this.init();
+     const app = document.getElementById('app');
+     const controller = new ScrollMagic.Controller();
+     const sceneMagic = new ScrollMagic.Scene({
+       triggerElement: app,
+       triggerHook: .2,
+       duration: 200,
+       reverse: true
+     })
+     .on('leave', () => {
+      // if(this.showName){
 
-     // const controller = new ScrollMagic.Controller();
-     // const projectScene = new ScrollMagic.Scene({
-     //   triggerElement: project,
-     //   triggerHook: .4,
-     //   reverse: false
+      // }
+
+     })
+     // .on('enter', () => {
+     //   console.log('on enter');
+     //   console.log(this.scene.showName);
+     //
      // })
-     // .on('start', () => {
-     //   tl.to(imageContainer, 1,
-     //   {
-     //     scale: 1,
-     //     ease: Power2.easeOut
-     //   }, 0)
-     //   .to(svg, 1,
-     //   {
-     //     opacity: 1,
-     //     x: '0%',
-     //     scale: 1,
-     //     ease: Expo.easeOut
-     //   }, 0)
-     //   .to(image, 1,
-     //   {
-     //     x: '0%',
-     //     ease: Circ.easeOut
-     //   }, 0)
-     // })
-     // .addTo(controller);
+     .addTo(controller);
+   },
+   watch: {
+     $route: function(to, from){
+       this.showName = this.$route.meta.showName;
+       if(this.showName){
+         console.log("showLetters!!!!!")
+         this.scene.animations.showLetters();
+       }else{
+         this.scene.animations.hideLetters();
+
+       }
+     }
    }
   }
 </script>

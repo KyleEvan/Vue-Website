@@ -12,7 +12,7 @@
             </p>
             <a class="link" :href="project.href" @click.prevent="handleClick" :style="{color: project.secondaryColor, backgroundColor: project.primaryColor}">View Project</a>
           </div>
-          <div class="image" :style="{width: project.image.width, background: project.primaryColor}">
+          <div class="image" :style="{width: project.image.width, height: project.image.height, background: project.primaryColor}">
             <img :src="project.image.src" />
           </div>
         </section>
@@ -33,11 +33,13 @@
   // Images:
   import careersPNG from '../../images/career-areas-mobile.png';
   import careersScreensPNG from '../../images/careers_screens.png';
+  import cycles_lg_jpg from '../../images/cyclesTile@lg.jpg';
 
   // Color Themes
   // https://coolors.co/616163-44ffd2-ffbfa0-87f6ff-f2545b
   const colors = {
     turquoise: '#44FFD2',
+    mediumTurquoise: '#3EE8BF',
     darkTurquoise: '#2CA386',
     peach: '#FFBFA0',
     mediumPeach: '#E8AE92',
@@ -68,11 +70,26 @@
             href: 'Careers-Redesign',
             image:{
               width: '60%',
+              height: '29vw',
               src: careersScreensPNG
             },
             primaryColor: colors.peach,
             mediumColor: colors.mediumPeach,
             secondaryColor: colors.darkPeach
+          },
+          {
+            align: 'rtl',
+            title: 'Cycles',
+            summary: 'Lorem ipsum dolor sit amet, quo ea tacimates scribentur. Sed no eius tempor, qui cu decore dolorem. Periculis adipiscing vix ad, erat democritum eu eos. Cu eum eros indoctum, putent quaeque mel eu. Vide apeirian delicata ea vim, eius deserunt ut has. Et pro magna salutatus.',
+            href: 'Cycles',
+            image:{
+              width: '44%',
+              height: '32vw',
+              src: cycles_lg_jpg
+            },
+            primaryColor: colors.turquoise,
+            mediumColor: colors.mediumTurquoise,
+            secondaryColor: colors.darkTurquoise
           }
         ],
 
@@ -219,41 +236,54 @@
 
       const projects = document.querySelectorAll('.project');
       const controller = new ScrollMagic.Controller();
-      const tl = new TimelineLite();
+      // const tl = new TimelineLite();
 
         for(let i = 0; i < projects.length; i++){
           let project = projects[i];
           const imageContainer = project.querySelector('.image');
           const image = project.querySelector('.image > img');
-          const alignment = project.getAttribute('data-align');
+          const text = project.querySelector('.text');
+          // const alignment = project.getAttribute('data-align');
 
           // Set initial values for transforms according to project alignment
-          if(alignment == 'ltr'){
-            tl.set(image, { x: '100%' });
-          }
-          else if(alignment == 'rtl'){
-            tl.set(image, { x: '-100%' });
-          }
-          tl.set(imageContainer, { scale: 1.4 });
+          // if(alignment == 'ltr'){
+          //   tl.set(image, { x: '100%' });
+          // }
+          // else if(alignment == 'rtl'){
+          //   tl.set(image, { x: '-100%' });
+          // }
+          // tl.set(imageContainer, { scale: 1.4 });
 
-
+          console.log(project);
 
           const projectScene = new ScrollMagic.Scene({
             triggerElement: project,
-            triggerHook: .8,
+            triggerHook: .5,
             reverse: false
           })
-          .on('start', () => {
+          .on('enter', () => {
+            console.log(project);
+            console.log(imageContainer);
+            console.log(image);
+            const tl = new TimelineLite();
             tl.to(imageContainer, 1,
             {
-              scale: 1,
+              y: '0%',
+              opacity: 1,
               ease: Power2.easeOut
             }, 0)
             .to(image, 1,
             {
-              x: '0%',
+              y: '0%',
+              opacity: 1,
               ease: Circ.easeOut
             }, 0)
+            .to(text, .6,
+            {
+              x: '0%',
+              opacity: 1,
+              ease: Power2.easeOut
+            }, .5)
           })
           .addTo(controller);
         }
@@ -294,7 +324,20 @@
         }
         @include medium {
           min-height: 80vh;
-          flex-direction: row;
+          &[data-align="ltr"]{
+            flex-direction: row;
+
+            .text{
+              transform: translateX(30%);
+            }
+          }
+          &[data-align="rtl"]{
+            flex-direction: row-reverse;
+
+            .text{
+              transform: translateX(-30%);
+            }
+          }
         }
         .text{
           @include small {
@@ -325,37 +368,33 @@
           }
 
         }
+        .image, .text{
+          opacity: 0;
+        }
         .image{
           display: flex;
           justify-content: center;
           overflow: hidden;
+          transform: translateY(100%);
 
           @include small{
-            width: 100% !important;
-            height: 34vw !important;
+            width: 100%;
+            // height: 34vw !important;
             margin-bottom: 1.5rem;
           }
           @include medium{
-            width: auto;
-            height: auto;
+            // width: auto;
+            // height: auto;
             margin-bottom: 0;
           }
 
           img{
-            height: 100%
+            height: 100%;
+            transform: translateY(100%);
+            opacity: 0;
           }
 
-          svg{
-            position: relative;
-            @include small {
-              width: 100% !important;
-              height: 34vw !important;
-            }
-            @include medium {
-              width: auto;
-              height: auto;
-            }
-          }
+
         }
 
       }

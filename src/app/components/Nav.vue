@@ -84,6 +84,9 @@
 				&:hover{
 					color: #F69296;
 				}
+				&.router-link-exact-active{
+					color: #F69296;
+				}
 	    }
 			.nav-menu{
 	      display: none;

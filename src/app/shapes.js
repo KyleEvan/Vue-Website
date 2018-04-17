@@ -18,7 +18,7 @@ Color Palette
 //   '#7BE7E1', '#88E9E4', '#95ECE7', '#A2EEEA', '#AFF0ED', '#BDF3F0'
 // ];
 const colors = [
-  '#E2E2E2', '#A8A8A9', '#C5C5C6'
+  '#E2E2E2', '#C5C5C6', '#F0F0F0', '#D3D3D4', '#B7B7B8' //'#A8A8A9'
 ];
 
 
@@ -52,7 +52,7 @@ function debounce(func, wait, immediate) {
 
 // https://remysharp.com/2010/07/21/throttling-function-calls
 function throttle(fn, threshhold, scope) {
-  threshhold || (threshhold = 250);
+  threshhold || (threshhold = 100);
   var last,
     deferTimer;
   return function() {
@@ -149,8 +149,8 @@ class Scene { // #scene
     };
     // virtual camera of the scene, used for calculating 3d perspectives
     this.camera = {
-      perspective: 500,
-      maxZ: 490,
+      perspective: 1000,
+      maxZ: 999,
       fov: {
         width: window.innerWidth,
         height: window.innerHeight
@@ -335,8 +335,8 @@ class Scene { // #scene
     const handleClick = function(e){
       if (scene.ready) {
         if (scene.interactive) {
-          console.log("clicking!");
-          scene.animations.hideLetters();
+          // console.log("clicking!");
+          // scene.animations.hideLetters();
         }
       }
     }
@@ -528,13 +528,13 @@ class Shape {
         strokeWidth: undefined,
         fill: this.colors[randomIndex(this.colors.length)]
       },
-      {
-        el: 'polygon',
-        points: this.getPoints(this.projectedXY[0], this.projectedXY[1], this.scale),
-        stroke: undefined,
-        strokeWidth: undefined,
-        fill: this.colors[randomIndex(this.colors.length)]
-      }
+      // {
+      //   el: 'polygon',
+      //   points: this.getPoints(this.projectedXY[0], this.projectedXY[1], this.scale),
+      //   stroke: undefined,
+      //   strokeWidth: undefined,
+      //   fill: this.colors[randomIndex(this.colors.length)]
+      // }
       // {
       //   el: 'rect',
       //   x: this.x,

@@ -6,6 +6,7 @@ import About from './components/About.vue';
 import Contact from './components/Contact.vue';
 import NotFound from './components/NotFound.vue';
 import WorkCareers from './components/Work_Careers.vue';
+import WorkCycles from './components/Work_Cycles.vue';
 import { transitions } from './transitions.js';
 
 Vue.use(Router);
@@ -31,6 +32,13 @@ export default new Router({
       component: WorkCareers,
       props: true,
       meta: { title: 'Careers Redesign | KP', showName: false }
+    },
+    {
+      path: '/cycles',
+      name: 'Cycles',
+      component: WorkCycles,
+      props: true,
+      meta: { title: 'Cycles | KP', showName: false }
     },
     {
       path: '/about',

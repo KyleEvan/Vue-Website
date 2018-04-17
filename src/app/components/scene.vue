@@ -6,6 +6,7 @@ HTML
 <template>
   <div id="scene" ref="scene">
     <h1 id="name" ref="name">{{ name }}</h1>
+    <h2>開発者</h2>
   </div>
 </template>
 
@@ -22,12 +23,15 @@ JS
   import { ShapeScene } from '../shapes.js';
 
   export default {
+  props: ['content'],
    data(){
      return{
        name: 'Kyle',
        scene: {},
        // initialized: false,
-       showname: false
+       showname: false,
+       bgBlack: 'bg-black',
+       bgWhite: 'bg-white'
      }
    },
    // props: ['name', 'showName'],
@@ -45,27 +49,34 @@ JS
    },
    beforeMount(){
 
+     if(this.showname) document.body.setAttribute('class', 'bg-black');
 
      if(this.devmode){
        console.log(' ******************** ');
        console.log(` SHOW NAME: ${this.showname}`);
        console.log(' ******************** ');
      }
+
    },
    mounted(){
      this.init();
-     const app = document.getElementById('app');
+     const content = document.querySelector('.content');
      const controller = new ScrollMagic.Controller();
      const sceneMagic = new ScrollMagic.Scene({
-       triggerElement: app,
-       triggerHook: .2,
-       duration: 200,
+       triggerElement: content,
+       triggerHook: 1,
+       duration: 100,
        reverse: true
      })
      .on('leave', () => {
-      // if(this.showName){
-
-      // }
+       console.log("hide letters");
+       console.log(this.showname);
+       if(this.showname){
+         // console.log("hide letters");
+         this.scene.animations.hideLetters();
+         document.body.removeAttribute('class');
+         // this.$refs.scene.setAttribute('class', 'bg-white');
+       }
 
      })
      // .on('enter', () => {
@@ -77,13 +88,16 @@ JS
    },
    watch: {
      $route: function(to, from){
-       this.showName = this.$route.meta.showName;
-       if(this.showName){
+       console.log(this.$props);
+       this.showname = this.$route.meta.showName;
+       if(this.showname){
          console.log("showLetters!!!!!")
          this.scene.animations.showLetters();
+         document.body.setAttribute('class', 'bg-black');
+
        }else{
          this.scene.animations.hideLetters();
-
+         document.body.removeAttribute('class');
        }
      }
    }
@@ -99,6 +113,13 @@ Styles/SCSS
  <style lang="scss">
  @import '../../style/global.scss';
 
+ .bg-black{
+   background: #2D2D2D;
+ }
+ .bg-white{
+   background: #f9f9f9;
+ }
+
  #scene {
      position: fixed;
      z-index: -2;
@@ -109,6 +130,8 @@ Styles/SCSS
      display: flex;
      align-items: center;
      justify-content: center;
+     flex-direction: column;
+
 
      svg {
          position: absolute;
@@ -116,6 +139,7 @@ Styles/SCSS
          height: 100%;
          top: 0;
          left: 0;
+         filter: blur(1px);
 
          * {
              opacity: 0;
@@ -123,14 +147,16 @@ Styles/SCSS
      }
      #name {
          // color: #FF9A91;
-         color: #645D54;
+         color: #f9f9f9;
          margin: 0;
          font-size: 50px;
          text-transform: uppercase;
-         font-size: 12vw;
+         font-size: 8vw;
          font-family: 'InterUI', sans-serif;
          font-weight: 700;
          user-select: none;
+         // text-shadow: 0 0 20px rgba(45, 45, 45, 0.7);
+         letter-spacing: 4px;
 
          span {
              display: inline-block;
@@ -140,6 +166,14 @@ Styles/SCSS
              padding: 0 0.05em;
              // transform: translateY(100%);
          }
+     }
+     h2{
+       font-family: "Noto Sans Japanese";
+       font-size: 4vw;
+       margin: 3% 0;
+       color: #FACDCF;
+       opacity: .8;
+       // text-shadow: 0 0 20px rgba(45, 45, 45, 0.7);
      }
      // .transition > * {
      //     transition: 5s cubic-bezier(0.02, 0.1, 0.15, 1);

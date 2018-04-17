@@ -57,6 +57,9 @@ body {
   /* overflow: auto; */
   overflow-x: hidden;
   font-family: 'InterUI', sans-serif;
+  transition: background .5s cubic-bezier(.79,0,.85,.56);
+  will-change: background;
+
 
 
   #app{

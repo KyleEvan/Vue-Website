@@ -69,8 +69,8 @@
             summary: 'Careers Website Redesign for Excellus BCBS and Univera Healthcare. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Varius quam quisque id diam vel quam elementum pulvinar. Purus ut faucibus pulvinar elementum integer enim neque.',
             href: 'Careers-Redesign',
             image:{
-              width: '60%',
-              height: '29vw',
+              width: '31%',
+              height: '16vw',
               src: careersScreensPNG
             },
             primaryColor: colors.peach,
@@ -83,8 +83,8 @@
             summary: 'Lorem ipsum dolor sit amet, quo ea tacimates scribentur. Sed no eius tempor, qui cu decore dolorem. Periculis adipiscing vix ad, erat democritum eu eos. Cu eum eros indoctum, putent quaeque mel eu. Vide apeirian delicata ea vim, eius deserunt ut has. Et pro magna salutatus.',
             href: 'Cycles',
             image:{
-              width: '44%',
-              height: '32vw',
+              width: '22%',
+              height: '20vw',
               src: cycles_lg_jpg
             },
             primaryColor: colors.turquoise,
@@ -258,7 +258,7 @@
 
           const projectScene = new ScrollMagic.Scene({
             triggerElement: project,
-            triggerHook: .5,
+            triggerHook: .8,
             reverse: false
           })
           .on('enter', () => {
@@ -266,13 +266,13 @@
             console.log(imageContainer);
             console.log(image);
             const tl = new TimelineLite();
-            tl.to(imageContainer, 1,
+            tl.to(imageContainer, .8,
             {
               y: '0%',
               opacity: 1,
-              ease: Power2.easeOut
+              ease: Power4.easeOut
             }, 0)
-            .to(image, 1,
+            .to(image, .8,
             {
               y: '0%',
               opacity: 1,
@@ -283,7 +283,7 @@
               x: '0%',
               opacity: 1,
               ease: Power2.easeOut
-            }, .5)
+            }, .4)
           })
           .addTo(controller);
         }
@@ -309,7 +309,7 @@
     background: transparent;
 
     .content{
-      padding: 100vh 8% 3em 8%;
+      margin: 100vh 8% 3em 8%;
 
       .project{
         position: relative;
@@ -323,7 +323,7 @@
           flex-direction: column-reverse;
         }
         @include medium {
-          min-height: 80vh;
+          // min-height: 80vh;
           &[data-align="ltr"]{
             flex-direction: row;
 
@@ -375,7 +375,7 @@
           display: flex;
           justify-content: center;
           overflow: hidden;
-          transform: translateY(100%);
+          transform: translateY(30%);
 
           @include small{
             width: 100%;
@@ -390,7 +390,7 @@
 
           img{
             height: 100%;
-            transform: translateY(100%);
+            transform: translateY(30%);
             opacity: 0;
           }
 

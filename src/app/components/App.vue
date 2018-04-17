@@ -11,11 +11,11 @@
       v-on:leave="leave"
       v-bind:css="false"
     >
-      <router-view class="main"></router-view>
+      <router-view class="main" ref="main"></router-view>
     </transition>
 
     <!-- Background shapes scene -->
-    <scene ref="scene" />
+    <scene ref="scene" :content="triggerContent" />
 
   </div>
 </template>
@@ -37,6 +37,11 @@
     components: {
       "navigation": Nav,
       "scene": Scene
+    },
+    computed:{
+      triggerContent: function(){
+        return this.$refs.main
+      }
     },
     created(){
       console.log("Hello App created!");

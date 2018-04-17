@@ -1,4 +1,5 @@
 <template>
+  <div>
   <div class="container">
     <div class="content">
       <h1>Hi,</h1>
@@ -12,6 +13,7 @@
       </p>
     </div>
   </div>
+</div>
 </template>
 
 <script>
@@ -34,7 +36,9 @@
   align-items: center;
 
   .content{
-    padding: 0 8%;
+    // padding: 0 8%;
+    margin: 0 8%;
+
 
     h1{
       font-family: 'InterUI', sans-serif;

@@ -18,7 +18,7 @@ Color Palette
 //   '#7BE7E1', '#88E9E4', '#95ECE7', '#A2EEEA', '#AFF0ED', '#BDF3F0'
 // ];
 const colors = [
-  '#E2E2E2', '#C5C5C6', '#F0F0F0', '#D3D3D4', '#B7B7B8' //'#A8A8A9'
+  '#E2E2E2', '#C5C5C6', '#F0F0F0', '#D3D3D4', '#B7B7B8'  //'#A8A8A9'
 ];
 
 
@@ -126,7 +126,7 @@ class Scene { // #scene
     // scene.interactive, if true mousemove events will be tracked for shape translations
     this.interactive = false;
     // Max boundaries of the scene in relation to the window. 1 = window size
-    this.sceneSize = 1.1;
+    this.sceneSize = 1.25;
 
     this.bounds = undefined;
 
@@ -150,7 +150,7 @@ class Scene { // #scene
     // virtual camera of the scene, used for calculating 3d perspectives
     this.camera = {
       perspective: 1000,
-      maxZ: 999,
+      maxZ: 800,
       fov: {
         width: window.innerWidth,
         height: window.innerHeight
@@ -204,7 +204,7 @@ class Scene { // #scene
       hideLetters: function(){
         let targets = this.scene.name.letterEls;
         targets = Array.from(targets).reverse();
-        this.tl.staggerTo(targets, .6, {
+        this.tl.staggerTo(targets, .333, {
           opacity: 0,
           y: "100%",
           ease: Elastic.easeIn.config(1, 0.75)
@@ -215,7 +215,7 @@ class Scene { // #scene
         for(let i = 0; i < targets.length; i++){
           let target = targets[i];
           this.tl.to(target, 1, {
-            opacity: 1,
+            opacity: .3,
             x: getRandomInt(this.scene.bounds.left, this.scene.bounds.right),
             y: getRandomInt(this.scene.bounds.top, this.scene.bounds.bottom),
             scale: 1,
@@ -253,11 +253,11 @@ class Scene { // #scene
           }
 
           TweenLite.to(shape.el, 10, {
-            opacity: .5,
+            opacity: .35,
             x: newX,
             y: newY,
             ease: Elastic.easeOut.config(1, 0.5)
-          }).delay(index*.01).smoothChildTiming = true;
+          }).delay(index*.005).smoothChildTiming = true;
 
         });
       },
@@ -479,7 +479,7 @@ class Letter {
     this.el = el;
     this.scene = scene;
     this.shapes = [];
-    this.totalShapes = 5;
+    this.totalShapes = 8;
     this.init(scene);
   }
   init() {
@@ -502,7 +502,7 @@ class Shape {
       el: letter,
       props: letterProps
     };
-    this.scale = getRandomInt(letterProps.width * .05, letterProps.width * .35); // scale will be 10% and 100% of the letter's width
+    this.scale = getRandomInt(letterProps.width * .05, letterProps.width * .2); // scale will be 10% and 100% of the letter's width
     this.x = (letterProps.left + letterProps.width / 2);
     this.y = (letterProps.top - letterProps.height / 2);
     this.z = this.scale / letterProps.width;

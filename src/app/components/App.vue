@@ -15,7 +15,7 @@
     </transition>
 
     <!-- Background shapes scene -->
-    <scene ref="scene" :content="triggerContent" />
+    <!-- <scene ref="scene" /> -->
 
   </div>
 </template>
@@ -37,11 +37,6 @@
     components: {
       "navigation": Nav,
       "scene": Scene
-    },
-    computed:{
-      triggerContent: function(){
-        return this.$refs.main
-      }
     },
     created(){
       console.log("Hello App created!");

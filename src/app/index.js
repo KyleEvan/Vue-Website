@@ -3,7 +3,7 @@ import "classlist-polyfill";
 import '../style/app.scss';
 import Vue from 'vue';
 import router from './router.js'
-import App from './components/App.vue';
+import Scene from './components/Scene.vue';
 
 
 
@@ -60,8 +60,8 @@ Vue.mixin({
 new Vue({
   el: '#app',
   router,
-  template: '<App/>',
-  components: { App },
+  template: '<Scene/>',
+  components: { Scene },
   created(){
     console.log('app created');
   }

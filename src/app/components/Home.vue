@@ -1,6 +1,5 @@
 <template>
   <div>
-
     <div class="container">
       <div class="content">
 
@@ -258,7 +257,7 @@
 
           const projectScene = new ScrollMagic.Scene({
             triggerElement: project,
-            triggerHook: .8,
+            triggerHook: .5,
             reverse: false
           })
           .on('enter', () => {
@@ -266,13 +265,13 @@
             console.log(imageContainer);
             console.log(image);
             const tl = new TimelineLite();
-            tl.to(imageContainer, .8,
+            tl.to(imageContainer, 1,
             {
               y: '0%',
               opacity: 1,
               ease: Power4.easeOut
             }, 0)
-            .to(image, .8,
+            .to(image, 1,
             {
               y: '0%',
               opacity: 1,
@@ -283,7 +282,7 @@
               x: '0%',
               opacity: 1,
               ease: Power2.easeOut
-            }, .4)
+            }, .55)
           })
           .addTo(controller);
         }
@@ -304,7 +303,10 @@
 
 <style lang="scss" scoped>
   @import '../../style/global.scss';
-
+  .scene-placeholder{
+    width: 100%;
+    height: 100vh;
+  }
   .container{
     background: transparent;
 

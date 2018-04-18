@@ -4,10 +4,19 @@ HTML
 
 -->
 <template>
-  <div id="scene" ref="scene">
-    <h1 id="name" ref="name">{{ name }}</h1>
-    <h2>開発者</h2>
+
+  <div class="bg-white">
+    <div class="bg-black">
+      <App />
+      <div class="scene-placeholder"></div>
+
+      <div id="scene" ref="scene">
+        <h1 id="name" ref="name">{{ name }}</h1>
+        <h2>開発者</h2>
+      </div>
+    </div>
   </div>
+
 </template>
 
 
@@ -17,22 +26,25 @@ JS
 
 -->
 <script>
+  import App from './App.vue';
   import ScrollMagic from "scrollmagic";
   import { TimelineLite } from "gsap";
 
   import { ShapeScene } from '../shapes.js';
 
   export default {
-  props: ['content'],
    data(){
      return{
        name: 'Kyle',
        scene: {},
        // initialized: false,
        showname: false,
-       bgBlack: 'bg-black',
-       bgWhite: 'bg-white'
+       // bgBlack: 'bg-black',
+       // bgWhite: 'bg-white'
      }
+   },
+   components:{
+     App: App
    },
    // props: ['name', 'showName'],
    methods:{
@@ -49,7 +61,7 @@ JS
    },
    beforeMount(){
 
-     if(this.showname) document.body.setAttribute('class', 'bg-black');
+     // if(this.showname) document.body.setAttribute('class', 'bg-black');
 
      if(this.devmode){
        console.log(' ******************** ');
@@ -60,44 +72,48 @@ JS
    },
    mounted(){
      this.init();
-     const content = document.querySelector('.content');
+     const scene = document.querySelector('.scene-placeholder');
      const controller = new ScrollMagic.Controller();
      const sceneMagic = new ScrollMagic.Scene({
-       triggerElement: content,
-       triggerHook: 1,
-       duration: 100,
+       triggerElement: '.scene-placeholder',
+       triggerHook: 'onLeave',
+       // duration: 100,
+       offset: 100,
        reverse: true
      })
-     .on('leave', () => {
+     // .triggerElement('.scene-placeholder')
+     .on('enter', () => {
        console.log("hide letters");
        console.log(this.showname);
-       if(this.showname){
+       // if(this.showname){
          // console.log("hide letters");
          this.scene.animations.hideLetters();
-         document.body.removeAttribute('class');
+         // document.body.removeAttribute('class');
          // this.$refs.scene.setAttribute('class', 'bg-white');
-       }
+       // }
 
      })
-     // .on('enter', () => {
-     //   console.log('on enter');
-     //   console.log(this.scene.showName);
-     //
-     // })
+     .on('leave', () => {
+       console.log('on leave');
+       console.log(this.scene.showName);
+       this.scene.animations.showLetters();
+       // document.body.setAttribute('class', 'bg-black');
+
+     })
      .addTo(controller);
    },
    watch: {
      $route: function(to, from){
-       console.log(this.$props);
+       // console.log(this.$props);
        this.showname = this.$route.meta.showName;
        if(this.showname){
-         console.log("showLetters!!!!!")
+         console.log("showLetters!!!!!");
          this.scene.animations.showLetters();
-         document.body.setAttribute('class', 'bg-black');
+         // document.body.setAttribute('class', 'bg-black');
 
        }else{
          this.scene.animations.hideLetters();
-         document.body.removeAttribute('class');
+         // document.body.removeAttribute('class');
        }
      }
    }
@@ -118,6 +134,15 @@ Styles/SCSS
  }
  .bg-white{
    background: #f9f9f9;
+ }
+
+ .scene-placeholder{
+   position: absolute;
+   top: 0;
+   left: 0;
+   width: 100%;
+   height: 100vh;
+   z-index: -3;
  }
 
  #scene {

@@ -1,7 +1,7 @@
 <template>
   <div id="app">
 
-    <navigation />
+    <!-- <navigation /> -->
 
     <!-- Main website content -->
     <transition mode="in-out"
@@ -24,8 +24,8 @@
   import { TimelineLite } from "gsap";
 
   // Components
-  import Nav from './Nav.vue';
-  import Scene from './Scene.vue';
+  // import Nav from './Nav.vue';
+  // import Scene from './Scene.vue';
 
   export default {
     name: 'app',
@@ -34,10 +34,10 @@
         tl: new TimelineLite({ paused: true })
       }
     },
-    components: {
-      "navigation": Nav,
-      "scene": Scene
-    },
+    // components: {
+      // "navigation": Nav,
+      // "scene": Scene
+    // },
     created(){
       console.log("Hello App created!");
       // Initially set title when app is first created

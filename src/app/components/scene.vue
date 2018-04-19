@@ -5,14 +5,17 @@ HTML
 -->
 <template>
 
-  <div class="bg-white">
-    <div class="bg-black">
-      <App />
-      <div class="scene-placeholder"></div>
+  <div>
+    <Nav />
+    <div class="bg-white">
+      <div class="bg-black">
+        <App />
+        <div class="scene-placeholder"></div>
 
-      <div id="scene" ref="scene">
-        <h1 id="name" ref="name">{{ name }}</h1>
-        <h2>開発者</h2>
+        <div id="scene" ref="scene">
+          <h1 id="name" ref="name">{{ name }}</h1>
+          <h2>開発者</h2>
+        </div>
       </div>
     </div>
   </div>
@@ -26,6 +29,7 @@ JS
 
 -->
 <script>
+  import Nav from './Nav.vue';
   import App from './App.vue';
   import ScrollMagic from "scrollmagic";
   import { TimelineLite } from "gsap";
@@ -44,6 +48,7 @@ JS
      }
    },
    components:{
+     Nav: Nav,
      App: App
    },
    // props: ['name', 'showName'],
@@ -129,6 +134,10 @@ Styles/SCSS
  <style lang="scss">
  @import '../../style/global.scss';
 
+ .bg-black, .bg-white{
+   position: relative;
+   z-index: -5;
+ }
  .bg-black{
    background: #2D2D2D;
  }

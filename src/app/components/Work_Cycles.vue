@@ -1,17 +1,29 @@
 <template>
 
   <work-template :project="project">
-    <!-- <carousel :progressColor="progressColor"> -->
+
     <template slot="imageSlides">
       <div class="carousel-cell" v-for="image in images">
         <img :src="image" alt="" />
       </div>
     </template>
 
-    <!-- </carousel> -->
+
+    <h2 slot="title">
+    <!-- Title: -->
+      Cycles
+    </h2>
+    <p slot="description">
+      <!-- Project Description -->
+      An educational take on retro trails/snake-like see-how-long-you-can-last games.
+    </p>
+    <!-- Skills utilized -->
+    <ul slot="skills">
+      <li>JS</li>
+      <li>More JS</li>
+    </ul>
 
     <!-- Main Content -->
-    <h2>Cycles</h2>
     <p>
       HTML5 canvas web game.
     </p>
@@ -43,7 +55,7 @@
     props: ['project'],
     data () {
       return {
-        images: [cycles_lg_jpg],
+        images: [cycles_lg_jpg, cycles_lg_jpg, cycles_lg_jpg],
         saying: 'hey im content'
 
       }
@@ -51,11 +63,11 @@
     components:{
       'work-template': Work_Template
     },
-    mounted(){
-      console.log(this.$props);
-
-
-    }
+    // mounted(){
+    //   console.log(this.$props);
+    //
+    //
+    // }
 
   }
 </script>
@@ -64,5 +76,9 @@
 
 <style lang="scss" scoped>
   // @import '../../style/global.scss';
-
+  .carousel-cell:nth-child(1){
+    img{
+      height: 50%;
+    }
+  }
 </style>

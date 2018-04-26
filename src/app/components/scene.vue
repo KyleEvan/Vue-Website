@@ -7,17 +7,17 @@ HTML
 
   <div>
     <Nav />
-    <div class="bg-white">
-      <div class="bg-black">
-        <App />
-        <div class="scene-placeholder"></div>
+    <div class="bg-white" ref="bgWhite"></div>
+    <div class="bg-black" ref="bgBlack"></div>
+    <App />
+    <div class="scene-placeholder"></div>
 
-        <div id="scene" ref="scene">
-          <h1 id="name" ref="name">{{ name }}</h1>
-          <h2>開発者</h2>
-        </div>
-      </div>
+    <div id="scene" ref="scene">
+      <h1 id="name" ref="name">{{ name }}</h1>
+      <h2>開発者</h2>
     </div>
+
+
   </div>
 
 </template>
@@ -83,7 +83,7 @@ JS
        triggerElement: '.scene-placeholder',
        triggerHook: 'onLeave',
        // duration: 100,
-       offset: 100,
+       offset: '80px',
        reverse: true
      })
      // .triggerElement('.scene-placeholder')
@@ -92,7 +92,15 @@ JS
        console.log(this.showname);
        // if(this.showname){
          // console.log("hide letters");
+       if(this.showname){
          this.scene.animations.hideLetters();
+         TweenLite.to(this.$refs.bgBlack, .6,
+         {
+           opacity: 0,
+           ease: Power4.easeIn
+         });
+       }
+
          // document.body.removeAttribute('class');
          // this.$refs.scene.setAttribute('class', 'bg-white');
        // }
@@ -101,23 +109,38 @@ JS
      .on('leave', () => {
        console.log('on leave');
        console.log(this.scene.showName);
-       this.scene.animations.showLetters();
-       // document.body.setAttribute('class', 'bg-black');
-
+       if(!this.showName){
+         this.scene.animations.showLetters();
+         TweenLite.to(this.$refs.bgBlack, .6,
+         {
+           opacity: 1,
+           ease: Power4.easeOut
+         });
+       }
      })
      .addTo(controller);
    },
    watch: {
      $route: function(to, from){
        // console.log(this.$props);
-       this.showname = this.$route.meta.showName;
-       if(this.showname){
+       this.showName = this.$route.meta.showName;
+       if(this.showName){
          console.log("showLetters!!!!!");
          this.scene.animations.showLetters();
+         TweenLite.to(this.$refs.bgBlack, .6,
+         {
+           opacity: 1,
+           ease: Power4.easeOut
+         });
          // document.body.setAttribute('class', 'bg-black');
 
        }else{
          this.scene.animations.hideLetters();
+         TweenLite.to(this.$refs.bgBlack, .6,
+         {
+           opacity: 0,
+           ease: Power4.easeIn
+         });
          // document.body.removeAttribute('class');
        }
      }
@@ -135,8 +158,12 @@ Styles/SCSS
  @import '../../style/global.scss';
 
  .bg-black, .bg-white{
-   position: relative;
-   z-index: -5;
+   position: fixed;
+   top: 0;
+   left: 0;
+   width: 100%;
+   height: 100%;
+   z-index: -10;
  }
  .bg-black{
    background: #2D2D2D;

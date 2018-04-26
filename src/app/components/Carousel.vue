@@ -6,15 +6,15 @@
       <slot></slot>
     </div>
 
-    <svg id="progressBar" :width="progressBar.width" :height="progressBar.height" :viewBox="viewBox" :style="{bottom: -progressBar.height}">
+    <svg id="progressBar" :width="progressBar.width" :height="progressBar.height" :viewBox="viewBox" :style="{bottom: -.5*progressBar.height}">
       <path :stroke="progressBar.background" :stroke-width="progressBar.height" :d="path"></path>
       <path :stroke="progressColor" :stroke-width="progressBar.height" :d="path" :style="{strokeDasharray: progressBar.width, strokeDashoffset: progressBar.progress}"></path>
     </svg>
 
     <!-- For Development -->
-    <div class="debug progressBar progress" v-if="devmode" style="color: red;">
+    <!-- <div class="debug progressBar progress" v-if="devmode" style="color: red;">
       {{progressBar.width - progressBar.progress}}
-    </div>
+    </div> -->
 
   </div>
 
@@ -34,9 +34,9 @@
         },
         progressBar: {
           width: 0,
-          height: 10,
+          height: 40,
           progress: 0,
-          background: '#E3E8E3'
+          background: 'transparent'
         }
       }
     },
@@ -99,17 +99,34 @@
 </script>
 
 <style lang="scss">
+  @import '../../style/global.scss';
+
   #carousel{
     position: relative;
+    width: 100%;
     z-index: 2;
+    @include medium{
+      width: 50%;
+
+    }
 
     #flickityContainer{
-      position: relative;
-      height: 30vw;
-      width: 100%;
       display: flex;
       justify-content: center;
       align-items: center;
+      position: relative;
+      width: 100%;
+      height: 50vh;
+
+      @include medium{
+        position: fixed;
+        top: 0;
+        left: 50%;
+        height: 100vh;
+        width: 50%;
+      }
+
+
 
       .flickity-viewport{
         width: 100%;
@@ -133,12 +150,13 @@
           .carousel-cell{
             display: flex;
             justify-content: center;
+            align-items: center;
             width: 100%;
             height: 100%;
 
-            img{
-              height:100%;
-            }
+            // img{
+            //   height:100%;
+            // }
           }
         }
       }
@@ -208,14 +226,15 @@
       width: 100%;
       position: absolute;
       left: 0;
+      bottom: 0;
     }
   }
 
   /* Increase contrast of shapes in scene */
   @supports (filter: contrast(100%)){
-    #scene{
-      filter: contrast(200%);
-    }
+    // #scene{
+    //   filter: contrast(200%);
+    // }
   }
 
 

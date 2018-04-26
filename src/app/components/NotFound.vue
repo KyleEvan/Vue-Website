@@ -2,7 +2,7 @@
   <div>
     <h1>Oops!</h1>
     <p>Something went wrong</p>
-    <p>{{ message }}</p>
+    <p>{{ messages.pageNotFound }}</p>
   </div>
 </template>
 
@@ -11,7 +11,9 @@
     // name: 'notFound',
     data () {
       return {
-        message: "404 page not found",
+        messages:{
+          pageNotFound: "404 page not found"
+        }
       }
     }
   }

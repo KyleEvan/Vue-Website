@@ -1,81 +1,62 @@
 <template>
-  <div>
-    <!-- <Carousel /> -->
 
-    <carousel :progressColor="progressColor">
-
+  <work-template :project="project">
+    <template slot="imageSlides">
       <div class="carousel-cell" v-for="image in images">
         <img :src="image" alt="" />
       </div>
+    </template>
 
-    </carousel>
+    <h2 slot="title">
+    <!-- Title: -->
+      Careers Redesign
+    </h2>
+    <p slot="description">
+      <!-- Project Description -->
+      An educational take on retro trails/snake-like see-how-long-you-can-last games. {{saying}}
+    </p>
+    <!-- Skills utilized -->
+    <ul slot="skills">
+      <li>JS</li>
+      <li>More JS</li>
+    </ul>
 
-    <div class="container">
-      <div class="content" ref="content">
-        <h2>Careers Redesign</h2>
-        <p>
-          {{saying}}
-        </p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Praesent mauris. Fusce nec tellus sed augue semper porta. Mauris massa. Vestibulum lacinia arcu eget nulla. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur sodales ligula in libero. Sed dignissim lacinia nunc. </p>
+    <!-- Main Content -->
+    <p>
+      {{saying}}
+    </p>
+    <p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Praesent mauris. Fusce nec tellus sed augue semper porta. Mauris massa. Vestibulum lacinia arcu eget nulla. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur sodales ligula in libero. Sed dignissim lacinia nunc.
+    </p>
+    <p>
+      Curabitur tortor. Pellentesque nibh. Aenean quam. In scelerisque sem at dolor. Maecenas mattis. Sed convallis tristique sem. Proin ut ligula vel nunc egestas porttitor. Morbi lectus risus, iaculis vel, suscipit quis, luctus non, massa. Fusce ac turpis quis ligula lacinia aliquet. Mauris ipsum. Nulla metus metus, ullamcorper vel, tincidunt sed, euismod in, nibh. Quisque volutpat condimentum velit. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Nam nec ante.
+    </p>
+    <p>
+      Sed lacinia, urna non tincidunt mattis, tortor neque adipiscing diam, a cursus ipsum ante quis turpis. Nulla facilisi. Ut fringilla. Suspendisse potenti. Nunc feugiat mi a tellus consequat imperdiet. Vestibulum sapien. Proin quam. Etiam ultrices. Suspendisse in justo eu magna luctus suscipit. Sed lectus. Integer euismod lacus luctus magna. Quisque cursus, metus vitae pharetra auctor, sem massa mattis sem, at interdum magna augue eget diam.
+    </p>
 
-        <p>Curabitur tortor. Pellentesque nibh. Aenean quam. In scelerisque sem at dolor. Maecenas mattis. Sed convallis tristique sem. Proin ut ligula vel nunc egestas porttitor. Morbi lectus risus, iaculis vel, suscipit quis, luctus non, massa. Fusce ac turpis quis ligula lacinia aliquet. Mauris ipsum. Nulla metus metus, ullamcorper vel, tincidunt sed, euismod in, nibh. Quisque volutpat condimentum velit. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Nam nec ante. </p>
+  </work-template>
 
-        <p>Sed lacinia, urna non tincidunt mattis, tortor neque adipiscing diam, a cursus ipsum ante quis turpis. Nulla facilisi. Ut fringilla. Suspendisse potenti. Nunc feugiat mi a tellus consequat imperdiet. Vestibulum sapien. Proin quam. Etiam ultrices. Suspendisse in justo eu magna luctus suscipit. Sed lectus. Integer euismod lacus luctus magna. Quisque cursus, metus vitae pharetra auctor, sem massa mattis sem, at interdum magna augue eget diam. </p>
-      </div>
-    </div>
-
-    <div :style="{background: backgroundColor}" class="background"></div>
-
-  </div>
 </template>
 
 <script>
-  // import Project from './Project.vue';
-  import { TimelineLite } from "gsap";
+  import Work_Template from './Work_Project_Template.vue';
 
   // Images
   import careersPNG from '../../images/career-areas-mobile.png';
   import careersScreensPNG from '../../images/careers_screens.png';
 
-  import Carousel from './Carousel.vue';
 
   export default {
     props: ['project'],
     data () {
       return {
-        images: [careersScreensPNG, careersPNG, careersPNG, careersPNG],
-        saying: 'hey im content',
-        defaultProgressColor: '#E88278',
-        defaultBackgroundColor: '#F69296'
-
+        images: [careersScreensPNG, careersScreensPNG, careersScreensPNG, careersScreensPNG],
+        saying: 'hey im content'
       }
     },
-    computed: {
-      progressColor: function(){
-        let color = this.$props.project ? this.$props.project.mediumColor : this.defaultProgressColor;
-        return color;
-      },
-      backgroundColor: function(){
-        let color = this.$props.project ? this.$props.project.primaryColor : this.defaultBackgroundColor;
-        return color;
-      }
-    },
-    components: {
-      carousel: Carousel
-    },
-    mounted(){
-      console.log(this.$props);
-
-      let tl = new TimelineLite();
-      tl.fromTo(this.$refs.content, .6, {
-        opacity: 0,
-        y: 50
-      },
-      {
-        opacity: 1,
-        y: 0,
-        ease: Expo.easeOut
-      })
+    components:{
+      'work-template': Work_Template
     }
 
   }
@@ -85,25 +66,15 @@
 
 <style lang="scss" scoped>
   // @import '../../style/global.scss';
+  .carousel-cell{
 
-  .container{
-    position: relative;
-    color: #4B4742;
-    background: #f9fff9;
-    z-index: 1;
-
-    .content{
-      padding: 5em 8% 3em 8%;
+    &:nth-child(1){
+      img{
+        height: 30vw;
+      }
     }
-  }
-
-  .background{
-    position:absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: #F69296;
-    z-index: -2;
+    img{
+      height: 30vw;
+    }
   }
 </style>

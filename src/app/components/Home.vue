@@ -37,12 +37,16 @@
   // Color Themes
   // https://coolors.co/616163-44ffd2-ffbfa0-87f6ff-f2545b
   const colors = {
-    turquoise: '#44FFD2',
+    turquoise: '#88FFE2',
+    lightTurquoise: '#C8FFF1',
     mediumTurquoise: '#3EE8BF',
     darkTurquoise: '#2CA386',
-    peach: '#FFBFA0',
+
+    peach: '#FFD6C2',
+    lightPeach: '#FFECE3',
     mediumPeach: '#E8AE92',
     darkPeach: '#A37A66',
+
     blue: '#87F6FF',
     darkBlue: '#569DA3'
   };
@@ -52,9 +56,10 @@
 
     data () {
       return {
-        bannerWidth: undefined,
-        bannerHeightVW: .3,   // 30vw
+        bannerWidth: .5, // 0 - 1 value
+        bannerHeightVH: 1,   // 30vw
         bannerMinHeight: 400, // px
+        bannerOffsetX: .5,
 
         background: undefined,
         project: undefined,
@@ -70,11 +75,13 @@
             image:{
               width: '31%',
               height: '16vw',
+              newHeight: .3,
               src: careersScreensPNG
             },
             primaryColor: colors.peach,
+            lightColor: colors.lightPeach,
             mediumColor: colors.mediumPeach,
-            secondaryColor: colors.darkPeach
+            darkColor: colors.darkPeach
           },
           {
             align: 'rtl',
@@ -84,11 +91,13 @@
             image:{
               width: '22%',
               height: '20vw',
+              newHeight: .3,
               src: cycles_lg_jpg
             },
             primaryColor: colors.turquoise,
+            lightColor: colors.lightTurquoise,
             mediumColor: colors.mediumTurquoise,
-            secondaryColor: colors.darkTurquoise
+            darkColor: colors.darkTurquoise
           }
         ],
 
@@ -98,10 +107,16 @@
     computed:{
       bannerHeight(){
         // Check bannerHeight to make sure its not lower than the minimum height
-        return (window.innerWidth*this.bannerHeightVW) >= this.bannerMinHeight ? (window.innerWidth*this.bannerHeightVW) : this.bannerMinHeight;
+        return (window.innerHeight*this.bannerHeightVH) >= this.bannerMinHeight ? (window.innerHeight*this.bannerHeightVH) : this.bannerMinHeight;
+      },
+      bannerOffset(){
+        return {
+          x: this.bannerOffsetX*document.documentElement.clientWidth,
+          y: 0
+        }
       },
       newPoints(){
-        let points = this.getPoints(0, 0, document.documentElement.clientWidth, this.bannerHeight);
+        let points = this.getPoints(this.bannerOffset.x, 0, document.documentElement.clientWidth, this.bannerHeight);
         return points;
       }
     },
@@ -145,12 +160,12 @@
           y: container.top + container.height/2
         };
         const newCenter = {
-          x: this.bannerWidth/2,
+          x: this.bannerOffset.x + (this.bannerWidth/2),
           y: this.bannerHeight/2
         };
-        // New Points
+        console.log(newCenter);
         return {
-          scale: this.bannerHeight/container.height,
+          scale: (window.innerWidth*project.data.image.newHeight)/container.height,
           translateX: newCenter.x - containerCenter.x,
           translateY: newCenter.y - containerCenter.y,
           newPoints: this.newPoints
@@ -224,11 +239,11 @@
     },
     mounted(){
       // Initially bannerWidth to window width
-      this.bannerWidth = document.documentElement.clientWidth;
+      this.bannerWidth = this.bannerWidth*document.documentElement.clientWidth;
 
       // Initialize Events
       const handleResize = this.debounce(() => {
-        this.bannerWidth = document.documentElement.clientWidth;
+        this.bannerWidth = this.bannerWidth*document.documentElement.clientWidth;
       }, 50);
       window.addEventListener('resize', handleResize);
 
@@ -257,7 +272,7 @@
 
           const projectScene = new ScrollMagic.Scene({
             triggerElement: project,
-            triggerHook: .5,
+            triggerHook: .7,
             reverse: false
           })
           .on('enter', () => {

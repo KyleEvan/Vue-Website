@@ -14,7 +14,7 @@ HTML
 
     <div id="scene" ref="scene">
       <h1 id="name" ref="name">{{ name }}</h1>
-      <h2>開発者</h2>
+      <h2>Front End Developer</h2>
     </div>
 
 
@@ -42,7 +42,7 @@ JS
        name: 'Kyle',
        scene: {},
        // initialized: false,
-       showname: false,
+       showName: false,
        // bgBlack: 'bg-black',
        // bgWhite: 'bg-white'
      }
@@ -54,7 +54,13 @@ JS
    // props: ['name', 'showName'],
    methods:{
      init: function(){
-       this.scene = ShapeScene(this.$refs.scene, this.$refs.name, this.devmode, this.showname);
+       const config = {
+         scene: this.$refs.scene,
+         name: this.$refs.name,
+         devmode: this.devmode,
+         showName: this.showName
+       };
+       this.scene = ShapeScene(config);
      },
      hideName: function(){
        this.scene.animations.hideLetters();
@@ -62,15 +68,15 @@ JS
    },
    created(){
      // Check if route displays the name
-     this.showname = this.$route.meta.showName;
+     this.showName = this.$route.meta.showName;
    },
    beforeMount(){
 
-     // if(this.showname) document.body.setAttribute('class', 'bg-black');
+     // if(this.showName) document.body.setAttribute('class', 'bg-black');
 
      if(this.devmode){
        console.log(' ******************** ');
-       console.log(` SHOW NAME: ${this.showname}`);
+       console.log(` SHOW NAME: ${this.showName}`);
        console.log(' ******************** ');
      }
 
@@ -89,10 +95,10 @@ JS
      // .triggerElement('.scene-placeholder')
      .on('enter', () => {
        console.log("hide letters");
-       console.log(this.showname);
-       // if(this.showname){
+       console.log(this.showName);
+       // if(this.showName){
          // console.log("hide letters");
-       if(this.showname){
+       if(this.showName){
          this.scene.animations.hideLetters();
          TweenLite.to(this.$refs.bgBlack, .6,
          {
@@ -200,7 +206,7 @@ Styles/SCSS
          height: 100%;
          top: 0;
          left: 0;
-         filter: blur(1px);
+         // filter: blur(1px);
 
          * {
              opacity: 0;

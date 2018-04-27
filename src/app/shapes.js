@@ -18,7 +18,7 @@ Color Palette
 //   '#7BE7E1', '#88E9E4', '#95ECE7', '#A2EEEA', '#AFF0ED', '#BDF3F0'
 // ];
 const colors = [
-  '#E2E2E2', '#C5C5C6', '#F0F0F0', '#D3D3D4', '#B7B7B8'  //'#A8A8A9'
+  '#F9F9F9'
 ];
 
 
@@ -104,8 +104,10 @@ function randomIndex(length) {
 */
 
 class Scene { // #scene
-  constructor(scene, name, devmode, showName) {
-    this.devmode = devmode;
+  constructor(config) {
+    // scene, name, devmode, showName
+    console.log(config);
+    this.devmode = config.devmode;
     this.devConfig = {
       console: {
         aquaText: 'color: #6FCAB1; background: #000000',
@@ -126,31 +128,31 @@ class Scene { // #scene
     // scene.interactive, if true mousemove events will be tracked for shape translations
     this.interactive = false;
     // Max boundaries of the scene in relation to the window. 1 = window size
-    this.sceneSize = 1.25;
+    this.sceneSize = .8;
 
     this.bounds = undefined;
 
-    this.showName = showName || false;
+    this.showName = config.showName || false;
 
     this.name = undefined;
     // DOM element references
     this.DOM = {
-      el: scene,
+      el: config.scene,
       children:{
         name: {
-          el: name
+          el: config.name
         },
         svg: {
           el: document.createElementNS("http://www.w3.org/2000/svg", "svg"),
           class: "shapes"
         }
       },
-      parent: scene.parentNode
+      parent: config.scene.parentNode
     };
     // virtual camera of the scene, used for calculating 3d perspectives
     this.camera = {
       perspective: 1000,
-      maxZ: 800,
+      maxZ: 999.99,
       fov: {
         width: window.innerWidth,
         height: window.innerHeight
@@ -211,17 +213,21 @@ class Scene { // #scene
         }, .1);
       },
       showShapes: function(){
-        let targets = this.scene.name.shapeEls;
-        for(let i = 0; i < targets.length; i++){
-          let target = targets[i];
-          this.tl.to(target, 1, {
-            opacity: .3,
+        // let targets = this.scene.name.shapeEls;
+        let shapes = this.scene.name.shapes;
+        console.log(shapes);
+        for(let i = 0; i < shapes.length; i++){
+          let shape = shapes[i];
+          // console.log(target);
+          TweenLite.to(shape.el, 1, {
+            opacity: shape.scale*.0015,
             x: getRandomInt(this.scene.bounds.left, this.scene.bounds.right),
             y: getRandomInt(this.scene.bounds.top, this.scene.bounds.bottom),
             scale: 1,
+            delay: (i*.005),
             ease: Expo.easeOut
-          }, "-=.998");
-          if(i == (targets.length - 1)) {
+          });
+          if(i == (shapes.length - 1)) {
             let scene = this.scene;
             setTimeout(() => {
               scene.animationCompleted();
@@ -253,11 +259,12 @@ class Scene { // #scene
           }
 
           TweenLite.to(shape.el, 10, {
-            opacity: .35,
+            // opacity: .35,
             x: newX,
             y: newY,
-            ease: Elastic.easeOut.config(1, 0.5)
-          }).delay(index*.005).smoothChildTiming = true;
+            delay: 0,
+            ease: Expo.easeOut
+          })
 
         });
       },
@@ -479,7 +486,7 @@ class Letter {
     this.el = el;
     this.scene = scene;
     this.shapes = [];
-    this.totalShapes = 8;
+    this.totalShapes = 6;
     this.init(scene);
   }
   init() {
@@ -502,7 +509,7 @@ class Shape {
       el: letter,
       props: letterProps
     };
-    this.scale = getRandomInt(letterProps.width * .05, letterProps.width * .2); // scale will be 10% and 100% of the letter's width
+    this.scale = getRandomInt(letterProps.width * .05, letterProps.width * .4); // scale will be 10% and 100% of the letter's width
     this.x = (letterProps.left + letterProps.width / 2);
     this.y = (letterProps.top - letterProps.height / 2);
     this.z = this.scale / letterProps.width;

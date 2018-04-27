@@ -34,7 +34,7 @@
         },
         progressBar: {
           width: 0,
-          height: 40,
+          height: 80,
           progress: 0,
           background: 'transparent'
         }

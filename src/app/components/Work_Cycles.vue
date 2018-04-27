@@ -49,8 +49,6 @@
   import careersScreensPNG from '../../images/careers_screens.png';
   import cycles_lg_jpg from '../../images/cyclesTile@lg.jpg';
 
-
-
   export default {
     props: ['project'],
     data () {
@@ -62,13 +60,7 @@
     },
     components:{
       'work-template': Work_Template
-    },
-    // mounted(){
-    //   console.log(this.$props);
-    //
-    //
-    // }
-
+    }
   }
 </script>
 
@@ -76,9 +68,15 @@
 
 <style lang="scss" scoped>
   // @import '../../style/global.scss';
-  .carousel-cell:nth-child(1){
+  .carousel-cell{
+
+    &:nth-child(1){
+      img{
+        height: 30vw;
+      }
+    }
     img{
-      height: 50%;
+      height: 30vw;
     }
   }
 </style>

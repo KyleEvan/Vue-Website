@@ -37,6 +37,14 @@ Vue.mixin({
     }
   },
   methods: {
+    getWindow: function(){
+      const viewport = {
+        width: window.innerWidth,
+        clientWidth: document.documentElement.clientWidth,
+        clientHeight: document.documentElement.clientHeight
+      }
+      return viewport;
+    },
     debounce: function(func, wait, immediate) {
       var timeout;
       return function() {

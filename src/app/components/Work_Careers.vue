@@ -1,20 +1,23 @@
 <template>
 
   <work-template :project="project">
+
     <template slot="imageSlides">
       <div class="carousel-cell" v-for="image in images">
         <img :src="image" alt="" />
       </div>
     </template>
 
-    <h2 slot="title">
     <!-- Title: -->
+    <template slot="title">
       Careers Redesign
-    </h2>
+    </template>
+
+    <!-- Project Description -->
     <p slot="description">
-      <!-- Project Description -->
       An educational take on retro trails/snake-like see-how-long-you-can-last games. {{saying}}
     </p>
+
     <!-- Skills utilized -->
     <ul slot="skills">
       <li>JS</li>

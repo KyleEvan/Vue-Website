@@ -105,7 +105,7 @@ function randomIndex(length) {
 
 class Scene { // #scene
   constructor(config) {
-    // scene, name, devmode, showName
+    // scene, name, devmode, showName, color
     console.log(config);
     this.devmode = config.devmode;
     this.devConfig = {
@@ -128,7 +128,7 @@ class Scene { // #scene
     // scene.interactive, if true mousemove events will be tracked for shape translations
     this.interactive = false;
     // Max boundaries of the scene in relation to the window. 1 = window size
-    this.sceneSize = .8;
+    this.sceneSize = 1;
 
     this.bounds = undefined;
 
@@ -220,7 +220,7 @@ class Scene { // #scene
           let shape = shapes[i];
           // console.log(target);
           TweenLite.to(shape.el, 1, {
-            opacity: shape.scale*.0015,
+            opacity: shape.scale*.01,
             x: getRandomInt(this.scene.bounds.left, this.scene.bounds.right),
             y: getRandomInt(this.scene.bounds.top, this.scene.bounds.bottom),
             scale: 1,

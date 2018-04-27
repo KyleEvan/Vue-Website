@@ -39,13 +39,13 @@
   const colors = {
     turquoise: '#88FFE2',
     lightTurquoise: '#C8FFF1',
-    mediumTurquoise: '#3EE8BF',
-    darkTurquoise: '#2CA386',
+    mediumTurquoise: '#7CE8CE',
+    darkTurquoise: '#70D1B9',
 
     peach: '#FFD6C2',
     lightPeach: '#FFECE3',
-    mediumPeach: '#E8AE92',
-    darkPeach: '#A37A66',
+    mediumPeach: '#E8C3B1',
+    darkPeach: '#D1B09F',
 
     blue: '#87F6FF',
     darkBlue: '#569DA3'
@@ -163,7 +163,6 @@
           x: this.bannerOffset.x + (this.bannerWidth/2),
           y: this.bannerHeight/2
         };
-        console.log(newCenter);
         return {
           scale: (window.innerWidth*project.data.image.newHeight)/container.height,
           translateX: newCenter.x - containerCenter.x,
@@ -247,28 +246,14 @@
       }, 50);
       window.addEventListener('resize', handleResize);
 
-
       const projects = document.querySelectorAll('.project');
       const controller = new ScrollMagic.Controller();
-      // const tl = new TimelineLite();
 
         for(let i = 0; i < projects.length; i++){
           let project = projects[i];
           const imageContainer = project.querySelector('.image');
           const image = project.querySelector('.image > img');
           const text = project.querySelector('.text');
-          // const alignment = project.getAttribute('data-align');
-
-          // Set initial values for transforms according to project alignment
-          // if(alignment == 'ltr'){
-          //   tl.set(image, { x: '100%' });
-          // }
-          // else if(alignment == 'rtl'){
-          //   tl.set(image, { x: '-100%' });
-          // }
-          // tl.set(imageContainer, { scale: 1.4 });
-
-          console.log(project);
 
           const projectScene = new ScrollMagic.Scene({
             triggerElement: project,
@@ -301,15 +286,6 @@
           })
           .addTo(controller);
         }
-
-
-
-      // ourScene.on("progress", function (event) {
-        // let progress = event.progress
-        // tl.progress(progress);
-        // tl.progress(event.progress);
-      // });
-    // }
 
     }
   }

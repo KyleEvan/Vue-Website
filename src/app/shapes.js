@@ -18,7 +18,7 @@ Color Palette
 //   '#7BE7E1', '#88E9E4', '#95ECE7', '#A2EEEA', '#AFF0ED', '#BDF3F0'
 // ];
 const colors = [
-  '#F9F9F9'
+  '#fff'
 ];
 
 
@@ -486,7 +486,7 @@ class Letter {
     this.el = el;
     this.scene = scene;
     this.shapes = [];
-    this.totalShapes = 6;
+    this.totalShapes = 10;
     this.init(scene);
   }
   init() {
@@ -509,7 +509,7 @@ class Shape {
       el: letter,
       props: letterProps
     };
-    this.scale = getRandomInt(letterProps.width * .05, letterProps.width * .4); // scale will be 10% and 100% of the letter's width
+    this.scale = getRandomInt(letterProps.width * .05, letterProps.width * .33); // scale will be 10% and 100% of the letter's width
     this.x = (letterProps.left + letterProps.width / 2);
     this.y = (letterProps.top - letterProps.height / 2);
     this.z = this.scale / letterProps.width;

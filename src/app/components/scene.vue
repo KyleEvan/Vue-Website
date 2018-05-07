@@ -14,7 +14,7 @@ HTML
 
     <div id="scene" ref="scene">
       <h1 id="name" ref="name">{{ name }}</h1>
-      <h2>Front End Developer</h2>
+      <!-- <h2>Front End Developer</h2> -->
     </div>
 
 
@@ -175,7 +175,7 @@ Styles/SCSS
    background: #2D2D2D;
  }
  .bg-white{
-   background: #f9f9f9;
+   background: #fff;
  }
 
  .scene-placeholder{

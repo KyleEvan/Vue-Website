@@ -154,7 +154,8 @@
   }
 
   // .carousel-aside{
-  p, ul{
+  .carousel-aside *,
+  .content *{
     opacity: .75;
   }
 

@@ -7,7 +7,8 @@ import Contact from './components/Contact.vue';
 import NotFound from './components/NotFound.vue';
 import WorkCareers from './components/Work_Careers.vue';
 import WorkCycles from './components/Work_Cycles.vue';
-import { transitions } from './transitions.js';
+import WorkComboSmash from './components/Work_ComboSmash.vue';
+// import { transitions } from './transitions.js';
 
 Vue.use(Router);
 
@@ -20,12 +21,16 @@ export default new Router({
       component: Home,
       meta: { title: 'Kyle Peterson', showName: true }
     },
-    {
-      path: '/work',
-      name: 'Work',
-      component: Work,
-      meta: { title: 'Work | KP', showName: false }
-    },
+
+    // Possible future implementation
+    // {
+    //   path: '/work',
+    //   name: 'Work',
+    //   component: Work,
+    //   meta: { title: 'Work | KP', showName: false }
+    // },
+
+    // Projects and Work
     {
       path: '/careers-redesign',
       name: 'Careers-Redesign',
@@ -40,6 +45,15 @@ export default new Router({
       props: true,
       meta: { title: 'Cycles | KP', showName: false }
     },
+    {
+      path: '/combo-smash',
+      name: 'ComboSmash',
+      component: WorkComboSmash,
+      props: true,
+      meta: { title: 'Combo Smash | KP', showName: false }
+    },
+
+    // Other Pages
     {
       path: '/about',
       name: 'About',

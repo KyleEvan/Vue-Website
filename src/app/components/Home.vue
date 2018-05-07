@@ -3,18 +3,25 @@
     <div class="container">
       <div class="content">
 
-        <section v-for="project in projects" :data-align="project.align" class="project">
+        <a
+          :href="project.href"
+          @click.prevent="handleClick"
+          v-for="project in projects"
+          :data-align="project.align"
+          :style="{width: project.image.width}"
+          class="project"
+        >
           <div class="text">
-            <h2>{{project.title}}</h2>
+            <!-- <h2>{{project.title}}</h2>
             <p>
               {{project.summary}}
             </p>
-            <a class="link" :href="project.href" @click.prevent="handleClick" :style="{color: project.secondaryColor, backgroundColor: project.primaryColor}">View Project</a>
+            <a class="link" :href="project.href" @click.prevent="handleClick" :style="{color: project.secondaryColor, backgroundColor: project.primaryColor}">View Project</a> -->
           </div>
-          <div class="image" :style="{width: project.image.width, height: project.image.height, background: project.primaryColor}">
+          <div class="image" :style="{height: project.image.height, background: project.primaryColor}">
             <img :src="project.image.src" />
           </div>
-        </section>
+        </a>
 
       </div>
     </div>
@@ -33,6 +40,8 @@
   import careersPNG from '../../images/career-areas-mobile.png';
   import careersScreensPNG from '../../images/careers_screens.png';
   import cycles_lg_jpg from '../../images/cyclesTile@lg.jpg';
+  import preview_lg_jpg from '../../images/comboSmash-preview@lg.jpg';
+
 
   // Color Themes
   // https://coolors.co/616163-44ffd2-ffbfa0-87f6ff-f2545b
@@ -47,8 +56,10 @@
     mediumPeach: '#E8C3B1',
     darkPeach: '#D1B09F',
 
-    blue: '#87F6FF',
-    darkBlue: '#569DA3'
+    blue: '#B2F9FF',
+    lightBlue: '#DCFCFF',
+    mediumBlue: '#A2E3E8',
+    darkBlue: '#92CCD1'
   };
 
   export default {
@@ -70,11 +81,11 @@
           {
             align: 'ltr',
             title: 'Careers Redesign',
-            summary: 'Careers Website Redesign for Excellus BCBS and Univera Healthcare. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Varius quam quisque id diam vel quam elementum pulvinar. Purus ut faucibus pulvinar elementum integer enim neque.',
+            summary: 'Careers Website Redesign',
             href: 'Careers-Redesign',
             image:{
-              width: '31%',
-              height: '16vw',
+              width: '34%',
+              height: '20vw',
               newHeight: .3,
               src: careersScreensPNG
             },
@@ -86,11 +97,11 @@
           {
             align: 'rtl',
             title: 'Cycles',
-            summary: 'Lorem ipsum dolor sit amet, quo ea tacimates scribentur. Sed no eius tempor, qui cu decore dolorem. Periculis adipiscing vix ad, erat democritum eu eos. Cu eum eros indoctum, putent quaeque mel eu. Vide apeirian delicata ea vim, eius deserunt ut has. Et pro magna salutatus.',
+            summary: 'Lorem ipsum dolor sit',
             href: 'Cycles',
             image:{
-              width: '22%',
-              height: '20vw',
+              width: '30%',
+              height: '25vw',
               newHeight: .3,
               src: cycles_lg_jpg
             },
@@ -98,6 +109,22 @@
             lightColor: colors.lightTurquoise,
             mediumColor: colors.mediumTurquoise,
             darkColor: colors.darkTurquoise
+          },
+          {
+            align: 'ltr',
+            title: 'Combo Smash',
+            summary: 'Lorem ipsum dolor sit',
+            href: 'ComboSmash',
+            image:{
+              width: '30%',
+              height: '22vw',
+              newHeight: .3,
+              src: preview_lg_jpg
+            },
+            primaryColor: colors.blue,
+            lightColor: colors.lightBlue,
+            mediumColor: colors.mediumBlue,
+            darkColor: colors.darkBlue
           }
         ],
 
@@ -138,11 +165,15 @@
       },
       getProjectData: function(target){
         const projects = document.querySelectorAll('.project');
+        // console.log(projects);
         for (let i = projects.length-1; i >= 0; i--){
           let project = projects[i];
-          if( project.querySelector('.link') == target){
+          // console.log(target);
+          // console.log(project);
+          if(project == target){
+            // console.log(project);
             return {
-              el: projects[i],
+              el: project,
               image: project.querySelector('.image > img'),
               imageContainer: project.querySelector('.image'),
               data: this.projects[i]
@@ -163,8 +194,10 @@
           x: this.bannerOffset.x + (this.bannerWidth/2),
           y: this.bannerHeight/2
         };
+        const padding = parseInt(window.getComputedStyle(project.imageContainer, null).getPropertyValue('padding-top'), 10);
+        // if(!padding) padding = 0;
         return {
-          scale: (window.innerWidth*project.data.image.newHeight)/container.height,
+          scale: (window.innerWidth*project.data.image.newHeight)/(container.height - (padding*2)),
           translateX: newCenter.x - containerCenter.x,
           translateY: newCenter.y - containerCenter.y,
           newPoints: this.newPoints
@@ -196,6 +229,17 @@
         const tl = new TimelineLite();
         const duration = 700; // temporary
 
+        // Hide other projects
+        const projects = Array.from(document.querySelectorAll('.project'));
+        let filteredProjects = projects.filter(function (el) {
+          return (el !== e.target);
+        });
+        tl.to(filteredProjects, .4, {
+          scale: 0,
+          ease: Power1.easeInOut,
+          transformOrigin: '50% 50%',
+        });
+
         const morphBackground = () => {
           const background = this.createBackground(project);
           console.log(background);
@@ -213,7 +257,7 @@
             }
           });
         };
-
+        // Animate
         tl.to(project.imageContainer, (duration/1000), {
           x: transforms.translateX,
           y: transforms.translateY,
@@ -233,6 +277,7 @@
         this.project = this.getProjectData(e.target);
         this.transforms = this.calcTransforms(this.project);
         this.animateImage(e, this.project, this.transforms);
+
       }
 
     },
@@ -277,12 +322,12 @@
               opacity: 1,
               ease: Circ.easeOut
             }, 0)
-            .to(text, .6,
-            {
-              x: '0%',
-              opacity: 1,
-              ease: Power2.easeOut
-            }, .55)
+            // .to(text, .6,
+            // {
+            //   x: '0%',
+            //   opacity: 1,
+            //   ease: Power2.easeOut
+            // }, .55)
           })
           .addTo(controller);
         }
@@ -294,53 +339,54 @@
 
 <style lang="scss" scoped>
   @import '../../style/global.scss';
-  .scene-placeholder{
-    width: 100%;
-    height: 100vh;
-  }
+
   .container{
     background: transparent;
 
     .content{
+      display: flex;
       margin: 100vh 8% 3em 8%;
 
       .project{
         position: relative;
-        width: 100%;
-        min-height: 60vh;
+        margin: 1em;
+        // width: 100%;
+        // min-height: 60vh;
         display: flex;
-        align-items: center;
-        justify-content: center;
-
+        // align-items: center;
+        // justify-content: center;
+       &>*{
+         pointer-events: none;
+       }
         @include small {
-          flex-direction: column-reverse;
+          // flex-direction: column-reverse;
         }
         @include medium {
           // min-height: 80vh;
           &[data-align="ltr"]{
-            flex-direction: row;
+            // flex-direction: row;
 
-            .text{
-              transform: translateX(30%);
-            }
+            // .text{
+            //   transform: translateX(30%);
+            // }
           }
           &[data-align="rtl"]{
-            flex-direction: row-reverse;
+            // flex-direction: row-reverse;
 
-            .text{
-              transform: translateX(-30%);
-            }
+            // .text{
+            //   transform: translateX(-30%);
+            // }
           }
         }
         .text{
-          @include small {
-            width: 100%;
-            margin: 0%;
-          }
-          @include medium {
-            width: 34%;
-            margin: 0% 0% 0% 8%;
-          }
+          // @include small {
+          //   width: 100%;
+          //   margin: 0%;
+          // }
+          // @include medium {
+          //   width: 34%;
+          //   margin: 0% 0% 0% 8%;
+          // }
 
           h2{
             margin-top: 0;
@@ -365,13 +411,14 @@
           opacity: 0;
         }
         .image{
+          width: 100%;
           display: flex;
+          padding: 1.5em;
           justify-content: center;
           overflow: hidden;
           transform: translateY(30%);
 
           @include small{
-            width: 100%;
             // height: 34vw !important;
             margin-bottom: 1.5rem;
           }

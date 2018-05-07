@@ -5,25 +5,27 @@
 -->
 <template>
   <div>
-    <div :style="{background: backgroundColor}" class="background"></div>
+    <div :style="{background: primaryColor}" class="background"></div>
 
     <div class="main-container">
-      <div class="carousel-aside" :style="{background: lightBackground}">
-        <!-- <template slot="title"> -->
+
+      <div class="carousel-aside" :style="{background: lightColor}">
         <h2 :style="{color: darkColor}">
           <slot name="title"></slot>
         </h2>
-        <!-- </template> -->
         <slot name="description"></slot>
         <slot name="skills"></slot>
+        <slot name="links"></slot>
       </div>
-      <carousel :progressColor="progressColor">
+
+      <carousel :progressColor="mediumColor">
         <slot name="imageSlides"></slot>
       </carousel>
+
     </div>
 
 
-    <div class="container" :style="{background: lightBackground}">
+    <div class="container" :style="{background: lightColor}">
       <div class="content" ref="content">
         <slot></slot>
       </div>
@@ -47,9 +49,9 @@
 		props:['project'],
     data(){
       return{
-        defaultProgressColor: '#E3A9AB',
-        defaultBgColor: '#F9B9BC',
-        defaultLightBgColor: '#FCDFE0',
+        defaultPrimaryColor: '#F9B9BC',
+        defaultLightColor: '#FCDFE0',
+        defaultMediumColor: '#E3A9AB',
         defaultDarkColor: '#CC989A'
       }
     },
@@ -57,16 +59,16 @@
       carousel: Carousel
     },
     computed: {
-      progressColor: function(){
-        let color = this.$props.project ? this.$props.project.mediumColor : this.defaultProgressColor;
+      primaryColor: function(){
+        let color = this.$props.project ? this.$props.project.primaryColor : this.defaultPrimaryColor;
         return color;
       },
-      backgroundColor: function(){
-        let color = this.$props.project ? this.$props.project.primaryColor : this.defaultBgColor;
+      lightColor: function(){
+        let color = this.$props.project ? this.$props.project.lightColor : this.defaultLightColor;
         return color;
       },
-      lightBackground: function(){
-        let color = this.$props.project ? this.$props.project.lightColor : this.defaultLightBgColor;
+      mediumColor: function(){
+        let color = this.$props.project ? this.$props.project.mediumColor : this.defaultMediumColor;
         return color;
       },
       darkColor: function(){
@@ -109,7 +111,6 @@
     mounted(){
       const tl = this.animateFlickity();
       this.initScrollMagic(tl);
-
     }
   }
 </script>
@@ -121,6 +122,12 @@
 -->
 <style lang="scss" scoped>
   @import '../../style/global.scss';
+
+  .carousel-aside,
+  .content{
+    color: rgba(66, 58, 47, .65);
+  }
+
   .main-container{
     display: flex;
     flex-direction: column-reverse;
@@ -137,6 +144,16 @@
       }
       h2{
         font-size: 5vw;
+        opacity: 1;
+      }
+      h3{
+        font-weight: 500;
+        margin-bottom: .5em;
+      }
+      ul{
+        list-style: none;
+        margin-top: 0;
+        padding: 0;
       }
     }
   }
@@ -153,13 +170,8 @@
     }
   }
 
-  // .carousel-aside{
-  .carousel-aside *,
-  .content *{
-    opacity: .75;
-  }
 
-  // }
+
 
   .background{
     position:absolute;

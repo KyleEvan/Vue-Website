@@ -8,17 +8,16 @@
       </div>
     </template>
 
-
-    <h2 slot="title">
     <!-- Title: -->
+    <template slot="title">
       Combo Smash
-    </h2>
+    </template>
+
+    <!-- Project Description -->
     <template slot="description">
-      <!-- Project Description -->
       <p>
         A webbrowser game made with HMTL5 Canvas. It's an arcade style top down horde survival game. I wrote it with Javascript as a final project for my New Media
       </p>
-      <a :href="gitHubLink">GitHub Repo</a>
 
       <h3>Requirements &amp; Constraints</h3>
       <ul>
@@ -26,21 +25,30 @@
           <b>Move:</b> keyboard (WASD Controls)
         </li>
         <li>
-          <b>Attack</b>Mouse, trackpad or touchscreen
+          <b>Attack:</b> Mouse, trackpad or touchscreen
         </li>
         <li>
           No mobile support
         </li>
       </ul>
-      <a :href="gitHubPagesLink">Play in browser</a>
     </template>
+
+
     <!-- Skills -->
     <ul slot="skills">
       <li>JS</li>
       <li>Tons of JS</li>
     </ul>
 
-    <!-- Main Content -->
+    <!-- Links -- >
+    <template slot="links">
+      <a :href="gitHubLink">GitHub Repo</a>
+      <a :href="gitHubPagesLink">Play in browser</a>
+    </template>
+
+
+
+    <!-- Extra Content -->
     <p>
       HTML5 canvas web game.
     </p>
@@ -53,6 +61,7 @@
     <p>
       Sed lacinia, urna non tincidunt mattis, tortor neque adipiscing diam, a cursus ipsum ante quis turpis. Nulla facilisi. Ut fringilla. Suspendisse potenti. Nunc feugiat mi a tellus consequat imperdiet. Vestibulum sapien. Proin quam. Etiam ultrices. Suspendisse in justo eu magna luctus suscipit. Sed lectus. Integer euismod lacus luctus magna. Quisque cursus, metus vitae pharetra auctor, sem massa mattis sem, at interdum magna augue eget diam.
     </p>
+
   </work-template>
 
 
@@ -76,9 +85,10 @@
     data () {
       return {
         images: [preview_lg_jpg, horde_md_jpg, death_md_jpg, highScores_lg_jpg],
-        saying: 'hey im content',
         gitHubLink: 'https://github.com/KyleEvan/ComboSmash-v2',
-        gitHubPagesLink: 'https://kyleevan.github.io/ComboSmash-v2/'
+        gitHubPagesLink: 'https://kyleevan.github.io/ComboSmash-v2/',
+        saying: 'hey im content',
+
       }
     },
     components:{
@@ -95,7 +105,7 @@
 
     &:nth-child(1){
       img{
-        height: 30vw;
+        height: 50vw;
       }
     }
     img{

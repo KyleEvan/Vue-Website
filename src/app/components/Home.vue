@@ -9,8 +9,7 @@
           v-for="project in projects"
           :data-align="project.align"
           :style="{width: project.image.width}"
-          class="project"
-        >
+          class="project">
           <div class="text">
             <!-- <h2>{{project.title}}</h2>
             <p>
@@ -46,6 +45,11 @@
   // Color Themes
   // https://coolors.co/616163-44ffd2-ffbfa0-87f6ff-f2545b
   const colors = {
+    red: '#F9B9BC',
+    lightRed: '#FCDFE0',
+    mediumRed: '#E3A9AB',
+    darkRed: '#CC989A',
+
     turquoise: '#88FFE2',
     lightTurquoise: '#C8FFF1',
     mediumTurquoise: '#7CE8CE',
@@ -89,10 +93,10 @@
               newHeight: .3,
               src: careersScreensPNG
             },
-            primaryColor: colors.peach,
-            lightColor: colors.lightPeach,
-            mediumColor: colors.mediumPeach,
-            darkColor: colors.darkPeach
+            primaryColor: colors.blue,
+            lightColor: colors.lightBlue,
+            mediumColor: colors.mediumBlue,
+            darkColor: colors.darkBlue
           },
           {
             align: 'rtl',
@@ -118,13 +122,13 @@
             image:{
               width: '30%',
               height: '22vw',
-              newHeight: .3,
+              newHeight: .5,
               src: preview_lg_jpg
             },
-            primaryColor: colors.blue,
-            lightColor: colors.lightBlue,
-            mediumColor: colors.mediumBlue,
-            darkColor: colors.darkBlue
+            primaryColor: colors.red,
+            lightColor: colors.lightRed,
+            mediumColor: colors.mediumRed,
+            darkColor: colors.darkRed
           }
         ],
 

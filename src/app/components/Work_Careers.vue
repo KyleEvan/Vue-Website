@@ -46,15 +46,15 @@
   import Work_Template from './Work_Project_Template.vue';
 
   // Images
-  import careersPNG from '../../images/career-areas-mobile.png';
-  import careersScreensPNG from '../../images/careers_screens.png';
+  import careers_screens_lg_png from '../../images/careers_screens@lg.png';
+
 
 
   export default {
     props: ['project'],
     data () {
       return {
-        images: [careersScreensPNG, careersScreensPNG, careersScreensPNG, careersScreensPNG],
+        images: [careers_screens_lg_png, careers_screens_lg_png, careers_screens_lg_png],
         saying: 'hey im content'
       }
     },

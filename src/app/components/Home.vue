@@ -3,24 +3,29 @@
     <div class="container">
       <div class="content">
 
-        <a
-          :href="project.href"
-          @click.prevent="handleClick"
-          v-for="project in projects"
-          :data-align="project.align"
-          :style="{width: project.image.width}"
-          class="project">
-          <div class="text">
-            <!-- <h2>{{project.title}}</h2>
-            <p>
-              {{project.summary}}
-            </p>
-            <a class="link" :href="project.href" @click.prevent="handleClick" :style="{color: project.secondaryColor, backgroundColor: project.primaryColor}">View Project</a> -->
-          </div>
-          <div class="image" :style="{height: project.image.height, background: project.primaryColor}">
-            <img :src="project.image.src" />
-          </div>
-        </a>
+        <h2>Work <span>&</span> Projects</h2>
+
+        <div class="grid">
+          <a
+            :href="project.href"
+            @click.prevent="handleClick"
+            v-for="project in projects"
+            :data-align="project.align"
+            :style="{width: project.image.width}"
+            class="project">
+            <div class="text">
+              <h3>{{project.title}}</h3>
+              <p>
+                {{project.summary}}
+              </p>
+              <!-- <a class="link" :href="project.href" @click.prevent="handleClick" :style="{color: project.secondaryColor, backgroundColor: project.primaryColor}">View Project</a> -->
+            </div>
+            <div class="image" :style="{background: project.primaryColor}">
+              <img :src="project.image.src" />
+            </div>
+          </a>
+        </div>
+
 
       </div>
     </div>
@@ -36,14 +41,22 @@
   import anime from 'animejs';
 
   // Images:
-  import careersPNG from '../../images/career-areas-mobile.png';
-  import careersScreensPNG from '../../images/careers_screens.png';
+  // import careersPNG from '../../images/career-areas-mobile.png';
+  import careers_screens_lg_png from '../../images/careers_screens@lg.png';
   import cycles_lg_jpg from '../../images/cyclesTile@lg.jpg';
   import preview_lg_jpg from '../../images/comboSmash-preview@lg.jpg';
+  import batmanPoster_lg_jpg from '../../images/batman@lg.jpg';
 
 
-  // Color Themes
-  // https://coolors.co/616163-44ffd2-ffbfa0-87f6ff-f2545b
+  /*
+     Color Palette
+
+     Saturated Colors
+     https://coolors.co/616163-44ffd2-ffbfa0-87f6ff-f69296
+
+     Light Colors
+     https://coolors.co/9a9a9b-88ffe2-ffd6c2-b2f9ff-f9b9bc
+  */
   const colors = {
     red: '#F9B9BC',
     lightRed: '#FCDFE0',
@@ -69,8 +82,8 @@
   export default {
     name: 'home',
 
-    data () {
-      return {
+    data(){
+      return{
         bannerWidth: .5, // 0 - 1 value
         bannerHeightVH: 1,   // 30vw
         bannerMinHeight: 400, // px
@@ -81,17 +94,16 @@
         transforms: undefined,
         transitioning: false,
 
-        projects: [
+        projects:[
           {
-            align: 'ltr',
-            title: 'Careers Redesign',
-            summary: 'Careers Website Redesign',
+            align: 'rtl',
+            title: 'Member & Careers Redesign',
+            summary: 'Complete UX/UI overhaul of member and careers sections of Excellus BCBS and Univera Healthcare',
             href: 'Careers-Redesign',
             image:{
-              width: '34%',
-              height: '20vw',
+              width: '52%',
               newHeight: .3,
-              src: careersScreensPNG
+              src: careers_screens_lg_png
             },
             primaryColor: colors.blue,
             lightColor: colors.lightBlue,
@@ -104,8 +116,7 @@
             summary: 'Lorem ipsum dolor sit',
             href: 'Cycles',
             image:{
-              width: '30%',
-              height: '25vw',
+              width: '34%',
               newHeight: .3,
               src: cycles_lg_jpg
             },
@@ -120,8 +131,7 @@
             summary: 'Lorem ipsum dolor sit',
             href: 'ComboSmash',
             image:{
-              width: '30%',
-              height: '22vw',
+              width: '40%',
               newHeight: .5,
               src: preview_lg_jpg
             },
@@ -129,10 +139,23 @@
             lightColor: colors.lightRed,
             mediumColor: colors.mediumRed,
             darkColor: colors.darkRed
+          },
+          {
+            align: 'rtl',
+            title: 'Batman Comic Store Poster',
+            summary: 'Lorem ipsum dolor sit',
+            href: 'ComboSmash',
+            image:{
+              width: '42%',
+              newHeight: .5,
+              src: batmanPoster_lg_jpg
+            },
+            primaryColor: colors.peach,
+            lightColor: colors.lightPeach,
+            mediumColor: colors.mediumPeach,
+            darkColor: colors.darkPeach
           }
         ],
-
-
       }
     },
     computed:{
@@ -169,13 +192,9 @@
       },
       getProjectData: function(target){
         const projects = document.querySelectorAll('.project');
-        // console.log(projects);
         for (let i = projects.length-1; i >= 0; i--){
           let project = projects[i];
-          // console.log(target);
-          // console.log(project);
           if(project == target){
-            // console.log(project);
             return {
               el: project,
               image: project.querySelector('.image > img'),
@@ -348,100 +367,118 @@
     background: transparent;
 
     .content{
-      display: flex;
       margin: 100vh 8% 3em 8%;
 
-      .project{
-        position: relative;
-        margin: 1em;
-        // width: 100%;
-        // min-height: 60vh;
+      // Work & Projects
+      h2{
+        font-size: 6vw;
+        margin-bottom: 1.2em;
+      }
+
+      .grid{
         display: flex;
-        // align-items: center;
-        // justify-content: center;
-       &>*{
-         pointer-events: none;
-       }
-        @include small {
-          // flex-direction: column-reverse;
-        }
-        @include medium {
-          // min-height: 80vh;
-          &[data-align="ltr"]{
-            // flex-direction: row;
+        align-items: flex-start;
+        flex-flow: row wrap;
+        // margin: 0 -1em 0 -1em;
 
-            // .text{
-            //   transform: translateX(30%);
-            // }
-          }
-          &[data-align="rtl"]{
-            // flex-direction: row-reverse;
-
-            // .text{
-            //   transform: translateX(-30%);
-            // }
-          }
-        }
-        .text{
-          // @include small {
-          //   width: 100%;
-          //   margin: 0%;
-          // }
-          // @include medium {
-          //   width: 34%;
-          //   margin: 0% 0% 0% 8%;
-          // }
-
-          h2{
-            margin-top: 0;
-            margin-bottom: .75rem;
-          }
-          p{
-            color: #645D54;
-            margin-top: 0;
-            margin-bottom: 1.5rem;
-          }
-          a{
-            display: inline-block;
-            padding: 1rem;
-            border-radius: 6px;
-            font-weight: 700;
-            letter-spacing: .5px;
-            text-decoration: none;
-          }
-
-        }
-        .image, .text{
-          opacity: 0;
-        }
-        .image{
-          width: 100%;
+        .project{
+          position: relative;
+          text-decoration: none;
+          // margin: 1em;
+          // width: 100%;
+          // min-height: 60vh;
           display: flex;
-          padding: 1.5em;
-          justify-content: center;
-          overflow: hidden;
-          transform: translateY(30%);
-
-          @include small{
-            // height: 34vw !important;
-            margin-bottom: 1.5rem;
+          align-items: flex-start;
+          // justify-content: center;
+         &>*{
+           pointer-events: none;
+         }
+          @include small {
+            flex-direction: column-reverse;
           }
-          @include medium{
-            // width: auto;
-            // height: auto;
-            margin-bottom: 0;
-          }
+          @include medium {
+            // min-height: 80vh;
+            &[data-align="ltr"]{
+              flex-direction: row;
 
-          img{
-            height: 100%;
-            transform: translateY(30%);
+              // .text{
+              //   transform: translateX(30%);
+              // }
+            }
+            &[data-align="rtl"]{
+              flex-direction: row-reverse;
+
+              // .text{
+              //   transform: translateX(-30%);
+              // }
+            }
+          }
+          // .image, .text{
+          .image{
             opacity: 0;
           }
+          .text{
+            color: #645D54;
+            margin: 0 .75em;
+            font-size: 70%;
+            line-height: 1;
 
+            @include small {
+              width: 100%;
+              // margin: 0%;
+            }
+            @include medium {
+              width: 15%;
+              // margin: 0% 0% 0% 8%;
+            }
 
+            h3{
+              margin-top: 0;
+              margin-bottom: .75rem;
+            }
+            p{
+              margin-top: 0;
+              margin-bottom: 1.5rem;
+              line-height: 1.5;
+            }
+            a{
+              display: inline-block;
+              padding: 1rem;
+              border-radius: 6px;
+              font-weight: 700;
+              letter-spacing: .5px;
+              text-decoration: none;
+            }
+          }
+
+          .image{
+            width: 100%;
+            display: flex;
+            align-items: flex-start;
+            padding: 1.5em;
+            justify-content: center;
+            overflow: hidden;
+            transform: translateY(30%);
+
+            @include small{
+              // height: 34vw !important;
+              margin-bottom: 1.5rem;
+            }
+            @include medium{
+              width: 85%;
+              // height: auto;
+              margin-bottom: 0;
+            }
+
+            img{
+              width: 100%;
+              transform: translateY(30%);
+              opacity: 0;
+            }
+          }
         }
-
       }
+
     }
   }
 

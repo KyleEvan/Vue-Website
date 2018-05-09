@@ -29,12 +29,21 @@ JS
 
 -->
 <script>
-  import Nav from './Nav.vue';
-  import App from './App.vue';
+  // Libraries
   import ScrollMagic from "scrollmagic";
   import { TimelineLite } from "gsap";
 
+  // Components
+  import Nav from './Nav.vue';
+  import App from './App.vue';
+
+  // JS files
   import { ShapeScene } from '../shapes.js';
+
+  // Images
+  import careers_screens_lg_png from '../../images/careers_screens@lg.png';
+  import cycles_lg_jpg from '../../images/cyclesTile@lg.jpg';
+  import preview_lg_jpg from '../../images/comboSmash-preview@lg.jpg';
 
   export default {
    data(){
@@ -43,6 +52,11 @@ JS
        scene: {},
        // initialized: false,
        showName: false,
+       preloadImages: [
+         careers_screens_lg_png,
+         cycles_lg_jpg,
+         preview_lg_jpg
+       ]
        // bgBlack: 'bg-black',
        // bgWhite: 'bg-white'
      }
@@ -53,7 +67,29 @@ JS
    },
    // props: ['name', 'showName'],
    methods:{
-     init: function(){
+     preload: function(){
+       // init loading animation
+
+       // load images
+       for (let i = 0, len = this.preloadImages.length; i < len; i++){
+
+         let img = new Image();
+
+         if(i >= len-1){
+           console.log(i);
+           img.onload = () => {
+             console.log('all images have been loaded');
+             console.log(this);
+             this.initScene();
+           }
+         }
+
+         img.src = this.preloadImages[i];
+
+       }
+     },
+     initScene: function(){
+       console.log('Scene Initialized in Scene.vue');
        const config = {
          scene: this.$refs.scene,
          name: this.$refs.name,
@@ -82,7 +118,11 @@ JS
 
    },
    mounted(){
-     this.init();
+
+     this.preload();
+
+
+     // ScrollMagic
      const scene = document.querySelector('.scene-placeholder');
      const controller = new ScrollMagic.Controller();
      const sceneMagic = new ScrollMagic.Scene({
@@ -125,8 +165,11 @@ JS
        }
      })
      .addTo(controller);
+
+
+
    },
-   watch: {
+   watch:{
      $route: function(to, from){
        // console.log(this.$props);
        this.showName = this.$route.meta.showName;

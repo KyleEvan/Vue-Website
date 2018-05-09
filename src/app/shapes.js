@@ -486,7 +486,7 @@ class Letter {
     this.el = el;
     this.scene = scene;
     this.shapes = [];
-    this.totalShapes = 10;
+    this.totalShapes = 5;
     this.init(scene);
   }
   init() {
@@ -509,7 +509,7 @@ class Shape {
       el: letter,
       props: letterProps
     };
-    this.scale = getRandomInt(letterProps.width * .05, letterProps.width * .33); // scale will be 10% and 100% of the letter's width
+    this.scale = getRandomInt(letterProps.width * .05, letterProps.width * .25); // scale will be 10% and 100% of the letter's width
     this.x = (letterProps.left + letterProps.width / 2);
     this.y = (letterProps.top - letterProps.height / 2);
     this.z = this.scale / letterProps.width;
@@ -585,7 +585,6 @@ class Shape {
         }
       }
     }
-
     if(this.scene.devmode){
       console.log('%c ---------------------------------------- ', this.scene.devConfig.console.grayText);
       console.log('%c SHAPE CREATED: ', this.scene.devConfig.console.aquaText)
@@ -594,9 +593,9 @@ class Shape {
       console.log(`%c Z: %c${this.scene.camera.perspective - (this.z * this.scene.camera.maxZ)} `, this.scene.devConfig.console.aquaText, this.scene.devConfig.console.yellowText);
       console.log('%c ---------------------------------------- ', this.scene.devConfig.console.grayText);
     }
-
   }
-  calc3DLocation(camera) {
+
+  calc3DLocation(camera){
     /*
         Bx = Ax*(Bz/Az)
     */
@@ -623,7 +622,7 @@ class Shape {
     return [newX, newY];
   }
 
-  updateShape() {
+  updateShape(){
     if(this.scene.ready){
       let letter = this.letter.el.getBoundingClientRect();
       this.letter.props = letter;
@@ -702,19 +701,19 @@ class Shape {
   }
 }
 
-exports.ShapeScene = function(scene, name, devmode, showName) {
+exports.ShapeScene = function(config) {
   let shapeScene;
-  shapeScene = new Scene(scene, name, devmode, showName);
-  // document.addEventListener('readystatechange', function(){
-  //   if (document.readyState == "interactive"){
-  //     console.log("interactive");
-  //   }
-  //   else if (document.readyState == "complete"){
-  //     console.log("document ready complete");
-  //   }
-  // });
-  //
-  // document.addEventListener('DOMContentLoaded', () => shapeScene = new Scene(scene, name));
-
+  shapeScene = new Scene(config);
   return shapeScene;
 }
+
+// document.addEventListener('readystatechange', function(){
+//   if (document.readyState == "interactive"){
+//     console.log("interactive");
+//   }
+//   else if (document.readyState == "complete"){
+//     console.log("document ready complete");
+//   }
+// });
+//
+// document.addEventListener('DOMContentLoaded', () => shapeScene = new Scene(scene, name));

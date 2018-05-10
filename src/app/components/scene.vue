@@ -7,8 +7,7 @@ HTML
 
   <div>
     <Nav />
-    <div class="bg-white" ref="bgWhite"></div>
-    <div class="bg-black" ref="bgBlack"></div>
+
     <App />
     <div class="scene-placeholder"></div>
 
@@ -29,6 +28,9 @@ JS
 
 -->
 <script>
+  // Color Palette
+  import {colors} from '../colors.js';
+
   // Libraries
   import ScrollMagic from "scrollmagic";
   import { TimelineLite } from "gsap";
@@ -49,25 +51,40 @@ JS
    data(){
      return{
        name: 'Kyle',
-       scene: {},
-       // initialized: false,
+       scene: undefined,
        showName: false,
        preloadImages: [
          careers_screens_lg_png,
          cycles_lg_jpg,
          preview_lg_jpg
+       ],
+       colors: [
+         colors.red,
+         colors.turquoise,
+         colors.peach
        ]
-       // bgBlack: 'bg-black',
-       // bgWhite: 'bg-white'
      }
    },
    components:{
      Nav: Nav,
      App: App
    },
-   // props: ['name', 'showName'],
+
    methods:{
+     // Utility Methods
+     bodyNoScroll: function(){
+       const body = document.body;
+       body.style.top = `${-(window.scrollY || window.pageYOffset || document.body.scrollTop + (document.documentElement && document.documentElement.scrollTop || 0))}px`;
+       body.style.position = 'fixed';
+       body.style.overflowY = "scroll";
+     },
+     bodyRestoreScroll: function(){
+       const body = document.body;
+       body.removeAttribute("style");
+     },
+
      preload: function(){
+       this.bodyNoScroll();
        // init loading animation
 
        // load images
@@ -81,6 +98,7 @@ JS
              console.log('all images have been loaded');
              console.log(this);
              this.initScene();
+             this.bodyRestoreScroll();
            }
          }
 
@@ -94,13 +112,16 @@ JS
          scene: this.$refs.scene,
          name: this.$refs.name,
          devmode: this.devmode,
-         showName: this.showName
+         showName: this.showName,
+         shapeColors: this.colors
        };
        this.scene = ShapeScene(config);
      },
+
      hideName: function(){
        this.scene.animations.hideLetters();
      }
+
    },
    created(){
      // Check if route displays the name
@@ -121,6 +142,13 @@ JS
 
      this.preload();
 
+     // Event Listeners
+     // const scene = this;
+     // flkty.on( 'scroll', ( progress ) => {
+     //   progress = Math.max( 0, Math.min( 1, progress ) );
+     //   carousel.updateProgress(progress);
+     // });
+
 
      // ScrollMagic
      const scene = document.querySelector('.scene-placeholder');
@@ -140,11 +168,11 @@ JS
          // console.log("hide letters");
        if(this.showName){
          this.scene.animations.hideLetters();
-         TweenLite.to(this.$refs.bgBlack, .6,
-         {
-           opacity: 0,
-           ease: Power4.easeIn
-         });
+         // TweenLite.to(this.$refs.bgBlack, .6,
+         // {
+         //   opacity: 0,
+         //   ease: Power4.easeIn
+         // });
        }
 
          // document.body.removeAttribute('class');
@@ -157,15 +185,14 @@ JS
        console.log(this.scene.showName);
        if(!this.showName){
          this.scene.animations.showLetters();
-         TweenLite.to(this.$refs.bgBlack, .6,
-         {
-           opacity: 1,
-           ease: Power4.easeOut
-         });
+         // TweenLite.to(this.$refs.bgBlack, .6,
+         // {
+         //   opacity: 1,
+         //   ease: Power4.easeOut
+         // });
        }
      })
      .addTo(controller);
-
 
 
    },
@@ -176,20 +203,20 @@ JS
        if(this.showName){
          console.log("showLetters!!!!!");
          this.scene.animations.showLetters();
-         TweenLite.to(this.$refs.bgBlack, .6,
-         {
-           opacity: 1,
-           ease: Power4.easeOut
-         });
+         // TweenLite.to(this.$refs.bgBlack, .6,
+         // {
+         //   opacity: 1,
+         //   ease: Power4.easeOut
+         // });
          // document.body.setAttribute('class', 'bg-black');
 
        }else{
          this.scene.animations.hideLetters();
-         TweenLite.to(this.$refs.bgBlack, .6,
-         {
-           opacity: 0,
-           ease: Power4.easeIn
-         });
+         // TweenLite.to(this.$refs.bgBlack, .6,
+         // {
+         //   opacity: 0,
+         //   ease: Power4.easeIn
+         // });
          // document.body.removeAttribute('class');
        }
      }
@@ -257,11 +284,11 @@ Styles/SCSS
      }
      #name {
          // color: #FF9A91;
-         color: #f9f9f9;
+         color: #616163;
          margin: 0;
          font-size: 50px;
          text-transform: uppercase;
-         font-size: 8vw;
+         font-size: 12vw;
          font-family: 'InterUI', sans-serif;
          font-weight: 700;
          user-select: none;

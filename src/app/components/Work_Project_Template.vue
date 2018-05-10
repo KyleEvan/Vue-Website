@@ -103,7 +103,8 @@
         },
         {
           y: '5%',
-          ease: Power0.easeNone
+          opacity: 0,
+          ease: Power4.easeOut
         });
         return tl;
       }

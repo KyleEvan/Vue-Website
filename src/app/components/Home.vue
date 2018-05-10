@@ -3,7 +3,7 @@
     <div class="container">
       <div class="content">
 
-        <h2>Work <span>&</span> Projects</h2>
+        <h2>Work <span>&amp;</span> Projects</h2>
 
         <div class="grid">
           <a
@@ -35,49 +35,21 @@
 </template>
 
 <script>
-  import ScrollMagic from "scrollmagic";
+  // Color Palette
+  import {colors} from '../colors.js';
 
+  // JS Libraries
+  import ScrollMagic from "scrollmagic";
   import { TimelineLite } from "gsap";
   import anime from 'animejs';
 
-  // Images:
-  // import careersPNG from '../../images/career-areas-mobile.png';
+  // Images
   import careers_screens_lg_png from '../../images/careers_screens@lg.png';
   import cycles_lg_jpg from '../../images/cyclesTile@lg.jpg';
   import preview_lg_jpg from '../../images/comboSmash-preview@lg.jpg';
   import batmanPoster_lg_jpg from '../../images/batman@lg.jpg';
+  // import careersPNG from '../../images/career-areas-mobile.png';
 
-
-  /*
-     Color Palette
-
-     Saturated Colors
-     https://coolors.co/616163-44ffd2-ffbfa0-87f6ff-f69296
-
-     Light Colors
-     https://coolors.co/9a9a9b-88ffe2-ffd6c2-b2f9ff-f9b9bc
-  */
-  const colors = {
-    red: '#F9B9BC',
-    lightRed: '#FCDFE0',
-    mediumRed: '#E3A9AB',
-    darkRed: '#CC989A',
-
-    turquoise: '#88FFE2',
-    lightTurquoise: '#C8FFF1',
-    mediumTurquoise: '#7CE8CE',
-    darkTurquoise: '#70D1B9',
-
-    peach: '#FFD6C2',
-    lightPeach: '#FFECE3',
-    mediumPeach: '#E8C3B1',
-    darkPeach: '#D1B09F',
-
-    blue: '#B2F9FF',
-    lightBlue: '#DCFCFF',
-    mediumBlue: '#A2E3E8',
-    darkBlue: '#92CCD1'
-  };
 
   export default {
     name: 'home',
@@ -146,7 +118,7 @@
             summary: 'Lorem ipsum dolor sit',
             href: 'ComboSmash',
             image:{
-              width: '42%',
+              width: '32%',
               newHeight: .5,
               src: batmanPoster_lg_jpg
             },
@@ -288,7 +260,7 @@
           ease: Power1.easeInOut,
           transformOrigin: '50% 50%',
           onStart: () => {
-            console.log('starting animation');
+            // console.log('starting animation');
           },
           onComplete: () => {
             morphBackground();
@@ -369,7 +341,7 @@
     .content{
       margin: 100vh 8% 3em 8%;
 
-      // Work & Projects
+      /* Work & Projects */
       h2{
         font-size: 6vw;
         margin-bottom: 1.2em;

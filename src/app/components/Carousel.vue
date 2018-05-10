@@ -87,9 +87,9 @@
       });
 
       const handleResize = this.debounce(function() {
-        console.log("handling resize");
+        // console.log("handling carousel resize");
         carousel.setWidth(document.documentElement.clientWidth);
-      }, 50);
+      }, 30);
       window.addEventListener('resize', handleResize);
 
 
@@ -105,9 +105,9 @@
     position: relative;
     width: 100%;
     z-index: 2;
+
     @include medium{
       width: 50%;
-
     }
 
     #flickityContainer{
@@ -125,8 +125,6 @@
         height: 100vh;
         width: 50%;
       }
-
-
 
       .flickity-viewport{
         width: 100%;
@@ -153,10 +151,6 @@
             align-items: center;
             width: 100%;
             height: 100%;
-
-            // img{
-            //   height:100%;
-            // }
           }
         }
       }
@@ -230,12 +224,6 @@
     }
   }
 
-  /* Increase contrast of shapes in scene */
-  @supports (filter: contrast(100%)){
-    // #scene{
-    //   filter: contrast(200%);
-    // }
-  }
 
 
 

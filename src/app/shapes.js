@@ -3,23 +3,7 @@
 import { TimelineLite } from "gsap";
 import charming from 'charming';
 
-/*
 
-Color Palette
-  https://coolors.co/7edad4-ff9393-ffec94-f9fff9-63676c
-  https://coolors.co/7edad4-ffa69e-ffec94-707c89-f9fff9
-
-  https://coolors.co/85e5e0-ffa69e-ffeb93-7b8a96-ffe5e5
-*/
-// const colors = [
-//   '#ACE7E3', '#FFC6C1', '#FFF2BA'
-// ];
-// const colors = [
-//   '#7BE7E1', '#88E9E4', '#95ECE7', '#A2EEEA', '#AFF0ED', '#BDF3F0'
-// ];
-const colors = [
-  '#fff'
-];
 
 
 /*
@@ -122,6 +106,7 @@ class Scene { // #scene
     //   background: '#000000'
     // };
     // this.devConsoleStyle = `color: ${this.devConsole.color}; background: ${this.devConsole.background}`;
+    this.shapeColors = config.shapeColors || ['#fff'];
 
     // scene.ready is true after the initial animation has fully completed
     this.ready = false;
@@ -151,8 +136,8 @@ class Scene { // #scene
     };
     // virtual camera of the scene, used for calculating 3d perspectives
     this.camera = {
-      perspective: 1000,
-      maxZ: 999.99,
+      perspective: 10,
+      maxZ: 9,
       fov: {
         width: window.innerWidth,
         height: window.innerHeight
@@ -220,7 +205,7 @@ class Scene { // #scene
           let shape = shapes[i];
           // console.log(target);
           TweenLite.to(shape.el, 1, {
-            opacity: shape.scale*.01,
+            opacity: shape.scale*.022,
             x: getRandomInt(this.scene.bounds.left, this.scene.bounds.right),
             y: getRandomInt(this.scene.bounds.top, this.scene.bounds.bottom),
             scale: 1,
@@ -486,7 +471,7 @@ class Letter {
     this.el = el;
     this.scene = scene;
     this.shapes = [];
-    this.totalShapes = 5;
+    this.totalShapes = 4;
     this.init(scene);
   }
   init() {
@@ -509,7 +494,7 @@ class Shape {
       el: letter,
       props: letterProps
     };
-    this.scale = getRandomInt(letterProps.width * .05, letterProps.width * .25); // scale will be 10% and 100% of the letter's width
+    this.scale = getRandomInt(letterProps.width * .08, letterProps.width * .36); // scale will be 10% and 100% of the letter's width
     this.x = (letterProps.left + letterProps.width / 2);
     this.y = (letterProps.top - letterProps.height / 2);
     this.z = this.scale / letterProps.width;
@@ -524,7 +509,7 @@ class Shape {
       translateY: undefined
     };
     this.transforms = undefined;
-    this.colors = colors;
+    this.colors = scene.shapeColors;
     this.types = [
       {
         el: 'circle',
@@ -535,13 +520,13 @@ class Shape {
         strokeWidth: undefined,
         fill: this.colors[randomIndex(this.colors.length)]
       },
-      // {
-      //   el: 'polygon',
-      //   points: this.getPoints(this.projectedXY[0], this.projectedXY[1], this.scale),
-      //   stroke: undefined,
-      //   strokeWidth: undefined,
-      //   fill: this.colors[randomIndex(this.colors.length)]
-      // }
+      {
+        el: 'polygon',
+        points: this.getPoints(this.projectedXY[0], this.projectedXY[1], this.scale),
+        stroke: undefined,
+        strokeWidth: undefined,
+        fill: this.colors[randomIndex(this.colors.length)]
+      }
       // {
       //   el: 'rect',
       //   x: this.x,
@@ -587,7 +572,8 @@ class Shape {
     }
     if(this.scene.devmode){
       console.log('%c ---------------------------------------- ', this.scene.devConfig.console.grayText);
-      console.log('%c SHAPE CREATED: ', this.scene.devConfig.console.aquaText)
+      console.log('%c SHAPE CREATED: ', this.scene.devConfig.console.aquaText);
+      console.log(this.el);
       console.log(`%c X: %c${this.x} `, this.scene.devConfig.console.aquaText, this.scene.devConfig.console.yellowText);
       console.log(`%c Y: %c${this.y} `, this.scene.devConfig.console.aquaText, this.scene.devConfig.console.yellowText);
       console.log(`%c Z: %c${this.scene.camera.perspective - (this.z * this.scene.camera.maxZ)} `, this.scene.devConfig.console.aquaText, this.scene.devConfig.console.yellowText);
@@ -597,6 +583,7 @@ class Shape {
 
   calc3DLocation(camera){
     /*
+        Projection Equation
         Bx = Ax*(Bz/Az)
     */
     let Bx,

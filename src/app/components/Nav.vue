@@ -5,9 +5,6 @@
 -->
 <template>
 	<nav>
-		<!-- <router-link to="/">
-	    home
-	  </router-link> -->
 	  <ul class="nav-items" :class="{expanded}">
 	    <li>
 	      <router-link to="/">
@@ -25,7 +22,11 @@
 	      </router-link>
 	    </li>
 	  </ul>
-	  <a class="nav-menu" tabindex="2" href="#" @click.prevent="handleMenuToggle"></a>
+
+		<!-- Mobile Nav Menu -->
+	  <a role="button" class="nav-menu" tabindex="2" href="#" @click.prevent="handleMenuToggle">
+      <img v-show="!expanded" :src="menu_svg" alt="navigation menu" />
+		</a>
 	</nav>
 </template>
 
@@ -35,10 +36,13 @@
 
 -->
 <script>
+  import menu_svg from '../../images/menu.svg';
+
 	export default{
 		data(){
       return {
-        expanded: false
+        expanded: false,
+				menu_svg: menu_svg
       }
     },
     methods:{
@@ -104,19 +108,21 @@
 	    //   padding:10px;
 	    // }
 
-			@media (max-width:$break-medium){
+			@media (max-width: $break-medium){
 	      .nav-menu{
 	        position: relative;
 	        display:block;
+					width: 2rem;
+					height: 2rem;
 	        padding:10px;
 	        z-index: 1;
 	      }
-	      .nav-menu::before{
-	        content:'menu';
-	      }
-	      .nav-items.expanded + .nav-menu::before{
-	        content:'close';
-	      }
+	      // .nav-menu::before{
+	      //   content:'menu';
+	      // }
+	      // .nav-items.expanded + .nav-menu::before{
+	      //   content:'close';
+	      // }
 	      .nav-items{
 	        width:100%;
 	        height:100vh;

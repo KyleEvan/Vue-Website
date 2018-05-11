@@ -5,17 +5,17 @@ HTML
 -->
 <template>
 
-  <div>
-    <Nav />
+  <div id="root">
 
+    <Nav />
     <App />
-    <div class="scene-placeholder"></div>
 
     <div id="scene" ref="scene">
       <h1 id="name" ref="name">{{ name }}</h1>
       <!-- <h2>Front End Developer</h2> -->
     </div>
 
+    <Footer />
 
   </div>
 
@@ -38,6 +38,7 @@ JS
   // Components
   import Nav from './Nav.vue';
   import App from './App.vue';
+  import Footer from './Footer.vue';
 
   // JS files
   import { ShapeScene } from '../shapes.js';
@@ -60,14 +61,16 @@ JS
        ],
        colors: [
          colors.red,
-         colors.turquoise,
+         colors.lightTurquoise,
          colors.peach
-       ]
+       ],
+       shapesPerLetter: 8
      }
    },
    components:{
      Nav: Nav,
-     App: App
+     App: App,
+     Footer: Footer
    },
 
    methods:{
@@ -113,9 +116,42 @@ JS
          name: this.$refs.name,
          devmode: this.devmode,
          showName: this.showName,
-         shapeColors: this.colors
+         shapeColors: this.colors,
+         shapesPerLetter: this.shapesPerLetter
        };
        this.scene = ShapeScene(config);
+     },
+     initScrollMagic: function(tl){
+       const viewport = this.getWindow();
+       const root = document.getElementById('root');
+       const controller = new ScrollMagic.Controller();
+       const mainScene = new ScrollMagic.Scene({
+         triggerElement: root,
+         triggerHook: 0,
+         duration: viewport.clientHeight*.75,
+         reverse: true
+       })
+       .on("progress", (event) => {
+         let progress = event.progress;
+         tl.progress(progress);
+         tl.progress(event.progress);
+       })
+       .addTo(controller);
+     },
+     animateScene: function(){
+       const tl = new TimelineLite({paused: true});
+       const scene = this.$refs.scene;
+       tl.fromTo(scene, .3,
+       {
+         y: '0%',
+         opacity: 1
+       },
+       {
+         y: '-40%',
+         opacity: 0,
+         ease: Power4.easeIn
+       });
+       return tl;
      },
 
      hideName: function(){
@@ -124,75 +160,69 @@ JS
 
    },
    created(){
-     // Check if route displays the name
+     // Initially check if route displays the name
      this.showName = this.$route.meta.showName;
    },
    beforeMount(){
-
-     // if(this.showName) document.body.setAttribute('class', 'bg-black');
-
      if(this.devmode){
        console.log(' ******************** ');
        console.log(` SHOW NAME: ${this.showName}`);
        console.log(' ******************** ');
      }
-
    },
    mounted(){
-
+     // Preload and Initialize Scene
      this.preload();
 
-     // Event Listeners
-     // const scene = this;
-     // flkty.on( 'scroll', ( progress ) => {
-     //   progress = Math.max( 0, Math.min( 1, progress ) );
-     //   carousel.updateProgress(progress);
-     // });
+     // ScrollMagic Scene
+     const tl = this.animateScene();
+     this.initScrollMagic(tl);
+
 
 
      // ScrollMagic
-     const scene = document.querySelector('.scene-placeholder');
-     const controller = new ScrollMagic.Controller();
-     const sceneMagic = new ScrollMagic.Scene({
-       triggerElement: '.scene-placeholder',
-       triggerHook: 'onLeave',
-       // duration: 100,
-       offset: '80px',
-       reverse: true
-     })
+     // const scene = document.querySelector('.scene-placeholder');
+     // const controller = new ScrollMagic.Controller();
+     // const sceneMagic = new ScrollMagic.Scene({
+     //   triggerElement: '.scene-placeholder',
+     //   triggerHook: 'onLeave',
+     //   // duration: 100,
+     //   offset: '80px',
+     //   reverse: true
+     // })
      // .triggerElement('.scene-placeholder')
-     .on('enter', () => {
-       console.log("hide letters");
-       console.log(this.showName);
-       // if(this.showName){
-         // console.log("hide letters");
-       if(this.showName){
-         this.scene.animations.hideLetters();
-         // TweenLite.to(this.$refs.bgBlack, .6,
-         // {
-         //   opacity: 0,
-         //   ease: Power4.easeIn
-         // });
-       }
+     // .on('enter', () => {
+     //   console.log("hide letters");
+     //   console.log(this.showName);
+     //   // if(this.showName){
+     //     // console.log("hide letters");
+     //   if(this.showName){
+     //     this.scene.animations.hideLetters();
+     //     // TweenLite.to(this.$refs.bgBlack, .6,
+     //     // {
+     //     //   opacity: 0,
+     //     //   ease: Power4.easeIn
+     //     // });
+     //   }
 
          // document.body.removeAttribute('class');
          // this.$refs.scene.setAttribute('class', 'bg-white');
        // }
 
-     })
-     .on('leave', () => {
-       console.log('on leave');
-       console.log(this.scene.showName);
-       if(!this.showName){
-         this.scene.animations.showLetters();
-         // TweenLite.to(this.$refs.bgBlack, .6,
-         // {
-         //   opacity: 1,
-         //   ease: Power4.easeOut
-         // });
-       }
-     })
-     .addTo(controller);
+     // })
+     // .on('leave', () => {
+     //   console.log('on leave');
+     //   console.log(this.scene.showName);
+     //   if(!this.showName){
+     //     this.scene.animations.showLetters();
+     //     // TweenLite.to(this.$refs.bgBlack, .6,
+     //     // {
+     //     //   opacity: 1,
+     //     //   ease: Power4.easeOut
+     //     // });
+     //   }
+     // })
+     // .addTo(controller);
 
 
    },
@@ -227,35 +257,11 @@ JS
 
 <!--
 
-Styles/SCSS
+  Styles/SCSS
 
  -->
  <style lang="scss">
  @import '../../style/global.scss';
-
- .bg-black, .bg-white{
-   position: fixed;
-   top: 0;
-   left: 0;
-   width: 100%;
-   height: 100%;
-   z-index: -10;
- }
- .bg-black{
-   background: #2D2D2D;
- }
- .bg-white{
-   background: #fff;
- }
-
- .scene-placeholder{
-   position: absolute;
-   top: 0;
-   left: 0;
-   width: 100%;
-   height: 100vh;
-   z-index: -3;
- }
 
  #scene {
      position: fixed;
@@ -269,14 +275,13 @@ Styles/SCSS
      justify-content: center;
      flex-direction: column;
 
-
      svg {
          position: absolute;
          width: 100%;
-         height: 100%;
+         height: 130%;
          top: 0;
          left: 0;
-         // filter: blur(1px);
+         overflow: auto;
 
          * {
              opacity: 0;

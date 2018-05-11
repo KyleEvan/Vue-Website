@@ -56,7 +56,7 @@ html{
 body {
   width: 100%;
   margin: 0;
-  background: #f9fff9;
+  background: #FFF;
   color: #423A2F;
   /* overflow: auto; */
   overflow-x: hidden;
@@ -65,12 +65,21 @@ body {
   will-change: background;
 
 
+  .content{
+    max-width: 1400px;
+    margin: 0 8%;
 
-  #app{
+    @include large{
+      margin: 0 auto 0 auto;
+
+    }
+  }
+  /* #app{
     width: 100%;
     overflow-y: hidden;
 
-  }/* end of app */
+  } */
+  /* end of app */
 }/* end of body */
 /* h2{
   font-size: 1..6em;

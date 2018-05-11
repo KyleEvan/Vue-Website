@@ -107,13 +107,14 @@ class Scene { // #scene
     // };
     // this.devConsoleStyle = `color: ${this.devConsole.color}; background: ${this.devConsole.background}`;
     this.shapeColors = config.shapeColors || ['#fff'];
+    this.shapesPerLetter = config.shapesPerLetter;
 
     // scene.ready is true after the initial animation has fully completed
     this.ready = false;
     // scene.interactive, if true mousemove events will be tracked for shape translations
     this.interactive = false;
     // Max boundaries of the scene in relation to the window. 1 = window size
-    this.sceneSize = 1;
+    this.sceneSize = 1.5;
 
     this.bounds = undefined;
 
@@ -205,7 +206,7 @@ class Scene { // #scene
           let shape = shapes[i];
           // console.log(target);
           TweenLite.to(shape.el, 1, {
-            opacity: shape.scale*.022,
+            opacity: shape.scale*.018,
             x: getRandomInt(this.scene.bounds.left, this.scene.bounds.right),
             y: getRandomInt(this.scene.bounds.top, this.scene.bounds.bottom),
             scale: 1,
@@ -223,11 +224,9 @@ class Scene { // #scene
 
       },
       moveShapes: function(mouseMove){
-
         let scene = this.scene;
         let shapes = scene.name.shapes;
         shapes = Array.from(shapes).reverse();
-
         shapes.forEach(function(shape, index) {
           let projectedXY, newX, newY;
           if(mouseMove){
@@ -242,15 +241,12 @@ class Scene { // #scene
             newX = shape.getsetTransform([0,0])[0];
             newY = shape.getsetTransform([0,0])[1];
           }
-
-          TweenLite.to(shape.el, 10, {
-            // opacity: .35,
+          TweenLite.to(shape.el, 12, {
             x: newX,
             y: newY,
             delay: 0,
             ease: Expo.easeOut
           })
-
         });
       },
       explodeShapes: function(targets){
@@ -471,7 +467,7 @@ class Letter {
     this.el = el;
     this.scene = scene;
     this.shapes = [];
-    this.totalShapes = 4;
+    this.totalShapes = scene.shapesPerLetter;
     this.init(scene);
   }
   init() {
@@ -494,7 +490,7 @@ class Shape {
       el: letter,
       props: letterProps
     };
-    this.scale = getRandomInt(letterProps.width * .08, letterProps.width * .36); // scale will be 10% and 100% of the letter's width
+    this.scale = getRandomInt(letterProps.width * .08, letterProps.width * .4); // scale will be 10% and 100% of the letter's width
     this.x = (letterProps.left + letterProps.width / 2);
     this.y = (letterProps.top - letterProps.height / 2);
     this.z = this.scale / letterProps.width;

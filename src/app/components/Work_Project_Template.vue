@@ -41,18 +41,25 @@
 
 -->
 <script>
+  // Color Palettes
+  import {colors} from '../colors.js';
+
+  // Libraries
   import ScrollMagic from "scrollmagic";
   import { TimelineLite } from "gsap";
+
+  // Components
   import Carousel from './Carousel.vue';
+
 
 	export default{
 		props:['project'],
     data(){
       return{
-        defaultPrimaryColor: '#F9B9BC',
-        defaultLightColor: '#FCDFE0',
-        defaultMediumColor: '#E3A9AB',
-        defaultDarkColor: '#CC989A'
+        defaultPrimaryColor: colors.red,
+        defaultLightColor: colors.lightRed,
+        defaultMediumColor: colors.mediumRed,
+        defaultDarkColor: colors.darkRed
       }
     },
     components:{

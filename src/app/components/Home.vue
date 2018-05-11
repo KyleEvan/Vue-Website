@@ -286,6 +286,8 @@
       }, 50);
       window.addEventListener('resize', handleResize);
 
+
+      // ScrollMagic Scene
       const projects = document.querySelectorAll('.project');
       const controller = new ScrollMagic.Controller();
 
@@ -294,10 +296,9 @@
           const imageContainer = project.querySelector('.image');
           const image = project.querySelector('.image > img');
           const text = project.querySelector('.text');
-
           const projectScene = new ScrollMagic.Scene({
             triggerElement: project,
-            triggerHook: .7,
+            triggerHook: .6,
             reverse: false
           })
           .on('enter', () => {
@@ -336,14 +337,14 @@
   @import '../../style/global.scss';
 
   .container{
-    background: transparent;
 
     .content{
-      margin: 100vh 8% 3em 8%;
+      padding-top: 160vh;
 
       /* Work & Projects */
       h2{
         font-size: 6vw;
+        line-height: 5vw;
         margin-bottom: 1.2em;
       }
 
@@ -351,6 +352,7 @@
         display: flex;
         align-items: flex-start;
         flex-flow: row wrap;
+        justify-content: space-between;
         // margin: 0 -1em 0 -1em;
 
         .project{
@@ -400,17 +402,18 @@
               // margin: 0%;
             }
             @include medium {
-              width: 15%;
+              width: 18%;
               // margin: 0% 0% 0% 8%;
             }
 
             h3{
               margin-top: 0;
               margin-bottom: .75rem;
+              line-height: 1.3;
             }
             p{
               margin-top: 0;
-              margin-bottom: 1.5rem;
+              // margin-bottom: 1.5rem;
               line-height: 1.5;
             }
             a{
@@ -437,7 +440,7 @@
               margin-bottom: 1.5rem;
             }
             @include medium{
-              width: 85%;
+              width: 82%;
               // height: auto;
               margin-bottom: 0;
             }

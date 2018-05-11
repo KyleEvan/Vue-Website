@@ -28,15 +28,20 @@ $primary-yellow: #FFEC94;
 
 $break-small: 200px;
 $break-medium: 800px;
-$break-large: 1200px;
+$break-large: 1600px;
 
-@mixin small {
-  @media (min-width: #{$break-small}) {
+@mixin small{
+  @media (min-width: #{$break-small}){
     @content;
   }
 }
-@mixin medium {
-  @media (min-width: #{$break-medium}) {
+@mixin medium{
+  @media (min-width: #{$break-medium}){
     @content;
+  }
+}
+@mixin large{
+  @media (min-width: #{$break-large}){
+     @content
   }
 }

@@ -61,17 +61,15 @@ body {
   /* overflow: auto; */
   overflow-x: hidden;
   font-family: 'InterUI', sans-serif;
-  transition: background .5s cubic-bezier(.79,0,.85,.56);
-  will-change: background;
 
 
-  .content{
+
+  .content, .footer-content{
     max-width: 1400px;
     margin: 0 8%;
 
-    @include large{
+    @include xl{
       margin: 0 auto 0 auto;
-
     }
   }
   /* #app{

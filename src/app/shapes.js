@@ -114,7 +114,7 @@ class Scene { // #scene
     // scene.interactive, if true mousemove events will be tracked for shape translations
     this.interactive = false;
     // Max boundaries of the scene in relation to the window. 1 = window size
-    this.sceneSize = 1.5;
+    this.sceneSize = 1.4;
 
     this.bounds = undefined;
 
@@ -226,28 +226,30 @@ class Scene { // #scene
       moveShapes: function(mouseMove){
         let scene = this.scene;
         let shapes = scene.name.shapes;
-        shapes = Array.from(shapes).reverse();
-        shapes.forEach(function(shape, index) {
-          let projectedXY, newX, newY;
-          if(mouseMove){
-            projectedXY = [
-              (shape.calc3DLocation(scene.camera)[0] - shape.projectedXY[0]),
-              (shape.calc3DLocation(scene.camera)[1] - shape.projectedXY[1])
-            ];
-            newX = shape.getsetTransform(projectedXY)[0];
-            newY = shape.getsetTransform(projectedXY)[1];
-          }
-          else{
-            newX = shape.getsetTransform([0,0])[0];
-            newY = shape.getsetTransform([0,0])[1];
-          }
-          TweenLite.to(shape.el, 12, {
-            x: newX,
-            y: newY,
-            delay: 0,
-            ease: Expo.easeOut
-          })
-        });
+        // if(scene.interactive){
+          shapes = Array.from(shapes).reverse();
+          shapes.forEach(function(shape, index) {
+            let projectedXY, newX, newY;
+            if(mouseMove){
+              projectedXY = [
+                (shape.calc3DLocation(scene.camera)[0] - shape.projectedXY[0]),
+                (shape.calc3DLocation(scene.camera)[1] - shape.projectedXY[1])
+              ];
+              newX = shape.getsetTransform(projectedXY)[0];
+              newY = shape.getsetTransform(projectedXY)[1];
+            }
+            else{
+              newX = shape.getsetTransform([0,0])[0];
+              newY = shape.getsetTransform([0,0])[1];
+            }
+            TweenLite.to(shape.el, 6, {
+              x: newX,
+              y: newY,
+              delay: 0,
+              ease: Expo.easeOut
+            })
+          });
+        // }
       },
       explodeShapes: function(targets){
         for(let i = 0; i < targets.length; i++){
@@ -490,9 +492,13 @@ class Shape {
       el: letter,
       props: letterProps
     };
-    this.scale = getRandomInt(letterProps.width * .08, letterProps.width * .4); // scale will be 10% and 100% of the letter's width
-    this.x = (letterProps.left + letterProps.width / 2);
-    this.y = (letterProps.top - letterProps.height / 2);
+    this.scale = getRandomInt(letterProps.width * .08, letterProps.width * .7); // scale will be 10% and 100% of the letter's width
+    // this.x = (letterProps.left + letterProps.width / 2);
+    // this.y = (letterProps.top - letterProps.height / 2);
+    this.x = document.documentElement.clientWidth/2;
+    this.y = document.documentElement.clientHeight/2;
+    console.log(this.x);
+    console.log(this.y);
     this.z = this.scale / letterProps.width;
     this.projectedXY = this.calc3DLocation(this.scene.camera);
     this.relationalValues = {

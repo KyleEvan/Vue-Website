@@ -7,11 +7,13 @@ HTML
 
   <div id="root">
 
+    <Loader v-if="loading" />
+
     <Nav />
     <App />
 
     <div id="scene" ref="scene">
-      <h1 id="name" ref="name">{{ name }}</h1>
+      <h1 id="name" ref="name">{{name}}</h1>
       <!-- <h2>Front End Developer</h2> -->
     </div>
 
@@ -34,8 +36,10 @@ JS
   // Libraries
   import ScrollMagic from "scrollmagic";
   import { TimelineLite } from "gsap";
+  import load from 'load-asset';
 
   // Components
+  import Loader from './Loader.vue';
   import Nav from './Nav.vue';
   import App from './App.vue';
   import Footer from './Footer.vue';
@@ -44,30 +48,43 @@ JS
   import { ShapeScene } from '../shapes.js';
 
   // Images
+  import careers_screens_sm_png from '../../images/careers_screens@sm.png';
+  import careers_screens_md_png from '../../images/careers_screens@md.png';
   import careers_screens_lg_png from '../../images/careers_screens@lg.png';
+  import careers_screens_xl_png from '../../images/careers_screens@xl.png';
+
   import cycles_lg_jpg from '../../images/cyclesTile@lg.jpg';
   import preview_lg_jpg from '../../images/comboSmash-preview@lg.jpg';
 
   export default {
    data(){
      return{
-       name: 'Kyle',
-       scene: undefined,
-       showName: false,
+       loading: true,
        preloadImages: [
+         careers_screens_sm_png,
+         careers_screens_md_png,
          careers_screens_lg_png,
+         careers_screens_xl_png,
+
          cycles_lg_jpg,
-         preview_lg_jpg
+         preview_lg_jpg,
        ],
-       colors: [
+
+
+       scene: undefined,
+       shapeColors: [
          colors.red,
          colors.lightTurquoise,
          colors.peach
        ],
-       shapesPerLetter: 8
+       shapesPerLetter: 5,
+       name: 'Kyle',
+       showName: false,
+
      }
    },
    components:{
+     Loader: Loader,
      Nav: Nav,
      App: App,
      Footer: Footer
@@ -86,29 +103,6 @@ JS
        body.removeAttribute("style");
      },
 
-     preload: function(){
-       this.bodyNoScroll();
-       // init loading animation
-
-       // load images
-       for (let i = 0, len = this.preloadImages.length; i < len; i++){
-
-         let img = new Image();
-
-         if(i >= len-1){
-           console.log(i);
-           img.onload = () => {
-             console.log('all images have been loaded');
-             console.log(this);
-             this.initScene();
-             this.bodyRestoreScroll();
-           }
-         }
-
-         img.src = this.preloadImages[i];
-
-       }
-     },
      initScene: function(){
        console.log('Scene Initialized in Scene.vue');
        const config = {
@@ -116,7 +110,7 @@ JS
          name: this.$refs.name,
          devmode: this.devmode,
          showName: this.showName,
-         shapeColors: this.colors,
+         shapeColors: this.shapeColors,
          shapesPerLetter: this.shapesPerLetter
        };
        this.scene = ShapeScene(config);
@@ -141,22 +135,45 @@ JS
      animateScene: function(){
        const tl = new TimelineLite({paused: true});
        const scene = this.$refs.scene;
-       tl.fromTo(scene, .3,
+       const name = this.$refs.name;
+       tl.fromTo(name, .3,
        {
          y: '0%',
          opacity: 1
        },
        {
-         y: '-40%',
+         y: '-50%',
          opacity: 0,
-         ease: Power4.easeIn
-       });
+         ease: Power3.easeIn
+       })
+       .fromTo(scene, .3,
+       {
+         opacity: 1
+       },
+       {
+         opacity: .25,
+         ease: Power0.easeNone
+       })
        return tl;
      },
-
      hideName: function(){
        this.scene.animations.hideLetters();
-     }
+     },
+     async loadImages(){
+       const assets = await load.any(this.preloadImages, (progress) => {
+         console.log(progress);
+         if(progress.count >= progress.total){
+           console.log('All images loaded');
+           this.initScene();
+           this.bodyRestoreScroll();
+         }
+       });
+     },
+     preload: function(){
+       this.bodyNoScroll();
+       // load images
+       this.loadImages();
+     },
 
    },
    created(){
@@ -165,9 +182,7 @@ JS
    },
    beforeMount(){
      if(this.devmode){
-       console.log(' ******************** ');
        console.log(` SHOW NAME: ${this.showName}`);
-       console.log(' ******************** ');
      }
    },
    mounted(){

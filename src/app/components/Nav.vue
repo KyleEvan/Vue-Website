@@ -25,7 +25,8 @@
 
 		<!-- Mobile Nav Menu -->
 	  <a role="button" class="nav-menu" tabindex="2" href="#" @click.prevent="handleMenuToggle">
-      <img v-show="!expanded" :src="menu_svg" alt="navigation menu" />
+      <!-- <img v-show="!expanded" :src="menu_svg" alt="navigation menu" /> -->
+			<div ref="menu"></div>
 		</a>
 	</nav>
 </template>
@@ -36,19 +37,43 @@
 
 -->
 <script>
-  import menu_svg from '../../images/menu.svg';
+  import hamburger_json from '../../images/menu/hamburger.json';
+  import hamburger from '../../images/menu/player_hamburger.js';
+
 
 	export default{
 		data(){
       return {
+				menu: undefined,
         expanded: false,
-				menu_svg: menu_svg
+
+				// menu_svg: menu_svg
       }
     },
     methods:{
+			initMenuSVG: function(){
+				const params = {
+	        container: this.$refs.menu,
+	        renderer: 'svg',
+	        loop: false,
+	        autoplay: false,
+	        animationData: hamburger_json
+	      };
+	      let anim;
+	      anim = hamburger.loadAnimation(params);
+				return hamburger;
+			},
 			handleMenuToggle: function(e){
 				this.expanded = !this.expanded;
+				if(this.menu) this.menu.play();
 		  }
+		},
+		mounted(){
+      this.menu = this.initMenuSVG();
+			console.log(this.menu);
+
+
+
 		}
 	}
 </script>
@@ -78,12 +103,11 @@
 			pointer-events: none;
 
 			a, a:visited, a:active{
-	      display: inline-block;
+	      display: flex;
 	      text-decoration: none;
-				color: #645d54;
 				padding: .1rem 1rem;
         font-weight: 600;
-				pointer-events: auto;
+				pointer-events: visible;
 
 				&:hover{
 					color: #F69296;
@@ -111,11 +135,14 @@
 			@media (max-width: $break-medium){
 	      .nav-menu{
 	        position: relative;
-	        display:block;
-					width: 2rem;
-					height: 2rem;
+	        display: block;
+					width: 10vw;
+					height: 10vw;
+					min-width: 5rem;
+					min-height: 5rem;
 	        padding:10px;
 	        z-index: 1;
+
 	      }
 	      // .nav-menu::before{
 	      //   content:'menu';

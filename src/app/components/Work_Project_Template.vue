@@ -178,9 +178,6 @@
     }
   }
 
-
-
-
   .background{
     position:absolute;
     top: 0;

@@ -56,8 +56,9 @@
 
     data(){
       return{
-        bannerWidth: .5, // 0 - 1 value
-        bannerHeightVH: 1,   // 30vw
+        bannerWidth: undefined, // 0 - 1 value
+        bannerNewWidth: .5, // .5 of window width
+        bannerNewHeight: 1,   // 1 of window height
         bannerMinHeight: 400, // px
         bannerOffsetX: .5,
 
@@ -84,21 +85,6 @@
           },
           {
             align: 'rtl',
-            title: 'Cycles',
-            summary: 'Lorem ipsum dolor sit',
-            href: 'Cycles',
-            image:{
-              width: '34%',
-              newHeight: .3,
-              src: cycles_lg_jpg
-            },
-            primaryColor: colors.turquoise,
-            lightColor: colors.lightTurquoise,
-            mediumColor: colors.mediumTurquoise,
-            darkColor: colors.darkTurquoise
-          },
-          {
-            align: 'ltr',
             title: 'Combo Smash',
             summary: 'Lorem ipsum dolor sit',
             href: 'ComboSmash',
@@ -126,14 +112,30 @@
             lightColor: colors.lightPeach,
             mediumColor: colors.mediumPeach,
             darkColor: colors.darkPeach
-          }
+          },
+          {
+            align: 'rtl',
+            title: 'Cycles',
+            summary: 'Lorem ipsum dolor sit',
+            href: 'Cycles',
+            image:{
+              width: '34%',
+              newHeight: .3,
+              src: cycles_lg_jpg
+            },
+            primaryColor: colors.turquoise,
+            lightColor: colors.lightTurquoise,
+            mediumColor: colors.mediumTurquoise,
+            darkColor: colors.darkTurquoise
+          },
+
         ],
       }
     },
     computed:{
       bannerHeight(){
         // Check bannerHeight to make sure its not lower than the minimum height
-        return (window.innerHeight*this.bannerHeightVH) >= this.bannerMinHeight ? (window.innerHeight*this.bannerHeightVH) : this.bannerMinHeight;
+        return (window.innerHeight*this.bannerNewHeight) >= this.bannerMinHeight ? (window.innerHeight*this.bannerNewHeight) : this.bannerMinHeight;
       },
       bannerOffset(){
         return {
@@ -166,6 +168,8 @@
         const projects = document.querySelectorAll('.project');
         for (let i = projects.length-1; i >= 0; i--){
           let project = projects[i];
+          console.log(project);
+          console.log(target);
           if(project == target){
             return {
               el: project,
@@ -175,12 +179,14 @@
             }
           }
           else{
-            console.log('Something went wrong, no project matches');
+            // console.log('Something went wrong, no project matches');
           }
         }
       },
       calcTransforms: function(project){
+        console.log(project)
         const container = project.imageContainer.getBoundingClientRect();
+        console.log(container);
         const containerCenter = {
           x: container.left + container.width/2,
           y: container.top + container.height/2
@@ -237,7 +243,6 @@
 
         const morphBackground = () => {
           const background = this.createBackground(project);
-          console.log(background);
           anime({
             targets: background,
             points: [
@@ -272,17 +277,17 @@
         this.project = this.getProjectData(e.target);
         this.transforms = this.calcTransforms(this.project);
         this.animateImage(e, this.project, this.transforms);
-
       }
 
     },
     mounted(){
       // Initially bannerWidth to window width
-      this.bannerWidth = this.bannerWidth*document.documentElement.clientWidth;
+      this.bannerWidth = this.bannerNewWidth*document.documentElement.clientWidth;
 
       // Initialize Events
       const handleResize = this.debounce(() => {
-        this.bannerWidth = this.bannerWidth*document.documentElement.clientWidth;
+        this.bannerWidth = this.bannerNewWidth*document.documentElement.clientWidth;
+        console.log(this.bannerWidth);
       }, 50);
       window.addEventListener('resize', handleResize);
 
@@ -296,34 +301,35 @@
           const imageContainer = project.querySelector('.image');
           const image = project.querySelector('.image > img');
           const text = project.querySelector('.text');
+          const delay = .2;
           const projectScene = new ScrollMagic.Scene({
             triggerElement: project,
-            triggerHook: .6,
+            triggerHook: .9,
             reverse: false
           })
           .on('enter', () => {
-            console.log(project);
-            console.log(imageContainer);
-            console.log(image);
+            // console.log(project);
+            // console.log(imageContainer);
+            // console.log(image);
             const tl = new TimelineLite();
             tl.to(imageContainer, 1,
             {
-              y: '0%',
+              y: '0',
               opacity: 1,
-              ease: Power4.easeOut
-            }, 0)
+              ease: Power3.easeOut
+            }, i*delay)
             .to(image, 1,
             {
-              y: '0%',
+              y: '0',
               opacity: 1,
               ease: Circ.easeOut
-            }, 0)
-            // .to(text, .6,
-            // {
-            //   x: '0%',
-            //   opacity: 1,
-            //   ease: Power2.easeOut
-            // }, .55)
+            }, i*delay)
+            .to(text, .6,
+            {
+              x: '0',
+              opacity: 1,
+              ease: Power2.easeOut
+            }, (i*delay) + .55)
           })
           .addTo(controller);
         }
@@ -339,7 +345,7 @@
   .container{
 
     .content{
-      padding-top: 160vh;
+      padding-top: 140vh;
 
       /* Work & Projects */
       h2{
@@ -375,16 +381,16 @@
             &[data-align="ltr"]{
               flex-direction: row;
 
-              // .text{
-              //   transform: translateX(30%);
-              // }
+              .text{
+                transform: translateX(-20px);
+              }
             }
             &[data-align="rtl"]{
               flex-direction: row-reverse;
 
-              // .text{
-              //   transform: translateX(-30%);
-              // }
+              .text{
+                transform: translateX(-20px);
+              }
             }
           }
           // .image, .text{
@@ -392,6 +398,7 @@
             opacity: 0;
           }
           .text{
+            opacity: 0;
             color: #645D54;
             margin: 0 .75em;
             font-size: 70%;
@@ -402,8 +409,12 @@
               // margin: 0%;
             }
             @include medium {
-              width: 18%;
+              width: 25%;
               // margin: 0% 0% 0% 8%;
+            }
+            @include large{
+              width: 18%;
+
             }
 
             h3{
@@ -433,21 +444,25 @@
             padding: 1.5em;
             justify-content: center;
             overflow: hidden;
-            transform: translateY(30%);
+            transform: translateY(100px);
 
             @include small{
               // height: 34vw !important;
               margin-bottom: 1.5rem;
             }
             @include medium{
-              width: 82%;
+              width: 75%;
               // height: auto;
               margin-bottom: 0;
+            }
+            @include large{
+              width: 82%;
+
             }
 
             img{
               width: 100%;
-              transform: translateY(30%);
+              transform: translateY(100px);
               opacity: 0;
             }
           }

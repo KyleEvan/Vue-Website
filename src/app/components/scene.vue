@@ -7,7 +7,7 @@ HTML
 
   <div id="root">
 
-    <Loader v-if="loading" />
+    <Loader/>
 
     <Nav />
     <App />
@@ -59,7 +59,6 @@ JS
   export default {
    data(){
      return{
-       loading: true,
        preloadImages: [
          careers_screens_sm_png,
          careers_screens_md_png,
@@ -77,7 +76,7 @@ JS
          colors.lightTurquoise,
          colors.peach
        ],
-       shapesPerLetter: 5,
+       shapesPerLetter: 4,
        name: 'Kyle',
        showName: false,
 

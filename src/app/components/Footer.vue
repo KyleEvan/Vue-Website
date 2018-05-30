@@ -51,7 +51,6 @@
 <style lang="scss" scoped>
   footer{
     padding: 3rem;
-    margin-top: 5rem;
     background: #F5F5F5;
 
     .footer-content{

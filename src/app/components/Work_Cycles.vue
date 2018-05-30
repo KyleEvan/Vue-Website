@@ -23,6 +23,12 @@
       <li>More JS</li>
     </ul>
 
+    <template slot="links">
+      <a href="#">A Link</a>
+      <a href="#">A Link</a>
+      <a href="#">A Link</a>
+    </template>
+
     <!-- Main Content -->
     <p>
       HTML5 canvas web game.
@@ -73,6 +79,7 @@
     &:nth-child(1){
       img{
         height: 30vw;
+        max-height: 70vh;
       }
     }
     img{

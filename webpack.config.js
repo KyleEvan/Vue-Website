@@ -4,7 +4,6 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin'); // Require  html-webpack-plugin plugin
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-// const WriteFilePlugin = require('write-file-webpack-plugin');
 
 // var env = process.env.WEBPACK_ENV;
 // console.log(env);

@@ -62,6 +62,8 @@
         bannerMinHeight: 400, // px
         bannerOffsetX: .5,
 
+        imageMaxHeight: .7, // 70% of vh
+
         background: undefined,
         project: undefined,
         transforms: undefined,
@@ -74,7 +76,7 @@
             summary: 'Complete UX/UI overhaul of member and careers sections of Excellus BCBS and Univera Healthcare',
             href: 'Careers-Redesign',
             image:{
-              width: '52%',
+              width: '54%',
               newHeight: .3,
               src: careers_screens_lg_png
             },
@@ -89,7 +91,7 @@
             summary: 'Lorem ipsum dolor sit',
             href: 'ComboSmash',
             image:{
-              width: '40%',
+              width: '36%',
               newHeight: .5,
               src: preview_lg_jpg
             },
@@ -104,7 +106,7 @@
             summary: 'Lorem ipsum dolor sit',
             href: 'ComboSmash',
             image:{
-              width: '32%',
+              width: '42%',
               newHeight: .5,
               src: batmanPoster_lg_jpg
             },
@@ -119,7 +121,7 @@
             summary: 'Lorem ipsum dolor sit',
             href: 'Cycles',
             image:{
-              width: '34%',
+              width: '42%',
               newHeight: .3,
               src: cycles_lg_jpg
             },
@@ -135,7 +137,8 @@
     computed:{
       bannerHeight(){
         // Check bannerHeight to make sure its not lower than the minimum height
-        return (window.innerHeight*this.bannerNewHeight) >= this.bannerMinHeight ? (window.innerHeight*this.bannerNewHeight) : this.bannerMinHeight;
+        let newBannerHeight = (window.innerHeight*this.bannerNewHeight);
+        return newBannerHeight >= this.bannerMinHeight ? newBannerHeight : this.bannerMinHeight;
       },
       bannerOffset(){
         return {
@@ -164,12 +167,33 @@
           });
         }
       },
+      getImageScale: function(project, container){
+        const padding = parseInt(window.getComputedStyle(project.imageContainer, null).getPropertyValue('padding-top'), 10);
+        let newHeight = window.innerWidth*project.data.image.newHeight;
+        let newMaxHeight = window.innerHeight*this.imageMaxHeight;
+        let imageHeight = newHeight > newMaxHeight? newMaxHeight : newHeight;
+        let scale = imageHeight/(container.height - (padding*2));
+        return scale;
+      },
+      hideProjects: function(target, tl){
+        const projects = Array.from(document.querySelectorAll('.project'));
+        const text = target.querySelector('.text');
+        console.log(text);
+
+        let filteredProjects = projects.filter( (el) => {
+          return (el !== target);
+        });
+        tl.to(filteredProjects, .5, {
+          scale: .2,
+          opacity: 0,
+          ease: Power1.easeIn,
+          transformOrigin: '50% 50%',
+        });
+      },
       getProjectData: function(target){
         const projects = document.querySelectorAll('.project');
         for (let i = projects.length-1; i >= 0; i--){
           let project = projects[i];
-          console.log(project);
-          console.log(target);
           if(project == target){
             return {
               el: project,
@@ -177,9 +201,6 @@
               imageContainer: project.querySelector('.image'),
               data: this.projects[i]
             }
-          }
-          else{
-            // console.log('Something went wrong, no project matches');
           }
         }
       },
@@ -195,10 +216,10 @@
           x: this.bannerOffset.x + (this.bannerWidth/2),
           y: this.bannerHeight/2
         };
-        const padding = parseInt(window.getComputedStyle(project.imageContainer, null).getPropertyValue('padding-top'), 10);
-        // if(!padding) padding = 0;
+
         return {
-          scale: (window.innerWidth*project.data.image.newHeight)/(container.height - (padding*2)),
+          // scale: (window.innerWidth*project.data.image.newHeight)/(container.height - (padding*2)), imageMaxHeight
+          scale: this.getImageScale(project, container),
           translateX: newCenter.x - containerCenter.x,
           translateY: newCenter.y - containerCenter.y,
           newPoints: this.newPoints
@@ -227,20 +248,15 @@
         return background;
       },
       animateImage: function(e, project, transforms){
+        backgroundAnimDuration = 400;
+        projectAnimDuration = .7;
         const tl = new TimelineLite();
-        const duration = 700; // temporary
 
-        // Hide other projects
-        const projects = Array.from(document.querySelectorAll('.project'));
-        let filteredProjects = projects.filter(function (el) {
-          return (el !== e.target);
-        });
-        tl.to(filteredProjects, .4, {
-          scale: 0,
-          ease: Power1.easeInOut,
-          transformOrigin: '50% 50%',
-        });
 
+        // Animate and hide other projects
+        this.hideProjects(e.target, tl);
+
+        // Animate Background
         const morphBackground = () => {
           const background = this.createBackground(project);
           anime({
@@ -249,7 +265,7 @@
               { value: this.newPoints }
             ],
             easing: 'easeOutQuad',
-            duration: 400,
+            duration: backgroundAnimDuration,
             complete: () => {
               console.log("Transition Completed");
               this.transitioning = false;
@@ -258,11 +274,11 @@
           });
         };
         // Animate
-        tl.to(project.imageContainer, (duration/1000), {
+        tl.to(project.imageContainer, projectAnimDuration, {
           x: transforms.translateX,
           y: transforms.translateY,
           scale: transforms.scale,
-          ease: Power1.easeInOut,
+          ease: Power2.easeOut,
           transformOrigin: '50% 50%',
           onStart: () => {
             // console.log('starting animation');
@@ -346,10 +362,11 @@
 
     .content{
       padding-top: 140vh;
+      padding-bottom: 12vh;
 
       /* Work & Projects */
       h2{
-        font-size: 6vw;
+        font-size: 5vw;
         line-height: 5vw;
         margin-bottom: 1.2em;
       }
@@ -370,6 +387,14 @@
           display: flex;
           align-items: flex-start;
           // justify-content: center;
+
+          &:nth-child(3){
+            margin-top: 5em;
+          }
+          &:nth-child(4){
+            margin-top: 8em;
+          }
+
          &>*{
            pointer-events: none;
          }
@@ -401,7 +426,7 @@
             opacity: 0;
             color: #645D54;
             margin: 0 .75em;
-            font-size: 70%;
+            font-size: 80%;
             line-height: 1;
 
             @include small {
@@ -409,11 +434,11 @@
               // margin: 0%;
             }
             @include medium {
-              width: 25%;
+              width: 30%;
               // margin: 0% 0% 0% 8%;
             }
             @include large{
-              width: 18%;
+              width: 25%;
 
             }
 
@@ -451,12 +476,12 @@
               margin-bottom: 1.5rem;
             }
             @include medium{
-              width: 75%;
+              width: 70%;
               // height: auto;
               margin-bottom: 0;
             }
             @include large{
-              width: 82%;
+              width: 75%;
 
             }
 

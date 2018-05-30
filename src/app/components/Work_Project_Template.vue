@@ -16,6 +16,7 @@
         <slot name="description"></slot>
         <slot name="skills"></slot>
         <slot name="links"></slot>
+
       </div>
 
       <carousel :progressColor="mediumColor">
@@ -26,7 +27,7 @@
 
 
     <div class="container" :style="{background: lightColor}">
-      <div class="content" ref="content">
+      <div ref="content">
         <slot></slot>
       </div>
 
@@ -173,8 +174,8 @@
     width: 100%;
     z-index: 2;
 
-    .content{
-      padding: 5em 8% 3em 8%;
+    div{
+      padding: 3% 3% 10% 3%;
     }
   }
 

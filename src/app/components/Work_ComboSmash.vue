@@ -41,10 +41,10 @@
     </ul>
 
     <!-- Links -- >
-    <template slot="links">
-      <a :href="gitHubLink">GitHub Repo</a>
-      <a :href="gitHubPagesLink">Play in browser</a>
-    </template>
+    <ul slot="externalLinks">
+      <li><a :href="gitHubLink">GitHub Repo</a></li>
+      <li><a :href="gitHubPagesLink">Play in browser</a></li>
+    </ul>
 
 
 
@@ -106,6 +106,7 @@
     &:nth-child(1){
       img{
         height: 50vw;
+        max-height: 70vh;
       }
     }
     img{

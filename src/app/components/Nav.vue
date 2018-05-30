@@ -37,6 +37,10 @@
 
 -->
 <script>
+  // Libraries
+	import ScrollMagic from "scrollmagic";
+  import { TimelineLite } from "gsap";
+  // Menu assets
   import hamburger_json from '../../images/menu/hamburger.json';
   import hamburger from '../../images/menu/player_hamburger.js';
 
@@ -46,7 +50,7 @@
       return {
 				menu: undefined,
         expanded: false,
-
+        animDirection: -1
 				// menu_svg: menu_svg
       }
     },
@@ -65,11 +69,17 @@
 			},
 			handleMenuToggle: function(e){
 				this.expanded = !this.expanded;
-				if(this.menu) this.menu.play();
+				this.animDirection *= -1;
+				if(this.menu){
+					this.menu.setDirection(this.animDirection);
+				  this.menu.play();
+        }
 		  }
+
 		},
 		mounted(){
       this.menu = this.initMenuSVG();
+
 			console.log(this.menu);
 
 

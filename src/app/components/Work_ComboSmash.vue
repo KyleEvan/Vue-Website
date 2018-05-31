@@ -41,7 +41,7 @@
     </ul>
 
     <!-- Links -- >
-    <ul slot="externalLinks">
+    <ul slot="links">
       <li><a :href="gitHubLink">GitHub Repo</a></li>
       <li><a :href="gitHubPagesLink">Play in browser</a></li>
     </ul>

@@ -4,8 +4,8 @@
 
 -->
 <template>
-  <svg class="page-transition" :viewBox="x y w h">
-
+  <svg :viewBox="viewBox">
+    <slot></slot>
   </svg>
 </template>
 
@@ -20,25 +20,21 @@
   import { TimelineLite } from "gsap";
 
 
-
 	export default{
-    props: [viewbox],
 		data(){
       return {
-        x: this.$props.viewbox.x,
-        y: this.$props.viewbox.y,
-        w: this.$props.viewbox.w,
-        h: this.$props.viewbox.h
+
+      }
+    },
+    computed:{
+      viewBox(){
+        return `0 0 ${document.documentElement.clientWidth} ${document.documentElement.clientHeight}`
       }
     },
     methods:{
 
-
 		},
 		mounted(){
-
-
-
 
 		}
 	}

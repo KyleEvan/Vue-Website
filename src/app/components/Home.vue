@@ -1,10 +1,9 @@
 <template>
   <div>
+
     <div class="container">
       <div class="content">
-
         <h2>Work <span>&amp;</span> Projects</h2>
-
         <div class="grid">
           <a
             :href="project.href"
@@ -18,18 +17,18 @@
               <p>
                 {{project.summary}}
               </p>
-              <!-- <a class="link" :href="project.href" @click.prevent="handleClick" :style="{color: project.secondaryColor, backgroundColor: project.primaryColor}">View Project</a> -->
             </div>
             <div class="image" :style="{background: project.primaryColor}">
               <img :src="project.image.src" />
             </div>
           </a>
         </div>
-
-
       </div>
     </div>
 
+    <page-transition class="page-transition">
+      <polygon :fill="transition.bgFill" :points="transition.bgPoints"></polygon>
+    </page-transition>
 
   </div>
 </template>
@@ -37,6 +36,9 @@
 <script>
   // Color Palette
   import {colors} from '../colors.js';
+
+  // Components
+  import PageTransition from './PageTransition.vue';
 
   // JS Libraries
   import ScrollMagic from "scrollmagic";
@@ -64,10 +66,15 @@
 
         imageMaxHeight: .7, // 70% of vh
 
-        background: undefined,
+        // background: undefined,
         project: undefined,
         transforms: undefined,
         transitioning: false,
+
+        transition:{
+          bgPoints: '0 0 0 0',
+          bgFill: 'transparent'
+        },
 
         projects:[
           {
@@ -133,6 +140,9 @@
 
         ],
       }
+    },
+    components:{
+      'page-transition': PageTransition
     },
     computed:{
       bannerHeight(){
@@ -248,10 +258,9 @@
         return background;
       },
       animateImage: function(e, project, transforms){
-        backgroundAnimDuration = 400;
-        projectAnimDuration = .7;
+        let backgroundAnimDuration = 400;
+        let projectAnimDuration = .7;
         const tl = new TimelineLite();
-
 
         // Animate and hide other projects
         this.hideProjects(e.target, tl);

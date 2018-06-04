@@ -26,9 +26,6 @@
       </div>
     </div>
 
-    <page-transition class="page-transition">
-      <polygon :fill="transition.bgFill" :points="transition.bgPoints"></polygon>
-    </page-transition>
 
   </div>
 </template>
@@ -37,8 +34,6 @@
   // Color Palette
   import {colors} from '../colors.js';
 
-  // Components
-  import PageTransition from './PageTransition.vue';
 
   // JS Libraries
   import ScrollMagic from "scrollmagic";
@@ -58,6 +53,10 @@
 
     data(){
       return{
+        vp: undefined, // viewport object
+        tl: new TimelineLite(),
+
+
         bannerWidth: undefined, // 0 - 1 value
         bannerNewWidth: .5, // .5 of window width
         bannerNewHeight: 1,   // 1 of window height
@@ -68,11 +67,12 @@
 
         // background: undefined,
         project: undefined,
+        text: [],
         transforms: undefined,
-        transitioning: false,
 
+        transitioning: false,
         transition:{
-          bgPoints: '0 0 0 0',
+          bgPoints: '0 0 0 0 0 0 0 0',
           bgFill: 'transparent'
         },
 
@@ -141,9 +141,9 @@
         ],
       }
     },
-    components:{
-      'page-transition': PageTransition
-    },
+    // components:{
+    //   'page-transition': PageTransition
+    // },
     computed:{
       bannerHeight(){
         // Check bannerHeight to make sure its not lower than the minimum height
@@ -168,6 +168,7 @@
       navigate: function(e, project, background){
         const href = e.target.getAttribute("href");
         if(href){
+          // Cleanup transitionLayer
           background.parentNode.outerHTML = "";
           background = null;
 
@@ -185,18 +186,24 @@
         let scale = imageHeight/(container.height - (padding*2));
         return scale;
       },
-      hideProjects: function(target, tl){
+      hideProjects: function(target){
         const projects = Array.from(document.querySelectorAll('.project'));
-        const text = target.querySelector('.text');
-        console.log(text);
+        // const text = document.querySelector('.text');
+        const duration = .4;
+        // console.log(text);
 
         let filteredProjects = projects.filter( (el) => {
           return (el !== target);
         });
-        tl.to(filteredProjects, .5, {
-          scale: .2,
+        this.tl.to(this.text, duration*.5, {
+          y: '20px',
           opacity: 0,
-          ease: Power1.easeIn,
+          ease: Circ.easeIn
+        })
+        .to(filteredProjects, duration, {
+          scale: .4,
+          opacity: 0,
+          ease: Circ.easeIn,
           transformOrigin: '50% 50%',
         });
       },
@@ -235,11 +242,10 @@
           newPoints: this.newPoints
         };
       },
-      createBackground: function(project){
-        const container = project.imageContainer.getBoundingClientRect();
-        const SVGContainer = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-        SVGContainer.setAttribute('viewBox', `${0} ${0} ${document.documentElement.clientWidth} ${document.documentElement.clientHeight}`);
-        SVGContainer.setAttribute('style',`
+      createTransitionLayer: function(){
+        const transitionContainer = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        transitionContainer.setAttribute('viewBox', `${0} ${0} ${document.documentElement.clientWidth} ${document.documentElement.clientHeight}`);
+        transitionContainer.setAttribute('style',`
           position: fixed;
           top: 0;
           left: 0;
@@ -247,70 +253,128 @@
           height: 100%;
           z-index: -3;`
         );
-
-        const background = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
-        background.setAttribute('fill', project.data.primaryColor);
-        const points = this.getPoints(container.left, container.top, container.right, container.bottom);
-        background.setAttribute('points', points);
-        SVGContainer.appendChild(background);
-        document.getElementById('app').appendChild(SVGContainer);
-        project.imageContainer.style.background = 'transparent';
-        return background;
+        document.getElementById('app').appendChild(transitionContainer);
+        return transitionContainer;
       },
-      animateImage: function(e, project, transforms){
-        let backgroundAnimDuration = 400;
-        let projectAnimDuration = .7;
-        const tl = new TimelineLite();
+      addImageBg: function(project, transitionLayer){
+        const container = project.imageContainer.getBoundingClientRect();
+        // const SVGContainer = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        // SVGContainer.setAttribute('viewBox', `${0} ${0} ${document.documentElement.clientWidth} ${document.documentElement.clientHeight}`);
+        // SVGContainer.setAttribute('style',`
+        //   position: fixed;
+        //   top: 0;
+        //   left: 0;
+        //   width: 100%;
+        //   height: 100%;
+        //   z-index: -3;`
+        // );
+
+
+        const imageBg = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+        imageBg.setAttribute('fill', project.data.primaryColor);
+        // this.transition.bgFill = project.data.primaryColor;
+
+        const points = this.getPoints(container.left, container.top, container.right, container.bottom);
+        imageBg.setAttribute('points', points);
+        // this.transition.bgPoints = points;
+
+        console.log(this.$refs.transitionBg);
+
+        // SVGContainer.appendChild(background);
+        transitionLayer.appendChild(imageBg);
+        // document.getElementById('app').appendChild(SVGContainer);
+        document.getElementById('app').appendChild(transitionLayer);
+
+        // Hide original background
+        project.imageContainer.style.background = 'transparent';
+
+        return imageBg;
+      },
+      addTransitionBg: function(project, transitionLayer){
+        const transitionBg = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+        const w = this.vp.width; // viewport & height
+        const h = this.vp.cHeight;
+        transitionBg.setAttribute('points', `${w} 0 ${w*2} 0 ${w*2} ${h} ${w} ${h}`);
+        transitionBg.setAttribute('fill', project.data.lightColor);
+        transitionLayer.appendChild(transitionBg);
+        let transitionBgObj = {
+          el: transitionBg,
+          width: w
+        }
+        return transitionBgObj;
+      },
+      executeTransition: function(e, project, transforms){
+        const transitionLayer = this.createTransitionLayer();
+        const transitionBgObj = this.addTransitionBg(project, transitionLayer);
+        // const tl = new TimelineLite();
+
+        const imageBgAnimDuration = 300;
+        const projectAnimDuration = .7;
+        const transitionBgAnimDur = 1.3;
 
         // Animate and hide other projects
-        this.hideProjects(e.target, tl);
+        this.hideProjects(e.target);
 
-        // Animate Background
-        const morphBackground = () => {
-          const background = this.createBackground(project);
+        // Animate Image Background
+        const morphImageBg = () => {
+          const imageBgClone = this.addImageBg(project, transitionLayer);
+          console.log(imageBgClone);
           anime({
-            targets: background,
+            targets: imageBgClone,
             points: [
               { value: this.newPoints }
             ],
-            easing: 'easeOutQuad',
-            duration: backgroundAnimDuration,
+            easing: 'easeInQuad',
+            duration: imageBgAnimDuration,
             complete: () => {
               console.log("Transition Completed");
               this.transitioning = false;
-              this.navigate(e, project.data, background);
+              this.navigate(e, project.data, imageBgClone);
             }
           });
         };
         // Animate
-        tl.to(project.imageContainer, projectAnimDuration, {
+        //
+        this.tl.to(project.imageContainer, projectAnimDuration, {
           x: transforms.translateX,
           y: transforms.translateY,
           scale: transforms.scale,
-          ease: Power2.easeOut,
+          ease: Power3.easeInOut,
           transformOrigin: '50% 50%',
           onStart: () => {
             // console.log('starting animation');
           },
           onComplete: () => {
-            morphBackground();
+            morphImageBg();
           }
-        });
+        })
+        // Transition Bg, Cover Screen swipe left to right
+        .to(transitionBgObj.el, transitionBgAnimDur, {
+          x: -transitionBgObj.width,
+          ease: Power4.easeInOut
+        }, `-=${(projectAnimDuration*.9)}`)
+
       },
       handleClick: function(e){
-        this.transitioning = true;
-        this.project = this.getProjectData(e.target);
-        this.transforms = this.calcTransforms(this.project);
-        this.animateImage(e, this.project, this.transforms);
+        if(!this.transitioning){
+          this.transitioning = true;
+          this.project = this.getProjectData(e.target);
+          this.transforms = this.calcTransforms(this.project);
+          this.executeTransition(e, this.project, this.transforms);
+        }
+        else{
+          return;
+        }
       }
 
     },
     mounted(){
       // Initially bannerWidth to window width
       this.bannerWidth = this.bannerNewWidth*document.documentElement.clientWidth;
-
+      this.vp = this.getWindow();
       // Initialize Events
       const handleResize = this.debounce(() => {
+        this.vp = getWindow();
         this.bannerWidth = this.bannerNewWidth*document.documentElement.clientWidth;
         console.log(this.bannerWidth);
       }, 50);
@@ -333,11 +397,7 @@
             reverse: false
           })
           .on('enter', () => {
-            // console.log(project);
-            // console.log(imageContainer);
-            // console.log(image);
-            const tl = new TimelineLite();
-            tl.to(imageContainer, 1,
+            this.tl.to(imageContainer, 1,
             {
               y: '0',
               opacity: 1,
@@ -357,6 +417,8 @@
             }, (i*delay) + .55)
           })
           .addTo(controller);
+
+          this.text.push(text);
         }
 
     }

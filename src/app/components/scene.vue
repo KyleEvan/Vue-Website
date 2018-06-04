@@ -115,13 +115,13 @@ JS
        this.scene = ShapeScene(config);
      },
      initScrollMagic: function(tl){
-       const viewport = this.getWindow();
+       const vp = this.getWindow();
        const root = document.getElementById('root');
        const controller = new ScrollMagic.Controller();
        const mainScene = new ScrollMagic.Scene({
          triggerElement: root,
          triggerHook: 0,
-         duration: viewport.clientHeight*.75,
+         duration: vp.cHeight*.75,
          reverse: true
        })
        .on("progress", (event) => {

@@ -9,13 +9,12 @@
 
     <div class="main-container">
 
-      <div class="carousel-aside" :style="{background: lightColor}">
+      <div ref="carouselAside" class="carousel-aside" :style="{background: lightColor}">
         <h2 :style="{color: darkColor}">
           <slot name="title"></slot>
         </h2>
+
         <slot name="description"></slot>
-        <slot name="skills"></slot>
-        <slot name="links"></slot>
 
       </div>
 
@@ -120,6 +119,9 @@
     mounted(){
       const tl = this.animateFlickity();
       this.initScrollMagic(tl);
+
+      console.log(this.$refs.carouselAside.children);
+      // get children and animate them rtl on enter
     }
   }
 </script>
@@ -140,9 +142,11 @@
   .main-container{
     display: flex;
     flex-direction: column-reverse;
+
     @include medium{
       flex-direction: row;
     }
+
     .carousel-aside{
       width: 100%;
       height: 50vh;
@@ -155,14 +159,36 @@
         font-size: 5vw;
         opacity: 1;
       }
-      h3{
-        font-weight: 500;
-        margin-bottom: .5em;
+      section{
+        margin: 2em 0;
       }
+      a{
+        text-decoration: none;
+        font-weight: 900;
+        border-bottom: 2.4px solid;
+      }
+
       ul{
         list-style: none;
         margin-top: 0;
         padding: 0;
+
+        li{
+          margin: .75em 0;
+        }
+      }
+
+      section.links{
+        li{
+          display: flex;
+
+          a + span{
+            margin-left: .4em;
+            font-size: 130%;
+            line-height: 1.4;
+            display: inline-block;
+          }
+        }
       }
     }
   }

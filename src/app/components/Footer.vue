@@ -25,7 +25,7 @@
       </ul>
     </div>
     <div>
-      Some footer text and stuff. Yeah, I made this website 0_0<br />
+      Some footer text and stuff..<br />
       ༼ つ ͡◕ . ͡◕ ༽つ
     </div>
     </div>
@@ -50,6 +50,8 @@
 
 <style lang="scss" scoped>
   footer{
+    position: relative;
+    z-index: -4;
     padding: 3rem;
     background: #F5F5F5;
 

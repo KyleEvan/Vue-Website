@@ -306,7 +306,6 @@
       executeTransition: function(e, project, transforms){
         const transitionLayer = this.createTransitionLayer();
         const transitionBgObj = this.addTransitionBg(project, transitionLayer);
-        // const tl = new TimelineLite();
 
         const imageBgAnimDuration = 300;
         const projectAnimDuration = .7;
@@ -333,21 +332,23 @@
             }
           });
         };
+
         // Animate
-        //
+        // Transition image background
         this.tl.to(project.imageContainer, projectAnimDuration, {
           x: transforms.translateX,
           y: transforms.translateY,
           scale: transforms.scale,
           ease: Power3.easeInOut,
           transformOrigin: '50% 50%',
-          onStart: () => {
-            // console.log('starting animation');
-          },
+          // onStart: () => {
+          //   ...
+          // },
           onComplete: () => {
             morphImageBg();
           }
         })
+
         // Transition Bg, Cover Screen swipe left to right
         .to(transitionBgObj.el, transitionBgAnimDur, {
           x: -transitionBgObj.width,

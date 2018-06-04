@@ -25,7 +25,7 @@
       <!-- Skills -->
       <section>
         <p>
-          Built with minimal HTML, lots of Javascript, and some CSS. Utilizing the HTML5 Canvas element developed a basic game loop with various states via the Javascript method requestAnimationFrame(). Basic linear algebra and trigonometry helped construct the game's mechanics.
+          Built with minimal HTML, lots of Javascript, and some CSS. Utilizing the HTML5 Canvas element developed a basic game loop with various states via the Javascript method requestAnimationFrame(). Basic linear algebra and trigonometry helped to construct the game's mechanics.
         </p>
       </section>
 
@@ -49,6 +49,14 @@
       <section class="links">
         <ul>
           <li>
+            <a target="_blank" href="#">
+              ComboSmash v.1
+            </a>
+            <span>
+              <font-awesome-icon :icon="['fas','long-arrow-alt-right']" />
+            </span>
+          </li>
+          <li>
             <a target="_blank" :href="gitHubLink">
               GitHub Repo
             </a>
@@ -56,7 +64,14 @@
               <font-awesome-icon :icon="['fas','long-arrow-alt-right']" />
             </span>
           </li>
-          <li><a target="_blank" :href="gitHubPagesLink">Play in browser <font-awesome-icon :icon="['fas','long-arrow-alt-right']" /></a></li>
+          <li>
+            <a target="_blank" :href="gitHubPagesLink">
+              Play in browser
+            </a>
+            <span>
+              <font-awesome-icon :icon="['fas','long-arrow-alt-right']" />
+            </span>
+          </li>
         </ul>
       </section>
     </template>

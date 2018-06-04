@@ -69,7 +69,6 @@ JS
          preview_lg_jpg,
        ],
 
-
        scene: undefined,
        shapeColors: [
          colors.red,
@@ -79,7 +78,6 @@ JS
        shapesPerLetter: 4,
        name: 'Kyle',
        showName: false,
-
      }
    },
    components:{
@@ -88,20 +86,8 @@ JS
      App: App,
      Footer: Footer
    },
-
    methods:{
      // Utility Methods
-     bodyNoScroll: function(){
-       const body = document.body;
-       body.style.top = `${-(window.scrollY || window.pageYOffset || document.body.scrollTop + (document.documentElement && document.documentElement.scrollTop || 0))}px`;
-       body.style.position = 'fixed';
-       body.style.overflowY = "scroll";
-     },
-     bodyRestoreScroll: function(){
-       const body = document.body;
-       body.removeAttribute("style");
-     },
-
      initScene: function(){
        console.log('Scene Initialized in Scene.vue');
        const config = {

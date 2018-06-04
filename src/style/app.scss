@@ -67,6 +67,7 @@ body {
   .content, .footer-content{
     max-width: 1400px;
     margin: 0 8%;
+    z-index: 0;
 
     @include xl{
       margin: 0 auto 0 auto;

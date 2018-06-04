@@ -104,7 +104,7 @@
   #carousel{
     position: relative;
     width: 100%;
-    z-index: 2;
+    z-index: 0;
 
     @include medium{
       width: 50%;

@@ -149,11 +149,13 @@
 
     .carousel-aside{
       width: 100%;
-      height: 50vh;
+      height: 60vh;
       padding: 3%;
+
       @include medium{
         width: 50%;
-        height: 100vh;
+        height: auto;
+        min-height: 100vh;
       }
       h2{
         font-size: 5vw;
@@ -172,7 +174,6 @@
         list-style: none;
         margin-top: 0;
         padding: 0;
-
         li{
           margin: .75em 0;
         }
@@ -206,12 +207,12 @@
   }
 
   .background{
-    position:absolute;
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     background: #F69296;
-    z-index: -2;
+    z-index: -5;
   }
 </style>

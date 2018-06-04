@@ -40,10 +40,19 @@ Vue.mixin({
   data: function () {
     return {
       devmode: true,
+      body: document.body
       // supportsSVGCSSTransforms: supportsCSSTransformsOnSVG
     }
   },
   methods: {
+    bodyNoScroll: function(){
+      this.body.style.top = `${-(window.scrollY || window.pageYOffset || document.body.scrollTop + (document.documentElement && document.documentElement.scrollTop || 0))}px`;
+      this.body.style.position = 'fixed';
+      this.body.style.overflowY = "scroll";
+    },
+    bodyRestoreScroll: function(){
+      this.body.removeAttribute("style");
+    },
     getWindow: function(){
       const viewport = {
         width: window.innerWidth,
@@ -71,9 +80,6 @@ Vue.mixin({
     }
   }
 });
-
-// Register Components
-// Vue.component('font-awesome-icon', FontAwesomeIcon); // Use the icon component anywhere in the app
 
 new Vue({
   el: '#app',

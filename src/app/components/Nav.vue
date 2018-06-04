@@ -25,8 +25,7 @@
 
 		<!-- Mobile Nav Menu -->
 	  <a role="button" class="nav-menu" tabindex="2" href="#" @click.prevent="handleMenuToggle">
-      <!-- <img v-show="!expanded" :src="menu_svg" alt="navigation menu" /> -->
-			<div ref="menu"></div>
+			<font-awesome-icon :icon="icon" />
 		</a>
 	</nav>
 </template>
@@ -38,22 +37,26 @@
 -->
 <script>
   // Libraries
+	import FontAwesomeIcon from '@fortawesome/vue-fontawesome';
 	import ScrollMagic from "scrollmagic";
   import { TimelineLite } from "gsap";
-  // Menu assets
-  import hamburger_json from '../../images/menu/hamburger.json';
-  import hamburger from '../../images/menu/player_hamburger.js';
 
 
 	export default{
 		data(){
       return {
-				menu: undefined,
+				menuIcon: ['fas', 'bars'],
+				exitIcon: ['fas', 'times'],
         expanded: false,
         animDirection: -1
 				// menu_svg: menu_svg
       }
     },
+		computed:{
+			icon(){
+				return this.expanded? this.exitIcon : this.menuIcon;
+			}
+		},
     methods:{
 			initMenuSVG: function(){
 				const params = {
@@ -69,21 +72,23 @@
 			},
 			handleMenuToggle: function(e){
 				this.expanded = !this.expanded;
-				this.animDirection *= -1;
-				if(this.menu){
-					this.menu.setDirection(this.animDirection);
-				  this.menu.play();
-        }
+				// this.animDirection *= -1;
+				// if(this.menu){
+				// 	this.menu.setDirection(this.animDirection);
+				//   this.menu.play();
+        // }
 		  }
 
 		},
 		mounted(){
-      this.menu = this.initMenuSVG();
-
-			console.log(this.menu);
-
+      // this.menu = this.initMenuSVG();
+			// console.log(this.menu);
 
 
+
+		},
+		components:{
+			FontAwesomeIcon
 		}
 	}
 </script>
@@ -115,7 +120,7 @@
 			a, a:visited, a:active{
 	      display: flex;
 	      text-decoration: none;
-				padding: .1rem 1rem;
+				// padding: .1rem 1rem;
         font-weight: 600;
 				pointer-events: visible;
 
@@ -127,7 +132,25 @@
 				}
 	    }
 			.nav-menu{
+				line-height: 1;
 	      display: none;
+
+				svg{
+					width: 6vw;
+          height: 6vw;
+          max-width: 36px;
+          max-height: 36px;
+          min-width: 24px;
+          min-height: 24px;
+					transform: scale(1);
+					transition: transform .2s cubic-bezier(.17,.67,.59,1.23);
+				}
+
+				&:active{
+					svg{
+						transform: scale(.7);
+					}
+				}
 	    }
 			.nav-items{
 	      list-style: none;
@@ -146,20 +169,15 @@
 	      .nav-menu{
 	        position: relative;
 	        display: block;
-					width: 10vw;
-					height: 10vw;
-					min-width: 5rem;
-					min-height: 5rem;
+					// width: 10vw;
+					// height: 10vw;
+					// min-width: 5rem;
+					// min-height: 5rem;
 	        padding:10px;
 	        z-index: 1;
 
 	      }
-	      // .nav-menu::before{
-	      //   content:'menu';
-	      // }
-	      // .nav-items.expanded + .nav-menu::before{
-	      //   content:'close';
-	      // }
+
 	      .nav-items{
 	        width:100%;
 	        height:100vh;

@@ -13,21 +13,36 @@
     <!-- Title: -->
       Cycles
     </h2>
-    <p slot="description">
+    <template slot="description">
       <!-- Project Description -->
-      An educational take on retro trails/snake-like see-how-long-you-can-last games.
-    </p>
-    <!-- Skills utilized -->
-    <ul slot="skills">
-      <li>JS</li>
-      <li>More JS</li>
-    </ul>
+      <!-- Synopsis -->
+      <section>
+        <p>
+          A fast paced educational game pitting the player against the computer to see who can last the longest before crashing. It's a math learning game at it's core targetting primary school audience. It relies on the player's ability to readily calculate rudimentary arithmetic
+        </p>
+      </section>
 
-    <template slot="links">
-      <a href="#">A Link</a>
-      <a href="#">A Link</a>
-      <a href="#">A Link</a>
+      <!-- Skills -->
+      <section>
+        <ul>
+          <li>JS</li>
+          <li>More JS</li>
+        </ul>
+      </section>
+
+      <!-- Links -->
+      <section>
+        <ul>
+          <a href="#">A Link</a>
+          <a href="#">A Link</a>
+          <a href="#">A Link</a>
+        </ul>
+      </section>
+
     </template>
+
+
+
 
     <!-- Main Content -->
     <p>

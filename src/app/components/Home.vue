@@ -375,7 +375,7 @@
       this.vp = this.getWindow();
       // Initialize Events
       const handleResize = this.debounce(() => {
-        this.vp = getWindow();
+        this.vp = this.getWindow();
         this.bannerWidth = this.bannerNewWidth*document.documentElement.clientWidth;
         console.log(this.bannerWidth);
       }, 50);

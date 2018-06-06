@@ -138,7 +138,7 @@ class Scene { // #scene
     // virtual camera of the scene, used for calculating 3d perspectives
     this.camera = {
       perspective: 10,
-      maxZ: 9,
+      maxZ: 9.9,
       fov: {
         width: window.innerWidth,
         height: window.innerHeight

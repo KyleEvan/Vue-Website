@@ -37,7 +37,7 @@ fontawesome.library.add(solid, faBars);
 // })();
 
 Vue.mixin({
-  data: function () {
+  data: function(){
     return {
       devmode: true,
       body: document.body
@@ -61,7 +61,7 @@ Vue.mixin({
       }
       return viewport;
     },
-    debounce: function(func, wait, immediate) {
+    debounce: function(func, wait, immediate){
       var timeout;
       return function() {
         var context = this,

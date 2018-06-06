@@ -1,14 +1,15 @@
 <template>
 
-  <div id="carousel">
+  <div ref="carouselContainer" id="carousel">
 
     <div id="flickityContainer" ref="carousel" :style="minHeight">
       <slot></slot>
     </div>
 
-    <svg id="progressBar" :width="progressBar.width" :height="progressBar.height" :viewBox="viewBox" :style="{bottom: -.5*progressBar.height}">
+    <!-- <svg id="progressBar" :width="progressBar.width" :height="progressBar.height" :viewBox="viewBox" :style="{bottom: -.5*progressBar.height}"> -->
+    <svg id="progressBar" :width="progressBar.width" :height="progressBar.height" :viewBox="viewBox" >
       <path :stroke="progressBar.background" :stroke-width="progressBar.height" :d="path"></path>
-      <path :stroke="progressColor" :stroke-width="progressBar.height" :d="path" :style="{strokeDasharray: progressBar.width, strokeDashoffset: progressBar.progress}"></path>
+      <path :stroke="progressColor" :stroke-width="progressBar.height*2" :d="path" :style="{strokeDasharray: progressBar.width, strokeDashoffset: progressBar.progress}"></path>
     </svg>
 
     <!-- For Development -->
@@ -58,9 +59,10 @@
       }
 
     },
-    mounted() {
-      this.progressBar.width = this.progressBar.progress = document.documentElement.clientWidth;
-
+    mounted(){
+      this.progressBar.width = this.progressBar.progress = (document.documentElement.clientWidth/2);
+      this.progressBar.height = this.$refs.carouselContainer.clientHeight;
+      // this.progressBar.height = this.$refs.carouselContainer.style.height;
       /*
 
         Initialize Carousel with flickity
@@ -88,6 +90,7 @@
 
       const handleResize = this.debounce(function() {
         // console.log("handling carousel resize");
+
         carousel.setWidth(document.documentElement.clientWidth);
       }, 30);
       window.addEventListener('resize', handleResize);
@@ -104,7 +107,7 @@
   #carousel{
     position: relative;
     width: 100%;
-    z-index: 0;
+    // z-index: 0;
 
     @include medium{
       width: 50%;
@@ -220,7 +223,8 @@
       width: 100%;
       position: absolute;
       left: 0;
-      bottom: 0;
+      top: 0;
+      z-index: -5;
     }
   }
 

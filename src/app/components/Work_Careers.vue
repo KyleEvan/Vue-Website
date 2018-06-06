@@ -19,7 +19,7 @@
       <!-- Synopsis -->
       <section>
         <p>
-          An educational take on retro trails/snake-like see-how-long-you-can-last games. {{saying}}
+          A UI and UX redesign for the member and careers sections of corporate healthcare websites (Excellus BCBS and Univera Healthcare). This project overhauled the entire front-end of these sites adding responsiveness, accessibility, and overall a better flow of content for a more consitent modern web experience accross devices.
         </p>
       </section>
 

@@ -65,7 +65,7 @@
     components:{
       carousel: Carousel
     },
-    computed: {
+    computed:{
       primaryColor: function(){
         let color = this.$props.project ? this.$props.project.primaryColor : this.defaultPrimaryColor;
         return color;
@@ -83,7 +83,7 @@
         return color;
       }
     },
-    methods: {
+    methods:{
       initScrollMagic: function(tl){
         const mainContainer = document.querySelector('.main-container');
         const controller = new ScrollMagic.Controller();

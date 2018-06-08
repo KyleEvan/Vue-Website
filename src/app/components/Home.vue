@@ -53,15 +53,15 @@
 
     data(){
       return{
-        vp: undefined, // viewport object
+        viewport: undefined, // viewport object
         tl: new TimelineLite(),
 
-
-        bannerWidth: undefined, // 0 - 1 value
-        bannerNewWidth: .5, // .5 of window width
-        bannerNewHeight: 1,   // 1 of window height
-        bannerMinHeight: 400, // px
-        bannerOffsetX: .5,
+        transitionedProject: undefined,
+        // bannerWidth: undefined, // 0 - 1 value
+        // bannerNewWidth: .5, // .5 of window width
+        // bannerNewHeight: 1,   // 1 of window height
+        // bannerMinHeight: 400, // px
+        // bannerOffsetX: .5,
 
         imageMaxHeight: .7, // 70% of vh
 
@@ -144,27 +144,24 @@
     // components:{
     //   'page-transition': PageTransition
     // },
-    computed:{
-      bannerHeight(){
-        // Check bannerHeight to make sure its not lower than the minimum height
-        let newBannerHeight = (window.innerHeight*this.bannerNewHeight);
-        return newBannerHeight >= this.bannerMinHeight ? newBannerHeight : this.bannerMinHeight;
-      },
-      bannerOffset(){
-        return {
-          x: this.bannerOffsetX*document.documentElement.clientWidth,
-          y: 0
-        }
-      },
-      newPoints(){
-        let points = this.getPoints(this.bannerOffset.x, 0, document.documentElement.clientWidth, this.bannerHeight);
-        return points;
-      }
-    },
+    // computed:{
+    //   bannerHeight(){
+    //     // Check bannerHeight to make sure its not lower than the minimum height
+    //     let newBannerHeight = (window.innerHeight*this.bannerNewHeight);
+    //     return newBannerHeight >= this.bannerMinHeight ? newBannerHeight : this.bannerMinHeight;
+    //   },
+    //   bannerOffset(){
+    //     return {
+    //       x: this.bannerOffsetX*document.documentElement.clientWidth,
+    //       y: 0
+    //     }
+    //   },
+    //   newPoints(){
+    //     let points = this.getPoints(this.bannerOffset.x, 0, document.documentElement.clientWidth, this.bannerHeight);
+    //     return points;
+    //   }
+    // },
     methods:{
-      getPoints: function(l, t, r, b){
-        return `${l} ${t} ${r} ${t} ${r} ${b} ${l} ${b}`;
-      },
       navigate: function(e, project, background){
         const href = e.target.getAttribute("href");
         if(href){
@@ -177,6 +174,9 @@
             params: {project: project}
           });
         }
+      },
+      getPoints: function(l, t, r, b){
+        return `${l} ${t} ${r} ${t} ${r} ${b} ${l} ${b}`;
       },
       getImageScale: function(project, container){
         const padding = parseInt(window.getComputedStyle(project.imageContainer, null).getPropertyValue('padding-top'), 10);
@@ -207,6 +207,42 @@
           transformOrigin: '50% 50%',
         });
       },
+      setTransitionedProject: function(){
+        const minHeight = 400; // Carousel min-height
+        let newWidth, newHeight, newOffset;
+        // Mobile
+        if(this.viewport.cWidth < this.breakpoints.md){
+          newWidth = 1;
+          newHeight = .5;
+          newOffset = {
+            x: 0,
+            y: 0
+          }
+        }
+        // Desktop
+        else{
+          newWidth = .5;
+          newHeight = 1;
+          newOffset = {
+            x: .5,
+            y: 0
+          };
+        }
+        this.transitionedProject = {
+          width: newWidth*this.viewport.cWidth,
+          height: (newHeight*this.viewport.cHeight) >= minHeight ? (newHeight*this.viewport.cHeight) : minHeight,
+          offset:{
+            x: newOffset.x*this.viewport.cWidth,
+            y: newOffset.y*this.viewport.cHeight
+          },
+          center:{
+            x: ((newWidth*this.viewport.cWidth)/2) + (newOffset.x*this.viewport.cWidth),
+            y: ((newHeight*this.viewport.cHeight)/2) + (newOffset.y*this.viewport.cHeight)
+          },
+          points: this.getPoints(newOffset.x*this.viewport.cWidth, newOffset.y*this.viewport.cHeight, this.viewport.cWidth, newHeight*this.viewport.cHeight)
+        }
+        console.log(this.transitionedProject);
+      },
       getProjectData: function(target){
         const projects = document.querySelectorAll('.project');
         for (let i = projects.length-1; i >= 0; i--){
@@ -221,31 +257,35 @@
           }
         }
       },
-      calcTransforms: function(project){
-        console.log(project)
+      calcProjectTransforms: function(project){
+        // console.log(project)
         const container = project.imageContainer.getBoundingClientRect();
-        console.log(container);
+        // console.log(container);
         const containerCenter = {
           x: container.left + container.width/2,
           y: container.top + container.height/2
         };
-        const newCenter = {
-          x: this.bannerOffset.x + (this.bannerWidth/2),
-          y: this.bannerHeight/2
-        };
+
+
+        // const newCenter = {
+        //   x: this.bannerOffset.x + (this.bannerWidth/2),
+        //   y: this.bannerHeight/2
+        // };
+        const newProjectCenter = this.transitionedProject.center;
+        console.log(newProjectCenter);
+
 
         return {
-          // scale: (window.innerWidth*project.data.image.newHeight)/(container.height - (padding*2)), imageMaxHeight
           scale: this.getImageScale(project, container),
-          translateX: newCenter.x - containerCenter.x,
-          translateY: newCenter.y - containerCenter.y,
-          newPoints: this.newPoints
+          translateX: newProjectCenter.x - containerCenter.x,
+          translateY: newProjectCenter.y - containerCenter.y,
+          newPoints: this.transitionedProject.points
         };
       },
       createTransitionLayer: function(){
         const transitionContainer = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-        transitionContainer.setAttribute('viewBox', `${0} ${0} ${document.documentElement.clientWidth} ${document.documentElement.clientHeight}`);
-        transitionContainer.setAttribute('style',`
+        transitionContainer.setAttribute('viewBox', `${0} ${0} ${this.viewport.cWidth} ${this.viewport.cHeight}`);
+        transitionContainer.setAttribute('style', `
           position: fixed;
           top: 0;
           left: 0;
@@ -258,31 +298,14 @@
       },
       addImageBg: function(project, transitionLayer){
         const container = project.imageContainer.getBoundingClientRect();
-        // const SVGContainer = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-        // SVGContainer.setAttribute('viewBox', `${0} ${0} ${document.documentElement.clientWidth} ${document.documentElement.clientHeight}`);
-        // SVGContainer.setAttribute('style',`
-        //   position: fixed;
-        //   top: 0;
-        //   left: 0;
-        //   width: 100%;
-        //   height: 100%;
-        //   z-index: -3;`
-        // );
-
 
         const imageBg = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
         imageBg.setAttribute('fill', project.data.primaryColor);
-        // this.transition.bgFill = project.data.primaryColor;
 
         const points = this.getPoints(container.left, container.top, container.right, container.bottom);
         imageBg.setAttribute('points', points);
-        // this.transition.bgPoints = points;
 
-        console.log(this.$refs.transitionBg);
-
-        // SVGContainer.appendChild(background);
         transitionLayer.appendChild(imageBg);
-        // document.getElementById('app').appendChild(SVGContainer);
         document.getElementById('app').appendChild(transitionLayer);
 
         // Hide original background
@@ -292,9 +315,10 @@
       },
       addTransitionBg: function(project, transitionLayer){
         const transitionBg = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
-        const w = this.vp.width; // viewport & height
-        const h = this.vp.cHeight;
-        transitionBg.setAttribute('points', `${w} 0 ${w*2} 0 ${w*2} ${h} ${w} ${h}`);
+        const w = this.viewport.width; // viewport & height
+        const h = this.viewport.cHeight;
+        // transitionBg.setAttribute('points', `${w} 0 ${w*2} 0 ${w*2} ${h} ${w} ${h}`);
+        transitionBg.setAttribute('points', this.getPoints(this.viewport.width, 0, this.viewport.width*2, this.viewport.cHeight));
         transitionBg.setAttribute('fill', project.data.lightColor);
         transitionLayer.appendChild(transitionBg);
         let transitionBgObj = {
@@ -321,7 +345,7 @@
           anime({
             targets: imageBgClone,
             points: [
-              { value: this.newPoints }
+              { value: this.transitionedProject.points }
             ],
             easing: 'easeInQuad',
             duration: imageBgAnimDuration,
@@ -360,7 +384,7 @@
         if(!this.transitioning){
           this.transitioning = true;
           this.project = this.getProjectData(e.target);
-          this.transforms = this.calcTransforms(this.project);
+          this.transforms = this.calcProjectTransforms(this.project);
           this.executeTransition(e, this.project, this.transforms);
         }
         else{
@@ -369,15 +393,24 @@
       }
 
     },
+    created(){
+
+    },
     mounted(){
+      // this.viewport = this.getWindow();
+      this.viewport = this.getWindow();
+      this.setTransitionedProject();
+
+
       // Initially bannerWidth to window width
-      this.bannerWidth = this.bannerNewWidth*document.documentElement.clientWidth;
-      this.vp = this.getWindow();
+      // this.bannerWidth = this.bannerNewWidth*document.documentElement.clientWidth;
+
       // Initialize Events
       const handleResize = this.debounce(() => {
-        this.vp = this.getWindow();
-        this.bannerWidth = this.bannerNewWidth*document.documentElement.clientWidth;
-        console.log(this.bannerWidth);
+        this.viewport = this.getWindow();
+        this.setTransitionedProject();
+        // this.bannerWidth = this.bannerNewWidth*document.documentElement.clientWidth;
+        // console.log(this.bannerWidth);
       }, 50);
       window.addEventListener('resize', handleResize);
 

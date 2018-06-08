@@ -40,7 +40,13 @@ Vue.mixin({
   data: function(){
     return {
       devmode: true,
-      body: document.body
+      body: document.body,
+      breakpoints: { // See global.scss for breakpoints MUST BE IN SYNC
+        sm: 200,
+        md: 800,
+        lg: 1300,
+        xl: 1600
+      }
       // supportsSVGCSSTransforms: supportsCSSTransformsOnSVG
     }
   },

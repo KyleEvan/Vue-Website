@@ -141,26 +141,7 @@
         ],
       }
     },
-    // components:{
-    //   'page-transition': PageTransition
-    // },
-    // computed:{
-    //   bannerHeight(){
-    //     // Check bannerHeight to make sure its not lower than the minimum height
-    //     let newBannerHeight = (window.innerHeight*this.bannerNewHeight);
-    //     return newBannerHeight >= this.bannerMinHeight ? newBannerHeight : this.bannerMinHeight;
-    //   },
-    //   bannerOffset(){
-    //     return {
-    //       x: this.bannerOffsetX*document.documentElement.clientWidth,
-    //       y: 0
-    //     }
-    //   },
-    //   newPoints(){
-    //     let points = this.getPoints(this.bannerOffset.x, 0, document.documentElement.clientWidth, this.bannerHeight);
-    //     return points;
-    //   }
-    // },
+    
     methods:{
       navigate: function(e, project, background){
         const href = e.target.getAttribute("href");
@@ -228,18 +209,20 @@
             y: 0
           };
         }
+        let width = newWidth*this.viewport.cWidth;
+        let height = (newHeight*this.viewport.cHeight) >= minHeight ? (newHeight*this.viewport.cHeight) : minHeight;
         this.transitionedProject = {
-          width: newWidth*this.viewport.cWidth,
-          height: (newHeight*this.viewport.cHeight) >= minHeight ? (newHeight*this.viewport.cHeight) : minHeight,
+          width: width,
+          height: height,
           offset:{
             x: newOffset.x*this.viewport.cWidth,
             y: newOffset.y*this.viewport.cHeight
           },
           center:{
-            x: ((newWidth*this.viewport.cWidth)/2) + (newOffset.x*this.viewport.cWidth),
-            y: ((newHeight*this.viewport.cHeight)/2) + (newOffset.y*this.viewport.cHeight)
+            x: (width/2) + (newOffset.x*this.viewport.cWidth),
+            y: (height/2) + (newOffset.y*this.viewport.cHeight)
           },
-          points: this.getPoints(newOffset.x*this.viewport.cWidth, newOffset.y*this.viewport.cHeight, this.viewport.cWidth, newHeight*this.viewport.cHeight)
+          points: this.getPoints(newOffset.x*this.viewport.cWidth, newOffset.y*this.viewport.cHeight, this.viewport.cWidth, height)
         }
         console.log(this.transitionedProject);
       },
@@ -391,34 +374,24 @@
           return;
         }
       }
-
     },
-    created(){
-
-    },
+    // created(){
+    //
+    // },
     mounted(){
-      // this.viewport = this.getWindow();
       this.viewport = this.getWindow();
       this.setTransitionedProject();
-
-
-      // Initially bannerWidth to window width
-      // this.bannerWidth = this.bannerNewWidth*document.documentElement.clientWidth;
 
       // Initialize Events
       const handleResize = this.debounce(() => {
         this.viewport = this.getWindow();
         this.setTransitionedProject();
-        // this.bannerWidth = this.bannerNewWidth*document.documentElement.clientWidth;
-        // console.log(this.bannerWidth);
       }, 50);
       window.addEventListener('resize', handleResize);
-
 
       // ScrollMagic Scene
       const projects = document.querySelectorAll('.project');
       const controller = new ScrollMagic.Controller();
-
         for(let i = 0; i < projects.length; i++){
           let project = projects[i];
           const imageContainer = project.querySelector('.image');
@@ -451,7 +424,6 @@
             }, (i*delay) + .55)
           })
           .addTo(controller);
-
           this.text.push(text);
         }
 

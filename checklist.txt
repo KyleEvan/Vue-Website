@@ -1,0 +1,11 @@
+
+
+
+
+To Do
+- Look into service workers to serve offline page
+- Google Analytics
+
+Must Do
+- Add Resume to Contact Us
+- Not Found Page, no-script page

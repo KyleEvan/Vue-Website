@@ -149,12 +149,12 @@
 
     .carousel-aside{
       width: 100%;
-      height: 60vh;
+      height: auto;
       padding: 3%;
 
       @include medium{
         width: 50%;
-        height: auto;
+        height: 60vh;
         min-height: 100vh;
       }
       h2{

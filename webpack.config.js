@@ -1,16 +1,18 @@
 const webpack = require('webpack');
 const path = require('path');
-
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const HtmlWebpackPlugin = require('html-webpack-plugin'); // Require  html-webpack-plugin plugin
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
+const { VueLoaderPlugin } = require('vue-loader');
+// const ExtractTextPlugin = require('extract-text-webpack-plugin');
+// const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 // var env = process.env.WEBPACK_ENV;
 // console.log(env);
 
 module.exports = {
+  mode: 'development',
   entry: ["babel-polyfill", __dirname + "/src/app/index.js"], // webpack entry point. Module to start building dependency graph
-  devtool: 'source-map',
+  devtool: 'inline-source-map',
   output: {
     path: path.resolve(__dirname, 'dist'), // Folder to store generated bundle
     filename: 'index_bundle.js'  // Name of generated bundle after build
@@ -26,15 +28,24 @@ module.exports = {
           ]
         },
         {
-            test: /\.(sass|scss)$/,
-            use: ExtractTextPlugin.extract({
-              fallback: 'style-loader',
-              use: [
-                { loader: 'css-loader' },
-                { loader: 'sass-loader' }
-              ],
-            })
+          test: /\.(sa|sc|c)ss$/,
+          use: [
+            MiniCssExtractPlugin.loader,
+            // "style-loader",
+            "css-loader",
+            "sass-loader"
+          ]
         },
+        // {
+        //     test: /\.(sass|scss)$/,
+        //     use: ExtractTextPlugin.extract({
+        //       fallback: 'style-loader',
+        //       use: [
+        //         { loader: 'css-loader' },
+        //         { loader: 'sass-loader' }
+        //       ],
+        //     })
+        // },
         {
           test:/\.(ttf|woff|woff2)$/,
           loader: "file-loader",
@@ -61,6 +72,18 @@ module.exports = {
       'vue$': 'vue/dist/vue.esm.js'
     }
   },
+  optimization: {
+    splitChunks: {
+      cacheGroups: {
+        styles: {
+          name: 'styles',
+          test: /\.css$/,
+          chunks: 'all',
+          enforce: true
+        }
+      }
+    }
+  },
   plugins: [  // Array of plugins to apply to build chunk
       new HtmlWebpackPlugin({
         // title: 'Kyle Peterson',
@@ -68,7 +91,11 @@ module.exports = {
         inject: 'body'
         // hash:true
       }),
-      new ExtractTextPlugin("styles_bundle.css"), // extract css to a separate file called styles.css
+      new MiniCssExtractPlugin({
+        filename: "[name]_bundle.css",
+      }),
+      new VueLoaderPlugin()
+      // new ExtractTextPlugin("styles_bundle.css"), // extract css to a separate file called styles.css
       // new CopyWebpackPlugin([
       //   { from: 'src/php' }
       // ])

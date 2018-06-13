@@ -59,7 +59,8 @@
         defaultPrimaryColor: colors.red,
         defaultLightColor: colors.lightRed,
         defaultMediumColor: colors.mediumRed,
-        defaultDarkColor: colors.darkRed
+        defaultDarkColor: colors.darkRed,
+        tl: new TimelineLite({paused: true})
       }
     },
     components:{
@@ -84,7 +85,7 @@
       }
     },
     methods:{
-      initScrollMagic: function(tl){
+      initScrollMagic: function(){
         const mainContainer = document.querySelector('.main-container');
         const controller = new ScrollMagic.Controller();
         const workScene = new ScrollMagic.Scene({
@@ -95,15 +96,15 @@
         })
         .on("progress", (event) => {
           let progress = event.progress;
-          tl.progress(progress);
-          tl.progress(event.progress);
+          this.tl.progress(progress);
+          this.tl.progress(event.progress);
         })
         .addTo(controller);
       },
-      animateFlickity: function(){
-        const tl = new TimelineLite({paused: true});
+      animateScroll: function(){
+        // const tl = new TimelineLite({paused: true});
         const flickity = document.getElementById('flickityContainer');
-        tl.fromTo(flickity, .3,
+        this.tl.fromTo(flickity, .3,
         {
           y: '0%',
           opacity: 1
@@ -113,14 +114,26 @@
           opacity: 0,
           ease: Power4.easeOut
         });
-        return tl;
+        // return tl;
+      },
+      initPage: function(){
+        const tl = new TimelineLite();
+        let sections = Array.from(this.$refs.carouselAside.children);
+        console.log(sections);
+        tl.to(sections, .6,
+        {
+          x: '0',
+          opacity: 1,
+          delay:.25,
+          ease: Power2.easeOut
+        } );
       }
     },
     mounted(){
-      const tl = this.animateFlickity();
-      this.initScrollMagic(tl);
+      this.initPage();
+      this.animateScroll();
+      this.initScrollMagic();
 
-      console.log(this.$refs.carouselAside.children);
       // get children and animate them rtl on enter
     }
   }
@@ -151,7 +164,10 @@
       width: 100%;
       height: auto;
       padding: 3%;
-
+      &>*{
+        opacity: 0;
+        transform: translateX(50px);
+      }
       @include medium{
         width: 50%;
         height: 60vh;
@@ -159,7 +175,6 @@
       }
       h2{
         font-size: 5vw;
-        opacity: 1;
       }
       section{
         margin: 2em 0;

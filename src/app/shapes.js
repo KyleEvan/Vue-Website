@@ -80,6 +80,8 @@ function randomIndex(length) {
   return item;
 }
 
+
+
 /*
 
   Classes:
@@ -205,7 +207,7 @@ class Scene { // #scene
         for(let i = 0; i < shapes.length; i++){
           let shape = shapes[i];
           // console.log(target);
-          TweenLite.to(shape.el, 1, {
+          TweenLite.to(shape.el, 1.5, {
             opacity: shape.scale*.018,
             x: getRandomInt(this.scene.bounds.left, this.scene.bounds.right),
             y: getRandomInt(this.scene.bounds.top, this.scene.bounds.bottom),
@@ -217,7 +219,7 @@ class Scene { // #scene
             let scene = this.scene;
             setTimeout(() => {
               scene.animationCompleted();
-            }, 1000);
+            }, 1500);
           }
         }
 
@@ -251,10 +253,37 @@ class Scene { // #scene
           });
         // }
       },
-      explodeShapes: function(targets){
-        for(let i = 0; i < targets.length; i++){
-          let target = targets[i];
-          console.log(target);
+      explodeShapes: function(e){
+        let scene = this.scene;
+        let shapes = scene.createShapes({
+          length: 10,
+          width: 50,
+          height: 50,
+          dist: 70,
+          e: e
+        });
+        for (let s = shapes.props.length; s > 0; s -= 1){
+          let shape = shapes.array[shapes.props.length-s];
+          TweenLite.to(shape.el, .8, {
+            opacity: 1,
+            x: getRandomInt(-70, 70),
+            y: getRandomInt(-70, 70),
+            scale: 1.5,
+            delay: (s*.008),
+            ease: Expo.easeOut
+          });
+          TweenLite.to(shape.el, .6, {
+            opacity: 0,
+            y: Math.abs(shape.size*1),
+            scale: .6,
+            ease: Power0.easeNone,
+            delay: .25,
+            onComplete: () => {
+              if(s <= 1){
+                scene.destroyShapes(shapes);
+              }
+            }
+          });
         }
       }
     };
@@ -268,14 +297,8 @@ class Scene { // #scene
     this.name = new Name(this);
     this.playScene();
 
-    if(this.devmode){
-      console.log('%c ---------------------------------------- ', this.devConfig.console.grayText);
-      console.log('%c SCENE INITIALIZED: ', this.devConfig.console.aquaText);
-      console.log(this);
-      console.log('%c ---------------------------------------- ', this.devConfig.console.grayText);
-    }
+    if(this.devmode) console.log('%c SCENE INITIALIZED: ', this.devConfig.console.aquaText);
   }
-
   initEvents() {
     let scene = this;
     // Resize event:
@@ -325,7 +348,8 @@ class Scene { // #scene
     const handleClick = function(e){
       if (scene.ready) {
         if (scene.interactive) {
-          // console.log("clicking!");
+          console.log("clicking!");
+          scene.animations.explodeShapes(e);
           // scene.animations.hideLetters();
         }
       }
@@ -365,10 +389,7 @@ class Scene { // #scene
     }, animations.initDelay);
   }
   animationCompleted(){
-    console.log('%c ---------------------------- ', this.devConfig.console.grayText);
-    console.log('%c SCENE ANIMATION COMPLETED ');
-    console.log('%c ---------------------------- ', this.devConfig.console.grayText);
-
+    if(this.devmode) console.log('Animation Complete');
 
     this.name.shapes.forEach(function(shape, i){
       // console.log("created: "+i);
@@ -391,25 +412,53 @@ class Scene { // #scene
       }else{
         style = this.devConfig.console.redText;
       }
-      console.log(`%c SCENE INTERACTIVE: %c${this.interactive} `, this.devConfig.console.aquaText, style);
+      // console.log(`%c SCENE INTERACTIVE: %c${this.interactive} `, this.devConfig.console.aquaText, style);
     }
   }
-  toggleScene() {
+  toggleScene(){
     this.toggleInteractive();
     this.ready = !this.ready;
 
     if(this.devmode){
       let style;
-      console.log('%c ######################################## ', this.devConfig.console.grayText);
       if(this.ready){
         style = this.devConfig.console.greenText;
       }else{
         style = this.devConfig.console.redText;
       }
       console.log(`%c SCENE READY: %c${this.ready} `, this.devConfig.console.aquaText, style);
-      console.log('%c ######################################## ', this.devConfig.console.grayText);
     }
-
+  }
+  createShapes(shapes){
+    const shapesArray = [];
+    for (let s = shapes.length; s > 0; s -= 1){
+      console.log(`creating shape ${s}`);
+      console.log(shapes.e);
+      shapesArray.push(new Shape(this, false, {
+        top: shapes.e.clientY,
+        left: shapes.e.clientX,
+        width: shapes.width,
+        height: shapes.height
+      }))
+    }
+    shapesArray.sort(function(a, b) {
+      return a.z - b.z;
+    });
+    shapesArray.forEach(function(shape) {
+      shape.parent.appendChild(shape.el);
+    });
+    return {
+      props: shapes,
+      array: shapesArray
+    }
+  }
+  destroyShapes(shapes){
+    console.log(shapes);
+    for (var s = shapes.props.length; s > 0; s -= 1){
+      let shape = shapes.array[shapes.props.length - s];
+      shape.el.outerHTML = '';
+      shape = null;
+    }
   }
 }
 
@@ -478,45 +527,50 @@ class Letter {
   }
   createShapes() {
     for (let i = 0; i < this.totalShapes; i++) {
-      this.shapes.push(new Shape(this.scene, this.el, this.el.getBoundingClientRect()));
+      this.shapes.push(new Shape(this.scene, this.el, this.el.getBoundingClientRect(), true));
     }
   }
 }
 
 class Shape {
-  constructor(scene, letter, letterProps) {
+  constructor(scene, letter, props, perspective) {
     this.scene = scene;
     this.el = undefined;
     this.parent = scene.DOM.children.svg.el;
-    this.letter = {
-      el: letter,
-      props: letterProps
-    };
-    this.scale = getRandomInt(letterProps.width * .08, letterProps.width * .7); // scale will be 10% and 100% of the letter's width
-    // this.x = (letterProps.left + letterProps.width / 2);
-    // this.y = (letterProps.top - letterProps.height / 2);
-    this.x = document.documentElement.clientWidth/2;
-    this.y = document.documentElement.clientHeight/2;
+    this.props = props;
+    this.scale = getRandomInt(props.width * .08, props.width * .7); // scale will be 10% and 100% of the letter's width
+    // this.x = (props.left + props.width / 2);
+    // this.y = (props.top - props.height / 2);
+    this.x = props.left;
+    this.y = props.top;
+    // this.x = document.documentElement.clientWidth/2;
+    // this.y = document.documentElement.clientHeight/2;
     console.log(this.x);
     console.log(this.y);
-    this.z = this.scale / letterProps.width;
-    this.projectedXY = this.calc3DLocation(this.scene.camera);
-    this.relationalValues = {
-      // Properties relative to their associated letter, values are percentage based
-      x: (this.x - letterProps.left) / letterProps.width,
-      y: (this.y - (letterProps.top - letterProps.height)) / letterProps.height,
-      scale: this.scale / letterProps.width,
-      // Properties relative to the window window dimensions
-      translateX: undefined,
-      translateY: undefined
-    };
-    this.transforms = undefined;
+    this.z = this.scale / props.width;
+
+
+    if(letter) this.letter = letter;
+    if(perspective){
+      this.transforms = undefined;
+      this.projectedXY = this.calc3DLocation(this.scene.camera);
+      this.relationalValues = {
+        // Properties relative to their associated letter, values are percentage based
+        x: (this.x - props.left) / props.width,
+        y: (this.y - (props.top - props.height)) / props.height,
+        scale: this.scale / props.width,
+        // Properties relative to the window window dimensions
+        translateX: undefined,
+        translateY: undefined
+      };
+    }
+
     this.colors = scene.shapeColors;
     this.types = [
       {
         el: 'circle',
-        cx: this.projectedXY[0],
-        cy: this.projectedXY[1],
+        cx: perspective ? this.projectedXY[0] : this.x,
+        cy: perspective ? this.projectedXY[1] : this.y,
         r: this.scale / 2,
         stroke: undefined,
         strokeWidth: undefined,
@@ -524,7 +578,7 @@ class Shape {
       },
       {
         el: 'polygon',
-        points: this.getPoints(this.projectedXY[0], this.projectedXY[1], this.scale),
+        points: perspective ? this.getPoints(this.projectedXY[0], (this.projectedXY[1]-(this.props.height/2)), this.scale) : this.getPoints(this.x, (this.y-(this.props.height/2)), this.scale),
         stroke: undefined,
         strokeWidth: undefined,
         fill: this.colors[randomIndex(this.colors.length)]
@@ -613,30 +667,34 @@ class Shape {
 
   updateShape(){
     if(this.scene.ready){
-      let letter = this.letter.el.getBoundingClientRect();
-      this.letter.props = letter;
-      this.x = letter.left + (letter.width * this.relationalValues.x);
-      this.y = letter.top + (letter.height * this.relationalValues.y);
-      this.scale = letter.width * this.relationalValues.scale;
-      this.transforms = [this.relationalValues.translateX*this.scene.bounds.right, this.relationalValues.translateY*this.scene.bounds.bottom];
-      this.projectedXY = this.calc3DLocation(this.scene.camera);
-      // If this Shape element has points, recalculate those values
-      // Otherwise, its a circle and the attributes can be outright updated with
-      // the Shape's new coordinates and scale values
-      if (this.el.hasAttribute("points")) {
-        let points = this.getPoints(this.projectedXY[0], this.projectedXY[1], this.scale);
-        this.el.setAttribute("points", points);
-      } else if (this.el.hasAttribute("cx", "cy")) {
-        this.el.setAttribute("cx", this.projectedXY[0]);
-        this.el.setAttribute("cy", this.projectedXY[1]);
-        this.el.setAttribute("r", this.scale / 2);
-      } else {
-        this.el.setAttribute("x", this.projectedXY[0]);
-        this.el.setAttribute("y", this.projectedXY[1]);
+
+      if(this.letter){
+        this.props = this.letter.getBoundingClientRect();
+        this.x = this.props.left + (this.props.width * this.relationalValues.x);
+        this.y = this.props.top + (this.props.height * this.relationalValues.y);
+        this.scale = this.props.width * this.relationalValues.scale;
+        this.transforms = [this.relationalValues.translateX*this.scene.bounds.right, this.relationalValues.translateY*this.scene.bounds.bottom];
+        this.projectedXY = this.calc3DLocation(this.scene.camera);
+
+        // If this Shape element has points, recalculate those values
+        // Otherwise, its a circle and the attributes can be outright updated with
+        // the Shape's new coordinates and scale values
+        if (this.el.hasAttribute("points")) {
+          let points = this.getPoints(this.projectedXY[0], this.projectedXY[1], this.scale);
+          this.el.setAttribute("points", points);
+        } else if (this.el.hasAttribute("cx", "cy")) {
+          this.el.setAttribute("cx", this.projectedXY[0]);
+          this.el.setAttribute("cy", this.projectedXY[1]);
+          this.el.setAttribute("r", this.scale / 2);
+        } else {
+          this.el.setAttribute("x", this.projectedXY[0]);
+          this.el.setAttribute("y", this.projectedXY[1]);
+        }
+        this.getsetTransform([0, 0]);
       }
-      this.getsetTransform([0, 0]);
-    }else{
-      console.log("scene not ready");
+    }
+    else{
+      if(this.devmode) console.log("ERROR: Scene not ready");
     }
   }
   getPoints(x, y, scale) {

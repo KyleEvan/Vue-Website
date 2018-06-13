@@ -30,13 +30,12 @@
     props: ['progressColor'],
     data(){
       return {
-        viewport: undefined,
         minHeight: {
           'min-height': '400px'
         },
         progressBar: {
           width: 0,
-          height: 0,
+          height: 80,
           progress: 0,
           background: 'transparent'
         }
@@ -55,16 +54,15 @@
         this.progressBar.progress = this.progressBar.width - (progress * this.progressBar.width);
         return this.progressBar.progress;
       },
-      setProgressBar: function(){
-        this.progressBar.width = this.$refs.carouselContainer.clientWidth;
-        this.progressBar.height = this.$refs.carouselContainer.clientHeight;
+      setWidth: function(width){
+        this.progressBar.width = width;
       }
+
     },
     mounted(){
-      this.viewport = this.getWindow();
-      this.progressBar.width = this.progressBar.progress = this.$refs.carouselContainer.clientWidth;
+      this.progressBar.width = this.progressBar.progress = (document.documentElement.clientWidth/2);
       this.progressBar.height = this.$refs.carouselContainer.clientHeight;
-
+      // this.progressBar.height = this.$refs.carouselContainer.style.height;
       /*
 
         Initialize Carousel with flickity
@@ -78,6 +76,7 @@
         setGallerySize: false
       });
 
+
       /*
 
         Events
@@ -89,11 +88,14 @@
         carousel.updateProgress(progress);
       });
 
-      const handleResize = this.debounce(() => {
-        this.viewport = this.getWindow();
-        carousel.setProgressBar();
+      const handleResize = this.debounce(function() {
+        // console.log("handling carousel resize");
+
+        carousel.setWidth(document.documentElement.clientWidth);
       }, 30);
       window.addEventListener('resize', handleResize);
+
+
     }
   }
 
@@ -117,7 +119,7 @@
       align-items: center;
       position: relative;
       width: 100%;
-      height: 60vh;
+      height: 50vh;
 
       @include medium{
         position: fixed;

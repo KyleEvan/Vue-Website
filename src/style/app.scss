@@ -62,7 +62,16 @@ body {
   overflow-x: hidden;
   font-family: 'InterUI', sans-serif;
 
-
+  #loader{
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: #FFF;
+    z-index: 4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
   .content, .footer-content{
     max-width: 1400px;

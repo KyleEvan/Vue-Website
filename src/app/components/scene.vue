@@ -7,7 +7,7 @@ HTML
 
   <div id="root">
 
-    <Loader/>
+    <Loader :init="initScene" />
 
     <Nav />
     <App />
@@ -36,7 +36,7 @@ JS
   // Libraries
   import ScrollMagic from "scrollmagic";
   import { TimelineLite } from "gsap";
-  import load from 'load-asset';
+  // import load from 'load-asset';
 
   // Components
   import Loader from './Loader.vue';
@@ -47,28 +47,10 @@ JS
   // JS files
   import { ShapeScene } from '../shapes.js';
 
-  // Images
-  import careers_screens_sm_png from '../../images/careers_screens@sm.png';
-  import careers_screens_md_png from '../../images/careers_screens@md.png';
-  import careers_screens_lg_png from '../../images/careers_screens@lg.png';
-  import careers_screens_xl_png from '../../images/careers_screens@xl.png';
-
-  import cycles_lg_jpg from '../../images/cyclesTile@lg.jpg';
-  import preview_lg_jpg from '../../images/comboSmash-preview@lg.jpg';
 
   export default {
    data(){
      return{
-       preloadImages: [
-         careers_screens_sm_png,
-         careers_screens_md_png,
-         careers_screens_lg_png,
-         careers_screens_xl_png,
-
-         cycles_lg_jpg,
-         preview_lg_jpg,
-       ],
-
        scene: undefined,
        shapeColors: [
          colors.red,
@@ -144,26 +126,14 @@ JS
      hideName: function(){
        this.scene.animations.hideLetters();
      },
-     async loadImages(){
-       const assets = await load.any(this.preloadImages, (progress) => {
-         console.log(progress);
-         if(progress.count >= progress.total){
-           console.log('All images loaded');
-           this.initScene();
-           this.bodyRestoreScroll();
-         }
-       });
-     },
-     preload: function(){
-       this.bodyNoScroll();
-       // load images
-       this.loadImages();
-     },
+
 
    },
    created(){
      // Initially check if route displays the name
      this.showName = this.$route.meta.showName;
+
+     
    },
    beforeMount(){
      if(this.devmode){
@@ -171,8 +141,7 @@ JS
      }
    },
    mounted(){
-     // Preload and Initialize Scene
-     this.preload();
+
 
      // ScrollMagic Scene
      const tl = this.animateScene();
@@ -231,8 +200,8 @@ JS
        // console.log(this.$props);
        this.showName = this.$route.meta.showName;
        if(this.showName){
-         console.log("showLetters!!!!!");
-         this.scene.animations.showLetters();
+         console.log(this.scene);
+         // this.scene.animations.showLetters();
          // TweenLite.to(this.$refs.bgBlack, .6,
          // {
          //   opacity: 1,
@@ -241,7 +210,7 @@ JS
          // document.body.setAttribute('class', 'bg-black');
 
        }else{
-         this.scene.animations.hideLetters();
+         // this.scene.animations.hideLetters();
          // TweenLite.to(this.$refs.bgBlack, .6,
          // {
          //   opacity: 0,

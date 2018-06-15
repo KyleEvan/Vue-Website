@@ -141,7 +141,7 @@
         ],
       }
     },
-    
+
     methods:{
       navigate: function(e, project, background){
         const href = e.target.getAttribute("href");
@@ -249,14 +249,7 @@
           y: container.top + container.height/2
         };
 
-
-        // const newCenter = {
-        //   x: this.bannerOffset.x + (this.bannerWidth/2),
-        //   y: this.bannerHeight/2
-        // };
         const newProjectCenter = this.transitionedProject.center;
-        console.log(newProjectCenter);
-
 
         return {
           scale: this.getImageScale(project, container),

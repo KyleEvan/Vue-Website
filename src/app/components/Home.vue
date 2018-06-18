@@ -4,7 +4,7 @@
     <div class="container">
       <div class="content">
         <h2>Work <span>&amp;</span> Projects</h2>
-        <div class="grid">
+        <!-- <div class="grid"> -->
           <a
             :href="project.href"
             @click.prevent="handleClick"
@@ -22,7 +22,7 @@
               <img :src="project.image.src" />
             </div>
           </a>
-        </div>
+        <!-- </div> -->
       </div>
     </div>
 
@@ -170,23 +170,23 @@
       hideProjects: function(target){
         const projects = Array.from(document.querySelectorAll('.project'));
         // const text = document.querySelector('.text');
-        const duration = .4;
-        // console.log(text);
+        const duration = .6;
 
         let filteredProjects = projects.filter( (el) => {
           return (el !== target);
         });
-        this.tl.to(this.text, duration*.5, {
-          y: '20px',
+        this.tl.to(this.text, duration/2, {
+          // y: '20px',
           opacity: 0,
-          ease: Circ.easeIn
+          ease: Power4.easeOut
         })
         .to(filteredProjects, duration, {
-          scale: .4,
+          x: '-15%',
+          scale: .88,
           opacity: 0,
-          ease: Circ.easeIn,
+          ease: Power4.easeIn,
           transformOrigin: '50% 50%',
-        });
+        }, `-=${duration/2}`);
       },
       setTransitionedProject: function(){
         const minHeight = 400; // Carousel min-height
@@ -328,6 +328,7 @@
             complete: () => {
               console.log("Transition Completed");
               this.transitioning = false;
+              this.bodyRestoreScroll();
               this.navigate(e, project.data, imageBgClone);
             }
           });
@@ -358,6 +359,7 @@
       },
       handleClick: function(e){
         if(!this.transitioning){
+          this.bodyNoScroll();
           this.transitioning = true;
           this.project = this.getProjectData(e.target);
           this.transforms = this.calcProjectTransforms(this.project);
@@ -433,19 +435,21 @@
     .content{
       padding-top: 140vh;
       padding-bottom: 12vh;
+      display: flex;
+      align-items: flex-start;
+      flex-flow: row wrap;
+      justify-content: space-between;
 
       /* Work & Projects */
       h2{
+        width: 100%;
         font-size: 5vw;
         line-height: 5vw;
         margin-bottom: 1.2em;
       }
 
-      .grid{
-        display: flex;
-        align-items: flex-start;
-        flex-flow: row wrap;
-        justify-content: space-between;
+      // .grid{
+
         // margin: 0 -1em 0 -1em;
 
         .project{
@@ -457,7 +461,13 @@
           display: flex;
           align-items: flex-start;
           // justify-content: center;
-
+          &:hover{
+            .text{
+              color:blue;
+              transform-origin: 0 0;
+              transform: scale(1.2) !important;
+            }
+          }
           &:nth-child(3){
             margin-top: 5em;
           }
@@ -562,7 +572,7 @@
             }
           }
         }
-      }
+      // }
 
     }
   }

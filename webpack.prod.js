@@ -3,6 +3,7 @@ const merge = require('webpack-merge');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 const common = require('./webpack.common.js');
 // const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
@@ -31,6 +32,7 @@ module.exports = merge(common, {
       }
     },
     plugins: [
+
       new HtmlWebpackPlugin({
         template: __dirname + "/src/public/index.html",
         inject: 'body',
@@ -39,6 +41,11 @@ module.exports = merge(common, {
       }),
       new webpack.DefinePlugin({
         'process.env.NODE_ENV': JSON.stringify('production')
-      })
+      }),
+      new CleanWebpackPlugin(['dist'], {
+        // root:     _dirname,
+        verbose:  true,
+        dry:      false
+      }),
    ]
 });

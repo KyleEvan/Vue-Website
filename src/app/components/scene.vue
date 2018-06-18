@@ -118,7 +118,7 @@ JS
          opacity: 1
        },
        {
-         opacity: .25,
+         opacity: 0,
          ease: Power0.easeNone
        })
        return tl;
@@ -133,12 +133,12 @@ JS
      // Initially check if route displays the name
      this.showName = this.$route.meta.showName;
 
-     
+
    },
    beforeMount(){
-     if(this.devmode){
-       console.log(` SHOW NAME: ${this.showName}`);
-     }
+     // if(this.devmode){
+     //   console.log(` SHOW NAME: ${this.showName}`);
+     // }
    },
    mounted(){
 

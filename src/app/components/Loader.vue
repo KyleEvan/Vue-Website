@@ -20,7 +20,6 @@
     props: ['init'],
     data(){
       return {
-        // loading: true,
         viewport: undefined,
 
       }
@@ -36,8 +35,8 @@
         return loadingLayer;
       },
       async loadImages(){
-        let images = getImages(this.breakpoints, this.viewport.cWidth);
-        const assets = await load.any(images, (progress) => {
+        this.images = getImages(this.breakpoints, this.viewport.cWidth);
+        const assets = await load.any(this.images.sources, (progress) => {
           if(progress.count >= progress.total){
             console.log('All images loaded');
             this.init();
@@ -46,9 +45,8 @@
           }
         });
       },
-      preload: function(){
+      preInit: function(){
         this.bodyNoScroll();
-        // load images
         this.loadImages();
       },
 
@@ -59,7 +57,7 @@
     mounted(){
       this.viewport = this.getWindow();
       // Preload and Initialize Scene
-      this.preload();
+      this.preInit();
     }
   }
 

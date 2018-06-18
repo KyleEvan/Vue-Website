@@ -26,7 +26,8 @@ Vue.mixin({
         md: 800,
         lg: 1300,
         xl: 1600
-      }
+      },
+      images: undefined
     }
   },
   methods: {

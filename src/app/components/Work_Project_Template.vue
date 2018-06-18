@@ -228,6 +228,6 @@
     width: 100%;
     height: 100%;
     background: #F69296;
-    z-index: -5;
+    z-index: -1;
   }
 </style>

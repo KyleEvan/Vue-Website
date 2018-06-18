@@ -45,7 +45,7 @@
 
 
     <!-- Main Content -->
-    <p>
+    <!-- <p>
       HTML5 canvas web game.
     </p>
     <p>
@@ -56,7 +56,7 @@
     </p>
     <p>
       Sed lacinia, urna non tincidunt mattis, tortor neque adipiscing diam, a cursus ipsum ante quis turpis. Nulla facilisi. Ut fringilla. Suspendisse potenti. Nunc feugiat mi a tellus consequat imperdiet. Vestibulum sapien. Proin quam. Etiam ultrices. Suspendisse in justo eu magna luctus suscipit. Sed lectus. Integer euismod lacus luctus magna. Quisque cursus, metus vitae pharetra auctor, sem massa mattis sem, at interdum magna augue eget diam.
-    </p>
+    </p> -->
   </work-template>
 
 
@@ -75,8 +75,8 @@
     data () {
       return {
         images: [cycles_lg_jpg, cycles_lg_jpg, cycles_lg_jpg],
-        saying: 'hey im content'
-
+        gitHubLink: 'https://github.com/KyleEvan/Cycles',
+        gitHubPagesLink: 'https://kyleevan.github.io/Cycles/'
       }
     },
     components:{

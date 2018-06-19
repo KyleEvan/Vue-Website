@@ -5,21 +5,9 @@ HTML
 -->
 <template>
 
-  <div id="root">
-
-    <Loader :init="initScene" />
-
-    <Nav />
-    <App />
-
     <div id="scene" ref="scene">
-      <h1 id="name" ref="name">{{name}}</h1>
-      <!-- <h2>Front End Developer</h2> -->
+      <slot ref="name"></slot>
     </div>
-
-    <Footer />
-
-  </div>
 
 </template>
 
@@ -30,80 +18,50 @@ JS
 
 -->
 <script>
-  // Color Palette
-  import {colors} from '../colors.js';
 
   // Libraries
   import ScrollMagic from "scrollmagic";
   import { TimelineLite } from "gsap";
-  // import load from 'load-asset';
-
-  // Components
-  import Loader from './Loader.vue';
-  import Nav from './Nav.vue';
-  import App from './App.vue';
-  import Footer from './Footer.vue';
-
-  // JS files
-  import { ShapeScene } from '../shapes.js';
 
 
   export default {
+   props: ["scene"],
    data(){
      return{
-       scene: undefined,
-       shapeColors: [
-         colors.red,
-         colors.lightTurquoise,
-         colors.peach
-       ],
-       shapesPerLetter: 4,
-       name: 'Kyle',
-       showName: false,
+       initialized: false,
+       tl: new TimelineLite({paused: true})
      }
    },
-   components:{
-     Loader: Loader,
-     Nav: Nav,
-     App: App,
-     Footer: Footer
-   },
+
    methods:{
-     // Utility Methods
-     initScene: function(){
-       console.log('Scene Initialized in Scene.vue');
-       const config = {
-         scene: this.$refs.scene,
-         name: this.$refs.name,
-         devmode: this.devmode,
-         showName: this.showName,
-         shapeColors: this.shapeColors,
-         shapesPerLetter: this.shapesPerLetter
-       };
-       this.scene = ShapeScene(config);
-     },
-     initScrollMagic: function(tl){
-       const vp = this.getWindow();
-       const root = document.getElementById('root');
+
+     initScrollMagic: function(){
+       const app = document.getElementById('app');
        const controller = new ScrollMagic.Controller();
        const mainScene = new ScrollMagic.Scene({
-         triggerElement: root,
+         triggerElement: app,
          triggerHook: 0,
-         duration: vp.cHeight*.75,
+         duration: this.viewport.cHeight*.75,
          reverse: true
        })
        .on("progress", (event) => {
          let progress = event.progress;
-         tl.progress(progress);
-         tl.progress(event.progress);
+         this.tl.progress(progress);
+         this.tl.progress(event.progress);
        })
        .addTo(controller);
      },
      animateScene: function(){
-       const tl = new TimelineLite({paused: true});
+       // const tl = new TimelineLite({paused: true});
+       // console.log(this.$props.scene);
+       // const scene = this.$props.scene.DOM.el;
        const scene = this.$refs.scene;
-       const name = this.$refs.name;
-       tl.fromTo(name, .3,
+       // const scene = document.getElementById('scene');
+       const name = document.getElementById('name');
+       console.log(scene);
+       console.log(name);
+       // const name = this.$props.scene.DOM.children.name.el;
+       this.tl.fromTo(name, .3,
        {
          y: '0%',
          opacity: 1
@@ -121,103 +79,37 @@ JS
          opacity: 0,
          ease: Power0.easeNone
        })
-       return tl;
+       // return tl;
      },
+
      hideName: function(){
-       this.scene.animations.hideLetters();
+       // this.scene.animations.hideLetters();
      },
 
 
    },
    created(){
      // Initially check if route displays the name
-     this.showName = this.$route.meta.showName;
-
-
+     // this.showName = this.$route.meta.showName;
    },
    beforeMount(){
-     // if(this.devmode){
-     //   console.log(` SHOW NAME: ${this.showName}`);
-     // }
+
    },
    mounted(){
-
-
      // ScrollMagic Scene
-     const tl = this.animateScene();
-     this.initScrollMagic(tl);
-
-
-
-     // ScrollMagic
-     // const scene = document.querySelector('.scene-placeholder');
-     // const controller = new ScrollMagic.Controller();
-     // const sceneMagic = new ScrollMagic.Scene({
-     //   triggerElement: '.scene-placeholder',
-     //   triggerHook: 'onLeave',
-     //   // duration: 100,
-     //   offset: '80px',
-     //   reverse: true
-     // })
-     // .triggerElement('.scene-placeholder')
-     // .on('enter', () => {
-     //   console.log("hide letters");
-     //   console.log(this.showName);
-     //   // if(this.showName){
-     //     // console.log("hide letters");
-     //   if(this.showName){
-     //     this.scene.animations.hideLetters();
-     //     // TweenLite.to(this.$refs.bgBlack, .6,
-     //     // {
-     //     //   opacity: 0,
-     //     //   ease: Power4.easeIn
-     //     // });
-     //   }
-
-         // document.body.removeAttribute('class');
-         // this.$refs.scene.setAttribute('class', 'bg-white');
-       // }
-
-     // })
-     // .on('leave', () => {
-     //   console.log('on leave');
-     //   console.log(this.scene.showName);
-     //   if(!this.showName){
-     //     this.scene.animations.showLetters();
-     //     // TweenLite.to(this.$refs.bgBlack, .6,
-     //     // {
-     //     //   opacity: 1,
-     //     //   ease: Power4.easeOut
-     //     // });
-     //   }
-     // })
-     // .addTo(controller);
-
-
+     // const tl = this.animateScene();
+   },
+   updated(){
+     // if(this.$props.scene && !this.initialized){
+       this.animateScene();
+       this.initScrollMagic();
+       this.initialized = !this.initialized;
+     // }
    },
    watch:{
      $route: function(to, from){
        // console.log(this.$props);
-       this.showName = this.$route.meta.showName;
-       if(this.showName){
-         console.log(this.scene);
-         // this.scene.animations.showLetters();
-         // TweenLite.to(this.$refs.bgBlack, .6,
-         // {
-         //   opacity: 1,
-         //   ease: Power4.easeOut
-         // });
-         // document.body.setAttribute('class', 'bg-black');
-
-       }else{
-         // this.scene.animations.hideLetters();
-         // TweenLite.to(this.$refs.bgBlack, .6,
-         // {
-         //   opacity: 0,
-         //   ease: Power4.easeIn
-         // });
-         // document.body.removeAttribute('class');
-       }
+       // this.showName = this.$route.meta.showName;
      }
    }
   }
@@ -257,7 +149,6 @@ JS
          }
      }
      #name {
-         // color: #FF9A91;
          color: #616163;
          margin: 0;
          font-size: 50px;
@@ -266,16 +157,13 @@ JS
          font-family: 'InterUI', sans-serif;
          font-weight: 700;
          user-select: none;
-         // text-shadow: 0 0 20px rgba(45, 45, 45, 0.7);
          letter-spacing: 4px;
 
          span {
              display: inline-block;
              position: relative;
-             // opacity: 0;
              line-height: 0.8;
              padding: 0 0.05em;
-             // transform: translateY(100%);
          }
      }
      h2{
@@ -284,23 +172,8 @@ JS
        margin: 3% 0;
        color: #FACDCF;
        opacity: .8;
-       // text-shadow: 0 0 20px rgba(45, 45, 45, 0.7);
      }
-     // .transition > * {
-     //     transition: 5s cubic-bezier(0.02, 0.1, 0.15, 1);
-     // }
 
  }
 
- /****************************************************************
-
- Fallback:
- If the broser doesn't support flexbox, don't display the scene
-
- ****************************************************************/
- // @supports not (display:flex) {
- //     #scene {
- //         display: none;
- //     }
- // }
  </style>

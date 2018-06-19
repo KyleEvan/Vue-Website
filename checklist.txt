@@ -9,3 +9,4 @@ To Do
 Must Do
 - Add Resume to Contact Us
 - Not Found Page, no-script page
+- Optimize production assets, watch size limit

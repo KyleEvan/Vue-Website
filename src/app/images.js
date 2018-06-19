@@ -13,6 +13,8 @@ import comboSmash_horde_lg_jpg from '../images/comboSmash-horde@lg.jpg';
 
 import comboSmash_preview_lg_jpg from '../images/comboSmash-preview@lg.jpg';
 
+import cycles_sm_jpg from '../images/cyclesTile@sm.jpg';
+import cycles_md_jpg from '../images/cyclesTile@md.jpg';
 import cycles_lg_jpg from '../images/cyclesTile@lg.jpg';
 
 
@@ -45,7 +47,9 @@ const images = [
   {
     name: 'cycles',
     src: {
-      lg: cycles_lg_jpg
+      sm: cycles_sm_jpg,
+      md: cycles_md_jpg,
+      lg: cycles_lg_jpg,
     }
   },
   {
@@ -59,21 +63,23 @@ const images = [
 
 exports.getImages = function(breakpoints, window){
   let imageSize;
-  let imageSources = [];
-  if(window >= breakpoints.xl) imageSize = 'xl';
-  else if(window >= breakpoints.lg) imageSize = 'lg';
-  else if(window >= breakpoints.md) imageSize = 'md';
-  else if(window >= breakpoints.sm) imageSize = 'sm';
-  let sizedImages = images.map(image => {
-    let src = image.src[imageSize];
-    if(src){
-      imageSources.push(src);
-      return image;
+  let imagesSized = {};
+  let imagesSrc = [];
+  let size = Object.keys(breakpoints);
+  for(let i = 0; i < images.length; i++){
+    let image = images[i];
+    for(let s = size.length-1; s >= 0; s--){
+      if(window >= breakpoints[size[s]]){
+        if(image.src[size[s]]){
+          imagesSized[image.name] = image.src[size[s]];
+          imagesSrc.push(image.src[size[s]])
+          s = 0;
+        }
+      }
     }
-  });
-  sizedImages = sizedImages.filter(function(i){ return i != undefined });
+  }
   return {
-    obj: sizedImages,
-    sources: imageSources
+    sized: imagesSized,
+    sources: imagesSrc
   }
 }

@@ -53,7 +53,7 @@
 
     data(){
       return{
-        viewport: undefined, // viewport object
+        // viewport: undefined, // viewport object
         tl: new TimelineLite(),
 
         transitionedProject: undefined,
@@ -374,12 +374,12 @@
     //
     // },
     mounted(){
-      this.viewport = this.getWindow();
+      // this.viewport = this.getWindow();
       this.setTransitionedProject();
 
       // Initialize Events
       const handleResize = this.debounce(() => {
-        this.viewport = this.getWindow();
+        // this.viewport = this.getWindow();
         this.setTransitionedProject();
       }, 50);
       window.addEventListener('resize', handleResize);

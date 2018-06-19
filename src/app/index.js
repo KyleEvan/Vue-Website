@@ -3,7 +3,9 @@ import "classlist-polyfill";
 import '../style/app.scss';
 import Vue from 'vue';
 import router from './router.js'
-import Scene from './components/Scene.vue';
+import App from './components/App.vue';
+
+import { getImages } from './images.js';
 
 import fontawesome from '@fortawesome/fontawesome';
 import solid from '@fortawesome/fontawesome-free-solid';
@@ -20,6 +22,11 @@ Vue.mixin({
   data: function(){
     return {
       devmode: true,
+      viewport: {
+        width: window.innerWidth,
+        cWidth: document.documentElement.clientWidth,
+        cHeight: document.documentElement.clientHeight
+      },
       body: document.body,
       breakpoints: { // See global.scss for breakpoints MUST BE IN SYNC
         sm: 200,
@@ -27,7 +34,11 @@ Vue.mixin({
         lg: 1300,
         xl: 1600
       },
-      images: undefined
+    }
+  },
+  computed:{
+    images: function(){
+      return getImages(this.breakpoints, document.documentElement.clientWidth);
     }
   },
   methods: {
@@ -70,8 +81,8 @@ Vue.mixin({
 new Vue({
   el: '#app',
   router,
-  template: '<Scene/>',
-  components: { Scene },
+  template: '<App/>',
+  components: { App },
   created(){
     console.log('app created');
   }

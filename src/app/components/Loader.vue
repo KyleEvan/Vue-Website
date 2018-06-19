@@ -15,32 +15,37 @@
   import { getImages } from '../images.js';
 
 
-
   export default {
     props: ['init'],
     data(){
       return {
-        viewport: undefined,
-
+        tl: new TimelineLite()
       }
-
     },
-    computed:{
-
-    },
+    // computed:{
+    //
+    // },
     methods: {
       doneLoading: function(){
         const loadingLayer = document.getElementById('loader');
-        loadingLayer.outerHTML = '';
+        this.tl.to(loadingLayer, .3, {
+          opacity: 0,
+          ease: Power2.easeOut,
+          onComplete: () => {
+            console.log('loading complete');
+            this.init();
+            this.bodyRestoreScroll();
+            loadingLayer.outerHTML = '';
+
+          }
+        })
         return loadingLayer;
       },
       async loadImages(){
-        this.images = getImages(this.breakpoints, this.viewport.cWidth);
+        console.log(this.images);
         const assets = await load.any(this.images.sources, (progress) => {
           if(progress.count >= progress.total){
             console.log('All images loaded');
-            this.init();
-            this.bodyRestoreScroll();
             this.doneLoading();
           }
         });
@@ -49,13 +54,11 @@
         this.bodyNoScroll();
         this.loadImages();
       },
-
     },
     created(){
 
     },
     mounted(){
-      this.viewport = this.getWindow();
       // Preload and Initialize Scene
       this.preInit();
     }

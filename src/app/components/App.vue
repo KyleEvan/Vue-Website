@@ -1,7 +1,8 @@
 <template>
   <div id="app">
 
-    <!-- <navigation /> -->
+    <Loader :init="initApp"/>
+    <Nav/>
 
     <!-- Main website content -->
     <transition mode="in-out"
@@ -14,74 +15,82 @@
       <router-view class="main" ref="main"></router-view>
     </transition>
 
-    <!-- Background shapes scene -->
-    <!-- <scene ref="scene" /> -->
+    <Scene ref="scene" :scene="scene">
+      <h1 id="name" ref="name">Kyle</h1>
+    </Scene>
+
+    <Footer/>
 
   </div>
 </template>
 
 <script>
+  import {colors} from '../colors.js';
   import { TimelineLite } from "gsap";
-
   // Components
-  // import Nav from './Nav.vue';
-  // import Scene from './Scene.vue';
+  import Loader from './Loader.vue';
+  import Nav from './Nav.vue';
+  import App from './App.vue';
+  import Footer from './Footer.vue';
+  import Scene from './Scene.vue';
+  import { ShapeScene } from '../shapes.js';
+
 
   export default {
     name: 'app',
     data(){
       return {
-        tl: new TimelineLite({ paused: true })
+        scene: undefined,
+        tl: new TimelineLite({ paused: true }),
+        showName: undefined,
       }
     },
-    // components: {
-      // "navigation": Nav,
-      // "scene": Scene
-    // },
+    components:{
+      Loader: Loader,
+      Nav: Nav,
+      App: App,
+      Footer: Footer,
+      Scene: Scene
+    },
     created(){
-      console.log("Hello App created!");
       // Initially set title when app is first created
       document.title = this.$route.meta.title;
 
     },
     mounted(){
-      // this.scene = this.$refs.scene;
-      // console.log(Scene);
-      // this.scene.init();
+
     },
     methods:{
-      bodyNoScroll: function(){
-        const body = document.body;
-        body.style.top = `${-(window.scrollY || window.pageYOffset || document.body.scrollTop + (document.documentElement && document.documentElement.scrollTop || 0))}px`;
-        body.style.position = 'fixed';
-        body.style.overflowY = "scroll";
+      initApp: function(){
+        console.log('Scene Initialized in Scene.vue');
+        const config = {
+          scene: this.$refs.scene.$el,
+          name: this.$refs.name,
+          devmode: this.devmode,
+          showName: this.showName,
+          shapeColors: [
+            colors.red,
+            colors.lightTurquoise,
+            colors.peach
+          ],
+          shapesPerLetter: 4
+        };
+        this.scene = ShapeScene(config);
+        // console.log(this.images);
       },
+
       beforeEnter: function(el){
-        console.log("before enter")
-        console.log()
+        // console.log("before enter")
       },
       enter: function(el, done){
-        console.log("transition entering");
-
+        // console.log("transition entering");
         // setTimeout(function(){
-          console.log("transition entering");
+          // console.log("transition entering");
           done();
         // }, 1000)
-
-
       },
       beforeLeave: function(el){
-        console.log("before leaving");
-
-        // let body = document.body;
-        // body.style.top = `${-(window.scrollY || window.pageYOffset || document.body.scrollTop + (document.documentElement && document.documentElement.scrollTop || 0))}px`;
-        // body.style.position = 'fixed';
-        // body.style.overflowY = "scroll";
-        // this.bodyNoScroll();
-
-        // let container = document.querySelector('.container');
-        // TweenLite.to(container, .5, { y: 50, opacity: 0, ease: Expo.easeIn });
-
+        // console.log("before leaving");
       },
       leave: function(el, done){
         console.log("transition leaving");
@@ -92,17 +101,20 @@
         // }, 1600);
       }
     },
+    updated(){
+      // console.log(this.images);
+    },
     watch: {
       $route: function(to, from){
+        // Change page title on route change
         document.title = to.meta.title;
+        this.showName = this.$route.meta.showName;
 
         const toDepth = to.path.split('/').length;
         const fromDepth = from.path.split('/').length;
-        console.log(to);
         if(toDepth < fromDepth) console.log('higher level');
         if(toDepth > fromDepth) console.log('lower level');
         if(toDepth == fromDepth) console.log('same level');
-        // toDepth < fromDepth ? console.log('higher level') : console.log('lower level');
       }
     }
   }

@@ -159,7 +159,7 @@ class Scene { // #scene
     // GSAP TimelineLite
     this.animations = {
       scene: this,
-      initDelay: 1000,
+      initDelay: 0,
       tl: new TimelineLite(), //{ paused: true }
       setLetters: function(targets){
         // let targets = this.scene.name.letterEls;
@@ -375,7 +375,6 @@ class Scene { // #scene
   }
   animationCompleted(){
     if(this.devmode) console.log('Animation Complete');
-
     this.name.shapes.forEach(function(shape, i){
       // console.log("created: "+i);
       shape.getsetTransform();

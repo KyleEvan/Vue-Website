@@ -25,10 +25,11 @@ JS
 
 
   export default {
-   props: ["scene"],
+   props: ['scene'],
    data(){
      return{
        initialized: false,
+       ready: undefined,
        tl: new TimelineLite({paused: true})
      }
    },
@@ -50,18 +51,30 @@ JS
          this.tl.progress(event.progress);
        })
        .addTo(controller);
+
+       const nameScene = new ScrollMagic.Scene({
+         triggerElement: app,
+         triggerHook: 0,
+         duration: this.viewport.cHeight*.5,
+         reverse: true
+       })
+       .on("enter", (event) => {
+         if(this.scene){
+           console.log('turn off scene!!!!!');
+           
+         }
+       })
+       .addTo(controller);
+
      },
      animateScene: function(){
        // const tl = new TimelineLite({paused: true});
        // console.log(this.$props.scene);
        // const scene = this.$props.scene.DOM.el;
        const scene = this.$refs.scene;
-       // const scene = document.getElementById('scene');
        const name = document.getElementById('name');
-       console.log(scene);
-       console.log(name);
-       // const name = this.$props.scene.DOM.children.name.el;
-       this.tl.fromTo(name, .3,
+       // const name = this.$refs.name;
+       this.tl.fromTo(name, 1,
        {
          y: '0%',
          opacity: 1
@@ -69,15 +82,17 @@ JS
        {
          y: '-50%',
          opacity: 0,
-         ease: Power3.easeIn
+         ease: Power2.easeIn
        })
-       .fromTo(scene, .3,
+       .fromTo(scene, 1,
        {
+         y: '0%',
          opacity: 1
        },
        {
+         y: '-40%',
          opacity: 0,
-         ease: Power0.easeNone
+         ease: Power2.easeIn
        })
        // return tl;
      },
@@ -98,13 +113,22 @@ JS
    mounted(){
      // ScrollMagic Scene
      // const tl = this.animateScene();
+     // this.animateScene();
+     // this.initScrollMagic();
    },
    updated(){
-     // if(this.$props.scene && !this.initialized){
+     // First update, when scene object is received as prop
+     // console.log(this.scene);
+
+     if(this.scene && !this.initialized){
+       // console.log(this.scene.ready);
        this.animateScene();
        this.initScrollMagic();
+       // this.ready = this.scene.ready;
+       // console.log(this.scene.ready);
+
        this.initialized = !this.initialized;
-     // }
+     }
    },
    watch:{
      $route: function(to, from){

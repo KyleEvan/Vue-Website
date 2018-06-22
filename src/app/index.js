@@ -27,6 +27,7 @@ Vue.mixin({
         cWidth: document.documentElement.clientWidth,
         cHeight: document.documentElement.clientHeight
       },
+      // app: document.getElementById('app'),
       body: document.body,
       breakpoints: { // See global.scss for breakpoints MUST BE IN SYNC
         sm: 200,

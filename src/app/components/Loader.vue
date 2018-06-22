@@ -1,11 +1,7 @@
 <template>
-
-  <!-- <div id="loader" v-if="loading">
-    <div class="spinner">
-      Loading ...
-    </div>
-  </div> -->
-
+  <div style="display:none;">
+    
+  </div>
 </template>
 
 <script>
@@ -19,30 +15,31 @@
     props: ['init'],
     data(){
       return {
+        el: document.getElementById('loader'),
         tl: new TimelineLite()
       }
     },
-    // computed:{
-    //
-    // },
     methods: {
+      destroySelf: function(){
+        // while (this.el.firstChild) {
+        //   this.el.removeChild(this.el.firstChild);
+        // }
+        this.body.removeChild(this.el);
+      },
       doneLoading: function(){
-        const loadingLayer = document.getElementById('loader');
-        this.tl.to(loadingLayer, .3, {
+        // const this.el = document.getElementById('loader');
+        this.tl.to(this.el, .3, {
           opacity: 0,
-          ease: Power2.easeOut,
+          ease: Power2.easeIn,
           onComplete: () => {
-            console.log('loading complete');
+            console.log('Loading Finished');
+            this.destroySelf();
             this.init();
-            this.bodyRestoreScroll();
-            loadingLayer.outerHTML = '';
-
           }
-        })
-        return loadingLayer;
+        });
+        // return loadingLayer;
       },
       async loadImages(){
-        console.log(this.images);
         const assets = await load.any(this.images.sources, (progress) => {
           if(progress.count >= progress.total){
             console.log('All images loaded');
@@ -55,9 +52,9 @@
         this.loadImages();
       },
     },
-    created(){
-
-    },
+    // created(){
+    //
+    // },
     mounted(){
       // Preload and Initialize Scene
       this.preInit();
@@ -69,16 +66,16 @@
 <style lang="scss">
   @import '../../style/global.scss';
 
-  // #loader{
-  //   position: fixed;
-  //   width: 100%;
-  //   height: 100%;
-  //   background: #FFF;
-  //   z-index: 4;
-  //   display: flex;
-  //   align-items: center;
-  //   justify-content: center;
-  // }
+  #loader{
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: #FFF;
+    z-index: 4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
 
 

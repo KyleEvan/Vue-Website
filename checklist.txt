@@ -2,11 +2,17 @@
 
 
 
-To Do
+Nice to Haves
 - Look into service workers to serve offline page
+- caching static assets
 - Google Analytics
 
 Must Do
+- Enable compression of assets
 - Add Resume to Contact Us
 - Not Found Page, no-script page
 - Optimize production assets, watch size limit
+
+
+Resources
+https://www.keycdn.com/blog/google-pagespeed-insights-wordpress/

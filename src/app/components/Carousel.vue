@@ -68,6 +68,7 @@
         Initialize Carousel with flickity
 
       */
+      console.log('Init Flickity');
       let flkty = new Flickity( this.$refs.carousel, {
         imagesLoaded: true,
         draggable: true,
@@ -95,6 +96,11 @@
       }, 30);
       window.addEventListener('resize', handleResize);
 
+
+    },
+    updated(){
+      // console.log(this.images);
+      console.log(this.images());
 
     }
   }

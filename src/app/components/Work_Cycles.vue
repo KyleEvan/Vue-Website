@@ -2,7 +2,7 @@
 
   <work-template :project="project">
 
-    <template slot="imageSlides">
+    <template slot="image_slides">
       <div class="carousel-cell" v-for="image in images">
         <img :src="image" alt="" />
       </div>

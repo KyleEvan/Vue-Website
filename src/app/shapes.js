@@ -257,7 +257,7 @@ class Scene { // #scene
             delay: (s*.008),
             ease: Expo.easeOut
           });
-          TweenLite.to(shape.el, .6, {
+          TweenLite.to(shape.el, .3, {
             opacity: 0,
             y: Math.abs(shape.size*1),
             scale: .6,
@@ -398,8 +398,6 @@ class Scene { // #scene
   createShapes(shapes){
     const shapesArray = [];
     for (let s = shapes.length; s > 0; s -= 1){
-      console.log(`creating shape ${s}`);
-      console.log(shapes.e);
       shapesArray.push(new Shape(this, false, {
         top: shapes.e.clientY,
         left: shapes.e.clientX,
@@ -471,7 +469,7 @@ class Name { // #name
 
     // Sort shapes array order based on z axis location and add them to the dom
     this.shapes.sort(function(a, b) {
-      return a.z - b.z;
+      return b.z - a.z;
     });
     this.shapes.forEach(function(shape) {
       shape.parent.appendChild(shape.el);
@@ -511,8 +509,8 @@ class Shape {
     this.y = props.top;
     // this.x = document.documentElement.clientWidth/2;
     // this.y = document.documentElement.clientHeight/2;
-    console.log(this.x);
-    console.log(this.y);
+    // console.log(this.x);
+    // console.log(this.y);
     this.z = (this.scale/props.width) * scene.camera.perspective;
 
 
@@ -617,7 +615,8 @@ class Shape {
 
     Bz = camera.perspective;
     // Az = camera.perspective - (this.z * camera.perspective);
-    Az = camera.perspective - this.z;
+    // Az = camera.perspective - this.z;
+    Az = this.z;
 
     Bx = this.x - camera.location.x;
     Ax = Bx / (Bz / Az);

@@ -2,8 +2,8 @@
 
   <work-template :project="project">
     <!-- Carousel images -->
-    <template slot="imageSlides">
-      <div class="carousel-cell" v-for="image in images">
+    <template slot="image_slides">
+      <div class="carousel-cell" v-for="image in project_images">
         <img :src="image" alt="" />
       </div>
     </template>
@@ -74,10 +74,15 @@
           </li>
         </ul>
       </section>
+
+
     </template>
 
+    <template slot="extra"></template>
+
+
     <!-- Extra Content -->
-    <section>
+    <!-- <section>
       <p>
         HTML5 canvas web game.
       </p>
@@ -90,7 +95,7 @@
       <p>
         Sed lacinia, urna non tincidunt mattis, tortor neque adipiscing diam, a cursus ipsum ante quis turpis. Nulla facilisi. Ut fringilla. Suspendisse potenti. Nunc feugiat mi a tellus consequat imperdiet. Vestibulum sapien. Proin quam. Etiam ultrices. Suspendisse in justo eu magna luctus suscipit. Sed lectus. Integer euismod lacus luctus magna. Quisque cursus, metus vitae pharetra auctor, sem massa mattis sem, at interdum magna augue eget diam.
       </p>
-    </section>
+    </section> -->
   </work-template>
 
 
@@ -98,33 +103,39 @@
 
 <script>
   import FontAwesomeIcon from '@fortawesome/vue-fontawesome';
-
   import Work_Template from './Work_Project_Template.vue';
-
-  // Images
-  import death_lg_jpg from '../../images/comboSmash-death@lg.jpg';
-  import death_md_jpg from '../../images/comboSmash-death@md.jpg';
-  import death_sm_jpg from '../../images/comboSmash-death@sm.jpg';
-  import horde_lg_jpg from '../../images/comboSmash-horde@lg.jpg';
-  import horde_md_jpg from '../../images/comboSmash-horde@md.jpg';
-  import horde_sm_jpg from '../../images/comboSmash-horde@sm.jpg';
-  import preview_lg_jpg from '../../images/comboSmash-preview@lg.jpg';
-  import highScores_lg_jpg from '../../images/comboSmash-highScores@lg.jpg';
 
   export default {
     props: ['project'],
     data () {
       return {
-        images: [preview_lg_jpg, horde_md_jpg, death_md_jpg, highScores_lg_jpg],
+        project_images: undefined,
         gitHubLink: 'https://github.com/KyleEvan/ComboSmash-v2',
         gitHubPagesLink: 'https://kyleevan.github.io/ComboSmash-v2/',
-        saying: 'hey im content',
-
       }
     },
     components:{
       'work-template': Work_Template,
       FontAwesomeIcon
+    },
+    methods:{
+      initImages: function(){
+        let image = this.images();
+        this.project_images = [
+          image.sized.comboSmash_preview,
+          image.sized.comboSmash_death,
+          image.sized.comboSmash_horde,
+        ];
+        console.log(this.project_images);
+      }
+    },
+    created(){
+      this.initImages();
+    },
+    updated(){
+      this.initImages();
+    },
+    mounted(){
     }
   }
 </script>

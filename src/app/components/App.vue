@@ -82,7 +82,9 @@
         });
       },
       async loadImages(){
-        const assets = await load.any(this.images.sources, (progress) => {
+        let images = this.images();
+        console.log(images);
+        const assets = await load.any(images.sources, (progress) => {
           if(progress.count >= progress.total){
             console.log('All images loaded');
             this.doneLoading();
@@ -100,7 +102,7 @@
             colors.lightTurquoise,
             colors.peach
           ],
-          shapesPerLetter: 4
+          shapesPerLetter: 8
         };
         this.scene = ShapeScene(config);
         console.log('Scene Initialized in Scene.vue');

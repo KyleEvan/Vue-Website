@@ -19,17 +19,16 @@
       </div>
 
       <carousel :progressColor="mediumColor">
-        <slot name="imageSlides"></slot>
+        <slot name="image_slides"></slot>
       </carousel>
 
     </div>
 
 
-    <div class="container" :style="{background: lightColor}">
+    <div v-if="extraSlotPassed" class="container" :style="{background: lightColor}">
       <div ref="content">
-        <slot></slot>
+        <slot name="extra"></slot>
       </div>
-
     </div>
 
   </div>
@@ -68,58 +67,56 @@
     },
     computed:{
       primaryColor: function(){
-        let color = this.$props.project ? this.$props.project.primaryColor : this.defaultPrimaryColor;
-        return color;
+        return this.$props.project ? this.$props.project.primaryColor : this.defaultPrimaryColor;
       },
       lightColor: function(){
-        let color = this.$props.project ? this.$props.project.lightColor : this.defaultLightColor;
-        return color;
+        return this.$props.project ? this.$props.project.lightColor : this.defaultLightColor;
       },
       mediumColor: function(){
-        let color = this.$props.project ? this.$props.project.mediumColor : this.defaultMediumColor;
-        return color;
+        return this.$props.project ? this.$props.project.mediumColor : this.defaultMediumColor;
       },
       darkColor: function(){
-        let color = this.$props.project ? this.$props.project.darkColor : this.defaultDarkColor;
-        return color;
+        return this.$props.project ? this.$props.project.darkColor : this.defaultDarkColor;
+      },
+      extraSlotPassed: function(){
+        return !!this.$slots['extra'];
       }
     },
     methods:{
-      initScrollMagic: function(){
-        const mainContainer = document.querySelector('.main-container');
-        const controller = new ScrollMagic.Controller();
-        const workScene = new ScrollMagic.Scene({
-          triggerElement: mainContainer,
-          triggerHook: 0,
-          duration: '100%',
-          reverse: true
-        })
-        .on("progress", (event) => {
-          let progress = event.progress;
-          this.tl.progress(progress);
-          this.tl.progress(event.progress);
-        })
-        .addTo(controller);
-      },
-      animateScroll: function(){
-        // const tl = new TimelineLite({paused: true});
-        const flickity = document.getElementById('flickityContainer');
-        this.tl.fromTo(flickity, .3,
-        {
-          y: '0%',
-          opacity: 1
-        },
-        {
-          y: '5%',
-          opacity: 0,
-          ease: Power4.easeOut
-        });
-        // return tl;
-      },
+      // initScrollMagic: function(){
+      //   const mainContainer = document.querySelector('.main-container');
+      //   const controller = new ScrollMagic.Controller();
+      //   const workScene = new ScrollMagic.Scene({
+      //     triggerElement: mainContainer,
+      //     triggerHook: 0,
+      //     duration: '100%',
+      //     reverse: true
+      //   })
+      //   .on("progress", (event) => {
+      //     let progress = event.progress;
+      //     this.tl.progress(progress);
+      //     this.tl.progress(event.progress);
+      //   })
+      //   .addTo(controller);
+      // },
+      // animateScroll: function(){
+      //   // const tl = new TimelineLite({paused: true});
+      //   const flickity = document.getElementById('flickityContainer');
+      //   this.tl.fromTo(flickity, .3,
+      //   {
+      //     y: '0%',
+      //     opacity: 1
+      //   },
+      //   {
+      //     y: '5%',
+      //     opacity: 0,
+      //     ease: Power4.easeOut
+      //   });
+      //   // return tl;
+      // },
       initPage: function(){
         const tl = new TimelineLite();
         let sections = Array.from(this.$refs.carouselAside.children);
-        console.log(sections);
         tl.to(sections, .6,
         {
           x: '0',
@@ -129,12 +126,14 @@
         } );
       }
     },
-    mounted(){
+    updated(){
+      console.log('updated project template');
       this.initPage();
-      this.animateScroll();
-      this.initScrollMagic();
 
-      // get children and animate them rtl on enter
+    },
+    mounted(){
+      // this.animateScroll();
+      // this.initScrollMagic();
     }
   }
 </script>

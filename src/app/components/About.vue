@@ -4,10 +4,7 @@
     <div class="content">
       <h1>About</h1>
       <p>
-        I'm an aspiring front-end developer trying to further my skills and push the boundaries of the web.
-        Self-motivated to learn, I actively continue my education through sites like udemy and codeacademy to stay up to date with development techniques.
-        create, and contribute my personal touch to the vast world wide web.
-        I'm a front-end developer who wants to help make the web a more beautiful, rich and natural experience.
+        Aspiring creative developer from Rochester, New York studied New Media & Interactive Development at RIT. I enjoy the challenge of developing interesting front end solutions for the web. I'm most curious about bleeding edge technologies, cool websites, and the near future of the web development space.
       </p>
     </div>
   </div>
@@ -29,9 +26,11 @@
 
 <style lang="scss" scoped>
 .container{
-  min-height: 100vh;
   display: flex;
   align-items: center;
+  justify-content: center;
+  margin: 0px 8%;
+  flex-flow: wrap;
 
   .content{
     // padding: 0 8%;

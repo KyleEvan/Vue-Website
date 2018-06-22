@@ -83,7 +83,7 @@
             summary: 'Complete UX/UI overhaul of member and careers sections of Excellus BCBS and Univera Healthcare',
             href: 'Careers-Redesign',
             image:{
-              width: '54%',
+              width: '40%',
               newHeight: .3,
               src: careers_screens_lg_png
             },
@@ -98,7 +98,7 @@
             summary: 'Lorem ipsum dolor sit',
             href: 'ComboSmash',
             image:{
-              width: '36%',
+              width: '38%',
               newHeight: .5,
               src: preview_lg_jpg
             },
@@ -113,7 +113,7 @@
             summary: 'Lorem ipsum dolor sit',
             href: 'ComboSmash',
             image:{
-              width: '42%',
+              width: '36%',
               newHeight: .5,
               src: batmanPoster_lg_jpg
             },
@@ -128,7 +128,7 @@
             summary: 'Lorem ipsum dolor sit',
             href: 'Cycles',
             image:{
-              width: '42%',
+              width: '32%',
               newHeight: .3,
               src: cycles_lg_jpg
             },
@@ -374,7 +374,7 @@
     //
     // },
     mounted(){
-      // this.viewport = this.getWindow();
+      console.log(this.images);
       this.setTransitionedProject();
 
       // Initialize Events
@@ -464,15 +464,19 @@
           &:hover{
             .text{
               color:blue;
-              transform-origin: 0 0;
-              transform: scale(1.2) !important;
+              transform: translateX(3%) scale(1.05) !important;
             }
           }
           &:nth-child(3){
-            margin-top: 5em;
+            margin-top: 5%;
+            margin-right: 10%;
           }
           &:nth-child(4){
-            margin-top: 8em;
+            margin-top: 5%;
+          }
+          &:nth-child(5){
+            margin-right: 10%;
+            margin-top: 17%;
           }
 
          &>*{
@@ -508,6 +512,9 @@
             margin: 0 .75em;
             font-size: 80%;
             line-height: 1;
+            transition: transform 1s cubic-bezier(.17,.62,.4,1);
+            transform-origin: 0 0;
+
 
             @include small {
               width: 100%;

@@ -5,7 +5,7 @@
 -->
 <template>
 	<nav>
-	  <ul class="nav-items" :class="{expanded}">
+	  <ul ref="navItems" class="nav-items" :class="{expanded}">
 	    <li>
 	      <router-link to="/">
 	        work
@@ -45,10 +45,12 @@
 	export default{
 		data(){
       return {
+				tl: new TimelineLite(),
 				menuIcon: ['fas', 'bars'],
 				exitIcon: ['fas', 'times'],
         expanded: false,
-        animDirection: -1
+				duration: 1
+        // animDirection: -1
 				// menu_svg: menu_svg
       }
     },
@@ -58,25 +60,49 @@
 			}
 		},
     methods:{
-			initMenuSVG: function(){
-				const params = {
-	        container: this.$refs.menu,
-	        renderer: 'svg',
-	        loop: false,
-	        autoplay: false,
-	        animationData: hamburger_json
-	      };
-	      let anim;
-	      anim = hamburger.loadAnimation(params);
-				return hamburger;
+			// initMenuSVG: function(){
+			// 	const params = {
+	    //     container: this.$refs.menu,
+	    //     renderer: 'svg',
+	    //     loop: false,
+	    //     autoplay: false,
+	    //     animationData: hamburger_json
+	    //   };
+	    //   let anim;
+	    //   anim = hamburger.loadAnimation(params);
+			// 	return hamburger;
+			// },
+			animateMenuItems: function(){
+				const navItems = this.$refs.navItems.children;
+        const staggerDelay = .1;
+				if(this.expanded){
+					this.tl.staggerFromTo(navItems, this.duration,
+					{
+						x: '50%',
+						opacity: 0
+					},
+					{
+						x: '0%',
+						opacity: 1,
+						ease: Power4.easeOut
+					}, staggerDelay);
+				}
+				else{
+					this.tl.staggerFromTo(navItems, .2,
+					{
+						x: '0%',
+						opacity: 1
+					},
+					{
+						x: '20%',
+						opacity: 0,
+						ease: Power4.easeOut
+					}, staggerDelay);
+				}
 			},
 			handleMenuToggle: function(e){
 				this.expanded = !this.expanded;
-				// this.animDirection *= -1;
-				// if(this.menu){
-				// 	this.menu.setDirection(this.animDirection);
-				//   this.menu.play();
-        // }
+        this.animateMenuItems();
 		  }
 
 		},
@@ -145,7 +171,6 @@
 					transform: scale(1);
 					transition: transform .2s cubic-bezier(.17,.67,.59,1.23);
 				}
-
 				&:active{
 					svg{
 						transform: scale(.7);
@@ -188,21 +213,20 @@
 					padding-left: 2.5rem;
     			font-size: 30px;
 	        position:absolute;
-	        top:0;
-	        left:100%;
+	        top: 0;
+	        left: 100%;
 	        visibility: hidden;
 	        transform: translateX(0%) translateZ(0);
-					transition: visibility 0s linear 0.6s, transform .3s ease-in;
-					will-change: transform;
+					transition: visibility 0s linear 0.6s, transform .6s ease-in;
 	      }
 	      .nav-items.expanded{
 	        visibility: visible;
 	        transform: translateX(-100%);
-					transition: visibility 0s linear 0.8s, transform .6s cubic-bezier(0.230, 1.000, 0.320, 1.000);
+					transition: visibility 0s linear 1s, transform .6s cubic-bezier(0.230, 1.000, 0.320, 1.000);
 					transition-delay: 0s;
 	      }
 				.nav-items a{
-					color: $primary-white;
+					color: #fff;
 				}
 	    }
   }

@@ -61,7 +61,7 @@ JS
        .on("enter", (event) => {
          if(this.scene){
            console.log('turn off scene!!!!!');
-           
+
          }
        })
        .addTo(controller);
@@ -90,7 +90,7 @@ JS
          opacity: 1
        },
        {
-         y: '-40%',
+         y: '-10%',
          opacity: 0,
          ease: Power2.easeIn
        })

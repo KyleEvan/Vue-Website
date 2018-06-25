@@ -1,12 +1,6 @@
 <template>
 
-  <work-template :project="project">
-    <!-- Carousel images -->
-    <template slot="image_slides">
-      <div class="carousel-cell" v-for="image in images">
-        <img :src="image" alt="" />
-      </div>
-    </template>
+  <work-template :project="project" :project_images="project_images">
 
     <!-- Title -->
     <template slot="title">
@@ -40,7 +34,7 @@
     </template>
 
     <!-- Main Content -->
-    <section>
+    <template slot="extra">
       <p>
         {{saying}}
       </p>
@@ -54,7 +48,7 @@
       <p>
         Sed lacinia, urna non tincidunt mattis, tortor neque adipiscing diam, a cursus ipsum ante quis turpis. Nulla facilisi. Ut fringilla. Suspendisse potenti. Nunc feugiat mi a tellus consequat imperdiet. Vestibulum sapien. Proin quam. Etiam ultrices. Suspendisse in justo eu magna luctus suscipit. Sed lectus. Integer euismod lacus luctus magna. Quisque cursus, metus vitae pharetra auctor, sem massa mattis sem, at interdum magna augue eget diam.
       </p>
-    </section>
+    </template>
   </work-template>
 
 </template>
@@ -72,7 +66,7 @@
     props: ['project'],
     data () {
       return {
-        images: [careers_screens_lg_png, careers_screens_lg_png, careers_screens_lg_png],
+        project_images: undefined,
         img_careerAreas: {
           src: career_areas_png,
           alt: 'Image: career areas mobile screens',
@@ -84,6 +78,14 @@
     },
     components:{
       'work-template': Work_Template
+    },
+    created(){
+      let image = this.images;
+      this.project_images = [
+        image.sized.careers_screens,
+        image.sized.careers_screens,
+        image.sized.careers_screens,
+      ];
     }
 
   }
@@ -91,13 +93,13 @@
 
 
 
-<style lang="scss" scoped>
+<style lang="scss">
   // @import '../../style/global.scss';
   .carousel-cell{
 
     &:nth-child(1){
       img{
-        // height: 30vw;
+        height: 30vw;
         max-height: 70vh;
       }
     }

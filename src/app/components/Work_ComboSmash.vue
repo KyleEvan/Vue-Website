@@ -1,12 +1,6 @@
 <template>
 
-  <work-template :project="project">
-    <!-- Carousel images -->
-    <template slot="image_slides">
-      <div class="carousel-cell" v-for="image in project_images">
-        <img :src="image" alt="" />
-      </div>
-    </template>
+  <work-template :project="project" :project_images="project_images">
 
     <!-- Title: -->
     <template slot="title">
@@ -118,23 +112,16 @@
       'work-template': Work_Template,
       FontAwesomeIcon
     },
-    methods:{
-      initImages: function(){
-        let image = this.images();
-        this.project_images = [
-          image.sized.comboSmash_preview,
-          image.sized.comboSmash_death,
-          image.sized.comboSmash_horde,
-        ];
-        console.log(this.project_images);
-      }
-    },
     created(){
-      this.initImages();
+      let image = this.images.sized;
+      this.project_images = [
+        image.comboSmash_preview,
+        image.comboSmash_death,
+        image.comboSmash_horde,
+      ];
     },
-    updated(){
-      this.initImages();
-    },
+    // updated(){
+    // },
     mounted(){
     }
   }
@@ -142,7 +129,7 @@
 
 
 
-<style lang="scss" scoped>
+<style lang="scss">
   // @import '../../style/global.scss';
   .carousel-cell{
 

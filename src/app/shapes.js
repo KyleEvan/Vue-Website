@@ -209,8 +209,6 @@ class Scene { // #scene
             }, 1500);
           }
         }
-
-
       },
       moveShapes: function(mouseMove){
         let scene = this.scene;
@@ -240,6 +238,7 @@ class Scene { // #scene
       },
       explodeShapes: function(e){
         let scene = this.scene;
+        const dur = 1;
         let shapes = scene.createShapes({
           length: 10,
           width: 50,
@@ -249,7 +248,7 @@ class Scene { // #scene
         });
         for (let s = shapes.props.length; s > 0; s -= 1){
           let shape = shapes.array[shapes.props.length-s];
-          TweenLite.to(shape.el, .8, {
+          TweenLite.to(shape.el, dur, {
             opacity: 1,
             x: getRandomInt(-70, 70),
             y: getRandomInt(-70, 70),
@@ -257,11 +256,11 @@ class Scene { // #scene
             delay: (s*.008),
             ease: Expo.easeOut
           });
-          TweenLite.to(shape.el, .3, {
+          TweenLite.to(shape.el, dur-.6, {
             opacity: 0,
             y: Math.abs(shape.size*1),
             scale: .6,
-            ease: Power0.easeNone,
+            ease: Power1.easeIn,
             delay: .25,
             onComplete: () => {
               if(s <= 1){

@@ -1,12 +1,12 @@
 <template>
 
-  <work-template :project="project">
+  <work-template :project="project" :project_images="project_images">
 
-    <template slot="image_slides">
+    <!-- <template slot="image_slides">
       <div class="carousel-cell" v-for="image in images">
         <img :src="image" alt="" />
       </div>
-    </template>
+    </template> -->
 
 
     <h2 slot="title">
@@ -66,28 +66,36 @@
   import Work_Template from './Work_Project_Template.vue';
 
   // Images
-  import careersPNG from '../../images/career-areas-mobile.png';
-  import careersScreensPNG from '../../images/careers_screens.png';
-  import cycles_lg_jpg from '../../images/cyclesTile@lg.jpg';
+  // import careersPNG from '../../images/career-areas-mobile.png';
+  // import careersScreensPNG from '../../images/careers_screens.png';
+  // import cycles_lg_jpg from '../../images/cyclesTile@lg.jpg';
 
   export default {
     props: ['project'],
     data () {
       return {
-        images: [cycles_lg_jpg, cycles_lg_jpg, cycles_lg_jpg],
+        project_images: undefined,
         gitHubLink: 'https://github.com/KyleEvan/Cycles',
         gitHubPagesLink: 'https://kyleevan.github.io/Cycles/'
       }
     },
     components:{
       'work-template': Work_Template
+    },
+    created(){
+      let image = this.images;
+      this.project_images = [
+        image.sized.cycles,
+        image.sized.cycles,
+        image.sized.cycles,
+      ];
     }
   }
 </script>
 
 
 
-<style lang="scss" scoped>
+<style lang="scss">
   // @import '../../style/global.scss';
   .carousel-cell{
 

@@ -14,9 +14,9 @@
             class="project">
             <div class="text">
               <h3>{{project.title}}</h3>
-              <p>
+              <!-- <p>
                 {{project.summary}}
-              </p>
+              </p> -->
             </div>
             <div class="image" :style="{background: project.primaryColor}">
               <img :src="project.image.src" />

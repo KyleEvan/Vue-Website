@@ -38,9 +38,9 @@ Vue.mixin({
     }
   },
   computed:{
-    // images: function(){
-    //
-    // }
+    images: function(){
+      return getImages(this.breakpoints, document.documentElement.clientWidth);
+    }
   },
   methods: {
     bodyNoScroll: function(){
@@ -51,9 +51,9 @@ Vue.mixin({
     bodyRestoreScroll: function(){
       this.body.removeAttribute("style");
     },
-    images: function(){
-      return getImages(this.breakpoints, document.documentElement.clientWidth);
-    },
+    // images: function(){
+    //   return getImages(this.breakpoints, document.documentElement.clientWidth);
+    // },
     getWindow: function(){
       const viewport = {
         width: window.innerWidth,

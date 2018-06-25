@@ -1,7 +1,6 @@
 <template>
   <div id="app">
 
-    <!-- <Loader :init="initApp"/> -->
     <Nav/>
 
     <!-- Main website content -->
@@ -31,12 +30,11 @@
   import { TimelineLite } from "gsap";
   import load from 'load-asset';
   // Components
-  // import Loader from './Loader.vue';
   import Nav from './Nav.vue';
-  import App from './App.vue';
   import Footer from './Footer.vue';
   import Scene from './Scene.vue';
   // JS
+  import { getImages } from '../images.js';
   import { ShapeScene } from '../shapes.js';
 
 
@@ -51,16 +49,33 @@
       }
     },
     components:{
-      // Loader: Loader,
       Nav: Nav,
-      App: App,
       Footer: Footer,
       Scene: Scene
+    },
+    computed:{
+      sceneConfig: function(){
+        return {
+          scene: this.$refs.scene.$el,
+          name: this.$refs.name,
+          devmode: this.devmode,
+          showName: this.showName,
+          shapeColors: [
+            colors.red,
+            colors.lightTurquoise,
+            colors.peach
+          ],
+          shapesPerLetter: 4
+        };
+      }
     },
     created(){
       // Initially set title when app is first created
       document.title = this.$route.meta.title;
+      // Disable Scroll while app loads assets
       this.bodyNoScroll();
+      this.images = getImages(this.breakpoints, this.viewport.cWidth);
+      console.log(this.images);
       this.loadImages();
     },
     methods:{
@@ -89,55 +104,40 @@
           }
         });
       },
+      initEvents: function(){
+        // Updates viewport and images data
+        const handleResize = this.debounce(() => {
+          this.viewport = this.getWindow();
+          this.images = getImages(this.breakpoints, this.viewport.cWidth);
+        }, 25);
+        window.addEventListener('resize', handleResize);
+      },
       initScene: function(){
-        const config = {
-          scene: this.$refs.scene.$el,
-          name: this.$refs.name,
-          devmode: this.devmode,
-          showName: this.showName,
-          shapeColors: [
-            colors.red,
-            colors.lightTurquoise,
-            colors.peach
-          ],
-          shapesPerLetter: 4
-        };
-        this.scene = ShapeScene(config);
-        console.log('Scene Initialized in Scene.vue');
+        this.scene = ShapeScene(this.sceneConfig);
       },
       initApp: function(){
+        this.initEvents();
         this.initScene();
         this.bodyRestoreScroll();
-
       },
-
       beforeEnter: function(el){
-        // console.log("before enter")
+
       },
       enter: function(el, done){
-        // console.log("transition entering");
-        // setTimeout(function(){
-          // console.log("transition entering");
           done();
-        // }, 1000)
       },
       beforeLeave: function(el){
-        // console.log("before leaving");
+
       },
       leave: function(el, done){
-        console.log("transition leaving");
-        // setTimeout(function(){
-          // const body = document.body;
-          // body.removeAttribute("style");
           done();
-        // }, 1600);
       }
     },
-    mounted(){
-      // initApp();
-    },
+    // mounted(){
+    //   // initApp();
+    // },
     updated(){
-      // console.log(this.images);
+      console.log("app updated");
     },
     watch: {
       $route: function(to, from){

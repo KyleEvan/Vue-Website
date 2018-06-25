@@ -27,18 +27,18 @@
       <!-- Links -->
       <section>
         <ul>
-          <li><a :href="link1">link 1</a></li>
-          <li><a href="#">link 2</a></li>
+          <li><a :href="link_excellus_home">Excellus Careers Home</a></li>
+          <li><a :href="link_univera_home">Univera Careers Home</a></li>
         </ul>
       </section>
     </template>
 
     <!-- Main Content -->
     <template slot="extra">
-      <p>
+      <!-- <p>
         {{saying}}
-      </p>
-      <img :class="img_careerAreas.class" :src="img_careerAreas.src" :alt="img_careerAreas.alt" />
+      </p> -->
+      <!-- <img :class="images.sized." :src="img_careerAreas.src" :alt="img_careerAreas.alt" /> -->
       <p>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Praesent mauris. Fusce nec tellus sed augue semper porta. Mauris massa. Vestibulum lacinia arcu eget nulla. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur sodales ligula in libero. Sed dignissim lacinia nunc.
       </p>
@@ -57,23 +57,22 @@
   import Work_Template from './Work_Project_Template.vue';
 
   // Images
-  import careers_screens_lg_png from '../../images/careers_screens@lg.png';
-  import career_areas_png from '../../images/career-areas-mobile.png';
-
-
+  // import careers_screens_lg_png from '../../images/careers_screens@lg.png';
+  // import career_areas_png from '../../images/career-areas-mobile.png';
 
   export default {
     props: ['project'],
     data () {
       return {
         project_images: undefined,
-        img_careerAreas: {
-          src: career_areas_png,
-          alt: 'Image: career areas mobile screens',
-          class: 'career-areas'
-        },
-        saying: 'hey im content',
-        link1: 'http://www.google.com'
+        // img_careerAreas: {
+        //   src: career_areas_png,
+        //   alt: 'Image: career areas mobile screens',
+        //   class: 'career-areas'
+        // },
+        link_excellus_home: 'https://www.excellusbcbs.com/wps/portal/xl/careers/',
+        link_univera_home: 'https://www.univerahealthcare.com/wps/portal/uv/careers/',
+        link_univera_events: 'https://www.univerahealthcare.com/wps/portal/uv/careers/hiring-process/recruitment-events',
       }
     },
     components:{
@@ -87,7 +86,6 @@
         image.sized.careers_screens,
       ];
     }
-
   }
 </script>
 
@@ -95,16 +93,16 @@
 
 <style lang="scss">
   // @import '../../style/global.scss';
-  .carousel-cell{
-
-    &:nth-child(1){
-      img{
-        height: 30vw;
-        max-height: 70vh;
-      }
-    }
-    img{
-      height: 30vw;
-    }
-  }
+  // .carousel-cell{
+  //
+  //   &:nth-child(1){
+  //     img{
+  //       height: 30vw;
+  //       max-height: 70vh;
+  //     }
+  //   }
+  //   img{
+  //     height: 30vw;
+  //   }
+  // }
 </style>

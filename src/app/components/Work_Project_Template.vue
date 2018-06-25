@@ -19,7 +19,6 @@
       </div>
 
       <carousel :progressColor="mediumColor">
-        <!-- <slot name="image_slides"></slot> -->
         <div class="carousel-cell" v-for="image in project_images">
           <img :src="image" alt="" />
         </div>
@@ -53,7 +52,6 @@
   // Components
   import Carousel from './Carousel.vue';
 
-
 	export default{
 		props:['project', 'project_images'],
     data(){
@@ -62,7 +60,7 @@
         defaultLightColor: colors.lightRed,
         defaultMediumColor: colors.mediumRed,
         defaultDarkColor: colors.darkRed,
-        tl: new TimelineLite({paused: true})
+        // tl: new TimelineLite({paused: true})
       }
     },
     components:{
@@ -86,37 +84,37 @@
       }
     },
     methods:{
-      initScrollMagic: function(){
-        const mainContainer = document.querySelector('.main-container');
-        const controller = new ScrollMagic.Controller();
-        const workScene = new ScrollMagic.Scene({
-          triggerElement: mainContainer,
-          triggerHook: 0,
-          duration: '100%',
-          reverse: true
-        })
-        .on("progress", (event) => {
-          let progress = event.progress;
-          this.tl.progress(progress);
-          this.tl.progress(event.progress);
-        })
-        .addTo(controller);
-      },
-      animateScroll: function(){
-        // const tl = new TimelineLite({paused: true});
-        const flickity = document.getElementById('flickityContainer');
-        this.tl.fromTo(flickity, .3,
-        {
-          y: '0%',
-          opacity: 1
-        },
-        {
-          y: '5%',
-          opacity: 0,
-          ease: Power4.easeOut
-        });
-        // return tl;
-      },
+      // initScrollMagic: function(){
+      //   const mainContainer = document.querySelector('.main-container');
+      //   const controller = new ScrollMagic.Controller();
+      //   const workScene = new ScrollMagic.Scene({
+      //     triggerElement: mainContainer,
+      //     triggerHook: 0,
+      //     duration: '100%',
+      //     reverse: true
+      //   })
+      //   .on("progress", (event) => {
+      //     let progress = event.progress;
+      //     this.tl.progress(progress);
+      //     this.tl.progress(event.progress);
+      //   })
+      //   .addTo(controller);
+      // },
+      // animateScroll: function(){
+      //   // const tl = new TimelineLite({paused: true});
+      //   const flickity = document.getElementById('flickityContainer');
+      //   this.tl.fromTo(flickity, .3,
+      //   {
+      //     y: '0%',
+      //     opacity: 1
+      //   },
+      //   {
+      //     y: '5%',
+      //     opacity: 0,
+      //     ease: Power4.easeOut
+      //   });
+      //   // return tl;
+      // },
       initPage: function(){
         const tl = new TimelineLite();
         let sections = Array.from(this.$refs.carouselAside.children);
@@ -126,17 +124,18 @@
           opacity: 1,
           delay:.25,
           ease: Power2.easeOut
-        } );
+        });
       }
     },
     updated(){
       console.log('updated project template');
-      this.initPage();
+
 
     },
     mounted(){
       // this.animateScroll();
       // this.initScrollMagic();
+      this.initPage();
     }
   }
 </script>
@@ -148,6 +147,19 @@
 -->
 <style lang="scss" scoped>
   @import '../../style/global.scss';
+
+  .carousel-cell{
+
+    &:nth-child(1){
+      img{
+        // height: 40vw;
+        max-height: 70vh;
+      }
+    }
+    img{
+      height: 30vw;
+    }
+  }
 
   .carousel-aside,
   .content{

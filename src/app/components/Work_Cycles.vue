@@ -97,16 +97,16 @@
 
 <style lang="scss">
   // @import '../../style/global.scss';
-  .carousel-cell{
-
-    &:nth-child(1){
-      img{
-        height: 30vw;
-        max-height: 70vh;
-      }
-    }
-    img{
-      height: 30vw;
-    }
-  }
+  // .carousel-cell{
+  //
+  //   &:nth-child(1){
+  //     img{
+  //       height: 30vw;
+  //       max-height: 70vh;
+  //     }
+  //   }
+  //   img{
+  //     height: 30vw;
+  //   }
+  // }
 </style>

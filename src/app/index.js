@@ -5,8 +5,6 @@ import Vue from 'vue';
 import router from './router.js'
 import App from './components/App.vue';
 
-import { getImages } from './images.js';
-
 import fontawesome from '@fortawesome/fontawesome';
 import solid from '@fortawesome/fontawesome-free-solid';
 import faBars from '@fortawesome/fontawesome-free-solid/faBars'
@@ -27,7 +25,6 @@ Vue.mixin({
         cWidth: document.documentElement.clientWidth,
         cHeight: document.documentElement.clientHeight
       },
-      // app: document.getElementById('app'),
       body: document.body,
       breakpoints: { // See global.scss for breakpoints MUST BE IN SYNC
         sm: 200,
@@ -35,11 +32,7 @@ Vue.mixin({
         lg: 1300,
         xl: 1600
       },
-    }
-  },
-  computed:{
-    images: function(){
-      return getImages(this.breakpoints, document.documentElement.clientWidth);
+      images: undefined,
     }
   },
   methods: {
@@ -51,9 +44,6 @@ Vue.mixin({
     bodyRestoreScroll: function(){
       this.body.removeAttribute("style");
     },
-    // images: function(){
-    //   return getImages(this.breakpoints, document.documentElement.clientWidth);
-    // },
     getWindow: function(){
       const viewport = {
         width: window.innerWidth,

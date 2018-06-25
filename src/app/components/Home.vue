@@ -57,15 +57,8 @@
         tl: new TimelineLite(),
 
         transitionedProject: undefined,
-        // bannerWidth: undefined, // 0 - 1 value
-        // bannerNewWidth: .5, // .5 of window width
-        // bannerNewHeight: 1,   // 1 of window height
-        // bannerMinHeight: 400, // px
-        // bannerOffsetX: .5,
-
         imageMaxHeight: .7, // 70% of vh
 
-        // background: undefined,
         project: undefined,
         text: [],
         transforms: undefined,
@@ -84,7 +77,7 @@
             href: 'Careers-Redesign',
             image:{
               width: '40%',
-              newHeight: .3,
+              newHeight: .4,
               src: careers_screens_lg_png
             },
             primaryColor: colors.blue,
@@ -99,7 +92,7 @@
             href: 'ComboSmash',
             image:{
               width: '38%',
-              newHeight: .5,
+              newHeight: .4,
               src: preview_lg_jpg
             },
             primaryColor: colors.red,
@@ -114,7 +107,7 @@
             href: 'ComboSmash',
             image:{
               width: '36%',
-              newHeight: .5,
+              newHeight: .4,
               src: batmanPoster_lg_jpg
             },
             primaryColor: colors.peach,
@@ -129,7 +122,7 @@
             href: 'Cycles',
             image:{
               width: '32%',
-              newHeight: .3,
+              newHeight: .4,
               src: cycles_lg_jpg
             },
             primaryColor: colors.turquoise,
@@ -224,7 +217,6 @@
           },
           points: this.getPoints(newOffset.x*this.viewport.cWidth, newOffset.y*this.viewport.cHeight, this.viewport.cWidth, height)
         }
-        console.log(this.transitionedProject);
       },
       getProjectData: function(target){
         const projects = document.querySelectorAll('.project');
@@ -241,16 +233,12 @@
         }
       },
       calcProjectTransforms: function(project){
-        // console.log(project)
         const container = project.imageContainer.getBoundingClientRect();
-        // console.log(container);
         const containerCenter = {
           x: container.left + container.width/2,
           y: container.top + container.height/2
         };
-
         const newProjectCenter = this.transitionedProject.center;
-
         return {
           scale: this.getImageScale(project, container),
           translateX: newProjectCenter.x - containerCenter.x,
@@ -293,7 +281,6 @@
         const transitionBg = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
         const w = this.viewport.width; // viewport & height
         const h = this.viewport.cHeight;
-        // transitionBg.setAttribute('points', `${w} 0 ${w*2} 0 ${w*2} ${h} ${w} ${h}`);
         transitionBg.setAttribute('points', this.getPoints(this.viewport.width, 0, this.viewport.width*2, this.viewport.cHeight));
         transitionBg.setAttribute('fill', project.data.lightColor);
         transitionLayer.appendChild(transitionBg);
@@ -370,16 +357,11 @@
         }
       }
     },
-    // created(){
-    //
-    // },
     mounted(){
-      console.log(this.images);
       this.setTransitionedProject();
 
       // Initialize Events
       const handleResize = this.debounce(() => {
-        // this.viewport = this.getWindow();
         this.setTransitionedProject();
       }, 50);
       window.addEventListener('resize', handleResize);

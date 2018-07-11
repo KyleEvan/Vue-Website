@@ -1,3 +1,5 @@
+import career_areas_xl from '../images/career-areas-mobile.png';
+
 import careers_screens_sm_png from '../images/careers_screens@sm.png';
 import careers_screens_md_png from '../images/careers_screens@sm.png';
 import careers_screens_lg_png from '../images/careers_screens@lg.png';
@@ -57,11 +59,17 @@ const images = [
     src: {
       lg: comboSmash_preview_lg_jpg
     }
+  },
+  {
+    name: 'career_areas',
+    src: {
+      xl: career_areas_xl
+    }
   }
 ]
 
 
-exports.getImages = function(breakpoints, window){
+exports.images = function(breakpoints, window){
   let imageSize;
   let imagesSized = {};
   let imagesSrc = [];
@@ -72,7 +80,7 @@ exports.getImages = function(breakpoints, window){
       if(window >= breakpoints[size[s]]){
         if(image.src[size[s]]){
           imagesSized[image.name] = image.src[size[s]];
-          imagesSrc.push(image.src[size[s]])
+          imagesSrc.push(image.src[size[s]]);
           s = 0;
         }
       }

@@ -5,6 +5,8 @@ import Vue from 'vue';
 import router from './router.js'
 import App from './components/App.vue';
 
+import { globals } from './globals.js';
+
 import fontawesome from '@fortawesome/fontawesome';
 import solid from '@fortawesome/fontawesome-free-solid';
 import faBars from '@fortawesome/fontawesome-free-solid/faBars'
@@ -13,27 +15,48 @@ import faBars from '@fortawesome/fontawesome-free-solid/faBars'
 
 fontawesome.library.add(solid, faBars);
 
+var debounce = function(func, wait, immediate){
+  var timeout;
+  return function() {
+    var context = this,
+      args = arguments;
+    var later = function() {
+      timeout = null;
+      if (!immediate)
+        func.apply(context, args);
+      };
+    var callNow = immediate && !timeout;
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+    if (callNow)
+      func.apply(context, args);
+    };
+}
+
+
 // Vue.config.productionTip = false
+
 
 
 Vue.mixin({
   data: function(){
     return {
       devmode: true,
-      viewport: {
-        width: window.innerWidth,
-        cWidth: document.documentElement.clientWidth,
-        cHeight: document.documentElement.clientHeight
-      },
       body: document.body,
-      breakpoints: { // See global.scss for breakpoints MUST BE IN SYNC
-        sm: 200,
-        md: 800,
-        lg: 1300,
-        xl: 1600
-      },
-      images: undefined,
+      breakpoints: globals.breakpoints,
+      // images: undefined,
+      // viewport: undefined,
     }
+  },
+  computed:{
+    // viewport: function(){
+    //   return this.setViewport();
+    // },
+    // images: function(){
+    //   return this.setImages();
+    // }
+    viewport: () => globals.getViewport(),
+    images: () => globals.getImages(),
   },
   methods: {
     bodyNoScroll: function(){
@@ -44,31 +67,26 @@ Vue.mixin({
     bodyRestoreScroll: function(){
       this.body.removeAttribute("style");
     },
-    getWindow: function(){
-      const viewport = {
-        width: window.innerWidth,
-        cWidth: document.documentElement.clientWidth,
-        cHeight: document.documentElement.clientHeight
-      }
-      return viewport;
+    getViewport: function(){
+      return globals.getViewport();
     },
-    debounce: function(func, wait, immediate){
-      var timeout;
-      return function() {
-        var context = this,
-          args = arguments;
-        var later = function() {
-          timeout = null;
-          if (!immediate)
-            func.apply(context, args);
-          };
-        var callNow = immediate && !timeout;
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-        if (callNow)
-          func.apply(context, args);
-        };
-    }
+    getImages: function(){
+      return globals.getImages();
+    },
+    // setImages: function(){
+    //   this.viewport = globals.getViewport();
+    //   this.images = globals.getImages();
+    //   console.log(this.viewport);
+    //   console.log(this.images);
+    // },
+    // initEvents: function(){
+    //   const handleResize = debounce(this.setImages, 25);
+    //   window.addEventListener('resize', handleResize);
+    // },
+    debounce: debounce
+  },
+  updated(){
+    // console.log('updated mixins')
   }
 });
 
@@ -79,6 +97,13 @@ new Vue({
   components: { App },
   created(){
     console.log('app created');
+    // window.addEventListener('resize', this.handleResize);
+
+    // globals.init();
+    // this.initEvents();
+    // console.log(this.images);
+    // console.log(this.viewport);
+    // console.log(globals);
   }
   // mixins: [mixins]
 });

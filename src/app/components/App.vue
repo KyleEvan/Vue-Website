@@ -34,7 +34,6 @@
   import Footer from './Footer.vue';
   import Scene from './Scene.vue';
   // JS
-  import { getImages } from '../images.js';
   import { ShapeScene } from '../shapes.js';
 
 
@@ -43,6 +42,7 @@
     data(){
       return {
         loader: document.getElementById('loader'),
+        // images: undefined,
         scene: undefined,
         tl: new TimelineLite({ paused: true }),
         showName: undefined,
@@ -56,6 +56,7 @@
     computed:{
       sceneConfig: function(){
         return {
+          images_updated: undefined,
           scene: this.$refs.scene.$el,
           name: this.$refs.name,
           devmode: this.devmode,
@@ -68,15 +69,6 @@
           shapesPerLetter: 4
         };
       }
-    },
-    created(){
-      // Initially set title when app is first created
-      document.title = this.$route.meta.title;
-      // Disable Scroll while app loads assets
-      this.bodyNoScroll();
-      this.images = getImages(this.breakpoints, this.viewport.cWidth);
-      console.log(this.images);
-      this.loadImages();
     },
     methods:{
       destroyLoader: function(){
@@ -96,27 +88,41 @@
           }
         });
       },
-      async loadImages(){
-        const assets = await load.any(this.images.sources, (progress) => {
+      async loadImages(images){
+        // console.log(this.images);
+        const assets = await load.any(images, (progress) => {
           if(progress.count >= progress.total){
             console.log('All images loaded');
             this.doneLoading();
           }
         });
       },
-      initEvents: function(){
-        // Updates viewport and images data
-        const handleResize = this.debounce(() => {
-          this.viewport = this.getWindow();
-          this.images = getImages(this.breakpoints, this.viewport.cWidth);
-        }, 25);
-        window.addEventListener('resize', handleResize);
+      handleResize: function(){
+        // let newImages = this.getImages();
+        // if(this.images_updated != newImages){
+        //   console.log('update images');
+        //   this.images_updated = this.getImages();;
+        // }
+        console.log(this.images_updated);
+
+        this.images_updated = this.getImages();
       },
+      // initEvents: function(){
+      //   // Updates viewport and images data
+      //   // const handleResize = this.debounce(() => {
+      //   //   // this.viewport = this.getWindow();
+      //   //   // this.getsetWindow();
+      //   //   // this.images = getImages(this.breakpoints, this.viewport.cWidth);
+      //   //   // this.viewport = this.getWindow();
+      //   //   // this.images = this.getImages();
+      //   // }, 25);
+      //   // window.addEventListener('resize', handleResize);
+      // },
       initScene: function(){
         this.scene = ShapeScene(this.sceneConfig);
       },
       initApp: function(){
-        this.initEvents();
+        // this.initEvents();
         this.initScene();
         this.bodyRestoreScroll();
       },
@@ -133,17 +139,43 @@
           done();
       }
     },
-    // mounted(){
-    //   // initApp();
-    // },
+    created(){
+      this.images_updated = this.images;
+      this.loadImages(this.images.sources);
+
+      window.addEventListener('resize', this.handleResize);
+
+      // Initially set title when app is first created
+      document.title = this.$route.meta.title;
+      // Disable Scroll while app loads assets
+      this.bodyNoScroll();
+      // console.log(this.images);
+
+      // Set images
+      // this.images = getImages(this.breakpoints, this.viewport.cWidth);
+      // this.viewport = this.getWindow();
+      // this.images = this.getImages();
+      // console.log(this.images.sources);
+    },
+    mounted(){
+      // console.log(this.$data);
+    },
     updated(){
-      console.log("app updated");
+      // console.log(this.$data);
+      // console.log("app updated");
     },
     watch: {
       $route: function(to, from){
         // Change page title on route change
         document.title = to.meta.title;
         this.showName = this.$route.meta.showName;
+        if(this.scene){
+          if(!this.showName){
+            this.scene.animations.hideLetters();
+          }else{
+            this.scene.animations.showLetters();
+          }
+        }
 
         const toDepth = to.path.split('/').length;
         const fromDepth = from.path.split('/').length;

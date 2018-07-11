@@ -77,7 +77,7 @@
             href: 'Careers-Redesign',
             image:{
               width: '40%',
-              newHeight: .4,
+              newHeight: .3,
               src: careers_screens_lg_png
             },
             primaryColor: colors.blue,
@@ -92,7 +92,7 @@
             href: 'ComboSmash',
             image:{
               width: '38%',
-              newHeight: .4,
+              newHeight: .3,
               src: preview_lg_jpg
             },
             primaryColor: colors.red,
@@ -107,7 +107,7 @@
             href: 'ComboSmash',
             image:{
               width: '36%',
-              newHeight: .4,
+              newHeight: .3,
               src: batmanPoster_lg_jpg
             },
             primaryColor: colors.peach,
@@ -122,7 +122,7 @@
             href: 'Cycles',
             image:{
               width: '32%',
-              newHeight: .4,
+              newHeight: .3,
               src: cycles_lg_jpg
             },
             primaryColor: colors.turquoise,
@@ -182,6 +182,8 @@
         }, `-=${duration/2}`);
       },
       setTransitionedProject: function(){
+        console.log('setting transitioned project');
+        console.log(this.viewport);
         const minHeight = 400; // Carousel min-height
         let newWidth, newHeight, newOffset;
         // Mobile
@@ -304,7 +306,7 @@
         // Animate Image Background
         const morphImageBg = () => {
           const imageBgClone = this.addImageBg(project, transitionLayer);
-          console.log(imageBgClone);
+          // console.log(imageBgClone);
           anime({
             targets: imageBgClone,
             points: [
@@ -345,8 +347,10 @@
 
       },
       handleClick: function(e){
+
         if(!this.transitioning){
           this.bodyNoScroll();
+          this.setTransitionedProject();
           this.transitioning = true;
           this.project = this.getProjectData(e.target);
           this.transforms = this.calcProjectTransforms(this.project);
@@ -358,13 +362,15 @@
       }
     },
     mounted(){
-      this.setTransitionedProject();
+      // this.setTransitionedProject();
 
       // Initialize Events
-      const handleResize = this.debounce(() => {
-        this.setTransitionedProject();
-      }, 50);
-      window.addEventListener('resize', handleResize);
+      // const handleResize = this.debounce(() => {
+      //   console.log('setting project');
+      //   console.log(this.viewport);
+      //   // this.setTransitionedProject();
+      // }, 50);
+      // window.addEventListener('resize', handleResize);
 
       // ScrollMagic Scene
       const projects = document.querySelectorAll('.project');
@@ -410,12 +416,13 @@
 </script>
 
 <style lang="scss" scoped>
-  @import '../../style/global.scss';
-
+@import '../../style/global.scss';
+.main{
+  /* To accomodate scene */
+  padding-top: 120vh;
   .container{
 
     .content{
-      padding-top: 140vh;
       padding-bottom: 12vh;
       display: flex;
       align-items: flex-start;
@@ -565,6 +572,6 @@
 
     }
   }
-
+}
 
 </style>

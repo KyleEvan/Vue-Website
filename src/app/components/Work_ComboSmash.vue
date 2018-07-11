@@ -1,6 +1,22 @@
 <template>
 
-  <work-template :project="project" :project_images="project_images">
+  <work-template :project="project">
+
+    <template slot="slides">
+      <div class="carousel-cell" v-for="image in project_images">
+        <img :src="image" alt="" />
+      </div>
+      <!-- <div class="carousel-cell">
+        <img :src="images_updated.sized.comboSmash_preview" alt="" />
+      </div>
+      <div class="carousel-cell">
+        <img :src="images_updated.sized.comboSmash_death" alt="" />
+      </div>
+      <div class="carousel-cell">
+        <img :src="images_updated.sized.comboSmash_horde" alt="" />
+      </div> -->
+    </template>
+
 
     <!-- Title: -->
     <template slot="title">
@@ -45,26 +61,27 @@
           <li>
             <a target="_blank" href="#">
               ComboSmash v.1
+              <i>
+                <font-awesome-icon :icon="['fas','angle-right']" />
+              </i>
             </a>
-            <span>
-              <font-awesome-icon :icon="['fas','long-arrow-alt-right']" />
-            </span>
           </li>
           <li>
             <a target="_blank" :href="gitHubLink">
               GitHub Repo
+              <i>
+                <font-awesome-icon :icon="['fas','angle-right']" />
+              </i>
             </a>
-            <span>
-              <font-awesome-icon :icon="['fas','long-arrow-alt-right']" />
-            </span>
           </li>
           <li>
             <a target="_blank" :href="gitHubPagesLink">
               Play in browser
+              <i>
+                <font-awesome-icon :icon="['fas','angle-right']" />
+              </i>
             </a>
-            <span>
-              <font-awesome-icon :icon="['fas','long-arrow-alt-right']" />
-            </span>
+
           </li>
         </ul>
       </section>
@@ -86,7 +103,6 @@
     props: ['project'],
     data () {
       return {
-        project_images: undefined,
         gitHubLink: 'https://github.com/KyleEvan/ComboSmash-v2',
         gitHubPagesLink: 'https://kyleevan.github.io/ComboSmash-v2/',
       }
@@ -95,20 +111,34 @@
       'work-template': Work_Template,
       FontAwesomeIcon
     },
-    // created(){
-    //
-    //
-    // },
-    updated(){
-      let image = this.images.sized;
-      this.project_images = [
-        image.comboSmash_preview,
-        image.comboSmash_death,
-        image.comboSmash_horde,
-      ];
+    computed:{
+      project_images: function(){
+        let images = this.images.sized;
+        return [
+          images.comboSmash_preview,
+          images.comboSmash_death,
+          images.comboSmash_horde,
+        ];
+
+        // return [
+        //   this.images.sized.comboSmash_preview,
+        //   this.images.sized.comboSmash_death,
+        //   this.images.sized.comboSmash_horde,
+        // ];
+      }
     },
-    // mounted(){
-    // }
+    created(){
+
+    },
+    updated(){
+
+    },
+    mounted(){
+
+    },
+    updated(){
+
+    }
   }
 </script>
 
@@ -116,6 +146,18 @@
 
 <style lang="scss">
   // @import '../../style/global.scss';
+  .carousel-cell{
+
+    &:nth-child(1){
+      img{
+        // height: 40vw;
+        max-height: 70vh;
+      }
+    }
+    img{
+      height: 30vw;
+    }
+  }
   // .carousel-cell{
   //
   //   &:nth-child(1){

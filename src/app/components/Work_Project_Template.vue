@@ -19,9 +19,7 @@
       </div>
 
       <carousel :progressColor="mediumColor">
-        <div class="carousel-cell" v-for="image in project_images">
-          <img :src="image" alt="" />
-        </div>
+        <slot name="slides"></slot>
       </carousel>
 
     </div>
@@ -52,8 +50,11 @@
   // Components
   import Carousel from './Carousel.vue';
 
+  import { globals } from '../globals.js';
+
+
 	export default{
-		props:['project', 'project_images'],
+		props:['project'],
     data(){
       return{
         defaultPrimaryColor: colors.red,
@@ -115,28 +116,53 @@
       //   });
       //   // return tl;
       // },
-      initPage: function(){
+      initEvents: function(){
+        const template = this;
+        const handleResize = this.debounce(function() {
+          this.images = globals.getImages();
+          console.log(this.images);
+
+          // te.setProgressBar();
+        }, 30);
+        window.addEventListener('resize', handleResize);
+      },
+      animateContent: function(){
         const tl = new TimelineLite();
         let sections = Array.from(this.$refs.carouselAside.children);
-        tl.to(sections, .6,
+        let links = Array.from(this.$refs.carouselAside.querySelectorAll('i'));
+        console.log(links);
+        let duration = .4;
+        tl.staggerTo(sections, duration,
         {
           x: '0',
           opacity: 1,
-          delay:.25,
+          delay: .25,
           ease: Power2.easeOut
-        });
+        }, .1)
+        .staggerTo(links, duration*2,{
+          x: '10px',
+          scaleX: 1,
+          scaleY: 1,
+          opacity: 1,
+          ease: Back.easeOut.config(2)
+        }, .1)
+      },
+      initPage: function(){
+        this.initEvents();
+        this.animateContent();
       }
     },
-    updated(){
-      console.log('updated project template');
 
-
-    },
     mounted(){
       // this.animateScroll();
       // this.initScrollMagic();
       this.initPage();
-    }
+    },
+    updated(){
+      // console.log('updated project template');
+
+
+    },
   }
 </script>
 
@@ -148,18 +174,7 @@
 <style lang="scss" scoped>
   @import '../../style/global.scss';
 
-  .carousel-cell{
 
-    &:nth-child(1){
-      img{
-        // height: 40vw;
-        max-height: 70vh;
-      }
-    }
-    img{
-      height: 30vw;
-    }
-  }
 
   .carousel-aside,
   .content{
@@ -211,13 +226,19 @@
       section.links{
         li{
           display: flex;
-
-          a + span{
-            margin-left: .4em;
-            font-size: 130%;
-            line-height: 1.4;
-            display: inline-block;
+          a{
+            i{
+              opacity: 0;
+              transform: scale(.1);
+              display: inline-block;
+            }
           }
+          // a + span{
+          //   margin-left: .4em;
+          //   font-size: 130%;
+          //   line-height: 1.4;
+          //   display: inline-block;
+          // }
         }
       }
     }

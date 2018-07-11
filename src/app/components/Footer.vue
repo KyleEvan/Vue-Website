@@ -1,7 +1,7 @@
 <template>
   <footer>
-    <div class="footer-content">
-      <div>
+    <div class="footer_content">
+      <div class="inner_content">
         <h4>Thank you developing community for these amazing technologies, without them this could not exist</h4>
         <ul>
           <li>
@@ -14,25 +14,21 @@
             <a href="#">Greensock</a>
           </li>
         </ul>
-      </div>
-      <div>
         Some footer text and stuff..<br />
         Thank You,<br />
-        Kyle ༼ つ ͡◕ . ͡◕ ༽つ
+        Kyle<br />
+        ༼ つ ͡◕ . ͡◕ ༽つ
       </div>
     </div>
-    <div class="footer-bg"></div>
   </footer>
 </template>
 
 <script>
-  // import handlerPHP from 'php-loader!../../forms/handler.php';
-  // import fileContent from "../../forms/handler.php";
   export default {
     // name: 'footer',
     data () {
       return {
-        message: false,
+        // message: false,
       }
     },
     methods:{
@@ -44,11 +40,13 @@
 <style lang="scss" scoped>
   footer{
     position: relative;
+    background: #616163;
     padding: 3rem;
 
-    .footer-content{
+    .footer_content{
       z-index: 0;
       display: flex;
+      flex-direction: column;
       justify-content: space-between;
 
       ul{
@@ -58,16 +56,19 @@
         line-height: 1.8;
         list-style: none;
       }
+      div{
+        text-align: center;
+      }
     }
-    .footer-bg{
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      z-index: -4;
-      width: 100%;
-      height: 100%;
-      background: #F5F5F5;
-    }
+    // .footer-bg{
+    //   position: absolute;
+    //   bottom: 0;
+    //   left: 0;
+    //   z-index: -4;
+    //   width: 100%;
+    //   height: 100%;
+    //   background: #F5F5F5;
+    // }
 
   }
 </style>

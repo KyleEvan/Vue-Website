@@ -72,9 +72,9 @@ body {
     align-items: center;
     justify-content: center;
   }
-  
 
-  .content, .footer-content{
+
+  .content, .footer_content{
     max-width: 1400px;
     margin: 0 8%;
     z-index: 0;
@@ -83,13 +83,11 @@ body {
       margin: 0 auto 0 auto;
     }
   }
-  /* #app{
-    width: 100%;
-    overflow-y: hidden;
+  /* global classes */
+  .inner_content{
+    width: 60%;
+    margin: 0 auto;
+  }
 
-  } */
   /* end of app */
 }/* end of body */
-/* h2{
-  font-size: 1..6em;
-} */

@@ -8,7 +8,7 @@
 
     <!-- <svg id="progressBar" :width="progressBar.width" :height="progressBar.height" :viewBox="viewBox" :style="{bottom: -.5*progressBar.height}"> -->
     <svg id="progressBar" :width="progressBar.width" :height="progressBar.height" :viewBox="viewBox" >
-      <path :stroke="progressBar.background" :stroke-width="progressBar.height" :d="path"></path>
+      <path :stroke="progressBar.background" :stroke-width="progressBar.height*2" :d="path"></path>
       <path :stroke="progressColor" :stroke-width="progressBar.height*2" :d="path" :style="{strokeDasharray: progressBar.width, strokeDashoffset: progressBar.progress}"></path>
     </svg>
 
@@ -30,6 +30,7 @@
     props: ['progressColor'],
     data(){
       return {
+        flickityInit: false,
         minHeight: {
           'min-height': '400px'
         },
@@ -47,35 +48,54 @@
       },
       path: function(){
         return `M0 0, ${this.progressBar.width} 0`;
-      }
+      },
     },
     methods: {
       updateProgress: function(progress){
         this.progressBar.progress = this.progressBar.width - (progress * this.progressBar.width);
         return this.progressBar.progress;
       },
-      setWidth: function(width){
-        this.progressBar.width = width;
+      setProgressBar: function(){
+        let width;
+        if(window.innerWidth <= this.breakpoints.md) width = document.documentElement.clientWidth;
+        else width = document.documentElement.clientWidth/2
+        this.progressBar.width = this.progressBar.progress = width;
+        this.progressBar.height = this.$refs.carouselContainer.clientHeight;
+      },
+      initFlickity: function(){
+        if(this.devmode) console.log('Init Flickity');
+        const flkty = new Flickity( this.$refs.carousel, {
+          imagesLoaded: true,
+          draggable: true,
+          freeScroll: true,
+          contain: true,
+          setGallerySize: false
+        });
+        const carousel = this;
+        flkty.on( 'scroll', ( progress ) => {
+          progress = Math.max( 0, Math.min( 1, progress ) );
+          carousel.updateProgress(progress);
+        });
       }
 
     },
     mounted(){
-      this.progressBar.width = this.progressBar.progress = (document.documentElement.clientWidth/2);
-      this.progressBar.height = this.$refs.carouselContainer.clientHeight;
+      this.setProgressBar();
+
+      // console.log(this.images);
+
       // this.progressBar.height = this.$refs.carouselContainer.style.height;
       /*
 
         Initialize Carousel with flickity
 
       */
-      console.log('Init Flickity');
-      let flkty = new Flickity( this.$refs.carousel, {
-        imagesLoaded: true,
-        draggable: true,
-        freeScroll: true,
-        contain: true,
-        setGallerySize: false
-      });
+      // Promise.all(this.images).then(function(values) {
+      //   console.log(values);
+      //   console.log('init flickity in Carousel.vue');
+      // });
+      this.initFlickity();
+
 
 
       /*
@@ -83,23 +103,26 @@
         Events
 
       */
+      // console.log(this.$props);
+      // this.initFlickity();
+      // this.initFlickity();
       const carousel = this;
-      flkty.on( 'scroll', ( progress ) => {
-        progress = Math.max( 0, Math.min( 1, progress ) );
-        carousel.updateProgress(progress);
-      });
-
       const handleResize = this.debounce(function() {
-        // console.log("handling carousel resize");
-
-        carousel.setWidth(document.documentElement.clientWidth);
+        carousel.setProgressBar();
       }, 30);
       window.addEventListener('resize', handleResize);
 
 
     },
     updated(){
+      // console.log('Updated in Carousel.vue');
+      // console.log(this.viewport);
+      // this.setProgressBar();
+      // console.log(this.hassl);
 
+      // if(this.images && !this.flickityInit){
+      //   this.flickityInit = !this.flickityInit;
+      // }
     }
   }
 

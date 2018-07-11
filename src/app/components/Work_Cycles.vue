@@ -1,12 +1,12 @@
 <template>
 
-  <work-template :project="project" :project_images="project_images">
+  <work-template :project="project">
 
-    <!-- <template slot="image_slides">
-      <div class="carousel-cell" v-for="image in images">
+    <template slot="slides">
+      <div class="carousel-cell" v-for="image in project_images">
         <img :src="image" alt="" />
       </div>
-    </template> -->
+    </template>
 
 
     <h2 slot="title">
@@ -74,7 +74,6 @@
     props: ['project'],
     data () {
       return {
-        project_images: undefined,
         gitHubLink: 'https://github.com/KyleEvan/Cycles',
         gitHubPagesLink: 'https://kyleevan.github.io/Cycles/'
       }
@@ -82,13 +81,16 @@
     components:{
       'work-template': Work_Template
     },
-    created(){
-      let image = this.images;
-      this.project_images = [
-        image.sized.cycles,
-        image.sized.cycles,
-        image.sized.cycles,
-      ];
+    computed:{
+      project_images: function(){
+        let images = this.images.sized;
+        return [
+          images.cycles,
+          images.cycles,
+          images.cycles,
+        ];
+      }
+
     }
   }
 </script>
@@ -97,16 +99,16 @@
 
 <style lang="scss">
   // @import '../../style/global.scss';
-  // .carousel-cell{
-  //
-  //   &:nth-child(1){
-  //     img{
-  //       height: 30vw;
-  //       max-height: 70vh;
-  //     }
-  //   }
-  //   img{
-  //     height: 30vw;
-  //   }
-  // }
+  .carousel-cell{
+
+    &:nth-child(1){
+      img{
+        height: 30vw;
+        max-height: 70vh;
+      }
+    }
+    img{
+      height: 30vw;
+    }
+  }
 </style>

@@ -502,16 +502,9 @@ class Shape {
     this.parent = scene.DOM.children.svg.el;
     this.props = props;
     this.scale = getRandomInt(0, 1*props.width); // scale will be 10% and 100% of the letter's width
-    // this.x = (props.left + props.width / 2);
-    // this.y = (props.top - props.height / 2);
     this.x = props.left;
     this.y = props.top;
-    // this.x = document.documentElement.clientWidth/2;
-    // this.y = document.documentElement.clientHeight/2;
-    // console.log(this.x);
-    // console.log(this.y);
-    this.z = (this.scale/props.width) * scene.camera.perspective;
-
+    this.z = (this.scale/props.width) * (scene.camera.perspective*.9);
 
     if(letter) this.letter = letter;
     if(perspective){

@@ -7,24 +7,24 @@
 	<nav>
 	  <ul ref="navItems" class="nav-items" :class="{expanded}">
 	    <li>
-	      <router-link to="/">
+	      <a href="Home" @click.prevent="handleClick">
 	        work
 	      </router-link>
 	    </li>
 	    <li>
-				<router-link to="/about">
+				<a href="About" @click.prevent="handleClick">
 	        about
-	      </router-link>
+	      </a>
 	    </li>
 	    <li>
-				<router-link to="/contact">
+				<a href="Contact" @click.prevent="handleClick">
 	        contact
-	      </router-link>
+	      </a>
 	    </li>
 	  </ul>
 
 		<!-- Mobile Nav Menu -->
-	  <a role="button" class="nav-menu" tabindex="2" href="#" @click.prevent="handleMenuToggle">
+	  <a role="button" class="nav-menu" tabindex="2" href="#" @click.prevent="handleMenuClick">
 			<font-awesome-icon :icon="icon" />
 		</a>
 	</nav>
@@ -49,9 +49,8 @@
 				menuIcon: ['fas', 'bars'],
 				exitIcon: ['fas', 'times'],
         expanded: false,
-				duration: 1
-        // animDirection: -1
-				// menu_svg: menu_svg
+				expand_duration: 1,
+				close_duration: .75
       }
     },
 		computed:{
@@ -60,57 +59,49 @@
 			}
 		},
     methods:{
-			// initMenuSVG: function(){
-			// 	const params = {
-	    //     container: this.$refs.menu,
-	    //     renderer: 'svg',
-	    //     loop: false,
-	    //     autoplay: false,
-	    //     animationData: hamburger_json
-	    //   };
-	    //   let anim;
-	    //   anim = hamburger.loadAnimation(params);
-			// 	return hamburger;
-			// },
-			animateMenuItems: function(){
-				const navItems = this.$refs.navItems.children;
+			toggleMenu: function(){
+				this.expanded = !this.expanded;
+				this.animateMenu();
+			},
+			navigate: function(e){
+        const href = e.target.getAttribute("href");
+        if(href){
+          this.$router.push({
+            name: href
+          });
+					if(this.expanded) this.toggleMenu();
+        }
+				setTimeout(()=>{
+					this.bodyRestoreScroll();
+				}, this.close_duration)
+      },
+      handleClick: function(e){
+				this.bodyNoScroll();
+				this.navigate(e);
+			},
+			handleMenuClick: function(e){
+				this.toggleMenu();
+		  },
+			animateMenu: function(){
+				const navItems = this.$refs.navItems;
         const staggerDelay = .1;
 				if(this.expanded){
-					this.tl.staggerFromTo(navItems, this.duration,
+					TweenLite.to(navItems, this.expand_duration,
 					{
-						x: '50%',
-						opacity: 0
-					},
-					{
-						x: '0%',
-						opacity: 1,
-						ease: Power4.easeOut
-					}, staggerDelay);
+						x: '-100%',
+						ease: Power3.easeOut
+					})
 				}
 				else{
-					this.tl.staggerFromTo(navItems, .2,
+					TweenLite.to(navItems, this.expand_duration,
 					{
 						x: '0%',
-						opacity: 1
-					},
-					{
-						x: '20%',
-						opacity: 0,
-						ease: Power4.easeOut
-					}, staggerDelay);
+						ease: Power3.easeOut
+					})
 				}
 			},
-			handleMenuToggle: function(e){
-				this.expanded = !this.expanded;
-        this.animateMenuItems();
-		  }
-
 		},
 		mounted(){
-      // this.menu = this.initMenuSVG();
-			// console.log(this.menu);
-
-
 
 		},
 		components:{
@@ -136,7 +127,7 @@
 			left: 0;
       display: flex;
       align-items: center;
-			z-index: 3;
+			z-index: 99;
       justify-content: flex-end;
       padding: 3%;
       font-size: 90%;
@@ -215,18 +206,23 @@
 	        position:absolute;
 	        top: 0;
 	        left: 100%;
-	        visibility: hidden;
-	        transform: translateX(0%) translateZ(0);
-					transition: visibility 0s linear 0.6s, transform .6s ease-in;
+	        // visibility: hidden;
+	        // transform: translateX(0%) translateZ(0);
+					// transition: visibility 0s linear 0.6s, transform .6s ease-in;
 	      }
 	      .nav-items.expanded{
-	        visibility: visible;
-	        transform: translateX(-100%);
-					transition: visibility 0s linear 1s, transform .6s cubic-bezier(0.230, 1.000, 0.320, 1.000);
-					transition-delay: 0s;
+	        // visibility: visible;
+	        // transform: translateX(-100%);
+					// transition: visibility 0s linear 1s, transform .6s cubic-bezier(0.230, 1.000, 0.320, 1.000);
+					// transition-delay: 0s;
 	      }
-				.nav-items a{
-					color: #fff;
+				.nav-items {
+					li{
+            margin: 1rem 0;
+						a{
+							color: #fff;
+						}
+					}
 				}
 	    }
   }

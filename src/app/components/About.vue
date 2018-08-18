@@ -39,11 +39,14 @@
   flex-flow: wrap;
 
   .content{
-    margin: 0 8%;
+
     h1{
       font-family: 'InterUI', sans-serif;
       font-weight: 700;
-      font-size: 6vw;
+      font-size: 5vw;
+    }
+    .inner_content{
+      padding: 4em 0;
     }
     // div{
     //   width: 60%;

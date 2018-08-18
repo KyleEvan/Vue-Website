@@ -174,8 +174,7 @@
           ease: Power4.easeOut
         })
         .to(filteredProjects, duration, {
-          x: '-15%',
-          scale: .88,
+          x: '-35%',
           opacity: 0,
           ease: Power4.easeIn,
           transformOrigin: '50% 50%',
@@ -306,7 +305,6 @@
         // Animate Image Background
         const morphImageBg = () => {
           const imageBgClone = this.addImageBg(project, transitionLayer);
-          // console.log(imageBgClone);
           anime({
             targets: imageBgClone,
             points: [

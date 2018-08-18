@@ -28,7 +28,7 @@
       <!-- Synopsis -->
       <section>
         <p>
-          A webbrowser game made with HMTL5 Canvas. It's an arcade style top down horde survival game. I wrote it with Javascript as a final project for my New Media
+          A web browser game made with HMTL5 Canvas. It's an arcade style top down horde survival game. I wrote it with Javascript as a final project for my Rich Media &amp; Web App Dev class.
         </p>
       </section>
 

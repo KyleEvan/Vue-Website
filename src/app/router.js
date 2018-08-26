@@ -1,18 +1,18 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-// import Home from './components/Home.vue';
+import Home from './components/Home.vue';
 
-const Home = () => import('./components/Home.vue');
+// const Home = () => import('./components/Home.vue');
 
 // import Work from './components/Work.vue';
-// import About from './components/About.vue';
-const About = () => import('./components/About.vue');
+import About from './components/About.vue';
+// const About = () => import('./components/About.vue');
 
-// import Contact from './components/Contact.vue';
-const Contact = () => import('./components/Contact.vue');
+import Contact from './components/Contact.vue';
+// const Contact = () => import('./components/Contact.vue');
 
-// import NotFound from './components/NotFound.vue';
-const NotFound = () => import('./components/NotFound.vue');
+import NotFound from './components/NotFound.vue';
+// const NotFound = () => import('./components/NotFound.vue');
 
 import WorkCareers from './components/Work_Careers.vue';
 // const WorkCareers = () => import('./components/Work_Careers.vue');
@@ -21,6 +21,8 @@ import WorkCycles from './components/Work_Cycles.vue';
 // const WorkCycles = () => import('./components/Work_Cycles.vue');
 
 import WorkComboSmash from './components/Work_ComboSmash.vue';
+
+import Test from './components/Test/Test.vue';
 // const WorkComboSmash = () => import('./components/Work_ComboSmash.vue');
 // import { transitions } from './transitions.js';
 
@@ -79,6 +81,13 @@ export default new Router({
       name: 'Contact',
       component: Contact,
       meta: { title: 'Contact | KP', showName: false }
+    },
+
+    {
+      path: '/test',
+      name: 'Test',
+      component: Test,
+      meta: { title: 'Testing | KP', showName: false }
     },
     {
       path: '*',

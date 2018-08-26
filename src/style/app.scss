@@ -1,5 +1,13 @@
 @import 'global.scss';
 
+
+
+@font-face {
+  font-family: "Eksell Display";
+  src: url("../fonts/EksellDisplay-Medium.woff") format("woff");
+}
+
+
 @font-face {
   font-family: "InterUI";
   src: url("../fonts/Inter-UI-Regular.woff2") format("woff2"),
@@ -58,7 +66,6 @@ body {
   margin: 0;
   background: #FFF;
   color: #423A2F;
-  /* overflow: auto; */
   overflow-x: hidden;
   font-family: 'InterUI', sans-serif;
 

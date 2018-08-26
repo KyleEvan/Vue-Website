@@ -15,7 +15,7 @@
     </transition>
 
     <Scene ref="scene" :scene="scene">
-      <h1 id="name" style="opacity:0;" ref="name">Kyle</h1>
+      <h1 id="name" style="opacity: 0;" ref="name">Kyle</h1>
     </Scene>
 
     <Footer/>
@@ -56,7 +56,7 @@
     computed:{
       sceneConfig: function(){
         return {
-          images_updated: undefined,
+          // images_updated: undefined,
           scene: this.$refs.scene.$el,
           name: this.$refs.name,
           devmode: this.devmode,

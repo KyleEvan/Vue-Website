@@ -11,7 +11,7 @@
       v-on:leave="leave"
       v-bind:css="false"
     >
-      <router-view class="main" ref="main"></router-view>
+      <router-view class="main" ref="main" :images="images"></router-view>
     </transition>
 
     <Scene ref="scene" :scene="scene">
@@ -38,11 +38,11 @@
 
 
   export default {
+    props: ['images'],
     name: 'app',
     data(){
       return {
         loader: document.getElementById('loader'),
-        // images: undefined,
         scene: undefined,
         tl: new TimelineLite({ paused: true }),
         showName: undefined,
@@ -97,16 +97,16 @@
           }
         });
       },
-      handleResize: function(){
-        // let newImages = this.getImages();
-        // if(this.images_updated != newImages){
-        //   console.log('update images');
-        //   this.images_updated = this.getImages();;
-        // }
-        console.log(this.images_updated);
-
-        this.images_updated = this.getImages();
-      },
+      // handleResize: function(){
+      //   // let newImages = this.getImages();
+      //   // if(this.images_updated != newImages){
+      //   //   console.log('update images');
+      //   //   this.images_updated = this.getImages();;
+      //   // }
+      //   console.log(this.images_updated);
+      //
+      //   this.images_updated = this.getImages();
+      // },
       // initEvents: function(){
       //   // Updates viewport and images data
       //   // const handleResize = this.debounce(() => {
@@ -140,29 +140,22 @@
       }
     },
     created(){
-      this.images_updated = this.images;
-      this.loadImages(this.images.sources);
-
-      window.addEventListener('resize', this.handleResize);
-
-      // Initially set title when app is first created
-      document.title = this.$route.meta.title;
+      console.log('creating app.vue');
       // Disable Scroll while app loads assets
       this.bodyNoScroll();
-      // console.log(this.images);
-
-      // Set images
-      // this.images = getImages(this.breakpoints, this.viewport.cWidth);
-      // this.viewport = this.getWindow();
-      // this.images = this.getImages();
-      // console.log(this.images.sources);
+      // Initially set title when app is first created
+      document.title = this.$route.meta.title;
+      // console.log(this.getImages());
+      // getting specific image
+      // images = this.getImages('careers_screens');
+      // const preload_images = globals.getImages();
+      this.loadImages(this.images.sources);
     },
     mounted(){
-      // console.log(this.$data);
+
     },
     updated(){
-      // console.log(this.$data);
-      // console.log("app updated");
+
     },
     watch: {
       $route: function(to, from){

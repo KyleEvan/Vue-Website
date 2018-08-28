@@ -19,7 +19,7 @@
               </p> -->
             </div>
             <div class="image" :style="{background: project.primaryColor}">
-              <img :src="project.image.src" />
+              <img :src="images.sized[project.image.src]" />
             </div>
           </a>
         <!-- </div> -->
@@ -33,7 +33,6 @@
 <script>
   // Color Palette
   import {colors} from '../colors.js';
-
 
   // JS Libraries
   import ScrollMagic from "scrollmagic";
@@ -49,11 +48,11 @@
 
 
   export default {
+    props: ['images'],
     name: 'home',
 
     data(){
       return{
-        // viewport: undefined, // viewport object
         tl: new TimelineLite(),
 
         transitionedProject: undefined,
@@ -78,7 +77,7 @@
             image:{
               width: '40%',
               newHeight: .3,
-              src: careers_screens_lg_png
+              src: 'careers_screens'
             },
             primaryColor: colors.blue,
             lightColor: colors.lightBlue,
@@ -93,7 +92,7 @@
             image:{
               width: '38%',
               newHeight: .3,
-              src: preview_lg_jpg
+              src: 'comboSmash_preview'
             },
             primaryColor: colors.red,
             lightColor: colors.lightRed,
@@ -123,7 +122,7 @@
             image:{
               width: '32%',
               newHeight: .3,
-              src: cycles_lg_jpg
+              src: 'cycles'
             },
             primaryColor: colors.turquoise,
             lightColor: colors.lightTurquoise,
@@ -362,6 +361,10 @@
       }
     },
     mounted(){
+      console.log('home.vue mounted');
+      // this.images = globals.app_images;
+      console.log(this.images);
+
       // this.setTransitionedProject();
 
       // Initialize Events
@@ -409,6 +412,10 @@
           .addTo(controller);
           this.text.push(text);
         }
+    },
+    updated(){
+      console.log('something updated');
+      console.log(this.images);
 
     }
   }

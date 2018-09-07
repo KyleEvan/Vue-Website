@@ -1,17 +1,27 @@
 
 
+Current Tasks:
+- Rewriting shapes.js to work without name
+✔ Responsive js images (Mostly done with implementation)
+- New Home title animation
+✔ New animation before site loads
 
-
-Nice to Haves
-- Look into service workers to serve offline page
-- caching static assets
-- Google Analytics
 
 Must Do
 - Enable compression of assets
 - Add Resume to Contact Us
 - Not Found Page, no-script page
 - Optimize production assets, watch size limit
+- Make sure all assets have proper sized images for each breakpoint level
+- Make globals.js master singe source of truth for breakpoints, functions, colors, fonts. To be shared between js and scss files accross the app
+
+
+Nice to Haves
+- Look into service workers to serve offline page
+- caching static assets
+- Google Analytics
+- Transition from project page back to home
+
 
 
 Resources

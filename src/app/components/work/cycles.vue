@@ -63,15 +63,10 @@
 </template>
 
 <script>
-  import Work_Template from './Work_Project_Template.vue';
-
-  // Images
-  // import careersPNG from '../../images/career-areas-mobile.png';
-  // import careersScreensPNG from '../../images/careers_screens.png';
-  // import cycles_lg_jpg from '../../images/cyclesTile@lg.jpg';
+  import Work_Template from './Work_Template.vue';
 
   export default {
-    props: ['project'],
+    props: ['project', 'images'],
     data () {
       return {
         gitHubLink: 'https://github.com/KyleEvan/Cycles',
@@ -83,7 +78,7 @@
     },
     computed:{
       project_images: function(){
-        let images = this.images.sized;
+        let images = this.$props.images.sized;
         return [
           images.cycles,
           images.cycles,

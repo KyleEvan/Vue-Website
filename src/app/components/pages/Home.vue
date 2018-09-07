@@ -4,7 +4,6 @@
     <div class="container">
       <div class="content">
         <h2>Work <span>&amp;</span> Projects</h2>
-        <!-- <div class="grid"> -->
           <a
             :href="project.href"
             @click.prevent="handleClick"
@@ -22,7 +21,6 @@
               <img :src="images.sized[project.image.src]" />
             </div>
           </a>
-        <!-- </div> -->
       </div>
     </div>
 
@@ -31,21 +29,13 @@
 </template>
 
 <script>
-  // Color Palette
-  import {colors} from '../colors.js';
+  // Project Data
+  import {projects} from '../../projects.js';
 
   // JS Libraries
   import ScrollMagic from "scrollmagic";
   import { TimelineLite } from "gsap";
   import anime from 'animejs';
-
-  // Images
-  import careers_screens_lg_png from '../../images/careers_screens@lg.png';
-  import cycles_lg_jpg from '../../images/cyclesTile@lg.jpg';
-  import preview_lg_jpg from '../../images/comboSmash-preview@lg.jpg';
-  import batmanPoster_lg_jpg from '../../images/batman@lg.jpg';
-  // import careersPNG from '../../images/career-areas-mobile.png';
-
 
   export default {
     props: ['images'],
@@ -53,84 +43,21 @@
 
     data(){
       return{
+        projects: projects,
         tl: new TimelineLite(),
 
-        transitionedProject: undefined,
         imageMaxHeight: .7, // 70% of vh
 
         project: undefined,
         text: [],
-        transforms: undefined,
 
-        transitioning: false,
+        transforms: undefined,
         transition:{
           bgPoints: '0 0 0 0 0 0 0 0',
           bgFill: 'transparent'
         },
-
-        projects:[
-          {
-            align: 'rtl',
-            title: 'Member & Careers Redesign',
-            summary: 'Complete UX/UI overhaul of member and careers sections of Excellus BCBS and Univera Healthcare',
-            href: 'Careers-Redesign',
-            image:{
-              width: '40%',
-              newHeight: .3,
-              src: 'careers_screens'
-            },
-            primaryColor: colors.blue,
-            lightColor: colors.lightBlue,
-            mediumColor: colors.mediumBlue,
-            darkColor: colors.darkBlue
-          },
-          {
-            align: 'rtl',
-            title: 'Combo Smash',
-            summary: 'Lorem ipsum dolor sit',
-            href: 'ComboSmash',
-            image:{
-              width: '38%',
-              newHeight: .3,
-              src: 'comboSmash_preview'
-            },
-            primaryColor: colors.red,
-            lightColor: colors.lightRed,
-            mediumColor: colors.mediumRed,
-            darkColor: colors.darkRed
-          },
-          {
-            align: 'rtl',
-            title: 'Batman Comic Store Poster',
-            summary: 'Lorem ipsum dolor sit',
-            href: 'ComboSmash',
-            image:{
-              width: '36%',
-              newHeight: .3,
-              src: batmanPoster_lg_jpg
-            },
-            primaryColor: colors.peach,
-            lightColor: colors.lightPeach,
-            mediumColor: colors.mediumPeach,
-            darkColor: colors.darkPeach
-          },
-          {
-            align: 'rtl',
-            title: 'Cycles',
-            summary: 'Lorem ipsum dolor sit',
-            href: 'Cycles',
-            image:{
-              width: '32%',
-              newHeight: .3,
-              src: 'cycles'
-            },
-            primaryColor: colors.turquoise,
-            lightColor: colors.lightTurquoise,
-            mediumColor: colors.mediumTurquoise,
-            darkColor: colors.darkTurquoise
-          },
-
-        ],
+        transitioning: false,
+        transitionedProject: undefined
       }
     },
 
@@ -144,7 +71,7 @@
 
           this.$router.push({
             name: href,
-            params: {project: project}
+            params: {project: project, images: this.images}
           });
         }
       },
@@ -182,7 +109,6 @@
       },
       setTransitionedProject: function(){
         console.log('setting transitioned project');
-        console.log(this.viewport);
         const minHeight = 400; // Carousel min-height
         let newWidth, newHeight, newOffset;
         // Mobile
@@ -423,7 +349,7 @@
 </script>
 
 <style lang="scss" scoped>
-@import '../../style/global.scss';
+@import '../../../style/global.scss';
 .main{
   /* To accomodate scene */
   padding-top: 120vh;

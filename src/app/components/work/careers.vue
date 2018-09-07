@@ -20,7 +20,7 @@
       <!-- Synopsis -->
       <section>
         <p>
-          A UI and UX redesign for the member and careers sections of corporate healthcare websites (Excellus BCBS and Univera Healthcare). This project overhauled the entire front-end of these sites adding responsiveness, accessibility, and overall a better flow of content for a more consitent modern web experience accross devices.
+          UI and UX redesign for the member and careers sections of corporate healthcare websites (Excellus BCBS and Univera Healthcare). This project overhauled the entire front-end of these sites adding responsiveness, accessibility, and overall a better flow of content for a more consitent modern web experience accross devices.
         </p>
       </section>
 
@@ -61,10 +61,10 @@
 </template>
 
 <script>
-  import Work_Template from './Work_Project_Template.vue';
+  import Work_Template from './Work_Template.vue';
 
   export default {
-    props: ['project'],
+    props: ['project', 'images'],
     data () {
       return {
         link_excellus_home: 'https://www.excellusbcbs.com/wps/portal/xl/careers/',
@@ -77,15 +77,16 @@
     },
     computed: {
       project_images: function(){
+        let images = this.$props.images.sized;
         return [
-          this.images.sized.careers_screens,
-          this.images.sized.careers_screens,
-          this.images.sized.careers_screens,
+          images.careers_screens,
+          images.careers_screens,
+          images.careers_screens,
         ]
       }
     },
     created(){
-
+      // console.log(this.$props.images);
     }
   }
 </script>
@@ -95,7 +96,6 @@
 <style lang="scss">
   // @import '../../style/global.scss';
   .carousel-cell{
-
     &:nth-child(1){
       img{
         height: 30vw;

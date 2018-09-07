@@ -26,13 +26,16 @@
 <script>
   // Color Palette
   import {colors} from '../colors.js';
+
   // Libraries
   import { TimelineLite } from "gsap";
   import load from 'load-asset';
+
   // Components
   import Nav from './Nav.vue';
   import Footer from './Footer.vue';
   import Scene from './Scene.vue';
+
   // JS
   import { ShapeScene } from '../shapes.js';
 
@@ -45,7 +48,6 @@
         loader: document.getElementById('loader'),
         scene: undefined,
         tl: new TimelineLite({ paused: true }),
-        showName: undefined,
       }
     },
     components:{
@@ -56,11 +58,9 @@
     computed:{
       sceneConfig: function(){
         return {
-          // images_updated: undefined,
           scene: this.$refs.scene.$el,
           name: this.$refs.name,
           devmode: this.devmode,
-          showName: this.showName,
           shapeColors: [
             colors.red,
             colors.lightTurquoise,
@@ -89,7 +89,6 @@
         });
       },
       async loadImages(images){
-        // console.log(this.images);
         const assets = await load.any(images, (progress) => {
           if(progress.count >= progress.total){
             console.log('All images loaded');
@@ -97,32 +96,10 @@
           }
         });
       },
-      // handleResize: function(){
-      //   // let newImages = this.getImages();
-      //   // if(this.images_updated != newImages){
-      //   //   console.log('update images');
-      //   //   this.images_updated = this.getImages();;
-      //   // }
-      //   console.log(this.images_updated);
-      //
-      //   this.images_updated = this.getImages();
-      // },
-      // initEvents: function(){
-      //   // Updates viewport and images data
-      //   // const handleResize = this.debounce(() => {
-      //   //   // this.viewport = this.getWindow();
-      //   //   // this.getsetWindow();
-      //   //   // this.images = getImages(this.breakpoints, this.viewport.cWidth);
-      //   //   // this.viewport = this.getWindow();
-      //   //   // this.images = this.getImages();
-      //   // }, 25);
-      //   // window.addEventListener('resize', handleResize);
-      // },
       initScene: function(){
         this.scene = ShapeScene(this.sceneConfig);
       },
       initApp: function(){
-        // this.initEvents();
         this.initScene();
         this.bodyRestoreScroll();
       },
@@ -145,11 +122,8 @@
       this.bodyNoScroll();
       // Initially set title when app is first created
       document.title = this.$route.meta.title;
-      // console.log(this.getImages());
-      // getting specific image
-      // images = this.getImages('careers_screens');
-      // const preload_images = globals.getImages();
-      this.loadImages(this.images.sources);
+
+      this.loadImages(this.$props.images.sources);
     },
     mounted(){
 
@@ -161,17 +135,9 @@
       $route: function(to, from){
         // Change page title on route change
         document.title = to.meta.title;
-        this.showName = this.$route.meta.showName;
-        if(this.scene){
-          if(!this.showName){
-            this.scene.animations.hideLetters();
-          }else{
-            this.scene.animations.showLetters();
-          }
-        }
 
-        const toDepth = to.path.split('/').length;
-        const fromDepth = from.path.split('/').length;
+        let toDepth = to.path.split('/').length;
+        let fromDepth = from.path.split('/').length;
         if(toDepth < fromDepth) console.log('higher level');
         if(toDepth > fromDepth) console.log('lower level');
         if(toDepth == fromDepth) console.log('same level');
@@ -181,6 +147,6 @@
 </script>
 
 <style lang="scss">
-  @import '../../style/global.scss';
+  // @import '../../style/global.scss';
 
 </style>

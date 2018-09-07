@@ -41,16 +41,16 @@
 -->
 <script>
   // Color Palettes
-  import {colors} from '../colors.js';
+  import {colors} from '../../colors.js';
 
   // Libraries
   import ScrollMagic from "scrollmagic";
   import { TimelineLite } from "gsap";
 
   // Components
-  import Carousel from './Carousel.vue';
+  import Carousel from '../Carousel.vue';
 
-  import { globals } from '../globals.js';
+  // import { globals } from '../globals.js';
 
 
 	export default{
@@ -117,14 +117,14 @@
       //   // return tl;
       // },
       initEvents: function(){
-        const template = this;
-        const handleResize = this.debounce(function() {
-          this.images = globals.getImages();
-          console.log(this.images);
+        // const template = this;
+        // const handleResize = this.debounce(function() {
+        //   this.images = globals.getImages();
+        //   console.log(this.images);
 
           // te.setProgressBar();
-        }, 30);
-        window.addEventListener('resize', handleResize);
+        // }, 30);
+        // window.addEventListener('resize', handleResize);
       },
       animateContent: function(){
         const tl = new TimelineLite();
@@ -172,7 +172,7 @@
 
 -->
 <style lang="scss" scoped>
-  @import '../../style/global.scss';
+  @import '../../../style/global.scss';
 
 
 

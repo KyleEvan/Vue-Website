@@ -1,6 +1,7 @@
 import "babel-polyfill";
 import "classlist-polyfill";
 import '../style/app.scss';
+
 import Vue from 'vue';
 import router from './router.js'
 import App from './components/App.vue';
@@ -44,6 +45,23 @@ Vue.mixin({
     bodyRestoreScroll: function(){
       this.body.removeAttribute("style");
     },
+    debounce: function(func, wait, immediate){
+      var timeout;
+      return function() {
+        var context = this,
+          args = arguments;
+        var later = function() {
+          timeout = null;
+          if (!immediate)
+            func.apply(context, args);
+        };
+        var callNow = immediate && !timeout;
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+        if (callNow)
+          func.apply(context, args);
+      };
+    }
   }
 });
 
@@ -86,7 +104,9 @@ new Vue({
           breakpoint = this.breakpoints[bp_Sizes[b]];
         }
       }
-      if(breakpoint == null) breakpoint = this.breakpoints[bp_Sizes[0]];
+      if(breakpoint == null){
+        breakpoint = this.breakpoints[bp_Sizes[0]];
+      }
       return breakpoint;
     },
 
@@ -100,7 +120,7 @@ new Vue({
       this.last_breakpoint = this.current_breakpoint();
     },
     handleResize: function(){
-      globals.debounce(this.checkBreakpoint(), 500, false);
+      this.debounce(this.checkBreakpoint(), 500, false);
     },
   },
   created(){

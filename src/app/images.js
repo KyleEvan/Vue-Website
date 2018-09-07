@@ -1,7 +1,7 @@
 import career_areas_xl from '../images/career-areas-mobile.png';
 
 import careers_screens_sm_png from '../images/careers_screens@sm.png';
-import careers_screens_md_png from '../images/careers_screens@sm.png';
+import careers_screens_md_png from '../images/careers_screens@md.png';
 import careers_screens_lg_png from '../images/careers_screens@lg.png';
 import careers_screens_xl_png from '../images/careers_screens@xl.png';
 
@@ -20,7 +20,7 @@ import cycles_md_jpg from '../images/cyclesTile@md.jpg';
 import cycles_lg_jpg from '../images/cyclesTile@lg.jpg';
 
 
-const images = [
+var images = [
   {
     name: 'careers_screens',
     src: {

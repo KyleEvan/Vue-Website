@@ -2,23 +2,29 @@
   <div>
 
     <div class="container">
-      <div class="content">
-        <h2>Work <span>&amp;</span> Projects</h2>
+      <h2>Work <span>&amp;</span> Projects</h2>
+
+      <div class="content projects">
           <a
             :href="project.href"
             @click.prevent="handleClick"
             v-for="project in projects"
-            :data-align="project.align"
-            :style="{width: project.image.width}"
+            :style="{background: project.primaryColor}"
             class="project">
-            <div class="text">
-              <h3>{{project.title}}</h3>
-              <!-- <p>
-                {{project.summary}}
-              </p> -->
-            </div>
-            <div class="image" :style="{background: project.primaryColor}">
+            <div class="bg"></div>
+
+            <!-- :style="{width: project.image.width}" -->
+              <!-- :data-align="project.align" -->
+
+            <div class="image">
               <img :src="images.sized[project.image.src]" />
+            </div>
+            <div class="caption">
+              <span class="name">{{project.name}}</span>
+              <p>
+                {{trimCaption(project.caption)}}
+                <span>...Read more »</span>
+              </p>
             </div>
           </a>
       </div>
@@ -38,20 +44,27 @@
   import anime from 'animejs';
 
   export default {
-    props: ['images'],
+    props: ['images', 'events'],
     name: 'home',
 
     data(){
       return{
         projects: projects,
+        projects_el_arr: [],
+        project: undefined,
+
+
+
+
         tl: new TimelineLite(),
 
         imageMaxHeight: .7, // 70% of vh
 
-        project: undefined,
-        text: [],
+
 
         transforms: undefined,
+
+        transition_obj: undefined,
         transition:{
           bgPoints: '0 0 0 0 0 0 0 0',
           bgFill: 'transparent'
@@ -60,15 +73,21 @@
         transitionedProject: undefined
       }
     },
-
     methods:{
+      //---------------< Helper Functions >---------------
+      trimCaption: function(caption){
+        let word_limit = 16;
+        caption = caption.split(" ").splice(0, word_limit).join(" ");
+        return caption;
+      },
+
+
       navigate: function(e, project, background){
         const href = e.target.getAttribute("href");
         if(href){
           // Cleanup transitionLayer
           background.parentNode.outerHTML = "";
           background = null;
-
           this.$router.push({
             name: href,
             params: {project: project, images: this.images}
@@ -79,36 +98,37 @@
         return `${l} ${t} ${r} ${t} ${r} ${b} ${l} ${b}`;
       },
       getImageScale: function(project, container){
-        const padding = parseInt(window.getComputedStyle(project.imageContainer, null).getPropertyValue('padding-top'), 10);
+        let padding = parseInt(window.getComputedStyle(project.el, null).getPropertyValue('padding-top'), 10);
         let newHeight = window.innerWidth*project.data.image.newHeight;
         let newMaxHeight = window.innerHeight*this.imageMaxHeight;
         let imageHeight = newHeight > newMaxHeight? newMaxHeight : newHeight;
         let scale = imageHeight/(container.height - (padding*2));
         return scale;
       },
-      hideProjects: function(target){
-        const projects = Array.from(document.querySelectorAll('.project'));
-        // const text = document.querySelector('.text');
-        const duration = .6;
-
-        let filteredProjects = projects.filter( (el) => {
+      animateOut: function(targets){
+        console.log(targets);
+        let dur = .3;
+        this.tl.to(targets, dur,
+        {
+          y: '20%',
+          opacity: 0,
+          ease: Expo.easeIn,
+          delay: .05,
+          transformOrigin: '50% 50%'
+        }, `-=${dur/2}`);
+      },
+      hideElements: function(target){
+        let hide_els, current_caption, filtered_projects;
+        hide_els = [];
+        current_caption = target.querySelector('.caption');
+        hide_els.push(current_caption);
+        filtered_projects = this.projects_el_arr.filter( (el) => {
           return (el !== target);
         });
-        this.tl.to(this.text, duration/2, {
-          // y: '20px',
-          opacity: 0,
-          ease: Power4.easeOut
-        })
-        .to(filteredProjects, duration, {
-          x: '-15%',
-          scale: .88,
-          opacity: 0,
-          ease: Power4.easeIn,
-          transformOrigin: '50% 50%',
-        }, `-=${duration/2}`);
+        hide_els = hide_els.concat(filtered_projects);
+        this.animateOut(hide_els);
       },
-      setTransitionedProject: function(){
-        console.log('setting transitioned project');
+      determineViewport: function(){
         const minHeight = 400; // Carousel min-height
         let newWidth, newHeight, newOffset;
         // Mobile
@@ -131,7 +151,7 @@
         }
         let width = newWidth*this.viewport.cWidth;
         let height = (newHeight*this.viewport.cHeight) >= minHeight ? (newHeight*this.viewport.cHeight) : minHeight;
-        this.transitionedProject = {
+        return {
           width: width,
           height: height,
           offset:{
@@ -143,95 +163,97 @@
             y: (height/2) + (newOffset.y*this.viewport.cHeight)
           },
           points: this.getPoints(newOffset.x*this.viewport.cWidth, newOffset.y*this.viewport.cHeight, this.viewport.cWidth, height)
-        }
+        };
       },
       getProjectData: function(target){
-        const projects = document.querySelectorAll('.project');
-        for (let i = projects.length-1; i >= 0; i--){
-          let project = projects[i];
+        // const projects = document.querySelectorAll('.project');
+        console.log(target);
+        for (let i = this.projects_el_arr.length-1; i >= 0; i--){
+          let project = this.projects_el_arr[i];
+
           if(project == target){
+            console.log(project);
+
             return {
               el: project,
-              image: project.querySelector('.image > img'),
-              imageContainer: project.querySelector('.image'),
+              image: project.querySelector('img'),
               data: this.projects[i]
             }
           }
         }
       },
       calcProjectTransforms: function(project){
-        const container = project.imageContainer.getBoundingClientRect();
-        const containerCenter = {
+        let container = project.el.getBoundingClientRect();
+        let container_center = {
           x: container.left + container.width/2,
           y: container.top + container.height/2
         };
-        const newProjectCenter = this.transitionedProject.center;
+        let new_center = this.transition_obj.center;
         return {
           scale: this.getImageScale(project, container),
-          translateX: newProjectCenter.x - containerCenter.x,
-          translateY: newProjectCenter.y - containerCenter.y,
-          newPoints: this.transitionedProject.points
+          translateX: new_center.x - container_center.x,
+          translateY: new_center.y - container_center.y,
+          newPoints: this.transition_obj.points
         };
       },
       createTransitionLayer: function(){
-        const transitionContainer = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-        transitionContainer.setAttribute('viewBox', `${0} ${0} ${this.viewport.cWidth} ${this.viewport.cHeight}`);
-        transitionContainer.setAttribute('style', `
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          z-index: -3;`
-        );
-        document.getElementById('app').appendChild(transitionContainer);
-        return transitionContainer;
+        let transition_el = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        let classname = 'transition_overlay';
+        transition_el.setAttribute('viewBox', `${0} ${0} ${this.viewport.cWidth} ${this.viewport.cHeight}`);
+        transition_el.classList.add(classname);
+        this.app.appendChild(transition_el);
+        return transition_el;
       },
-      addImageBg: function(project, transitionLayer){
-        const container = project.imageContainer.getBoundingClientRect();
+      createProjectBgs: function(project, transitionLayer){
+        let container = project.el.getBoundingClientRect();
+        let color_bg = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+        // let overlay_bg = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+        let points = this.getPoints(container.left, container.top, container.right, container.bottom);
 
-        const imageBg = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
-        imageBg.setAttribute('fill', project.data.primaryColor);
+        color_bg.setAttribute('fill', project.data.primaryColor);
+        // overlay_bg.setAttribute('fill', '#fff');
+        color_bg.setAttribute('points', points);
+        // overlay_bg.setAttribute('points', points);
 
-        const points = this.getPoints(container.left, container.top, container.right, container.bottom);
-        imageBg.setAttribute('points', points);
-
-        transitionLayer.appendChild(imageBg);
-        document.getElementById('app').appendChild(transitionLayer);
+        transitionLayer.appendChild(color_bg);
+        // transitionLayer.appendChild(overlay_bg);
+        this.app.appendChild(transitionLayer);
 
         // Hide original background
-        project.imageContainer.style.background = 'transparent';
-
+        project.el.style.background = 'transparent';
         return imageBg;
       },
-      addTransitionBg: function(project, transitionLayer){
-        const transitionBg = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
-        const w = this.viewport.width; // viewport & height
-        const h = this.viewport.cHeight;
+      createTransitionBgObj: function(project, transitionLayer){
+        let transitionBg = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+        // let w = this.viewport.width; // viewport & height
+        // let h = this.viewport.cHeight;
         transitionBg.setAttribute('points', this.getPoints(this.viewport.width, 0, this.viewport.width*2, this.viewport.cHeight));
         transitionBg.setAttribute('fill', project.data.lightColor);
         transitionLayer.appendChild(transitionBg);
         let transitionBgObj = {
           el: transitionBg,
-          width: w
+          width: this.viewport.width
         }
         return transitionBgObj;
       },
       executeTransition: function(e, project, transforms){
         const transitionLayer = this.createTransitionLayer();
-        const transitionBgObj = this.addTransitionBg(project, transitionLayer);
-
-        const imageBgAnimDuration = 300;
+        const transitionBgObj = this.createTransitionBgObj(project, transitionLayer);
+        const imageBgAnimDuration = 400;
         const projectAnimDuration = .7;
         const transitionBgAnimDur = 1.3;
 
+        const animate_hideElements = .3;
+
+
         // Animate and hide other projects
-        this.hideProjects(e.target);
+        this.hideElements(e.target);
+        //this.centerProject();
 
         // Animate Image Background
         const morphImageBg = () => {
-          const imageBgClone = this.addImageBg(project, transitionLayer);
-          // console.log(imageBgClone);
+          const project_bg = this.createProjectBgs(project, transitionLayer);
+          console.log(project_bg);
           anime({
             targets: imageBgClone,
             points: [
@@ -248,9 +270,14 @@
           });
         };
 
-        // Animate
-        // Transition image background
-        this.tl.to(project.imageContainer, projectAnimDuration, {
+        // Translate Project
+        let background = project.el.querySelector('.bg');
+        console.log(background);
+        // increase z index val to bring project to top layer
+        this.tl.set(project.el, {
+          zIndex: 3
+        })
+        .to(project.el, projectAnimDuration, {
           x: transforms.translateX,
           y: transforms.translateY,
           scale: transforms.scale,
@@ -263,6 +290,10 @@
             morphImageBg();
           }
         })
+        .to(background, projectAnimDuration, {
+          opacity: 0,
+          ease: Power3.easeInOut
+        })
 
         // Transition Bg, Cover Screen swipe left to right
         .to(transitionBgObj.el, transitionBgAnimDur, {
@@ -272,11 +303,14 @@
 
       },
       handleClick: function(e){
-
         if(!this.transitioning){
-          this.bodyNoScroll();
-          this.setTransitionedProject();
+          // Starting transition, transitioning = true
           this.transitioning = true;
+          // Disable scroll
+          this.bodyNoScroll();
+          // Transition obj sets values used to execute transition
+          this.transition_obj = this.determineViewport();
+          // Get project data
           this.project = this.getProjectData(e.target);
           this.transforms = this.calcProjectTransforms(this.project);
           this.executeTransition(e, this.project, this.transforms);
@@ -284,64 +318,54 @@
         else{
           return;
         }
+      },
+      initScrollMagic: function(){
+        // ScrollMagic Scene
+        const controller = new ScrollMagic.Controller();
+        const projectsContainer = document.querySelector('.projects');
+        let offset = .065;
+        let appearDur = .8;
+          for(let i = 0; i < this.projects_el_arr.length; i++){
+            let project = this.projects_el_arr[i];
+            let image = project.querySelector('.image > img');
+            let caption = project.querySelector('.caption');
+            let projectScene = new ScrollMagic.Scene({
+              triggerElement: projectsContainer,
+              triggerHook: .6,
+              reverse: false
+            })
+            .on('enter', () => {
+              this.tl.to(project, appearDur+=offset,
+              {
+                y: '0',
+                opacity: 1,
+                ease: Power3.easeOut
+              }, 0)
+            })
+            .addTo(controller);
+          }
       }
     },
+    // beforeCreate(){
+    //   console.log('before created');
+    //
+    // },
+    created(){
+      // listen for app to load
+      this.events.$on('app-loaded', () => {
+        console.log('init home.vue');
+      });
+    },
     mounted(){
-      console.log('home.vue mounted');
-      // this.images = globals.app_images;
-      console.log(this.images);
 
-      // this.setTransitionedProject();
+      this.projects_el_arr = Array.from(document.querySelectorAll('.project'));
+      console.log(this.projects_el_arr);
+      console.log(this.$props.images);
+      this.initScrollMagic();
 
-      // Initialize Events
-      // const handleResize = this.debounce(() => {
-      //   console.log('setting project');
-      //   console.log(this.viewport);
-      //   // this.setTransitionedProject();
-      // }, 50);
-      // window.addEventListener('resize', handleResize);
 
-      // ScrollMagic Scene
-      const projects = document.querySelectorAll('.project');
-      const controller = new ScrollMagic.Controller();
-        for(let i = 0; i < projects.length; i++){
-          let project = projects[i];
-          const imageContainer = project.querySelector('.image');
-          const image = project.querySelector('.image > img');
-          const text = project.querySelector('.text');
-          const delay = .2;
-          const projectScene = new ScrollMagic.Scene({
-            triggerElement: project,
-            triggerHook: .9,
-            reverse: false
-          })
-          .on('enter', () => {
-            this.tl.to(imageContainer, 1,
-            {
-              y: '0',
-              opacity: 1,
-              ease: Power3.easeOut
-            }, i*delay)
-            .to(image, 1,
-            {
-              y: '0',
-              opacity: 1,
-              ease: Circ.easeOut
-            }, i*delay)
-            .to(text, .6,
-            {
-              x: '0',
-              opacity: 1,
-              ease: Power2.easeOut
-            }, (i*delay) + .55)
-          })
-          .addTo(controller);
-          this.text.push(text);
-        }
     },
     updated(){
-      console.log('something updated');
-      console.log(this.images);
 
     }
   }
@@ -350,12 +374,92 @@
 
 <style lang="scss" scoped>
 @import '../../../style/global.scss';
+
+.main{
+  padding-top: 120vh;
+
+  .projects{
+    padding-bottom: 12vh;
+    display: flex;
+    align-items: flex-start;
+    flex-flow: row wrap;
+    justify-content: space-around;
+
+    .project{
+      position: relative;
+      display: flex;
+      flex-flow: column;
+      width: 90%;
+      border-radius: 3px;
+      overflow: hidden;
+      border: 1px solid #CAD2C5;
+      text-decoration: none;
+      opacity: 0;
+      transform: translateY(15%);
+      &>div{
+        pointer-events: none;
+      }
+      @include medium{
+        width: 45%;
+      }
+      @include large{
+        width: 28.33%;
+      }
+
+      .bg{
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: #fff;
+      }
+
+      .image{
+        padding: 1.5em;
+        position: absolute;
+        overflow: hidden;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        img{
+          transform: translateY(-20%);
+          max-height: 70%;
+          max-width: 100%;
+        }
+      }
+      .caption{
+        padding: 1em;
+        margin-top: 50%;
+        z-index: 1;
+        background: #fff;
+
+        .name{
+          font-weight: 700;
+          opacity: 1;
+        }
+        p{
+          opacity: .75;
+          margin: .5em 0;
+        }
+      }
+    }
+  }
+}
+
+
+
 .main{
   /* To accomodate scene */
   padding-top: 120vh;
   .container{
 
-    .content{
+    .contsent{
       padding-bottom: 12vh;
       display: flex;
       align-items: flex-start;

@@ -12,8 +12,6 @@ import { images } from './images.js';
 import fontawesome from '@fortawesome/fontawesome';
 import solid from '@fortawesome/fontawesome-free-solid';
 import faBars from '@fortawesome/fontawesome-free-solid/faBars'
-
-
 fontawesome.library.add(solid, faBars);
 
 
@@ -24,6 +22,7 @@ Vue.mixin({
     return {
       devmode: true,
       body: document.body,
+      app: document.getElementById('app'),
       breakpoints: globals.breakpoints,
     }
   },
@@ -68,7 +67,7 @@ Vue.mixin({
 new Vue({
   el: '#app',
   router,
-  template: `<App :images='images'/>`,
+  template: `<App :images='images' />`,
   components: { App },
   data:{
     images: {},

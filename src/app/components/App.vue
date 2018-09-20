@@ -11,7 +11,7 @@
       v-on:leave="leave"
       v-bind:css="false"
     >
-      <router-view class="main" ref="main" :images="images"></router-view>
+      <router-view class="main" ref="main" :images="images" :events="eventBus"></router-view>
     </transition>
 
     <Scene ref="scene" :scene="scene">
@@ -24,6 +24,8 @@
 </template>
 
 <script>
+  import Vue from 'vue';
+
   // Color Palette
   import {colors} from '../colors.js';
 
@@ -41,6 +43,7 @@
 
 
   export default {
+    // inheritAttrs: false,
     props: ['images'],
     name: 'app',
     data(){
@@ -48,6 +51,7 @@
         loader: document.getElementById('loader'),
         scene: undefined,
         tl: new TimelineLite({ paused: true }),
+        eventBus: new Vue()
       }
     },
     components:{
@@ -62,15 +66,30 @@
           name: this.$refs.name,
           devmode: this.devmode,
           shapeColors: [
-            colors.red,
-            colors.lightTurquoise,
-            colors.peach
+            // '#E3A9AB',
+            // '#7CE8CE',
+            // '#E8C3B1',
+            // '#A2E3E8'
+            // experimental palette
+
+            // https://coolors.co/e9ede7-cddcd1-bac9c5-aeb9ba-acb2b5
+            // https://colorleap.app/time/2000BC
+            // https://coolors.co/cad2c5-84a98c-52796f-354f52-2f3e46
+            '#CDDCD1',
+            '#BAC9C5',
+            '#AEB9BA'
           ],
           shapesPerLetter: 4
         };
       }
     },
     methods:{
+      setTitle: function(){
+        document.title = this.$route.meta.title;
+      },
+      appLoaded: function(){
+        this.eventBus.$emit('app-loaded');
+      },
       destroyLoader: function(){
         // while (this.el.firstChild) {
         //   this.el.removeChild(this.el.firstChild);
@@ -82,7 +101,6 @@
           opacity: 0,
           ease: Power2.easeIn,
           onComplete: () => {
-            console.log('Loading Finished');
             this.destroyLoader();
             this.initApp();
           }
@@ -97,9 +115,13 @@
         });
       },
       initScene: function(){
-        this.scene = ShapeScene(this.sceneConfig);
+        // Init shape scene
+        // this.scene = ShapeScene(this.sceneConfig);
       },
       initApp: function(){
+        // Emits custom event handled by page component in router view
+        this.appLoaded();
+        // Plays shape scene
         this.initScene();
         this.bodyRestoreScroll();
       },
@@ -121,7 +143,7 @@
       // Disable Scroll while app loads assets
       this.bodyNoScroll();
       // Initially set title when app is first created
-      document.title = this.$route.meta.title;
+      this.setTitle();
 
       this.loadImages(this.$props.images.sources);
     },
@@ -134,7 +156,7 @@
     watch: {
       $route: function(to, from){
         // Change page title on route change
-        document.title = to.meta.title;
+        this.setTitle();
 
         let toDepth = to.path.split('/').length;
         let fromDepth = from.path.split('/').length;

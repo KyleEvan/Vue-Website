@@ -39,6 +39,7 @@ JS
      initScrollMagic: function(){
        const app = document.getElementById('app');
        const controller = new ScrollMagic.Controller();
+
        const mainScene = new ScrollMagic.Scene({
          triggerElement: app,
          triggerHook: 0,
@@ -61,7 +62,6 @@ JS
        .on("enter", (event) => {
          if(this.scene){
            console.log('turn off scene!!!!!');
-
          }
        })
        .addTo(controller);
@@ -122,7 +122,7 @@ JS
 
      if(this.scene && !this.initialized){
        // console.log(this.scene.ready);
-       this.animateScene();
+       // this.animateScene();
        this.initScrollMagic();
        // this.ready = this.scene.ready;
        // console.log(this.scene.ready);

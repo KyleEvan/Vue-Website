@@ -5,19 +5,17 @@
 -->
 <template>
   <div>
-    <div :style="{background: primaryColor}" class="background"></div>
+    <div :style="{background: primaryColor}" class="template_bg">
 
-    <div class="main-container">
-
-      <div ref="carouselAside" class="carousel-aside" :style="{background: lightColor}">
-        <h2 :style="{color: darkColor}">
+    <div class="template_main">
+      <!-- main work info -->
+      <div ref="carouselAside" class="template_aside" :style="{background: lightColor}">
+        <h2 :style="{color: darkColor}" class="template_title">
           <slot name="title"></slot>
         </h2>
-
         <slot name="description"></slot>
-
       </div>
-
+      <!-- main work images -->
       <carousel :progressColor="mediumColor">
         <slot name="slides"></slot>
       </carousel>
@@ -25,10 +23,12 @@
     </div>
 
 
-    <div v-if="extraSlotPassed" class="container" :style="{background: lightColor}">
-      <div ref="content">
+    <div v-if="extraSlotPassed" class="template_extra" :style="{background: lightColor}">
+      <div>
         <slot name="extra"></slot>
       </div>
+    </div>
+
     </div>
 
   </div>
@@ -174,95 +174,54 @@
 <style lang="scss" scoped>
   @import '../../../style/global.scss';
 
-
-
-  .carousel-aside,
-  .content{
+  .template_aside,
+  .template_extra{
     color: rgba(66, 58, 47, .65);
   }
 
-  .main-container{
-    display: flex;
-    flex-direction: column-reverse;
 
-    @include medium{
-      flex-direction: row;
-    }
-
-    .carousel-aside{
-      width: 100%;
-      height: auto;
-      padding: 3%;
-      &>*{
-        opacity: 0;
-        transform: translateX(50px);
-      }
-      @include medium{
-        width: 50%;
-        height: 60vh;
-        min-height: 100vh;
-      }
-      h2{
-        font-size: 5vw;
-      }
-      section{
-        margin: 2em 0;
-      }
-      a{
-        text-decoration: none;
-        font-weight: 900;
-        border-bottom: 2.4px solid;
-      }
-
-      ul{
-        list-style: none;
-        margin-top: 0;
-        padding: 0;
-        li{
-          margin: .75em 0;
-        }
-      }
-
-      section.links{
-        li{
-          display: flex;
-          a{
-            i{
-              opacity: 0;
-              transform: scale(.1);
-              display: inline-block;
-            }
-          }
-          // a + span{
-          //   margin-left: .4em;
-          //   font-size: 130%;
-          //   line-height: 1.4;
-          //   display: inline-block;
-          // }
-        }
-      }
-    }
-  }
-
-  .container{
-    position: relative;
-    color: #4B4742;
-    background: #f9fff9;
-    width: 100%;
-    z-index: 2;
-
-    div{
-      padding: 3% 3% 10% 3%;
-    }
-  }
-
-  .background{
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+  .template_bg{
     background: #F69296;
-    z-index: -1;
+
+    .template_main{
+      display: flex;
+      flex-direction: column-reverse;
+      @include medium{
+        flex-direction: row;
+      }
+
+      .template_aside{
+        width: 100%;
+        height: auto;
+        padding: 3%;
+
+        &>*{
+          opacity: 0;
+          transform: translateX(10%);
+        }
+        @include medium{
+          width: 50%;
+          height: 60vh;
+          min-height: 100vh;
+        }
+
+        .template_title{
+          font-size: 5vw;
+        }
+
+        section{
+          margin: 2em 0;
+        }
+      }
+    }
+    .template_extra{
+      position: relative;
+      z-index: 1;
+      div {
+        padding: 3% 3% 10% 3%;
+      }
+    }
   }
+
+
 </style>

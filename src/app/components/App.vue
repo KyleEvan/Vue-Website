@@ -84,7 +84,7 @@
       }
     },
     methods:{
-      setTitle: function(){
+      setPageTitle: function(){
         document.title = this.$route.meta.title;
       },
       appLoaded: function(){
@@ -118,6 +118,14 @@
         // Init shape scene
         // this.scene = ShapeScene(this.sceneConfig);
       },
+      preInitApp: function(){
+        console.log('getting app.vue ready');
+        // Disable Scroll while app loads assets
+        this.bodyNoScroll();
+        // Initially set title when app is first created
+        this.setPageTitle();
+        this.loadImages(this.$props.images.sources);
+      },
       initApp: function(){
         // Emits custom event handled by page component in router view
         this.appLoaded();
@@ -139,24 +147,18 @@
       }
     },
     created(){
-      console.log('creating app.vue');
-      // Disable Scroll while app loads assets
-      this.bodyNoScroll();
-      // Initially set title when app is first created
-      this.setTitle();
-
-      this.loadImages(this.$props.images.sources);
+      this.preInitApp();
     },
-    mounted(){
-
-    },
-    updated(){
-
-    },
+    // mounted(){
+    //
+    // },
+    // updated(){
+    //
+    // },
     watch: {
       $route: function(to, from){
         // Change page title on route change
-        this.setTitle();
+        this.setPageTitle();
 
         let toDepth = to.path.split('/').length;
         let fromDepth = from.path.split('/').length;

@@ -54,6 +54,10 @@
         project: undefined,
 
 
+        animate_hideElements: .35,
+        animate_centerProject: .75,
+        animate_projectTransition: 1,
+
 
 
         tl: new TimelineLite(),
@@ -70,7 +74,7 @@
           bgFill: 'transparent'
         },
         transitioning: false,
-        transitionedProject: undefined
+        // transitionedProject: undefined
       }
     },
     methods:{
@@ -98,26 +102,29 @@
         return `${l} ${t} ${r} ${t} ${r} ${b} ${l} ${b}`;
       },
       getImageScale: function(project, container){
-        let padding = parseInt(window.getComputedStyle(project.el, null).getPropertyValue('padding-top'), 10);
-        let newHeight = window.innerWidth*project.data.image.newHeight;
-        let newMaxHeight = window.innerHeight*this.imageMaxHeight;
-        let imageHeight = newHeight > newMaxHeight? newMaxHeight : newHeight;
-        let scale = imageHeight/(container.height - (padding*2));
+        let imageContainer = project.image.parentNode;
+        let imageHeight = project.image.clientHeight;
+        let padding = parseInt(window.getComputedStyle(imageContainer, null).getPropertyValue('padding-top'), 10);
+        console.log(imageHeight);
+        let height = window.innerWidth*project.data.image.newHeight;
+        let maxHeight = window.innerHeight*this.imageMaxHeight;
+        let newHeight = height > maxHeight? maxHeight : height;
+        console.log(newHeight/imageHeight);
+        // let scale = imageHeight/(container.height - (padding*2));
+        let scale = newHeight/imageHeight;
         return scale;
       },
       animateOut: function(targets){
-        console.log(targets);
-        let dur = .3;
-        this.tl.to(targets, dur,
+        TweenLite.to(targets, this.animate_hideElements,
         {
           y: '20%',
           opacity: 0,
           ease: Expo.easeIn,
           delay: .05,
           transformOrigin: '50% 50%'
-        }, `-=${dur/2}`);
+        });
       },
-      hideElements: function(target){
+      animateHideElements: function(target){
         let hide_els, current_caption, filtered_projects;
         hide_els = [];
         current_caption = target.querySelector('.caption');
@@ -127,6 +134,14 @@
         });
         hide_els = hide_els.concat(filtered_projects);
         this.animateOut(hide_els);
+
+      },
+      animateCenterProject: function(target){
+        let img = target.querySelector('img');
+        TweenLite.to(img, this.animate_centerProject, {
+          y: 0,
+          ease: Power2.easeInOut,
+        });
       },
       determineViewport: function(){
         const minHeight = 400; // Carousel min-height
@@ -204,7 +219,7 @@
         this.app.appendChild(transition_el);
         return transition_el;
       },
-      createProjectBgs: function(project, transitionLayer){
+      createProjectBg: function(project, transitionLayer){
         let container = project.el.getBoundingClientRect();
         let color_bg = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
         // let overlay_bg = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
@@ -221,7 +236,7 @@
 
         // Hide original background
         project.el.style.background = 'transparent';
-        return imageBg;
+        return color_bg;
       },
       createTransitionBgObj: function(project, transitionLayer){
         let transitionBg = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
@@ -236,7 +251,8 @@
         }
         return transitionBgObj;
       },
-      executeTransition: function(e, project, transforms){
+      animateTransition: function(e, project, transforms){
+        console.log(transforms);
         const transitionLayer = this.createTransitionLayer();
         const transitionBgObj = this.createTransitionBgObj(project, transitionLayer);
         const imageBgAnimDuration = 400;
@@ -247,37 +263,40 @@
 
 
         // Animate and hide other projects
-        this.hideElements(e.target);
-        //this.centerProject();
+        this.animateHideElements(e.target);
+        // Vertically center the current project
+        this.animateCenterProject(e.target);
+
 
         // Animate Image Background
         const morphImageBg = () => {
-          const project_bg = this.createProjectBgs(project, transitionLayer);
-          console.log(project_bg);
+          const project_bg = this.createProjectBg(project, transitionLayer);
+          // console.log(project_bg);
           anime({
-            targets: imageBgClone,
+            targets: project_bg,
             points: [
-              { value: this.transitionedProject.points }
+              { value: transforms.newPoints }
             ],
             easing: 'easeInQuad',
             duration: imageBgAnimDuration,
             complete: () => {
               console.log("Transition Completed");
               this.transitioning = false;
+              this.navigate(e, project.data, project_bg);
               this.bodyRestoreScroll();
-              this.navigate(e, project.data, imageBgClone);
+              
             }
           });
         };
 
         // Translate Project
         let background = project.el.querySelector('.bg');
-        console.log(background);
         // increase z index val to bring project to top layer
-        this.tl.set(project.el, {
-          zIndex: 3
-        })
-        .to(project.el, projectAnimDuration, {
+        TweenLite.set(project.el, {
+          zIndex: 3,
+          borderColor: 'transparent'
+        });
+        TweenLite.to(project.el, this.animate_projectTransition, {
           x: transforms.translateX,
           y: transforms.translateY,
           scale: transforms.scale,
@@ -289,17 +308,17 @@
           onComplete: () => {
             morphImageBg();
           }
-        })
-        .to(background, projectAnimDuration, {
+        });
+        // fade neutral background to colored bg
+        TweenLite.to(background, this.animate_projectTransition, {
           opacity: 0,
           ease: Power3.easeInOut
-        })
-
-        // Transition Bg, Cover Screen swipe left to right
-        .to(transitionBgObj.el, transitionBgAnimDur, {
+        });
+        // transition Bg, cover screen swipe left to right
+        TweenLite.to(transitionBgObj.el, this.animate_projectTransition, {
           x: -transitionBgObj.width,
-          ease: Power4.easeInOut
-        }, `-=${(projectAnimDuration*.9)}`)
+          ease: Power2.easeIn
+        });
 
       },
       handleClick: function(e){
@@ -313,7 +332,7 @@
           // Get project data
           this.project = this.getProjectData(e.target);
           this.transforms = this.calcProjectTransforms(this.project);
-          this.executeTransition(e, this.project, this.transforms);
+          this.animateTransition(e, this.project, this.transforms);
         }
         else{
           return;
@@ -359,8 +378,6 @@
     mounted(){
 
       this.projects_el_arr = Array.from(document.querySelectorAll('.project'));
-      console.log(this.projects_el_arr);
-      console.log(this.$props.images);
       this.initScrollMagic();
 
 

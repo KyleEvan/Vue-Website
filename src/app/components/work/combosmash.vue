@@ -97,10 +97,10 @@
 
 <script>
   import FontAwesomeIcon from '@fortawesome/vue-fontawesome';
-  import Work_Template from './Work_Project_Template.vue';
+  import Work_Template from './Work_Template.vue';
 
   export default {
-    props: ['project'],
+    props: ['project', 'images'],
     data () {
       return {
         gitHubLink: 'https://github.com/KyleEvan/ComboSmash-v2',
@@ -113,7 +113,7 @@
     },
     computed:{
       project_images: function(){
-        let images = this.images.sized;
+        let images = this.$props.images.sized;
         return [
           images.comboSmash_preview,
           images.comboSmash_death,

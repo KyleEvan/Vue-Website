@@ -1,106 +1,89 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import Home from './components/Home.vue';
 
-// const Home = () => import('./components/Home.vue');
+// Below syntax dynamically imports component when requested
+// const Component = () => import('./file.ext');
+const Home = () => import('./components/pages/Home.vue');
+const About = () => import('./components/pages/About.vue');
+const Contact = () => import('./components/pages/Contact.vue');
+const NotFound = () => import('./components/pages/NotFound.vue');
 
-// import Work from './components/Work.vue';
-import About from './components/About.vue';
-// const About = () => import('./components/About.vue');
+const WorkCareers = () => import('./components/work/careers.vue');
+const WorkCycles = () => import('./components/work/cycles.vue');
+const WorkComboSmash = () => import('./components/work/combosmash.vue');
 
-import Contact from './components/Contact.vue';
-// const Contact = () => import('./components/Contact.vue');
+const Test = () => import('./components/test/test.vue');
 
-import NotFound from './components/NotFound.vue';
-// const NotFound = () => import('./components/NotFound.vue');
 
-import WorkCareers from './components/Work_Careers.vue';
-// const WorkCareers = () => import('./components/Work_Careers.vue');
-
-import WorkCycles from './components/Work_Cycles.vue';
-// const WorkCycles = () => import('./components/Work_Cycles.vue');
-
-import WorkComboSmash from './components/Work_ComboSmash.vue';
-
-import Test from './components/Test/Test.vue';
-// const WorkComboSmash = () => import('./components/Work_ComboSmash.vue');
-// import { transitions } from './transitions.js';
 
 Vue.use(Router);
 
 export default new Router({
   mode: 'history',
   routes: [
+    //-----------------------< Main Pages >--------------------------
+    // In navigation menu
     {
       path: '/',
       name: 'Home',
       component: Home,
-      meta: { title: 'Kyle Peterson', showName: true }
+      meta: { title: 'Kyle Peterson' }
+    },
+    {
+      path: '/about',
+      name: 'About',
+      component: About,
+      meta: { title: 'About | Kyle P' }
+    },
+    {
+      path: '/contact',
+      name: 'Contact',
+      component: Contact,
+      meta: { title: 'Contact | Kyle P' }
     },
 
-    // Possible future implementation
-    // {
-    //   path: '/work',
-    //   name: 'Work',
-    //   component: Work,
-    //   meta: { title: 'Work | KP', showName: false }
-    // },
-
-    // Projects and Work
+    //--------------------< Work/Projects >-----------------------
     {
       path: '/careers-redesign',
       name: 'Careers-Redesign',
       component: WorkCareers,
       props: true,
-      meta: { title: 'Careers Redesign | KP', showName: false }
+      meta: { title: 'Careers Redesign | Kyle P' }
     },
     {
       path: '/cycles',
       name: 'Cycles',
       component: WorkCycles,
       props: true,
-      meta: { title: 'Cycles | KP', showName: false }
+      meta: { title: 'Cycles | Kyle P' }
     },
     {
       path: '/combo-smash',
       name: 'ComboSmash',
       component: WorkComboSmash,
       props: true,
-      meta: { title: 'Combo Smash | KP', showName: false }
+      meta: { title: 'Combo Smash | Kyle P' }
     },
 
-    // Other Pages
-    {
-      path: '/about',
-      name: 'About',
-      component: About,
-      meta: { title: 'About | KP', showName: false }
-    },
-    {
-      path: '/contact',
-      name: 'Contact',
-      component: Contact,
-      meta: { title: 'Contact | KP', showName: false }
-    },
-
+    //-----------------------< Other Pages >---------------------------
     {
       path: '/test',
       name: 'Test',
       component: Test,
-      meta: { title: 'Testing | KP', showName: false }
+      meta: { title: 'Testing | Kyle P' }
     },
+
+    //-----------------------< Test Pages >---------------------------
     {
       path: '*',
       name: 'NotFound',
       component: NotFound,
-      meta: { title: 'Not Found | KP', showName: false }
+      meta: { title: 'Not Found | Kyle P' }
     }
   ],
   scrollBehavior (to, from, savedPosition) {
     return new Promise((resolve, reject) => {
-      // setTimeout(() => {
       resolve({ x: 0, y: 0 })
-      // }, transitions.duration)
     })
   }
 })

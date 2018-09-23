@@ -147,6 +147,7 @@
       position: relative;
       width: 100%;
       height: 50vh;
+      z-index: 1;
 
       @include medium{
         position: fixed;
@@ -251,7 +252,7 @@
       position: absolute;
       left: 0;
       top: 0;
-      z-index: -1;
+      z-index: 0;
     }
   }
 

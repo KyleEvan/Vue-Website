@@ -1,23 +1,15 @@
 <template>
   <footer>
     <div class="footer_content">
-      <div class="inner_content">
-        <h4>Thank you developing community for these amazing technologies, without them this could not exist</h4>
-        <ul>
-          <li>
-            <a href="#">Vue</a>
-          </li>
-          <li>
-            <a href="#">Scrollmagic</a>
-          </li>
-          <li>
-            <a href="#">Greensock</a>
-          </li>
-        </ul>
-        Some footer text and stuff..<br />
-        Thank You,<br />
-        Kyle<br />
-        ༼ つ ͡◕ . ͡◕ ༽つ
+      <div>
+        <span>Check out this project on GitHub</span>
+        <span>Thank you Vue</span>
+        <span>༼ つ ͡◕ . ͡◕ ༽つ</span>
+      </div>
+      <div>
+        <span>Made by</span>
+        <span>Kyle Peterson</span>
+        <span>Rochester, NY</span>
       </div>
     </div>
   </footer>
@@ -25,7 +17,6 @@
 
 <script>
   export default {
-    // name: 'footer',
     data () {
       return {
         // message: false,
@@ -40,24 +31,23 @@
 <style lang="scss" scoped>
   footer{
     position: relative;
-    background: #616163;
+    background: #2F3E46;
     padding: 3rem;
+    color: #84A98C;
+    font-weight: 600;
 
     .footer_content{
       z-index: 0;
       display: flex;
-      flex-direction: column;
+      flex-direction: row;
       justify-content: space-between;
 
-      ul{
-        margin: 0;
-        padding: 0;
-        font-size: .75rem;
-        line-height: 1.8;
-        list-style: none;
-      }
+
       div{
-        text-align: center;
+        width: 40%;
+        span{
+          display: block;
+        }
       }
     }
     // .footer-bg{

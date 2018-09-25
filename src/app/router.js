@@ -8,9 +8,9 @@ const About = () => import('./components/pages/About.vue');
 const Contact = () => import('./components/pages/Contact.vue');
 const NotFound = () => import('./components/pages/NotFound.vue');
 
-const WorkCareers = () => import('./components/work/careers.vue');
-const WorkCycles = () => import('./components/work/cycles.vue');
-const WorkComboSmash = () => import('./components/work/combosmash.vue');
+import WorkCareers from './components/work/careers.vue';
+import WorkCycles from './components/work/cycles.vue';
+import WorkComboSmash from './components/work/combosmash.vue';
 
 const Test = () => import('./components/test/test.vue');
 

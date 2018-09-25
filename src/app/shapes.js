@@ -1,9 +1,13 @@
 "use strict";
 
 import { TimelineLite } from "gsap";
-import charming from 'charming';
+// import charming from 'charming';
 
+/*
 
+Special thanks to these resources:
+
+  http://jsfiddle.net/m1erickson/CtsY3/
 
 
 /*
@@ -58,18 +62,7 @@ function throttle(fn, threshhold, scope) {
   };
 }
 
-// Assigns the passed element a new width and height attribute
-// equal to that of the window. After returns the element
-function setWindowDimensions(el) {
 
-  // if (obj instanceof Element || obj.ownerDocument == document) {
-    el.setAttribute('width', window.innerWidth);
-    el.setAttribute('height', window.innerHeight);
-    if (el.tagName === 'svg')
-      el.setAttribute('viewbox', `0 0 ${window.innerWidth} ${window.innerHeight}`);
-    // }
-  return el;
-}
 
 function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -85,51 +78,98 @@ function randomIndex(length) {
 /*
 
   Classes:
-  Scene, Name, Letter, Shape
+  Scene, Shape
 
 */
 
 class Scene { // #scene
   constructor(config) {
-    // scene, name, devmode, showName, color
-    console.log(config);
+    /*------------------< Scene Config Options >-------------------
+      scene (element): where to inject scene,
+      devmode (boolean): show console logs or not,
+      totalShapes (number): total number of shapes created,
+      shape_size (array): array with length of 2 numbers declaring min and max sizes of shape
+                          must be decimals, represents percentage of window width ex: [min, max] => [.01, .5],
+      shapes_colors (array): array of hex codes randomly selected for shape fills,
+      shapes_delay (number): compounding decimal staggering the animation of each shape
+
+      Ex:
+             {
+               scene: this.$refs.scene.$el,
+               devmode: this.devmode,
+               totalShapes: 20,
+               shapes_size: [.03, .12],
+               shapes_colors: [
+                 colors.red,
+                 colors.lightTurquoise,
+                 colors.peach
+               ],
+               shapes_delay: .0018,
+             }
+
+    */
+    // DEBUG mode
     this.devmode = config.devmode;
 
-    this.shapeColors = config.shapeColors || ['#fff'];
-    this.shapesPerLetter = config.shapesPerLetter || 3;
+    //---------------------< Scene >-----------------------
+    // ELEMENTS
+    this.el = config.scene;
+    this.width = this.el.clientWidth;
+    this.height = this.el.clientHeight;
+    this.parent = config.scene.parentNode;
+    this.svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    this.svg.classList.add('shapes');
 
-    // scene.ready is true after the initial animation has fully completed
+    // STATES
+    // Scene is ready after initial animation
+    // When scene is interactive it responds to mouse events
     this.ready = false;
-    // scene.interactive, if true mousemove events will be tracked for shape translations
     this.interactive = false;
-    // Max boundaries of the scene in relation to the window. 1 = window size
-    this.sceneSize = 1.4;
 
-    this.bounds = undefined;
+    // DIMENSIONS
+    // size is relative to window size ( 1 = window size )
+    this.sceneSize = {};
+    this.size = 1;
 
-    this.showName = config.showName || false;
+    // EVENT vars
+    this.mouseX = undefined;
+    this.mouseY = undefined;
+    this.mouseX_update = undefined;
+    this.mouseY_update = undefined;
 
-    this.name = undefined;
-    // DOM element references
-    this.DOM = {
-      el: config.scene,
-      children:{
-        name: {
-          el: config.name
-        },
-        svg: {
-          el: document.createElementNS("http://www.w3.org/2000/svg", "svg"),
-          class: "shapes"
-        }
-      },
-      parent: config.scene.parentNode
-    };
-    // virtual camera of the scene, used for calculating 3d perspectives
+    // RAF update loop properties
+    this.update = this.update.bind(this);
+    this.toggleScene = this.toggleScene.bind(this);
+    this.stop = undefined;
+    this.frameCount = 0;
+    this.fps = 18;
+    this.fpsInterval = undefined;
+    this.startTime = undefined;
+    this.now = undefined;
+    this.then = undefined;
+    this.elapsed = undefined;
+
+
+    //-------------------< Shapes >---------------------
+    // Shapes Properties
+    this.shapes = [];
+    this.shapes.length = config.totalShapes;
+    this.shapes_size = config.shapes_size || [.04, .1];
+    this.shapes_colors = config.shapes_colors || ['#000'];
+    this.shapes_delay = config.shapes_delay || 0;
+    this.shapes_moveDur = 4;
+
+
+    //---------------------< Camera >----------------------
+    // virtual camera of the scene,
+    // used to calculate 3d location of each shape
     this.camera = {
+      scene: this,
+      maxZ: .9, // % of perspective
       perspective: 10,
       fov: {
-        width: window.innerWidth,
-        height: window.innerHeight
+        width: undefined,
+        height: undefined
       },
       center: {
         x: undefined,
@@ -148,229 +188,276 @@ class Scene { // #scene
         this.location.y = newY;
       },
       updateFov: function() {
-        this.fov.width = window.innerWidth;
-        this.fov.height = window.innerHeight;
+        this.fov.width = this.scene.width;
+        this.fov.height = this.scene.height;
         this.center.x = this.fov.width / 2;
         this.center.y = this.fov.height / 2;
       }
     };
-
-
-    // GSAP TimelineLite
-    this.animations = {
-      scene: this,
-      initDelay: 0,
-      tl: new TimelineLite(), //{ paused: true }
-      setLetters: function(targets){
-        // let targets = this.scene.name.letterEls;
-        this.tl.set(targets, {
-          opacity: 0,
-          y: '100%'
-        });
-      },
-      showLetters: function(){
-        let targets = this.scene.name.letterEls;
-        this.tl.staggerTo(targets, 1,
-        {
-          opacity: 1,
-          y: "0%",
-          ease: Elastic.easeOut.config(1, 0.4)
-        }, .1);
-      },
-      hideLetters: function(){
-        let targets = this.scene.name.letterEls;
-        targets = Array.from(targets).reverse();
-        this.tl.staggerTo(targets, .333, {
-          opacity: 0,
-          y: "100%",
-          ease: Elastic.easeIn.config(1, 0.75)
-        }, .1);
-      },
-      showShapes: function(){
-        // let targets = this.scene.name.shapeEls;
-        let shapes = this.scene.name.shapes;
-        console.log(shapes);
-        for(let i = 0; i < shapes.length; i++){
-          let shape = shapes[i];
-          // console.log(target);
-          TweenLite.to(shape.el, 1.5, {
-            opacity: 1,
-            // opacity: shape.scale*.018,
-            x: getRandomInt(this.scene.bounds.left, this.scene.bounds.right),
-            y: getRandomInt(this.scene.bounds.top, this.scene.bounds.bottom),
-            scale: 1,
-            delay: (i*.005),
-            ease: Expo.easeOut
-          });
-          if(i == (shapes.length - 1)) {
-            let scene = this.scene;
-            setTimeout(() => {
-              scene.animationCompleted();
-            }, 1500);
-          }
-        }
-      },
-      moveShapes: function(mouseMove){
-        let scene = this.scene;
-        let shapes = scene.name.shapes;
-          shapes = Array.from(shapes).reverse();
-          shapes.forEach(function(shape, index) {
-            let projectedXY, newX, newY;
-            if(mouseMove){
-              projectedXY = [
-                (shape.calc3DLocation(scene.camera)[0] - shape.projectedXY[0]),
-                (shape.calc3DLocation(scene.camera)[1] - shape.projectedXY[1])
-              ];
-              newX = shape.getsetTransform(projectedXY)[0];
-              newY = shape.getsetTransform(projectedXY)[1];
-            }
-            else{
-              newX = shape.getsetTransform([0,0])[0];
-              newY = shape.getsetTransform([0,0])[1];
-            }
-            TweenLite.to(shape.el, 6, {
-              x: newX,
-              y: newY,
-              delay: 0,
-              ease: Expo.easeOut
-            })
-          });
-      },
-      explodeShapes: function(e){
-        let scene = this.scene;
-        const dur = 1;
-        let shapes = scene.createShapes({
-          length: 10,
-          width: 50,
-          height: 50,
-          dist: 70,
-          e: e
-        });
-        for (let s = shapes.props.length; s > 0; s -= 1){
-          let shape = shapes.array[shapes.props.length-s];
-          TweenLite.to(shape.el, dur, {
-            opacity: 1,
-            x: getRandomInt(-70, 70),
-            y: getRandomInt(-70, 70),
-            scale: 1.5,
-            delay: (s*.008),
-            ease: Expo.easeOut
-          });
-          TweenLite.to(shape.el, dur-.6, {
-            opacity: 0,
-            y: Math.abs(shape.size*1),
-            scale: .6,
-            ease: Power1.easeIn,
-            delay: .25,
-            onComplete: () => {
-              if(s <= 1){
-                scene.destroyShapes(shapes);
-              }
-            }
-          });
-        }
-      }
+    // init on create
+    // this.init();
+  }
+  // Gets the bounding client props of the svg #scene container
+  // Sets the virtual props for the svg to fill 100% 100% of its container
+  setSceneWH(){
+    let el = this.el.getBoundingClientRect();
+    this.width = this.el.clientWidth;
+    this.height = this.el.clientHeight;
+    this.sceneSize = {
+      // width: this.el.clientWidth,
+      // height: this.el.clientHeight,
+      top: (el.bottom/-2)*this.size,
+      right: (el.right/2)*this.size,
+      bottom: (el.bottom/2)*this.size,
+      left: (el.right/-2)*this.size
     };
-
-    this.init();
-    this.initEvents();
+  }
+  // Assigns the passed element a new width and height attribute
+  // equal to that of the window. After returns the element
+  setAttrsWH(){
+    this.svg.setAttribute('width', this.width);
+    this.svg.setAttribute('height', this.height);
+    this.svg.setAttribute('viewbox', `0 0 ${this.width} ${this.height}`);
+  }
+  configScene() {
+    // Add svg layer to scene if it doesn't already exist
+    if(!this.el.firstChild) this.el.appendChild(this.svg);
+    // Set Scene projected size in relation to the window
+    this.setSceneWH();
+    // Set Width and Height Attrs on svg layer
+    this.setAttrsWH();
+    // Configure virtual camera for the scene
+    this.camera.config();
   }
 
+  moveShapes(bounds, update_xy, callback){
+    let delay = 0;
+    for(var s = 0; s < this.shapes.length; s++){
+      let shape, moveX, moveY, func;
+      shape = this.shapes[s];
+      if(bounds){
+        moveX = getRandomInt(bounds.minX, bounds.maxX);
+        moveY = getRandomInt(bounds.minY, bounds.maxY);
+      }
+      else{
+        moveX = shape.x;
+        moveY = shape.y;
+      }
+      if(s == this.shapes.length-1 && callback) func = callback;
+      delay += this.shapes_delay;
+      shape.move(moveX, moveY, delay, update_xy, func);
+    }
+  }
+  createShapes(shapes, props, destroy){
+    let shapeProps = props;
+    for (let s = shapes.length-1; s >= 0; s -= 1){
+      if(!shapeProps) shapeProps = {};
+      shapeProps.x ? shapeProps.x : shapeProps.x = this.width/2;
+      shapeProps.y ? shapeProps.y : shapeProps.y = this.height/2;
+      let size = getRandomInt(this.shapes_size[0]*100, this.shapes_size[1]*100)/100;
+      shapeProps.size = size;
+      shapeProps.width = this.width*size;
+      shapeProps.height = this.width*size;
+      shapeProps.moveDur = this.shapes_moveDur;
+      shapes[s] = new Shape(this, shapeProps);
+    }
+    shapes.sort(function(a, b){
+      return b.z - a.z;
+    });
+    shapes.forEach(function(shape){
+      shape.parent.appendChild(shape.el);
+    });
+    if(destroy){
+      // console.log('destroy shapes');
+      this.moveShapes({
+        minX: -70,
+        maxX: 70,
+        minY: -70,
+        maxY: 70
+      }, true, function(){
+        console.log('destroy shapes!!!!!');
+      });
+      // this.animations.disappearShapes(shapes, this.destroyShapes(shapes));
+    }else{
+      return shapes;
+    }
+  }
   init() {
-    this.createScene();
-    this.name = new Name(this);
-    this.playScene();
-
-    if(this.devmode) console.log('SCENE INITIALIZED');
+    console.log('scene init');
+    console.log('createScene');
+    // Configures the svg layer
+    this.configScene();
+    if(this.devmode) console.log('createShapes');
+    this.createShapes(this.shapes, null, null);
+    console.log('Shapes: ');
+    console.log(this.shapes);
+    this.init_events();
+    //this.name = new Name(this);
+    this.playScene(this.shapes);
   }
-  initEvents() {
+  updateMouseXY(newX, newY){
+    this.mouseX = newX;
+    this.mouseY = newY;
+  }
+  init_events(){
     let scene = this;
-    // Resize event:
-    // Debounces event every 50ms, resizes scene element to window size
-    const handleResize = debounce(function() {
-      setWindowDimensions(scene.DOM.children.svg.el);
-      scene.setBoundaries();
-      scene.camera.config();
-      scene.animations.moveShapes(false);
-
-    }, 50);
-    window.addEventListener('resize', handleResize);
 
     // Mousemove event:
-    // Tracks mouse to calculate projection perspective of svg shapes
-    const handleMouseMove = throttle(function(e) {
-      if (scene.interactive) {
-        scene.camera.updateLoc(e.clientX, e.clientY);
-        scene.animations.moveShapes(true);
+    // Update mouseX mouseY position
+    const handleMouseMove = throttle(function(e){
+      // if scene is interactable, update the mouse and camera locations
+      if(scene.interactive){
+        // scene.mouseY = e.clientY;
+        scene.updateMouseXY(e.clientX, e.clientY);
+        // scene.camera.updateLoc(e.clientX, e.clientY);
       }
-    }, 150);
-    window.addEventListener('mousemove', handleMouseMove, false);
+    }, 50);
+    window.addEventListener('mousemove', handleMouseMove);
 
-    // Mouseenter event:
-    // Toggle scene interactivity
-    const handleMouseEnter = function(e) {
-      if (scene.ready) {
-        if (!scene.interactive) scene.toggleInteractive();
-      }
-    }
-    this.DOM.parent.addEventListener('mouseenter', handleMouseEnter);
-
-    // Mouseleave event:
-    // Toggle scene interactivity and reset shapes to original positions
-    const handleMouseLeave = function(e) {
-      if (scene.ready) {
-        if (scene.interactive) {
-          scene.toggleInteractive();
-          scene.camera.updateLoc(scene.camera.center.x, scene.camera.center.y);
-          scene.animations.moveShapes(false);
-        }
-      }
-    }
-    this.DOM.parent.addEventListener('mouseleave', handleMouseLeave);
+    // Resize event:
+    const handleResize = debounce(function() {
+      scene.configScene();
+    }, 100);
+    window.addEventListener('resize', handleResize);
 
     // Click event:
     const handleClick = function(e){
       if (scene.ready) {
         if (scene.interactive) {
-          console.log("clicking!");
-          scene.animations.explodeShapes(e);
-          // scene.animations.hideLetters();
+          console.log("clicking! create some shapes!!!!!!!!!");
+          // scene.createShapes();
         }
       }
     }
-    this.DOM.parent.addEventListener('click', handleClick);
+    window.addEventListener('click', handleClick);
+  }
 
+
+
+
+  // initEvents() {
+  //   let scene = this;
+  //   // Resize event:
+  //   // Debounces event every 50ms, resizes scene element to window size
+  //   const handleResize = debounce(function() {
+  //     setWindowDimensions(scene.DOM.children.svg.el);
+  //     scene.setBoundaries();
+  //     scene.camera.config();
+  //     scene.animations.moveShapes(false);
+  //
+  //   }, 50);
+  //   window.addEventListener('resize', handleResize);
+  //
+  //   // Mousemove event:
+  //   // Tracks mouse to calculate projection perspective of svg shapes
+  //   const handleMouseMove = throttle(function(e) {
+  //     if (scene.interactive) {
+  //       scene.camera.updateLoc(e.clientX, e.clientY);
+  //       scene.animations.moveShapes(true);
+  //     }
+  //   }, 150);
+  //   window.addEventListener('mousemove', handleMouseMove, false);
+  //
+  //   // Mouseenter event:
+  //   // Toggle scene interactivity
+  //   const handleMouseEnter = function(e) {
+  //     if (scene.ready) {
+  //       if (!scene.interactive) scene.toggleInteractive();
+  //     }
+  //   }
+  //   this.DOM.parent.addEventListener('mouseenter', handleMouseEnter);
+  //
+  //   // Mouseleave event:
+  //   // Toggle scene interactivity and reset shapes to original positions
+  //   const handleMouseLeave = function(e) {
+  //     if (scene.ready) {
+  //       if (scene.interactive) {
+  //         scene.toggleInteractive();
+  //         scene.camera.updateLoc(scene.camera.center.x, scene.camera.center.y);
+  //         scene.animations.moveShapes(false);
+  //       }
+  //     }
+  //   }
+  //   this.DOM.parent.addEventListener('mouseleave', handleMouseLeave);
+  //
+  //   // Click event:
+  //   const handleClick = function(e){
+  //     if (scene.ready) {
+  //       if (scene.interactive) {
+  //         console.log("clicking!");
+  //         // scene.animations.explodeShapes(e);
+  //         // scene.animations.hideLetters();
+  //       }
+  //     }
+  //   }
+  //   this.DOM.parent.addEventListener('click', handleClick);
+  //
+  // }
+
+
+
+  mouseUpdated(){
+    let mouse_updated = false;
+    if(this.mouseX_update != this.mouseX && this.mouseY_update != this.mouseX){
+      this.mouseX_update = this.mouseX;
+      this.mouseY_update = this.mouseY;
+      mouse_updated = true;
+    }
+    return mouse_updated;
   }
-  setBoundaries(){
-    let el = this.DOM.el;
-    el = el.getBoundingClientRect();
-    this.bounds = {
-      top: (el.bottom/-2)*this.sceneSize,
-      right: (el.right/2)*this.sceneSize,
-      bottom: (el.bottom/2)*this.sceneSize,
-      left: (el.right/-2)*this.sceneSize
-    };
-  }
-  createScene() {
-    // Add class to svg
-    // Insert svg scene before h1#name to ensure the name is layered on top
-    let scene = this.DOM;
-    scene.children.svg.el.classList.add(scene.children.svg.class);
-    scene.el.insertBefore(scene.children.svg.el, scene.children.name.el);
-    setWindowDimensions(scene.children.svg.el);
-    this.setBoundaries();
-    this.camera.config();
+  update(){
+    // if stop, stop loop
+    if (this.stop) {
+        return;
+    }
+    // request another frame
+    requestAnimationFrame(this.update);
+    // calc elapsed time since last loop
+    this.now = Date.now();
+    this.elapsed = this.now - this.then;
+    // if enough time has elapsed, draw the next frame
+    if (this.elapsed > this.fpsInterval) {
+      // Do updates here:
+      // if the mouse location has updated since last tick
+      if(this.mouseUpdated()){
+
+        this.camera.updateLoc(this.mouseX, this.mouseY);
+        this.moveShapes();
+
+      }
+
+
+
+      // Get ready for next frame by setting then=now, but...
+      // Also, adjust for fpsInterval not being multiple of 16.67
+      this.then = this.now - (this.elapsed % this.fpsInterval);
+      let sinceStart = this.now - this.startTime;
+      let currentFps = Math.round(1000 / (sinceStart / ++this.frameCount) * 100) / 100;
+      // if(this.devmode) console.log(currentFps);
+    }
   }
   playScene() {
-    let scene = this;
-    let name = this.name;
-    let animations = this.animations;
+    console.log('playing scene');
+    // var callback = function(){
+    //   console.log('fuuuuuuuuuck!!!!');
+    // }
+    let bounds = {
+      minX: this.sceneSize.left,
+      maxX: this.sceneSize.right,
+      minY: this.sceneSize.top,
+      maxY: this.sceneSize.bottom
+    };
+    this.moveShapes(bounds, true, this.toggleScene);
 
-    setTimeout(function() {
-      if(scene.showName) animations.showLetters();
-      animations.showShapes(name.shapeEls);
+    // move to toggle interactive
+    // toggle interactive will be a callback function
+    // after the initial shapes move
+    this.fpsInterval = 1000 / this.fps;
+    this.then = Date.now();
+    this.startTime = this.then;
+    this.update();
 
-    }, animations.initDelay);
+
   }
   animationCompleted(){
     if(this.devmode) console.log('Animation Complete');
@@ -394,150 +481,87 @@ class Scene { // #scene
     this.ready = !this.ready;
     console.log(`SCENE READY: ${this.ready}`);
   }
-  createShapes(shapes){
-    const shapesArray = [];
-    for (let s = shapes.length; s > 0; s -= 1){
-      shapesArray.push(new Shape(this, false, {
-        top: shapes.e.clientY,
-        left: shapes.e.clientX,
-        width: shapes.width,
-        height: shapes.height
-      }))
-    }
-    shapesArray.sort(function(a, b) {
-      return a.z - b.z;
-    });
-    shapesArray.forEach(function(shape) {
-      shape.parent.appendChild(shape.el);
-    });
-    return {
-      props: shapes,
-      array: shapesArray
-    }
-  }
+
   destroyShapes(shapes){
-    console.log(shapes);
-    for (var s = shapes.props.length; s > 0; s -= 1){
-      let shape = shapes.array[shapes.props.length - s];
-      shape.el.outerHTML = '';
-      shape = null;
+    for (var s = shapes.length; s > 0; s -= 1){
+      let shape = this.shapes[shapes.length - s];
+      console.log('destroy this SHAPE!!!!!!');
+      console.log(shape);
+      // shape.el.outerHTML = '';
+      // shape = null;
     }
   }
 }
 
-class Name { // #name
-  constructor(scene) {
-    this.scene = scene;
-    this.el = scene.DOM.children.name.el;
-    this.letterEls = undefined;
-    this.shapeEls = undefined;
-    this.letters = [];
-    this.shapes = [];
 
-    this.init(this.scene);
-  }
-  init(scene) {
-    // Wraps each letter in a span with a new class 'letter#'
-    charming(this.el, {classPrefix: 'letter'});
-    // Create letters and assign the elements to animations
-    this.createLetters(scene);
-  }
-  createLetters(scene){
-    const letters = Array.from(scene.DOM.children.name.el.childNodes);
-
-    // letters = Array.from(letters);
-
-    let shapes = [];
-    letters.forEach(function(el, index){
-      letters[index] = new Letter(scene, el);
-
-      let letter = letters[index];
-      for(let i = 0; i < letter.totalShapes; i++){
-        shapes.push(letter.shapes[i]);
-      }
-    });
-
-    // Map letter and shape DOM elements to arrays for reference
-    this.letterEls = letters.map(l => l.el);
-    this.shapeEls = shapes.map(s => s.el);
-    // Set initial animation attributes/styles
-    this.scene.animations.setLetters(this.letterEls);
-
-    this.letters = letters;
-    this.shapes = shapes;
-
-    // Sort shapes array order based on z axis location and add them to the dom
-    this.shapes.sort(function(a, b) {
-      return b.z - a.z;
-    });
-    this.shapes.forEach(function(shape) {
-      shape.parent.appendChild(shape.el);
-    });
-  }
-}
-
-class Letter {
-  constructor(scene, el) {
-    this.el = el;
-    this.scene = scene;
-    this.shapes = [];
-    this.totalShapes = scene.shapesPerLetter;
-    this.init(scene);
-  }
-  init() {
-    this.createShapes();
-    console.log("Letter created");
-  }
-  createShapes() {
-    for (let i = 0; i < this.totalShapes; i++) {
-      this.shapes.push(new Shape(this.scene, this.el, this.el.getBoundingClientRect(), true));
-    }
-  }
-}
 
 class Shape {
-  constructor(scene, letter, props, perspective) {
+  constructor(scene, props) {
+    /*----------< props >----------
+    x: coordinate of shape,
+    y: coordinate of shape,
+    size: represents percentage of scene's width (Number 1-100)
+
+    */
     this.scene = scene;
-    this.el = undefined;
-    this.parent = scene.DOM.children.svg.el;
+    this.scene_sizedWidth = undefined;
+    this.scene_sizedHeight = undefined;
+    this.parent = scene.svg;
     this.props = props;
-    this.scale = getRandomInt(0, 1*props.width); // scale will be 10% and 100% of the letter's width
-    this.x = props.left;
-    this.y = props.top;
-    this.z = (this.scale/props.width) * (scene.camera.perspective*.9);
+    this.el = undefined;
+    this.x = props.x;
+    this.y = props.y;
+    this.scale = props.size;
+    this.width = props.width;
+    this.height = props.height;
+    this.z = (this.scale/scene.shapes_size[1]) * (scene.camera.perspective*scene.camera.maxZ);
+    // scene x & y are the shape's positions relative to the scene
+    this.sceneX = props.x/scene.width;
+    this.sceneY = props.y/scene.height;
 
-    if(letter) this.letter = letter;
-    if(perspective){
-      this.transforms = undefined;
-      this.projectedXY = this.calc3DLocation(this.scene.camera);
-      this.relationalValues = {
-        // Properties relative to their associated letter, values are percentage based
-        x: (this.x - props.left) / props.width,
-        y: (this.y - (props.top - props.height)) / props.height,
-        scale: this.scale / props.width,
-        // Properties relative to the window window dimensions
-        translateX: undefined,
-        translateY: undefined
-      };
-    }
+    this.minOpacity = .35;
+    this.moveX = 0;
+    this.moveY = 0;
+    this.moveDur = props.moveDur;
+    this.projectedXY = this.calc3DLocation(scene.camera);
+    // this.projectedXY = undefined;
+    // console.log(this.projectedXY);
 
-    this.colors = scene.shapeColors;
+
+    // this.relativeProps = {
+    //     // Properties relative to their associated letter, values are percentage based
+    //     x: (this.x - props.left) / props.width,
+    //     y: (this.y - (props.top - props.height)) / props.height,
+    //     scale: this.scale / props.width,
+    //     // Properties relative to the window window dimensions
+    //     translateX: undefined,
+    //     translateY: undefined
+    // };
+
+
+    // }
+    // this.colors = scene.shapes_colors;
+    this.color = scene.shapes_colors[randomIndex(scene.shapes_colors.length)];
+    this.color_rgba = this.getRgbaColor(this.color, this.z, scene.camera.maxZ*scene.camera.perspective, this.minOpacity);
+
     this.types = [
       {
         el: 'circle',
-        cx: perspective ? this.projectedXY[0] : this.x,
-        cy: perspective ? this.projectedXY[1] : this.y,
-        r: this.scale / 2,
+        cx: this.x,
+        cy: this.y,
+        r: this.width/2,
         stroke: undefined,
         strokeWidth: undefined,
-        fill: this.colors[randomIndex(this.colors.length)]
+        fill: this.color_rgba
       },
       {
         el: 'polygon',
-        points: perspective ? this.getPoints(this.projectedXY[0], (this.projectedXY[1]-(this.props.height/2)), this.scale) : this.getPoints(this.x, (this.y-(this.props.height/2)), this.scale),
+        // points: this.getPoints(this.projectedXY[0], (this.projectedXY[1]-(this.height/2)), this.scale),
+        // points: this.projectedXY[0] && this.projected[1] ? this.getPoints(this.projectedXY[0], (this.projectedXY[1]-(this.height/2)), this.scale),
+        points: this.getPoints(this.x, this.y-(this.height/2), this.width),
         stroke: undefined,
         strokeWidth: undefined,
-        fill: this.colors[randomIndex(this.colors.length)]
+        fill: this.color_rgba
       }
       // {
       //   el: 'rect',
@@ -550,9 +574,49 @@ class Shape {
       //   fill: this.colors[randomIndex(this.colors.length)]
       // },
     ];
-
+    this.setSizedScene();
     this.init();
     this.initEvents();
+  }
+  setXY(x, y){
+    this.x = x;
+    this.y = y;
+    console.log(this.x+', '+this.y);
+  }
+  setSizedScene(){
+    this.scene_sizedWidth = Math.abs(this.scene.sceneSize.left - this.scene.sceneSize.right);
+    this.scene_sizedHeight = Math.abs(this.scene.sceneSize.top - this.scene.sceneSize.bottom);
+  }
+  setSceneXY(){
+    this.sceneX = this.x/this.scene_sizedWidth;
+    this.sceneY = this.y/this.scene_sizedHeight;
+  }
+  getProjectedXY(){
+    return [
+      (this.calc3DLocation(this.scene.camera)[0] - this.projectedXY[0]),
+      (this.calc3DLocation(this.scene.camera)[1] - this.projectedXY[1])
+    ];
+  }
+  animateTranslate(delay, func){
+    TweenLite.to(this.el, this.moveDur, {
+      x: this.moveX,
+      y: this.moveY,
+      delay: delay,
+      opacity: 1,
+      ease: Power4.easeOut,
+      onComplete: () => {
+        if(func) func();
+      }
+    });
+  }
+  move(moveX, moveY, delay, update_xy, func){
+    if(update_xy){
+      this.setXY(moveX, moveY);
+      this.setSceneXY();
+    }
+    this.moveX = moveX + this.getProjectedXY()[0];
+    this.moveY = moveY + this.getProjectedXY()[1];
+    this.animateTranslate(delay, func);
   }
   initEvents() {
     // Create an observer to monitor the parent svg container's attributes
@@ -582,6 +646,7 @@ class Shape {
         }
       }
     }
+    // return shape;
     // if(this.scene.devmode){
     //   console.log('SHAPE CREATED:');
     //   console.log(this.el);
@@ -623,13 +688,22 @@ class Shape {
 
   updateShape(){
     if(this.scene.ready){
+      this.setSizedScene();
+      let newX = this.sceneX*this.scene_sizedWidth;
+      let newY = this.sceneY*this.scene_sizedHeight;
+      this.move(newX, newY, 0, true, null);
 
-      if(this.letter){
+
+
+
+      // this.move(this.sceneX*this.scene.sceneSize.width)
+
+      /*if(this.letter){
         this.props = this.letter.getBoundingClientRect();
-        this.x = this.props.left + (this.props.width * this.relationalValues.x);
-        this.y = this.props.top + (this.props.height * this.relationalValues.y);
-        this.scale = this.props.width * this.relationalValues.scale;
-        this.transforms = [this.relationalValues.translateX*this.scene.bounds.right, this.relationalValues.translateY*this.scene.bounds.bottom];
+        this.x = this.props.left + (this.props.width * this.relativeProps.x);
+        this.y = this.props.top + (this.props.height * this.relativeProps.y);
+        this.scale = this.props.width * this.relativeProps.scale;
+        this.transforms = [this.relativeProps.translateX*this.scene.bounds.right, this.relativeProps.translateY*this.scene.bounds.bottom];
         this.projectedXY = this.calc3DLocation(this.scene.camera);
 
         // If this Shape element has points, recalculate those values
@@ -648,66 +722,77 @@ class Shape {
         }
         this.getsetTransform([0, 0]);
       }
-    }
-    else{
-      if(this.devmode) console.log("ERROR: Scene not ready");
-    }
+    }*/
   }
-  getPoints(x, y, scale) {
+    // else{
+    //   if(this.devmode) console.log("ERROR: Scene not ready");
+    // }
+  }
+  getPoints(x, y, width) {
     // This configuration of points creates a triangle shape
-    let points = `${x} ${y} ${x + scale * .5} ${y + scale} ${x - scale * .5} ${y + scale}`;
+    let points = `${x} ${y} ${x + width * .5} ${y + width} ${x - width * .5} ${y + width}`;
     return points;
   }
-  getsetTransform(projectedXY) {
-    if (!this.transforms) {
-
-      // if(this.el.hasAttribute("transform")){
-      let matrix = this.el.getAttribute("transform");
-      if(matrix){
-        // let matrixCopy = matrix.replace(/^\w+\(/,"[").replace(/\)$/,"]");
-        let matrixCopy = matrix.replace(/^\w*\(/, '').replace(')', '');
-        let matrixValue = [];
-        matrixValue = matrixCopy.split(/[ ,]+/).map(Number);
-        this.transforms = matrixValue.slice(4);
-        this.relationalValues.translateX = this.transforms[0]/this.scene.bounds.right;
-        this.relationalValues.translateY = this.transforms[1]/this.scene.bounds.bottom;
-        // KEEP FOR REFERENCE & Potential future application
-        // (Converts computedStyle of element and turns into translateX translateY values)
-              // https://stackoverflow.com/questions/3432446/how-to-read-individual-transform-values-in-javascript
-              // let computedStyle = window.getComputedStyle(this.el, null); // "null" means this is not a pesudo style.
-              // You can retrieve the CSS3 matrix string by the following method.
-              // let matrix = computedStyle.getPropertyValue('transform')
-              // || computedStyle.getPropertyValue('-moz-transform')
-              // || computedStyle.getPropertyValue('-webkit-transform')
-              // || computedStyle.getPropertyValue('-ms-transform')
-              // || computedStyle.getPropertyValue('-o-transform');
-              // let matrixValue = [];
-              // let matrixCopy = matrix.replace(/^\w*\(/, '').replace(')', '');
-              // matrixValue = matrixCopy.split(/\s*,\s*/).map(Number);
-              // this.transforms = matrixValue.slice(4);
-              // this.relationalValues.translateX = this.transforms[0]/(window.innerWidth*.45);
-              // this.relationalValues.translateY = this.transforms[1]/(window.innerHeight*.45);
-        //
-      }
-      else{
-        console.log("! Error: Matrix Returned:")
-        console.log(matrix);
-      }
-
-    }
-    if (projectedXY) {
-      let newProjectedXY = [];
-      this.transforms.forEach((transform, index) => newProjectedXY.push(transform + projectedXY[index]));
-      return newProjectedXY;
-
-    }
+  getRgbaColor(hex, z, maxZ, minOpacity){
+    let rgb, a, rgba;
+    rgb = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    a = (1-(z/maxZ))*(1-minOpacity) + minOpacity;
+    rgba = {
+        r: parseInt(rgb[1], 16),
+        g: parseInt(rgb[2], 16),
+        b: parseInt(rgb[3], 16),
+        a: a
+    };
+    return `rgba(${rgba.r},${rgba.g},${rgba.b},${rgba.a})`;
   }
+  // getsetTransform(projectedXY) {
+  //   if (!this.transforms) {
+  //
+  //     // if(this.el.hasAttribute("transform")){
+  //     let matrix = this.el.getAttribute("transform");
+  //     if(matrix){
+  //       // let matrixCopy = matrix.replace(/^\w+\(/,"[").replace(/\)$/,"]");
+  //       let matrixCopy = matrix.replace(/^\w*\(/, '').replace(')', '');
+  //       let matrixValue = [];
+  //       matrixValue = matrixCopy.split(/[ ,]+/).map(Number);
+  //       this.transforms = matrixValue.slice(4);
+  //       this.relativeProps.translateX = this.transforms[0]/this.scene.bounds.right;
+  //       this.relativeProps.translateY = this.transforms[1]/this.scene.bounds.bottom;
+  //       // KEEP FOR REFERENCE & Potential future application
+  //       // (Converts computedStyle of element and turns into translateX translateY values)
+  //             // https://stackoverflow.com/questions/3432446/how-to-read-individual-transform-values-in-javascript
+  //             // let computedStyle = window.getComputedStyle(this.el, null); // "null" means this is not a pesudo style.
+  //             // You can retrieve the CSS3 matrix string by the following method.
+  //             // let matrix = computedStyle.getPropertyValue('transform')
+  //             // || computedStyle.getPropertyValue('-moz-transform')
+  //             // || computedStyle.getPropertyValue('-webkit-transform')
+  //             // || computedStyle.getPropertyValue('-ms-transform')
+  //             // || computedStyle.getPropertyValue('-o-transform');
+  //             // let matrixValue = [];
+  //             // let matrixCopy = matrix.replace(/^\w*\(/, '').replace(')', '');
+  //             // matrixValue = matrixCopy.split(/\s*,\s*/).map(Number);
+  //             // this.transforms = matrixValue.slice(4);
+  //             // this.relativeProps.translateX = this.transforms[0]/(window.innerWidth*.45);
+  //             // this.relativeProps.translateY = this.transforms[1]/(window.innerHeight*.45);
+  //       //
+  //     }
+  //     else{
+  //       console.log("! Error: Matrix Returned:")
+  //       console.log(matrix);
+  //     }
+  //
+  //   }
+  //   if (projectedXY) {
+  //     let newProjectedXY = [];
+  //     this.transforms.forEach((transform, index) => newProjectedXY.push(transform + projectedXY[index]));
+  //     return newProjectedXY;
+  //
+  //   }
+  // }
 }
 
-exports.ShapeScene = function(config) {
-  let shapeScene;
-  shapeScene = new Scene(config);
-  return shapeScene;
+exports.Shapes = function(config) {
+  return new Scene(config);
 }
 
 // document.addEventListener('readystatechange', function(){

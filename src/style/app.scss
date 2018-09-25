@@ -69,6 +69,16 @@ body {
   overflow-x: hidden;
   font-family: 'InterUI', sans-serif;
 
+  .content, .footer_content{
+    max-width: 1400px;
+    margin: 0 8%;
+    z-index: 0;
+
+    @include xl{
+      margin: 0 auto 0 auto;
+    }
+  }
+
   #loader{
     position: fixed;
     width: 100%;
@@ -80,23 +90,21 @@ body {
     justify-content: center;
   }
 
-
-  .content, .footer_content{
+  .transition_overlay{
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 100%;
-    max-width: 1400px;
-    padding: 0 8%;
-    z-index: 0;
-
-    @include xl{
-      padding: 0;
-      margin: 0 auto 0 auto;
-    }
+    height: 100%;
+    z-index: 1;
   }
+
+
   /* global classes */
-  .inner_content{
+  /* .inner_content{
     width: 60%;
     margin: 0 auto;
-  }
+  } */
 
   /* end of app */
 }/* end of body */

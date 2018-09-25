@@ -5,9 +5,7 @@ HTML
 -->
 <template>
 
-    <div id="scene" ref="scene">
-      <slot ref="name"></slot>
-    </div>
+    <div id="scene" ref="scene"></div>
 
 </template>
 
@@ -23,27 +21,48 @@ JS
   import ScrollMagic from "scrollmagic";
   import { TimelineLite } from "gsap";
 
+  import {colors} from '../colors.js';
+
+  import {Shapes} from "../shapes.js";
 
   export default {
-   props: ['scene'],
+   props: ['events'],
    data(){
      return{
-       initialized: false,
-       ready: undefined,
+       // initialized: false,
+       // ready: undefined,
+       scene: undefined,
+       shapes: undefined,
        tl: new TimelineLite({paused: true})
      }
    },
 
    methods:{
+     init: function(){
+       console.log('init scene.vue');
+       this.scene = new Shapes({
+         scene: this.$refs.scene,
+         devmode: this.devmode,
+         totalShapes: 14,
+         shapes_size: [.03, .25],
+         shapes_colors: [
+           '#CDDCD1',
+           '#BAC9C5',
+           '#AEB9BA'
+         ],
+         shapes_delay: .003,
+       })
+       this.scene.init();
+     },
 
      initScrollMagic: function(){
-       const app = document.getElementById('app');
+       // const app = document.getElementById('app');
        const controller = new ScrollMagic.Controller();
 
        const mainScene = new ScrollMagic.Scene({
-         triggerElement: app,
+         triggerElement: this.app,
          triggerHook: 0,
-         duration: this.viewport.cHeight*.75,
+         duration: this.app*.75,
          reverse: true
        })
        .on("progress", (event) => {
@@ -53,18 +72,18 @@ JS
        })
        .addTo(controller);
 
-       const nameScene = new ScrollMagic.Scene({
-         triggerElement: app,
-         triggerHook: 0,
-         duration: this.viewport.cHeight*.5,
-         reverse: true
-       })
-       .on("enter", (event) => {
-         if(this.scene){
-           console.log('turn off scene!!!!!');
-         }
-       })
-       .addTo(controller);
+       // const nameScene = new ScrollMagic.Scene({
+       //   triggerElement: app,
+       //   triggerHook: 0,
+       //   duration: this.viewport.cHeight*.5,
+       //   reverse: true
+       // })
+       // .on("enter", (event) => {
+       //   if(this.scene){
+       //     console.log('turn off scene!!!!!');
+       //   }
+       // })
+       // .addTo(controller);
 
      },
      animateScene: function(){
@@ -72,19 +91,19 @@ JS
        // console.log(this.$props.scene);
        // const scene = this.$props.scene.DOM.el;
        const scene = this.$refs.scene;
-       const name = document.getElementById('name');
+       // const name = document.getElementById('name');
        // const name = this.$refs.name;
-       this.tl.fromTo(name, 1,
-       {
-         y: '0%',
-         opacity: 1
-       },
-       {
-         y: '-50%',
-         opacity: 0,
-         ease: Power2.easeIn
-       })
-       .fromTo(scene, 1,
+       // this.tl.fromTo(name, 1,
+       // {
+       //   y: '0%',
+       //   opacity: 1
+       // },
+       // {
+       //   y: '-50%',
+       //   opacity: 0,
+       //   ease: Power2.easeIn
+       // })
+       this.tl.fromTo(scene, 1,
        {
          y: '0%',
          opacity: 1
@@ -97,13 +116,17 @@ JS
        // return tl;
      },
 
-     hideName: function(){
-       // this.scene.animations.hideLetters();
-     },
+     // hideName: function(){
+     //   // this.scene.animations.hideLetters();
+     // },
 
 
    },
    created(){
+     const scene = this;
+     this.events.$on('app-loaded', () => {
+       scene.init();
+     });
      // Initially check if route displays the name
      // this.showName = this.$route.meta.showName;
    },
@@ -111,6 +134,8 @@ JS
 
    },
    mounted(){
+     // this.initScrollMagic();
+
      // ScrollMagic Scene
      // const tl = this.animateScene();
      // this.animateScene();
@@ -120,15 +145,14 @@ JS
      // First update, when scene object is received as prop
      // console.log(this.scene);
 
-     if(this.scene && !this.initialized){
+     // if(this.scene && !this.initialized){
        // console.log(this.scene.ready);
        // this.animateScene();
-       this.initScrollMagic();
        // this.ready = this.scene.ready;
        // console.log(this.scene.ready);
 
-       this.initialized = !this.initialized;
-     }
+       // this.initialized = !this.initialized;
+     // }
    },
    watch:{
      $route: function(to, from){

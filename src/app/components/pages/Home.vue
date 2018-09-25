@@ -282,9 +282,9 @@
             complete: () => {
               console.log("Transition Completed");
               this.transitioning = false;
+              // this.bodyRestoreScroll();
               this.navigate(e, project.data, project_bg);
-              this.bodyRestoreScroll();
-              
+
             }
           });
         };
@@ -446,8 +446,9 @@
 
         img{
           transform: translateY(-20%);
-          max-height: 70%;
-          max-width: 100%;
+          width: auto;
+          height: 70%;
+          // max-width: 100%;
         }
       }
       .caption{

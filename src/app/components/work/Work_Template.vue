@@ -9,11 +9,13 @@
 
     <div class="template_main">
       <!-- main work info -->
-      <div ref="carouselAside" class="template_aside" :style="{background: lightColor}">
-        <h2 :style="{color: darkColor}" class="template_title">
-          <slot name="title"></slot>
-        </h2>
-        <slot name="description"></slot>
+      <div class="template_aside" :style="{background: lightColor}">
+        <div ref="carouselAside">
+          <h2 :style="{color: darkColor}" class="template_title">
+            <slot name="title"></slot>
+          </h2>
+          <slot name="description"></slot>
+        </div>
       </div>
       <!-- main work images -->
       <carousel :progressColor="mediumColor">
@@ -127,25 +129,33 @@
         // window.addEventListener('resize', handleResize);
       },
       animateContent: function(){
-        const tl = new TimelineLite();
-        let sections = Array.from(this.$refs.carouselAside.children);
-        let links = Array.from(this.$refs.carouselAside.querySelectorAll('i'));
-        console.log(links);
-        let duration = .4;
-        tl.staggerTo(sections, duration,
+        // const tl = new TimelineLite();
+        // let sections = Array.from(this.$refs.carouselAside.children);
+        // let links = Array.from(this.$refs.carouselAside.querySelectorAll('i'));
+        // console.log(links);
+        // let duration = .4;
+        // tl.staggerTo(sections, duration,
+        // {
+        //   x: '0',
+        //   opacity: 1,
+        //   delay: .25,
+        //   ease: Power2.easeOut
+        // }, .1)
+        // .staggerTo(links, duration*2,{
+        //   x: '10px',
+        //   scaleX: 1,
+        //   scaleY: 1,
+        //   opacity: 1,
+        //   ease: Back.easeOut.config(2)
+        // }, .1)
+
+        TweenLite.to(this.$refs.carouselAside, .4,
         {
           x: '0',
           opacity: 1,
-          delay: .25,
-          ease: Power2.easeOut
-        }, .1)
-        .staggerTo(links, duration*2,{
-          x: '10px',
-          scaleX: 1,
-          scaleY: 1,
-          opacity: 1,
-          ease: Back.easeOut.config(2)
-        }, .1)
+          ease: Power2.easeInOut
+        })
+
       },
       initPage: function(){
         this.initEvents();
@@ -157,6 +167,8 @@
       // this.animateScroll();
       // this.initScrollMagic();
       this.initPage();
+      console.log('init work template')
+
     },
     updated(){
       // console.log('updated project template');
@@ -195,10 +207,15 @@
         height: auto;
         padding: 3%;
 
-        &>*{
+        &>div{
           opacity: 0;
           transform: translateX(10%);
         }
+
+        // &>*{
+        //   opacity: 0;
+        //   transform: translateX(10%);
+        // }
         @include medium{
           width: 50%;
           height: 60vh;

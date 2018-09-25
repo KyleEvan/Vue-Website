@@ -14,9 +14,7 @@
       <router-view class="main" ref="main" :images="images" :events="eventBus"></router-view>
     </transition>
 
-    <Scene ref="scene" :scene="scene">
-      <h1 id="name" style="opacity: 0;" ref="name">Kyle</h1>
-    </Scene>
+    <Scene ref="scene" :events="eventBus" />
 
     <Footer/>
 
@@ -39,7 +37,7 @@
   import Scene from './Scene.vue';
 
   // JS
-  import { ShapeScene } from '../shapes.js';
+  // import { ShapeScene } from '../shapes.js';
 
 
   export default {
@@ -60,28 +58,28 @@
       Scene: Scene
     },
     computed:{
-      sceneConfig: function(){
-        return {
-          scene: this.$refs.scene.$el,
-          name: this.$refs.name,
-          devmode: this.devmode,
-          shapeColors: [
-            // '#E3A9AB',
-            // '#7CE8CE',
-            // '#E8C3B1',
-            // '#A2E3E8'
-            // experimental palette
-
-            // https://coolors.co/e9ede7-cddcd1-bac9c5-aeb9ba-acb2b5
-            // https://colorleap.app/time/2000BC
-            // https://coolors.co/cad2c5-84a98c-52796f-354f52-2f3e46
-            '#CDDCD1',
-            '#BAC9C5',
-            '#AEB9BA'
-          ],
-          shapesPerLetter: 4
-        };
-      }
+      // sceneConfig: function(){
+      //   return {
+      //     scene: this.$refs.scene.$el,
+      //     name: this.$refs.name,
+      //     devmode: this.devmode,
+      //     shapeColors: [
+      //       // '#E3A9AB',
+      //       // '#7CE8CE',
+      //       // '#E8C3B1',
+      //       // '#A2E3E8'
+      //       // experimental palette
+      //
+      //       // https://coolors.co/e9ede7-cddcd1-bac9c5-aeb9ba-acb2b5
+      //       // https://colorleap.app/time/2000BC
+      //       // https://coolors.co/cad2c5-84a98c-52796f-354f52-2f3e46
+      //       '#CDDCD1',
+      //       '#BAC9C5',
+      //       '#AEB9BA'
+      //     ],
+      //     shapesPerLetter: 4
+      //   };
+      // }
     },
     methods:{
       setPageTitle: function(){
@@ -137,6 +135,9 @@
 
       },
       enter: function(el, done){
+          console.log('enter');
+          this.bodyRestoreScroll();
+          
           done();
       },
       beforeLeave: function(el){

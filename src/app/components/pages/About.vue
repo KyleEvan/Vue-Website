@@ -15,10 +15,8 @@
 </template>
 
 <script>
-
   export default {
     name: 'about',
-
     data(){
       return {
         msg: 'about me and stuff'
@@ -28,7 +26,6 @@
 </script>
 
 <style lang="scss" scoped>
-
 .container{
   width: 100%;
   height: auto;
@@ -37,27 +34,21 @@
   align-items: center;
   justify-content: center;
   flex-flow: wrap;
-
   .content{
-
+    margin: 0 8%;
     h1{
       font-family: 'InterUI', sans-serif;
       font-weight: 700;
       font-size: 5vw;
+      line-height: 1;
     }
-    .inner_content{
-      padding: 4em 0;
+    div{
+      // width: 60%;
+      margin: 0 15% 0 25%;
+      // text-align: center;
+      // margin: 0 auto;
+      // user-select: none;
     }
-    // div{
-    //   width: 60%;
-    //   text-align: center;
-    //   margin: 0 auto;
-    //   // user-select: none;
-    //
-    //
-    // }
-
   }
 }
-
 </style>

@@ -59,6 +59,6 @@ module.exports = {
       filename: "[name]_bundle.css",
     }),
     new VueLoaderPlugin()
-    
+
   ],
 };

@@ -2,7 +2,6 @@
   <div id="app">
 
     <Nav/>
-
     <!-- Main website content -->
     <transition mode="in-out"
       v-on:before-enter="beforeEnter"
@@ -11,11 +10,12 @@
       v-on:leave="leave"
       v-bind:css="false"
     >
-      <router-view class="main" ref="main" :images="images" :events="eventBus"></router-view>
+      <router-view class="main" ref="main" :images="images" :events="eventBus">
+      <!-- Main View -->
+      </router-view>
     </transition>
 
-    <Scene ref="scene" :events="eventBus" />
-
+    <scene ref="scene" :events="eventBus" />
     <Footer/>
 
   </div>
@@ -34,10 +34,10 @@
   // Components
   import Nav from './Nav.vue';
   import Footer from './Footer.vue';
-  import Scene from './Scene.vue';
+  import scene from './scene.vue';
 
   // JS
-  // import { ShapeScene } from '../shapes.js';
+  // import { Shapescene } from '../shapes.js';
 
 
   export default {
@@ -46,8 +46,8 @@
     name: 'app',
     data(){
       return {
-        loader: document.getElementById('loader'),
-        scene: undefined,
+        loading_el: document.querySelector('.loading'),
+        // scene: undefined,
         tl: new TimelineLite({ paused: true }),
         eventBus: new Vue()
       }
@@ -55,7 +55,7 @@
     components:{
       Nav: Nav,
       Footer: Footer,
-      Scene: Scene
+      scene: scene
     },
     computed:{
       // sceneConfig: function(){
@@ -92,19 +92,27 @@
         // while (this.el.firstChild) {
         //   this.el.removeChild(this.el.firstChild);
         // }
-        this.body.removeChild(this.loader);
+        this.body.removeChild(this.loading_el);
       },
       doneLoading: function(){
-        TweenLite.to(this.loader, .3, {
+        const spinner = this.loading_el.querySelector('.spinner');
+        TweenLite.to(spinner, .3, {
+          scale: .25,
+          opacity: 0,
+          ease: Power2.easeOut
+        });
+        TweenLite.to(this.loading_el, .3, {
           opacity: 0,
           ease: Power2.easeIn,
           onComplete: () => {
+            console.log('done loading images');
             this.destroyLoader();
             this.initApp();
           }
         });
       },
       async loadImages(images){
+        console.log(images);
         const assets = await load.any(images, (progress) => {
           if(progress.count >= progress.total){
             console.log('All images loaded');
@@ -112,10 +120,10 @@
           }
         });
       },
-      initScene: function(){
-        // Init shape scene
-        // this.scene = ShapeScene(this.sceneConfig);
-      },
+      // initscene: function(){
+      //   // Init shape scene
+      //   // this.scene = Shapescene(this.sceneConfig);
+      // },
       preInitApp: function(){
         console.log('getting app.vue ready');
         // Disable Scroll while app loads assets
@@ -128,7 +136,7 @@
         // Emits custom event handled by page component in router view
         this.appLoaded();
         // Plays shape scene
-        this.initScene();
+        // this.initscene();
         this.bodyRestoreScroll();
       },
       beforeEnter: function(el){
@@ -137,7 +145,7 @@
       enter: function(el, done){
           console.log('enter');
           this.bodyRestoreScroll();
-          
+
           done();
       },
       beforeLeave: function(el){

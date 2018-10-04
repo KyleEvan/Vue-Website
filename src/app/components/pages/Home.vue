@@ -1,8 +1,10 @@
 <template>
   <div>
 
+    <home-title class="content" :events="events" />
+
     <div class="container">
-      <h2>Work <span>&amp;</span> Projects</h2>
+      <h2>Work</h2>
 
       <div class="content projects">
           <a
@@ -19,15 +21,20 @@
             <div class="image">
               <img :src="images.sized[project.image.src]" />
             </div>
-            <div class="caption">
-              <span class="name">{{project.name}}</span>
-              <p>
+            <div class="info">
+              <div class="name">{{project.name}}</div>
+              <div class="tags">
+                <span v-for="tag in project.tags" :class="tag.toLowerCase()">{{tag}}</span>
+              </div>
+              <!-- <p>
                 {{trimCaption(project.caption)}}
                 <span>...Read more »</span>
-              </p>
+              </p> -->
             </div>
           </a>
       </div>
+
+      <h2>Projects</h2>
     </div>
 
 
@@ -37,6 +44,9 @@
 <script>
   // Project Data
   import {projects} from '../../projects.js';
+
+  // Components
+  import home_title from '../Test/home-title.vue';
 
   // JS Libraries
   import ScrollMagic from "scrollmagic";
@@ -77,6 +87,9 @@
         // transitionedProject: undefined
       }
     },
+    components: {
+      'home-title': home_title
+    },
     methods:{
       //---------------< Helper Functions >---------------
       trimCaption: function(caption){
@@ -94,7 +107,7 @@
           background = null;
           this.$router.push({
             name: href,
-            params: {project: project, images: this.images}
+            params: {project: project}
           });
         }
       },
@@ -125,10 +138,10 @@
         });
       },
       animateHideElements: function(target){
-        let hide_els, current_caption, filtered_projects;
+        let hide_els, current_info, filtered_projects;
         hide_els = [];
-        current_caption = target.querySelector('.caption');
-        hide_els.push(current_caption);
+        current_info = target.querySelector('.info');
+        hide_els.push(current_info);
         filtered_projects = this.projects_el_arr.filter( (el) => {
           return (el !== target);
         });
@@ -347,7 +360,7 @@
           for(let i = 0; i < this.projects_el_arr.length; i++){
             let project = this.projects_el_arr[i];
             let image = project.querySelector('.image > img');
-            let caption = project.querySelector('.caption');
+            let info = project.querySelector('.info');
             let projectScene = new ScrollMagic.Scene({
               triggerElement: projectsContainer,
               triggerHook: .6,
@@ -393,14 +406,25 @@
 @import '../../../style/global.scss';
 
 .main{
-  padding-top: 120vh;
-
+  // padding-top: 120vh;
+  h2{
+    display: inline-block;
+    margin-left: 5%;
+    padding: 3% 0;
+    font-size: 3.65vw;
+    line-height: 1;
+    font-family: 'Eksell Display';
+    font-weight: 400;
+  }
+  .content{
+    margin: 0 10% 0% 16%;
+  }
   .projects{
     padding-bottom: 12vh;
     display: flex;
     align-items: flex-start;
     flex-flow: row wrap;
-    justify-content: space-around;
+    justify-content: space-between;
 
     .project{
       position: relative;
@@ -410,16 +434,18 @@
       border-radius: 3px;
       overflow: hidden;
       border: 1px solid #CAD2C5;
+      margin-bottom: 1.75em;
       text-decoration: none;
       opacity: 0;
       transform: translateY(15%);
       &>div{
         pointer-events: none;
       }
-      @include medium{
+      @include md{
         width: 45%;
+        margin-bottom: 2.75em;
       }
-      @include large{
+      @include lg{
         width: 28.33%;
       }
 
@@ -445,186 +471,44 @@
         justify-content: center;
 
         img{
-          transform: translateY(-20%);
+          // transform: translateY(-20%);
           width: auto;
-          height: 70%;
-          // max-width: 100%;
+          height: auto;
+          // height: 70%;
+          max-width: 100%;
+          max-height: 100%;
         }
       }
-      .caption{
-        padding: 1em;
+      .info{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        // padding: 1em;
         margin-top: 50%;
         z-index: 1;
         background: #fff;
 
         .name{
+          padding: .5em;
           font-weight: 700;
           opacity: 1;
         }
-        p{
-          opacity: .75;
-          margin: .5em 0;
-        }
-      }
-    }
-  }
-}
-
-
-
-.main{
-  /* To accomodate scene */
-  padding-top: 120vh;
-  .container{
-
-    .contsent{
-      padding-bottom: 12vh;
-      display: flex;
-      align-items: flex-start;
-      flex-flow: row wrap;
-      justify-content: space-between;
-
-      /* Work & Projects */
-      h2{
-        width: 100%;
-        font-size: 5vw;
-        line-height: 5vw;
-        margin-bottom: 1.2em;
-      }
-
-      // .grid{
-
-        // margin: 0 -1em 0 -1em;
-
-        .project{
-          position: relative;
-          text-decoration: none;
-          // margin: 1em;
-          // width: 100%;
-          // min-height: 60vh;
-          display: flex;
-          align-items: flex-start;
-          // justify-content: center;
-          &:hover{
-            .text{
-              color:blue;
-              transform: translateX(3%) scale(1.05) !important;
-            }
-          }
-          &:nth-child(3){
-            margin-top: 5%;
-            margin-right: 10%;
-          }
-          &:nth-child(4){
-            margin-top: 5%;
-          }
-          &:nth-child(5){
-            margin-right: 10%;
-            margin-top: 17%;
-          }
-
-         &>*{
-           pointer-events: none;
-         }
-          @include small {
-            flex-direction: column-reverse;
-          }
-          @include medium {
-            // min-height: 80vh;
-            &[data-align="ltr"]{
-              flex-direction: row;
-
-              .text{
-                transform: translateX(-20px);
-              }
-            }
-            &[data-align="rtl"]{
-              flex-direction: row-reverse;
-
-              .text{
-                transform: translateX(-20px);
-              }
-            }
-          }
-          // .image, .text{
-          .image{
-            opacity: 0;
-          }
-          .text{
-            opacity: 0;
-            color: #645D54;
-            margin: 0 .75em;
-            font-size: 80%;
-            line-height: 1;
-            transition: transform 1s cubic-bezier(.17,.62,.4,1);
-            transform-origin: 0 0;
-
-
-            @include small {
-              width: 100%;
-              // margin: 0%;
-            }
-            @include medium {
-              width: 30%;
-              // margin: 0% 0% 0% 8%;
-            }
-            @include large{
-              width: 25%;
-
-            }
-
-            h3{
-              margin-top: 0;
-              margin-bottom: .75rem;
-              line-height: 1.3;
-            }
-            p{
-              margin-top: 0;
-              // margin-bottom: 1.5rem;
-              line-height: 1.5;
-            }
-            a{
-              display: inline-block;
-              padding: 1rem;
-              border-radius: 6px;
-              font-weight: 700;
-              letter-spacing: .5px;
-              text-decoration: none;
-            }
-          }
-
-          .image{
-            width: 100%;
-            display: flex;
-            align-items: flex-start;
-            padding: 1.5em;
-            justify-content: center;
-            overflow: hidden;
-            transform: translateY(100px);
-
-            @include small{
-              // height: 34vw !important;
-              margin-bottom: 1.5rem;
-            }
-            @include medium{
-              width: 70%;
-              // height: auto;
-              margin-bottom: 0;
-            }
-            @include large{
-              width: 75%;
-
-            }
-
-            img{
-              width: 100%;
-              transform: translateY(100px);
-              opacity: 0;
-            }
+        .tags{
+          text-align: right;
+          span{
+            background: #f4f4f4;
+            display: inline-block;
+            padding: 1em;
+            font-size: .7em;
+            line-height: .7em;
+            margin: .5em;
           }
         }
-      // }
-
+        // p{
+        //   opacity: .75;
+        //   margin: .5em 0;
+        // }
+      }
     }
   }
 }

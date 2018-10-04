@@ -57,10 +57,13 @@
       },
       setProgressBar: function(){
         let width;
-        if(window.innerWidth <= this.breakpoints.md) width = document.documentElement.clientWidth;
-        else width = document.documentElement.clientWidth/2
+        if(window.innerWidth <= this.breakpoints.md){
+          width = this.viewport.cWidth;
+        } else {
+          width = this.viewport.cWidth/2;
+        }
         this.progressBar.width = this.progressBar.progress = width;
-        this.progressBar.height = this.$refs.carouselContainer.clientHeight;
+        this.progressBar.height = document.getElementById('carousel').offsetHeight;
       },
       initFlickity: function(){
         if(this.devmode) console.log('Init Flickity');
@@ -80,7 +83,6 @@
 
     },
     mounted(){
-      this.setProgressBar();
 
       // console.log(this.images);
 
@@ -95,7 +97,8 @@
       //   console.log('init flickity in Carousel.vue');
       // });
       this.initFlickity();
-
+      // this.setProgressBar = this.setProgressBar.bind(this);
+      this.setProgressBar(this);
 
 
       /*
@@ -106,9 +109,9 @@
       // console.log(this.$props);
       // this.initFlickity();
       // this.initFlickity();
-      const carousel = this;
+      const vm = this;
       const handleResize = this.debounce(function() {
-        carousel.setProgressBar();
+        vm.setProgressBar();
       }, 30);
       window.addEventListener('resize', handleResize);
 
@@ -136,7 +139,7 @@
     width: 100%;
     // z-index: 0;
 
-    @include medium{
+    @include md{
       width: 50%;
     }
 
@@ -149,7 +152,7 @@
       height: 50vh;
       z-index: 1;
 
-      @include medium{
+      @include md{
         position: fixed;
         top: 0;
         left: 50%;

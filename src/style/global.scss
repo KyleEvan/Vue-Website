@@ -31,17 +31,17 @@ $break-medium: 800px;
 $break-large: 1300px;
 $break-xl: 1600px;
 
-@mixin small{
+@mixin sm{
   @media (min-width: #{$break-small}){
     @content;
   }
 }
-@mixin medium{
+@mixin md{
   @media (min-width: #{$break-medium}){
     @content;
   }
 }
-@mixin large{
+@mixin lg{
   @media (min-width: #{$break-large}){
      @content
   }

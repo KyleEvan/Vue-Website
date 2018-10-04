@@ -138,7 +138,8 @@
 	      display: flex;
 	      text-decoration: none;
 				// padding: .1rem 1rem;
-        font-weight: 600;
+				color: #000;
+        font-weight: 400;
 				pointer-events: visible;
 
 				&:hover{

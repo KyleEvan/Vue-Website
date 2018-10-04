@@ -23,9 +23,13 @@
   import charming from 'charming';
 
   export default {
+    props: ['events'],
     data(){
       return {
-
+        init: false,
+        init_delay: .35,
+        init_dur: .6,
+        charmedName: undefined,
       }
     },
     methods:{
@@ -41,50 +45,59 @@
       getName: function(){
         const container = this.$refs.home_title;
         const lines = 2;
-        let home_title = Array.from(container.querySelectorAll('li'));
+        let title = Array.from(container.querySelectorAll('li'));
         let begin = 0;
-        home_title = home_title.slice(begin,lines);
-        return home_title;
+        title = title.slice(begin,lines);
+        return title;
       },
       animateIn: function(els){
-        let dur = 1;
+        console.log('animate in');
         let inc = .052;
         for(var i = 0; i < els.length; i++){
           let letter = els[i];
-          TweenLite.to(letter, dur,
+          TweenLite.to(letter, this.init_dur,
           {
             opacity: 1,
             y: '0%',
-            ease: Power4.easeOut
+            ease: Power4.easeOut,
+            delay: this.init_delay,
           });
-          dur += inc;
+          this.init_dur += inc;
         }
+      },
+      initTitle: function(){
+        this.animateIn(this.charmedName);
+        if(!this.init) this.init = true;
       }
     },
+    created(){
+      let vm = this;
+      this.events.$on('app-loaded', () => {
+        console.log('init Home_title.vue');
+        vm.initTitle();
+      });
+    },
     mounted(){
-      let name = this.getName();
-      let charmedName = this.charmWords(name);
-      let home = this;
-      setTimeout(()=>{
-        home.animateIn(charmedName);
-      }, 500)
+      this.charmedName = this.charmWords(this.getName());
+      if(!this.init) this.initTitle();
     }
   }
 </script>
 
 <style lang="scss">
-
+  @import '../../../style/global.scss';
 
   .home_title{
     display: flex;
     align-items: center;
-    width: 50vw;
+    width: 100%;
     height: 100vh;
     position: relative;
     user-select: none;
 
     ul{
-      padding-left: 15%;
+      padding-left: 0;
+      margin: 0;
       list-style: none;
 
       li{
@@ -92,6 +105,10 @@
           font-family: 'Eksell Display';
           font-size: 7vw;
           line-height: 8vw;
+          @include lg{
+            font-size: 5em;
+            line-height: 6rem;
+          }
           span{
             display: inline-block;
             opacity: 0;

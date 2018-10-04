@@ -2,7 +2,7 @@
   <div><!-- Main Container -->
     <div class="container">
 
-      <home-title />
+      <!-- <home-title /> -->
       <loading />
 
       <!-- <div class="content">
@@ -20,9 +20,9 @@
 </template>
 
 <script>
-  import Home_Title from './Home_Title.vue';
+  // import Home_Title from './Title.vue';
   import Loading from './loading.vue';
-
+  
   export default {
     name: 'test',
 
@@ -32,7 +32,7 @@
       }
     },
     components: {
-      'home-title': Home_Title,
+      // 'home-title': Home_Title,
       'loading': Loading
     }
   }

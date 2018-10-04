@@ -43,8 +43,8 @@ JS
        this.scene = new Shapes({
          scene: this.$refs.scene,
          devmode: this.devmode,
-         totalShapes: 14,
-         shapes_size: [.03, .25],
+         totalShapes: 50,
+         shapes_size: [.0075, .045],
          shapes_colors: [
            '#CDDCD1',
            '#BAC9C5',
@@ -196,31 +196,31 @@ JS
              opacity: 0;
          }
      }
-     #name {
-         color: #616163;
-         margin: 0;
-         font-size: 50px;
-         text-transform: uppercase;
-         font-size: 12vw;
-         font-family: 'InterUI', sans-serif;
-         font-weight: 700;
-         user-select: none;
-         letter-spacing: 4px;
-
-         span {
-             display: inline-block;
-             position: relative;
-             line-height: 0.8;
-             padding: 0 0.05em;
-         }
-     }
-     h2{
-       font-family: "Noto Sans Japanese";
-       font-size: 4vw;
-       margin: 3% 0;
-       color: #FACDCF;
-       opacity: .8;
-     }
+     // #name {
+     //     color: #616163;
+     //     margin: 0;
+     //     font-size: 50px;
+     //     text-transform: uppercase;
+     //     font-size: 12vw;
+     //     font-family: 'InterUI', sans-serif;
+     //     font-weight: 700;
+     //     user-select: none;
+     //     letter-spacing: 4px;
+     //
+     //     span {
+     //         display: inline-block;
+     //         position: relative;
+     //         line-height: 0.8;
+     //         padding: 0 0.05em;
+     //     }
+     // }
+     // h2{
+     //   font-family: "Noto Sans Japanese";
+     //   font-size: 4vw;
+     //   margin: 3% 0;
+     //   color: #FACDCF;
+     //   opacity: .8;
+     // }
 
  }
 

@@ -581,7 +581,7 @@ class Shape {
   setXY(x, y){
     this.x = x;
     this.y = y;
-    console.log(this.x+', '+this.y);
+    // console.log(this.x+', '+this.y);
   }
   setSizedScene(){
     this.scene_sizedWidth = Math.abs(this.scene.sceneSize.left - this.scene.sceneSize.right);

@@ -4,8 +4,9 @@ import {colors} from './colors.js';
 var projects = [
   {
     // align: 'rtl',
-    name: 'Member & Careers Redesign',
+    name: 'Member Redesign',
     caption: 'Complete UX/UI overhaul of member and careers sections of Excellus BCBS and Univera Healthcare',
+    tags: ['JavaScript', 'CSS', 'HTML'],
     href: 'Careers-Redesign',
     image:{
       width: '40%',
@@ -21,6 +22,7 @@ var projects = [
     // align: 'rtl',
     name: 'Combo Smash',
     caption: 'Lorem ipsum dolor sit',
+    tags: ['JavaScript', 'CSS', 'HTML'],
     href: 'ComboSmash',
     image:{
       width: '38%',
@@ -36,6 +38,7 @@ var projects = [
     // align: 'rtl',
     name: 'Batman Comic Store Poster',
     caption: 'Lorem ipsum dolor sit',
+    tags: ['Illustrator', 'Photoshop'],
     href: 'ComboSmash',
     image:{
       width: '36%',
@@ -51,6 +54,7 @@ var projects = [
     // align: 'rtl',
     name: 'Cycles',
     caption: 'Lorem ipsum dolor sit',
+    tags: ['Javascript', 'HTML', 'CSS'],
     href: 'Cycles',
     image:{
       width: '32%',

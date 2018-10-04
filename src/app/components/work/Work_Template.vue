@@ -50,7 +50,7 @@
   import { TimelineLite } from "gsap";
 
   // Components
-  import Carousel from '../Carousel.vue';
+  import carousel from '../carousel.vue';
 
   // import { globals } from '../globals.js';
 
@@ -67,7 +67,7 @@
       }
     },
     components:{
-      carousel: Carousel
+      carousel: carousel
     },
     computed:{
       primaryColor: function(){
@@ -198,7 +198,7 @@
     .template_main{
       display: flex;
       flex-direction: column-reverse;
-      @include medium{
+      @include md{
         flex-direction: row;
       }
 
@@ -216,7 +216,7 @@
         //   opacity: 0;
         //   transform: translateX(10%);
         // }
-        @include medium{
+        @include md{
           width: 50%;
           height: 60vh;
           min-height: 100vh;

@@ -103,6 +103,7 @@
         const href = e.target.getAttribute("href");
         if(href){
           // Cleanup transitionLayer
+          console.log(background.parentNode);
           background.parentNode.outerHTML = "";
           background = null;
           this.$router.push({
@@ -115,15 +116,11 @@
         return `${l} ${t} ${r} ${t} ${r} ${b} ${l} ${b}`;
       },
       getImageScale: function(project, container){
-        let imageContainer = project.image.parentNode;
         let imageHeight = project.image.clientHeight;
-        let padding = parseInt(window.getComputedStyle(imageContainer, null).getPropertyValue('padding-top'), 10);
-        console.log(imageHeight);
+        let imageWidth = project.image.clientWidth;
         let height = window.innerWidth*project.data.image.newHeight;
         let maxHeight = window.innerHeight*this.imageMaxHeight;
         let newHeight = height > maxHeight? maxHeight : height;
-        console.log(newHeight/imageHeight);
-        // let scale = imageHeight/(container.height - (padding*2));
         let scale = newHeight/imageHeight;
         return scale;
       },
@@ -411,10 +408,10 @@
     display: inline-block;
     margin-left: 5%;
     padding: 3% 0;
-    font-size: 3.65vw;
+    font-size: 2.65vw;
     line-height: 1;
-    font-family: 'Eksell Display';
-    font-weight: 400;
+    // font-family: 'Eksell Display';
+    font-weight: 600;
   }
   .content{
     margin: 0 10% 0% 16%;
@@ -430,7 +427,7 @@
       position: relative;
       display: flex;
       flex-flow: column;
-      width: 90%;
+      width: 92%;
       border-radius: 3px;
       overflow: hidden;
       border: 1px solid #CAD2C5;
@@ -442,11 +439,11 @@
         pointer-events: none;
       }
       @include md{
-        width: 45%;
+        width: 48%;
         margin-bottom: 2.75em;
       }
       @include lg{
-        width: 28.33%;
+        width: 30.33%;
       }
 
       .bg{
@@ -456,6 +453,11 @@
         width: 100%;
         height: 100%;
         background: #fff;
+      }
+      &:hover{
+        .bg{
+          background: #f4f4f4;
+        }
       }
 
       .image{
@@ -473,10 +475,10 @@
         img{
           // transform: translateY(-20%);
           width: auto;
-          height: auto;
+          height: 100%;
           // height: 70%;
-          max-width: 100%;
-          max-height: 100%;
+          // max-width: 100%;
+          // max-height: 100%;
         }
       }
       .info{
@@ -489,12 +491,13 @@
         background: #fff;
 
         .name{
+          width: 70%;
           padding: .5em;
           font-weight: 700;
           opacity: 1;
         }
         .tags{
-          text-align: right;
+          // text-align: right;
           span{
             background: #f4f4f4;
             display: inline-block;
@@ -502,6 +505,7 @@
             font-size: .7em;
             line-height: .7em;
             margin: .5em;
+            float: right;
           }
         }
         // p{

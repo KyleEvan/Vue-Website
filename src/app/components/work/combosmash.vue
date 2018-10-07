@@ -1,6 +1,6 @@
 <template>
 
-  <work-template :project="project">
+  <work-template :project="project" :events="events">
 
     <template slot="slides">
       <div class="carousel-cell" v-for="image in project_images">
@@ -100,7 +100,7 @@
   import Work_Template from './Work_Template.vue';
 
   export default {
-    props: ['project', 'images'],
+    props: ['project', 'images', 'events'],
     data () {
       return {
         gitHubLink: 'https://github.com/KyleEvan/ComboSmash-v2',
@@ -150,7 +150,8 @@
 
     &:nth-child(1){
       img{
-        // height: 40vw;
+        width: auto;
+        height: 30vw;
         max-height: 70vh;
       }
     }

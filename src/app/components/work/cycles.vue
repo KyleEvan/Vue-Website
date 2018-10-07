@@ -98,6 +98,7 @@
 
     &:nth-child(1){
       img{
+        width: auto;
         height: 30vw;
         max-height: 70vh;
       }

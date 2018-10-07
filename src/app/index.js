@@ -128,5 +128,4 @@ new Vue({
     // Add resize event handler to main Vue
     window.addEventListener('resize', this.handleResize);
   }
-  // mixins: [mixins]
 });

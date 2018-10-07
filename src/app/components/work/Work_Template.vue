@@ -56,7 +56,7 @@
 
 
 	export default{
-		props:['project'],
+		props:['project', 'events'],
     data(){
       return{
         defaultPrimaryColor: colors.red,
@@ -162,11 +162,16 @@
         this.animateContent();
       }
     },
-
+    created(){
+      this.events.$on('app-loaded', () => {
+        console.log('init work template');
+        this.initPage();
+      });
+    },
     mounted(){
       // this.animateScroll();
       // this.initScrollMagic();
-      this.initPage();
+      if(this.$props.project) this.initPage();
       console.log('init work template')
 
     },
@@ -203,9 +208,11 @@
       }
 
       .template_aside{
+        position: relative;
         width: 100%;
         height: auto;
         padding: 3%;
+        z-index: 2;
 
         &>div{
           opacity: 0;

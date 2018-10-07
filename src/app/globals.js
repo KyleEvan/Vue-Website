@@ -1,5 +1,3 @@
-import { images } from './images.js';
-
 var globals = {
   breakpoints:{
     sm: 200,

@@ -126,6 +126,8 @@ body {
     }
   }
 
+
+    $loadingDuration: 2s;
     .loading{
       position: fixed;
       width: 100%;
@@ -153,7 +155,7 @@ body {
             transform: translateX(33%) scale(.33);
             animation-name: size;
             transform-origin: 50% 50%;
-            animation-duration: 2s;
+            animation-duration: $loadingDuration;
             animation-timing-function: cubic-bezier(.15,.6,.93,.5);
             animation-iteration-count: infinite;
             background-color: transparent;
@@ -197,7 +199,7 @@ body {
         &>span,
         &>span>span{
           transform-origin: 50% 50%;
-          animation-duration: 2s;
+          animation-duration: $loadingDuration;
           animation-timing-function: cubic-bezier(.15,.6,.93,.5);
           animation-iteration-count: infinite;
         }

@@ -35,6 +35,7 @@
     padding: 3rem;
     color: #84A98C;
     font-weight: 600;
+    z-index: 1;
 
     .footer_content{
       z-index: 0;

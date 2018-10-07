@@ -1,22 +1,12 @@
 <template>
 
   <div ref="carouselContainer" id="carousel">
-
     <div id="flickityContainer" ref="carousel" :style="minHeight">
       <slot></slot>
     </div>
-
-    <!-- <svg id="progressBar" :width="progressBar.width" :height="progressBar.height" :viewBox="viewBox" :style="{bottom: -.5*progressBar.height}"> -->
-    <svg id="progressBar" :width="progressBar.width" :height="progressBar.height" :viewBox="viewBox" >
-      <path :stroke="progressBar.background" :stroke-width="progressBar.height*2" :d="path"></path>
-      <path :stroke="progressColor" :stroke-width="progressBar.height*2" :d="path" :style="{strokeDasharray: progressBar.width, strokeDashoffset: progressBar.progress}"></path>
+    <svg id="progressBar" :style="{backgroundColor: progressBar.background}" :width="progressBar.width" :height="progressBar.height" :viewBox="viewBox" >
+      <polygon ref="progressBar" :fill="progressColor" :points="points"></polygon>
     </svg>
-
-    <!-- For Development -->
-    <!-- <div class="debug progressBar progress" v-if="devmode" style="color: red;">
-      {{progressBar.width - progressBar.progress}}
-    </div> -->
-
   </div>
 
 </template>
@@ -24,7 +14,6 @@
 <script>
   import { TimelineLite } from "gsap";
   import Flickity from 'flickity';
-
 
   export default {
     props: ['progressColor'],
@@ -39,31 +28,41 @@
           height: 80,
           progress: 0,
           background: 'transparent'
-        }
+        },
+        points: undefined,
+        viewBox: undefined
       }
     },
-    computed:{
-      viewBox: function(){
-        return `0 0 ${this.progressBar.width} ${this.progressBar.height}`;
-      },
-      path: function(){
-        return `M0 0, ${this.progressBar.width} 0`;
-      },
-    },
     methods: {
-      updateProgress: function(progress){
-        this.progressBar.progress = this.progressBar.width - (progress * this.progressBar.width);
-        return this.progressBar.progress;
-      },
-      setProgressBar: function(){
-        let width;
-        if(window.innerWidth <= this.breakpoints.md){
-          width = this.viewport.cWidth;
-        } else {
-          width = this.viewport.cWidth/2;
+      getContainerWH: function(){
+        return{
+          width: this.$refs.carouselContainer.clientWidth,
+          height: this.$refs.carouselContainer.clientHeight
         }
-        this.progressBar.width = this.progressBar.progress = width;
-        this.progressBar.height = document.getElementById('carousel').offsetHeight;
+      },
+      getPoints: function(l, t, r, b){
+        return `${l-r} ${t} ${l-l} ${t} ${l-l} ${b} ${l-r} ${b}`;
+      },
+      setViewBox: function(width, height){
+        this.viewBox = `0 0 ${width} ${height}`;
+      },
+      animateProgressBar(x){
+        TweenLite.to(this.$refs.progressBar, 0,
+        {
+          x: x,
+          ease: Power0.easeNone
+        });
+      },
+      updateProgress: function(progress){
+        this.animateProgressBar(progress*this.progressBar.width);
+      },
+      configProgressBar: function(){
+        let container = this.getContainerWH();
+        container = Object.assign(this.$refs.carouselContainer.getBoundingClientRect(), container);
+        this.setViewBox(container.width, container.height);
+        this.progressBar.width = container.width;
+        this.progressBar.height = container.height;
+        this.points = this.getPoints(container.left, container.top, container.right, container.bottom);
       },
       initFlickity: function(){
         if(this.devmode) console.log('Init Flickity');
@@ -79,53 +78,27 @@
           progress = Math.max( 0, Math.min( 1, progress ) );
           carousel.updateProgress(progress);
         });
-      }
+      },
 
+      handleResize: function(){
+        const carousel = this;
+        const resize = this.debounce(function() {
+          carousel.configProgressBar();
+        }, 100);
+        resize();
+      }
     },
     mounted(){
 
-      // console.log(this.images);
-
-      // this.progressBar.height = this.$refs.carouselContainer.style.height;
-      /*
-
-        Initialize Carousel with flickity
-
-      */
-      // Promise.all(this.images).then(function(values) {
-      //   console.log(values);
-      //   console.log('init flickity in Carousel.vue');
-      // });
       this.initFlickity();
-      // this.setProgressBar = this.setProgressBar.bind(this);
-      this.setProgressBar(this);
-
-
-      /*
-
-        Events
-
-      */
-      // console.log(this.$props);
-      // this.initFlickity();
-      // this.initFlickity();
-      const vm = this;
-      const handleResize = this.debounce(function() {
-        vm.setProgressBar();
-      }, 30);
-      window.addEventListener('resize', handleResize);
-
+      this.configProgressBar();
 
     },
-    updated(){
-      // console.log('Updated in Carousel.vue');
-      // console.log(this.viewport);
-      // this.setProgressBar();
-      // console.log(this.hassl);
-
-      // if(this.images && !this.flickityInit){
-      //   this.flickityInit = !this.flickityInit;
-      // }
+    created(){
+      window.addEventListener('resize', this.handleResize)
+    },
+    beforeDestroy(){
+      window.removeEventListener('resize', this.handleResize)
     }
   }
 
@@ -137,7 +110,7 @@
   #carousel{
     position: relative;
     width: 100%;
-    // z-index: 0;
+    z-index: 0;
 
     @include md{
       width: 50%;
@@ -207,6 +180,7 @@
         border: none;
         padding: 0;
         display: flex;
+        align-items: center;
         justify-content: center;
         opacity: .4;
         cursor: pointer;
@@ -252,6 +226,7 @@
 
     #progressBar, .debug.progressBar.progress{
       width: 100%;
+      height: 100%;
       position: absolute;
       left: 0;
       top: 0;

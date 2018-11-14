@@ -1,8 +1,8 @@
 <template>
   <div id="app">
 
-    <Nav/>
-    <!-- Main website content -->
+    <nav-content/>
+
     <transition mode="in-out"
       v-on:before-enter="beforeEnter"
       v-on:enter="enter"
@@ -16,7 +16,8 @@
     </transition>
 
     <scene ref="scene" :events="eventBus" />
-    <Footer/>
+
+    <footer-content/>
 
   </div>
 </template>
@@ -32,12 +33,9 @@
   import load from 'load-asset';
 
   // Components
-  import Nav from './Nav.vue';
-  import Footer from './Footer.vue';
+  import nav from './nav.vue';
+  import footer from './footer.vue';
   import scene from './scene.vue';
-
-  // JS
-  // import { Shapescene } from '../shapes.js';
 
 
   export default {
@@ -47,39 +45,14 @@
     data(){
       return {
         loading_el: document.querySelector('.loading'),
-        // scene: undefined,
         tl: new TimelineLite({ paused: true }),
         eventBus: new Vue()
       }
     },
     components:{
-      Nav: Nav,
-      Footer: Footer,
+      'nav-content': nav,
+      'footer-content': footer,
       scene: scene
-    },
-    computed:{
-      // sceneConfig: function(){
-      //   return {
-      //     scene: this.$refs.scene.$el,
-      //     name: this.$refs.name,
-      //     devmode: this.devmode,
-      //     shapeColors: [
-      //       // '#E3A9AB',
-      //       // '#7CE8CE',
-      //       // '#E8C3B1',
-      //       // '#A2E3E8'
-      //       // experimental palette
-      //
-      //       // https://coolors.co/e9ede7-cddcd1-bac9c5-aeb9ba-acb2b5
-      //       // https://colorleap.app/time/2000BC
-      //       // https://coolors.co/cad2c5-84a98c-52796f-354f52-2f3e46
-      //       '#CDDCD1',
-      //       '#BAC9C5',
-      //       '#AEB9BA'
-      //     ],
-      //     shapesPerLetter: 4
-      //   };
-      // }
     },
     methods:{
       setPageTitle: function(){
@@ -104,6 +77,7 @@
         TweenLite.to(this.loading_el, .3, {
           opacity: 0,
           ease: Power2.easeIn,
+          // delay: 999,
           onComplete: () => {
             console.log('done loading images');
             this.destroyLoader();
@@ -120,10 +94,7 @@
           }
         });
       },
-      // initscene: function(){
-      //   // Init shape scene
-      //   // this.scene = Shapescene(this.sceneConfig);
-      // },
+
       preInitApp: function(){
         console.log('getting app.vue ready');
         // Disable Scroll while app loads assets
@@ -135,17 +106,20 @@
       initApp: function(){
         // Emits custom event handled by page component in router view
         this.appLoaded();
-        // Plays shape scene
-        // this.initscene();
         this.bodyRestoreScroll();
       },
       beforeEnter: function(el){
 
       },
       enter: function(el, done){
-          console.log('enter');
           this.bodyRestoreScroll();
-
+          if(this.$route.meta.scroll){
+            let app = this;
+            setTimeout(function(){
+              console.log('enter');
+              document.documentElement.scrollTop = app.$route.meta.scroll;
+            }, 5);
+          }
           done();
       },
       beforeLeave: function(el){
@@ -158,17 +132,13 @@
     created(){
       this.preInitApp();
     },
-    // mounted(){
-    //
-    // },
-    // updated(){
-    //
-    // },
+
     watch: {
       $route: function(to, from){
         // Change page title on route change
         this.setPageTitle();
-
+        // console.log(to);
+        // console.log(from);
         let toDepth = to.path.split('/').length;
         let fromDepth = from.path.split('/').length;
         if(toDepth < fromDepth) console.log('higher level');

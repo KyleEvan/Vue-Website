@@ -11,7 +11,7 @@
 
     <!-- Title -->
     <template slot="title">
-      Careers Redesign
+      Batman Poster Design
     </template>
 
     <!-- Project Description -->
@@ -79,9 +79,7 @@
       project_images: function(){
         let images = this.$props.images.sized;
         return [
-          images.careers_screens,
-          images.careers_screens,
-          images.careers_screens,
+          images.batman,
         ]
       }
     },

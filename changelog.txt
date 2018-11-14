@@ -1,15 +1,19 @@
 Completed:
 ✔ Responsive js images (Mostly done with implementation)
+✔ Rewriting shapes.js to work without name
 
 
 Current Tasks:
-- (in progress) Rewriting shapes.js to work without name
----- Need to add responsive shape behavior, add click events, on/off functionality
+- (in Progress) Need to add responsive shape behavior, add click events, on/off functionality
+---- scaling and repositioning on resize working, still need to implement click event
 - (in progress) New Home title animation
-✔ (needs tweaks) New animation before site loads (spinning wheel)
+---- Mostly done, working on animation for sub heading
+- (needs tweaks) New animation before site loads (spinning wheel)
 
 
 Must Do
+- Finish copy for work and projects
+- create a works.js and split projects and work into separate files
 - Enable compression of assets
 - Add Resume to Contact Us
 - Not Found Page, no-script page

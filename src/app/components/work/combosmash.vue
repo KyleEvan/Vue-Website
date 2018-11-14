@@ -97,7 +97,7 @@
 
 <script>
   import FontAwesomeIcon from '@fortawesome/vue-fontawesome';
-  import Work_Template from './Work_Template.vue';
+  import workTemplate from './work-template.vue';
 
   export default {
     props: ['project', 'images', 'events'],
@@ -108,7 +108,7 @@
       }
     },
     components:{
-      'work-template': Work_Template,
+      'work-template': workTemplate,
       FontAwesomeIcon
     },
     computed:{

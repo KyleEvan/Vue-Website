@@ -85,7 +85,7 @@
 </script>
 
 <style lang="scss">
-  @import '../../../style/global.scss';
+  @import '../../style/global.scss';
 
   .home_title{
     display: flex;
@@ -103,8 +103,12 @@
       li{
         &:nth-child(-n+2){
           font-family: 'Eksell Display';
-          font-size: 7vw;
-          line-height: 8vw;
+          font-size: 34px;
+          line-height: 40px;
+          @include md {
+            font-size: 7vw;
+            line-height: 8vw;
+          }
           @include lg{
             font-size: 5em;
             line-height: 6rem;
@@ -118,11 +122,13 @@
         &:nth-child(2){
           padding-bottom: .4em;
           margin-bottom: .4em;
-          border-bottom: 3px solid #423A2F;
+          border-bottom: 3px solid $mainColor;
         }
         &:nth-child(n+3){
-          line-height: 3vw;
           font-weight: 700;
+          @include md {
+            line-height: 3vw;
+          }
         }
 
       }

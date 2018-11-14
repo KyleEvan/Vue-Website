@@ -38,6 +38,38 @@
   }
 </script>
 <style lang="scss" scoped>
+// .container{
+//   width: 100%;
+//   height: auto;
+//   min-height: 100vh;
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   flex-flow: wrap;
+//
+//   .content{
+//
+//     h1{
+//       font-family: 'InterUI', sans-serif;
+//       font-weight: 700;
+//       font-size: 5vw;
+//     }
+//     .inner_content{
+//       padding: 4em 0;
+//
+//       ul{
+//         padding: 0;
+//         list-style: none;
+//
+//         li{
+//           font-size: 3vw;
+//           line-height: 1.6;
+//         }
+//       }
+//     }
+//
+//   }
+// }
 .container{
   width: 100%;
   height: auto;
@@ -46,28 +78,21 @@
   align-items: center;
   justify-content: center;
   flex-flow: wrap;
-
   .content{
-
+    margin: 0 8%;
     h1{
       font-family: 'InterUI', sans-serif;
       font-weight: 700;
-      font-size: 5vw;
+      font-size: 3.75vw;
+      line-height: 1;
     }
-    .inner_content{
-      padding: 4em 0;
-      
-      ul{
-        padding: 0;
-        list-style: none;
-
-        li{
-          font-size: 3vw;
-          line-height: 1.6;
-        }
-      }
+    div{
+      // width: 60%;
+      margin: 0 15% 0 20%;
+      // text-align: center;
+      // margin: 0 auto;
+      // user-select: none;
     }
-
   }
 }
 

@@ -5,34 +5,31 @@
 -->
 <template>
   <div>
-    <div :style="{background: primaryColor}" class="template_bg">
+    <div :style="{background: lightColor}" class="template_bg">
+      <div class="template_main">
+        <!-- main work info -->
+        <!-- <div v-if="project" ref="aside_curtain" class="aside_curtain" :style="{background: mainColor}"></div> -->
+        <div class="template_aside" >
+          <div ref="carouselAside">
+            <h1 :style="{color: mainColor}" class="template_title">
+              <slot name="title"></slot>
+            </h1>
+            <slot name="description"></slot>
+          </div>
+        </div>
+        <!-- main work images -->
+        <carousel :progressColor="mediumColor">
+          <slot name="slides"></slot>
+        </carousel>
+      </div>
 
-    <div class="template_main">
-      <!-- main work info -->
-      <div class="template_aside" :style="{background: lightColor}">
-        <div ref="carouselAside">
-          <h2 :style="{color: darkColor}" class="template_title">
-            <slot name="title"></slot>
-          </h2>
-          <slot name="description"></slot>
+      <!-- extra work info -->
+      <div v-if="extraSlotPassed" class="template_extra" >
+        <div>
+          <slot name="extra"></slot>
         </div>
       </div>
-      <!-- main work images -->
-      <carousel :progressColor="mediumColor">
-        <slot name="slides"></slot>
-      </carousel>
-
     </div>
-
-
-    <div v-if="extraSlotPassed" class="template_extra" :style="{background: lightColor}">
-      <div>
-        <slot name="extra"></slot>
-      </div>
-    </div>
-
-    </div>
-
   </div>
 </template>
 
@@ -59,19 +56,18 @@
 		props:['project', 'events'],
     data(){
       return{
-        defaultPrimaryColor: colors.red,
-        defaultLightColor: colors.lightRed,
-        defaultMediumColor: colors.mediumRed,
-        defaultDarkColor: colors.darkRed,
-        // tl: new TimelineLite({paused: true})
+        defaultLightColor: colors.templateDefaultLightc1,
+        defaultMediumColor: colors.templateDefaultMediumc1,
+        defaultMainColor: colors.templateDefaultMediumc2,
+        defaultDarkColor: colors.lightRed,
       }
     },
     components:{
       carousel: carousel
     },
     computed:{
-      primaryColor: function(){
-        return this.$props.project ? this.$props.project.primaryColor : this.defaultPrimaryColor;
+      mainColor: function(){
+        return this.$props.project ? this.$props.project.mainColor : this.defaultMainColor;
       },
       lightColor: function(){
         return this.$props.project ? this.$props.project.lightColor : this.defaultLightColor;
@@ -128,58 +124,51 @@
         // }, 30);
         // window.addEventListener('resize', handleResize);
       },
+      determineViewport: function(){
+        return  this.viewport.cWidth < this.breakpoints.md ? 'mobile' : 'desktop';
+      },
       animateContent: function(){
-        // const tl = new TimelineLite();
-        // let sections = Array.from(this.$refs.carouselAside.children);
-        // let links = Array.from(this.$refs.carouselAside.querySelectorAll('i'));
-        // console.log(links);
-        // let duration = .4;
-        // tl.staggerTo(sections, duration,
-        // {
-        //   x: '0',
-        //   opacity: 1,
-        //   delay: .25,
-        //   ease: Power2.easeOut
-        // }, .1)
-        // .staggerTo(links, duration*2,{
-        //   x: '10px',
-        //   scaleX: 1,
-        //   scaleY: 1,
-        //   opacity: 1,
-        //   ease: Back.easeOut.config(2)
-        // }, .1)
-
-        TweenLite.to(this.$refs.carouselAside, .4,
+        TweenLite.to(this.$refs.carouselAside, .45,
         {
           x: '0',
           opacity: 1,
+          delay: .3,
           ease: Power2.easeInOut
-        })
-
+        });
+      },
+      animateCurtain: function(func){
+        TweenLite.to(this.$refs.aside_curtain, .6,
+        {
+          x: '-100%',
+          ease: Power4.easeIn,
+          delay: .3,
+          onComplete: () => {
+            if(func) func();
+          }
+        });
       },
       initPage: function(){
-        this.initEvents();
-        this.animateContent();
+        if(this.$props.project) {
+          if(this.determineViewport() == 'mobile') this.$refs.aside_curtain.classList.add('mobile');
+          this.animateContent();
+          // this.animateCurtain(this.animateContent);
+        }
       }
     },
     created(){
-      this.events.$on('app-loaded', () => {
-        console.log('init work template');
-        this.initPage();
-      });
+        this.events.$on('app-loaded', () => {
+          console.log('init work template');
+          this.animateContent();
+        });
     },
     mounted(){
       // this.animateScroll();
       // this.initScrollMagic();
-      if(this.$props.project) this.initPage();
-      console.log('init work template')
+      this.initPage();
+      console.log('init work template');
+      console.log(this.$props.project);
 
-    },
-    updated(){
-      // console.log('updated project template');
-
-
-    },
+    }
   }
 </script>
 
@@ -194,8 +183,8 @@
   .template_aside,
   .template_extra{
     color: rgba(66, 58, 47, .65);
+    background: #fff;
   }
-
 
   .template_bg{
     background: #F69296;
@@ -205,6 +194,19 @@
       flex-direction: column-reverse;
       @include md{
         flex-direction: row;
+      }
+      .aside_curtain{
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 50%;
+        height: 100vh;
+        z-index: 99;
+        &.mobile{
+          width: 100%;
+          height: 50vh;
+          top: 400px;
+        }
       }
 
       .template_aside{
@@ -230,7 +232,7 @@
         }
 
         .template_title{
-          font-size: 5vw;
+          font-size: 3.25vw;
         }
 
         section{

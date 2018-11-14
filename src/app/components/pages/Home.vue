@@ -4,27 +4,26 @@
     <home-title class="content" :events="events" />
 
     <div class="container">
-      <h2>Work</h2>
 
-      <div class="content projects">
+
+      <div v-for="(works, section) in sections">
+        <h2>{{section}}</h2>
+        <div class="content projects">
           <a
-            :href="project.href"
+            :href="work.href"
             @click.prevent="handleClick"
-            v-for="project in projects"
-            :style="{background: project.primaryColor}"
+            v-for="work in works"
+            :style="{background: work.lightColor}"
             class="project">
             <div class="bg"></div>
 
-            <!-- :style="{width: project.image.width}" -->
-              <!-- :data-align="project.align" -->
-
             <div class="image">
-              <img :src="images.sized[project.image.src]" />
+              <img :style="{transform: `translateY(${work.image.offsetY})`}" :src="images.sized[work.image.src]" />
             </div>
             <div class="info">
-              <div class="name">{{project.name}}</div>
+              <div class="name">{{work.name}}</div>
               <div class="tags">
-                <span v-for="tag in project.tags" :class="tag.toLowerCase()">{{tag}}</span>
+                <span v-for="tag in work.tags" :class="tag.toLowerCase()">{{tag}}</span>
               </div>
               <!-- <p>
                 {{trimCaption(project.caption)}}
@@ -32,9 +31,10 @@
               </p> -->
             </div>
           </a>
+        </div>
       </div>
 
-      <h2>Projects</h2>
+
     </div>
 
 
@@ -43,10 +43,11 @@
 
 <script>
   // Project Data
+  import {work} from '../../work.js';
   import {projects} from '../../projects.js';
 
   // Components
-  import home_title from '../Test/home-title.vue';
+  import home_title from '../home-title.vue';
 
   // JS Libraries
   import ScrollMagic from "scrollmagic";
@@ -59,6 +60,7 @@
 
     data(){
       return{
+        sections: {Work: work, Projects: projects},
         projects: projects,
         projects_el_arr: [],
         project: undefined,
@@ -74,11 +76,22 @@
 
         imageMaxHeight: .7, // 70% of vh
 
-
+        carousel_mobile: {
+          height: .5,
+          minHeight: 400,
+          width: 1,
+          offsetX: 0,
+          offsetY: 0
+        },
+        carousel_desktop: {
+          height: 1,
+          minHeight: 0,
+          width: .5,
+          offsetX: .5,
+          offsetY: 0
+        },
 
         transforms: undefined,
-
-        transition_obj: undefined,
         transition:{
           bgPoints: '0 0 0 0 0 0 0 0',
           bgFill: 'transparent'
@@ -127,7 +140,7 @@
       animateOut: function(targets){
         TweenLite.to(targets, this.animate_hideElements,
         {
-          y: '20%',
+          scale: .25,
           opacity: 0,
           ease: Expo.easeIn,
           delay: .05,
@@ -153,41 +166,24 @@
           ease: Power2.easeInOut,
         });
       },
-      determineViewport: function(){
-        const minHeight = 400; // Carousel min-height
-        let newWidth, newHeight, newOffset;
-        // Mobile
-        if(this.viewport.cWidth < this.breakpoints.md){
-          newWidth = 1;
-          newHeight = .5;
-          newOffset = {
-            x: 0,
-            y: 0
-          }
-        }
-        // Desktop
-        else{
-          newWidth = .5;
-          newHeight = 1;
-          newOffset = {
-            x: .5,
-            y: 0
-          };
-        }
-        let width = newWidth*this.viewport.cWidth;
-        let height = (newHeight*this.viewport.cHeight) >= minHeight ? (newHeight*this.viewport.cHeight) : minHeight;
+      getViewportData: function(){
+        let carousel, width, height;
+        carousel = this.carousel_mobile;
+        if(this.viewport.cWidth >= this.breakpoints.md) carousel = this.carousel_desktop;
+        width = carousel.width*this.viewport.cWidth;
+        height = (carousel.height*this.viewport.cHeight) >= carousel.minHeight ? (carousel.height*this.viewport.cHeight) : carousel.minHeight;
         return {
           width: width,
           height: height,
-          offset:{
-            x: newOffset.x*this.viewport.cWidth,
-            y: newOffset.y*this.viewport.cHeight
+          offset: {
+            x: carousel.offsetX*this.viewport.cWidth,
+            y: carousel.offsetY*this.viewport.cHeight
           },
-          center:{
-            x: (width/2) + (newOffset.x*this.viewport.cWidth),
-            y: (height/2) + (newOffset.y*this.viewport.cHeight)
+          center: {
+            x: (width/2) + (carousel.offsetX*this.viewport.cWidth),
+            y: (height/2) + (carousel.offsetY*this.viewport.cHeight)
           },
-          points: this.getPoints(newOffset.x*this.viewport.cWidth, newOffset.y*this.viewport.cHeight, this.viewport.cWidth, height)
+          points: this.getPoints(carousel.offsetX*this.viewport.cWidth, carousel.offsetY*this.viewport.cHeight, this.viewport.cWidth, height)
         };
       },
       getProjectData: function(target){
@@ -213,12 +209,12 @@
           x: container.left + container.width/2,
           y: container.top + container.height/2
         };
-        let new_center = this.transition_obj.center;
+        let new_center = project.data.center;
         return {
           scale: this.getImageScale(project, container),
           translateX: new_center.x - container_center.x,
           translateY: new_center.y - container_center.y,
-          newPoints: this.transition_obj.points
+          newPoints: project.data.points
         };
       },
       createTransitionLayer: function(){
@@ -235,7 +231,7 @@
         // let overlay_bg = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
         let points = this.getPoints(container.left, container.top, container.right, container.bottom);
 
-        color_bg.setAttribute('fill', project.data.primaryColor);
+        color_bg.setAttribute('fill', project.data.lightColor);
         // overlay_bg.setAttribute('fill', '#fff');
         color_bg.setAttribute('points', points);
         // overlay_bg.setAttribute('points', points);
@@ -253,7 +249,8 @@
         // let w = this.viewport.width; // viewport & height
         // let h = this.viewport.cHeight;
         transitionBg.setAttribute('points', this.getPoints(this.viewport.width, 0, this.viewport.width*2, this.viewport.cHeight));
-        transitionBg.setAttribute('fill', project.data.lightColor);
+        // transitionBg.setAttribute('fill', project.data.mainColor);
+        transitionBg.setAttribute('fill', '#fff');
         transitionLayer.appendChild(transitionBg);
         let transitionBgObj = {
           el: transitionBg,
@@ -304,7 +301,7 @@
         // increase z index val to bring project to top layer
         TweenLite.set(project.el, {
           zIndex: 3,
-          borderColor: 'transparent'
+          borderColor: 'transparent',
         });
         TweenLite.to(project.el, this.animate_projectTransition, {
           x: transforms.translateX,
@@ -335,12 +332,13 @@
         if(!this.transitioning){
           // Starting transition, transitioning = true
           this.transitioning = true;
+          this.$route.meta.scroll = document.documentElement.scrollTop;
           // Disable scroll
           this.bodyNoScroll();
-          // Transition obj sets values used to execute transition
-          this.transition_obj = this.determineViewport();
           // Get project data
           this.project = this.getProjectData(e.target);
+          this.project.data = Object.assign(this.getViewportData(), this.project.data);
+          // console.log(this.project);
           this.transforms = this.calcProjectTransforms(this.project);
           this.animateTransition(e, this.project, this.transforms);
         }
@@ -375,10 +373,7 @@
           }
       }
     },
-    // beforeCreate(){
-    //   console.log('before created');
-    //
-    // },
+
     created(){
       // listen for app to load
       this.events.$on('app-loaded', () => {
@@ -408,10 +403,10 @@
     display: inline-block;
     margin-left: 5%;
     padding: 3% 0;
-    font-size: 2.65vw;
+    font-size: 2.25vw;
     line-height: 1;
     // font-family: 'Eksell Display';
-    font-weight: 600;
+    font-weight: 900;
   }
   .content{
     margin: 0 10% 0% 16%;
@@ -430,7 +425,7 @@
       width: 92%;
       border-radius: 3px;
       overflow: hidden;
-      border: 1px solid #CAD2C5;
+      border: 1px solid $offWhite;
       margin-bottom: 1.75em;
       text-decoration: none;
       opacity: 0;
@@ -453,10 +448,12 @@
         width: 100%;
         height: 100%;
         background: #fff;
+        opacity: 1;
       }
       &:hover{
         .bg{
-          background: #f4f4f4;
+          // background: #CAD2C5;
+          opacity: 0;
         }
       }
 
@@ -474,8 +471,11 @@
 
         img{
           // transform: translateY(-20%);
+          position: relative;
           width: auto;
-          height: 100%;
+          height: auto;
+          max-width: 100%;
+          max-height: 100%;
           // height: 70%;
           // max-width: 100%;
           // max-height: 100%;
@@ -486,32 +486,36 @@
         justify-content: space-between;
         align-items: center;
         // padding: 1em;
-        margin-top: 50%;
+        border-top: 1px solid $offWhite;
+        margin-top: 70%;
         z-index: 1;
-        background: #fff;
+        color: $mainColor;
+        // background: #fff;
 
         .name{
-          width: 70%;
+          // width: 70%;
           padding: .5em;
           font-weight: 700;
           opacity: 1;
         }
         .tags{
           // text-align: right;
+          color: $mediumGreen;
+          position: absolute;
+          top: 0;
+          right: 0;
+
           span{
-            background: #f4f4f4;
+            // background: #f4f4f4;
             display: inline-block;
-            padding: 1em;
+            padding: .5em;
             font-size: .7em;
             line-height: .7em;
-            margin: .5em;
+            // margin: .5em;
             float: right;
           }
         }
-        // p{
-        //   opacity: .75;
-        //   margin: .5em 0;
-        // }
+
       }
     }
   }

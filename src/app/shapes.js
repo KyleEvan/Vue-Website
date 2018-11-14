@@ -138,8 +138,6 @@ class Scene { // #scene
     this.mouseY_update = undefined;
 
     // RAF update loop properties
-    this.update = this.update.bind(this);
-    this.toggleScene = this.toggleScene.bind(this);
     this.stop = undefined;
     this.frameCount = 0;
     this.fps = 18;
@@ -149,6 +147,14 @@ class Scene { // #scene
     this.then = undefined;
     this.elapsed = undefined;
 
+    // bindings
+    this.update = this.update.bind(this);
+    this.handleResize = this.handleResize.bind(this);
+    this.handleMouseMove = this.handleMouseMove.bind(this);
+    this.handleClick = this.handleClick.bind(this);
+    this.resizeReady = true;
+    // this.toggleScene = this.toggleScene.bind(this);
+    
 
     //-------------------< Shapes >---------------------
     // Shapes Properties
@@ -158,6 +164,8 @@ class Scene { // #scene
     this.shapes_colors = config.shapes_colors || ['#000'];
     this.shapes_delay = config.shapes_delay || 0;
     this.shapes_moveDur = 4;
+    this.shapes_click = [];
+    this.shapes_click.length = 10;
 
 
     //---------------------< Camera >----------------------
@@ -194,8 +202,6 @@ class Scene { // #scene
         this.center.y = this.fov.height / 2;
       }
     };
-    // init on create
-    // this.init();
   }
   // Gets the bounding client props of the svg #scene container
   // Sets the virtual props for the svg to fill 100% 100% of its container
@@ -204,8 +210,6 @@ class Scene { // #scene
     this.width = this.el.clientWidth;
     this.height = this.el.clientHeight;
     this.sceneSize = {
-      // width: this.el.clientWidth,
-      // height: this.el.clientHeight,
       top: (el.bottom/-2)*this.size,
       right: (el.right/2)*this.size,
       bottom: (el.bottom/2)*this.size,
@@ -284,54 +288,119 @@ class Scene { // #scene
   }
   init() {
     console.log('scene init');
-    console.log('createScene');
     // Configures the svg layer
     this.configScene();
     if(this.devmode) console.log('createShapes');
     this.createShapes(this.shapes, null, null);
-    console.log('Shapes: ');
-    console.log(this.shapes);
-    this.init_events();
-    //this.name = new Name(this);
+    // console.log('Shapes: ');
+    // console.log(this.shapes);
+    this.initEvents();
     this.playScene(this.shapes);
+  }
+  destroyShapes(shapes){
+    while (this.svg.firstChild) {
+      this.svg.removeChild(this.svg.firstChild);
+    }
+  }
+  destroyScene(){
+    this.stop = true;
+    this.unInitEvents();
+    this.destroyShapes();
+    console.log('scene destroyed');
   }
   updateMouseXY(newX, newY){
     this.mouseX = newX;
     this.mouseY = newY;
   }
-  init_events(){
-    let scene = this;
+  mouseUpdated(){
+    let mouse_updated = false;
+    if(this.mouseX_update != this.mouseX && this.mouseY_update != this.mouseX){
+      this.mouseX_update = this.mouseX;
+      this.mouseY_update = this.mouseY;
+      mouse_updated = true;
+    }
+    return mouse_updated;
+  }
+
+  //---------< Mouse Events >---------
+  // Move
+  handleMouseMove(e){
+    const scene = this;
+    const onMove = function(){
+      scene.updateMouseXY(e.clientX, e.clientY);
+    };
+    throttle(onMove(), 50);
+  }
+  // Resize
+  handleResize(e){
+    const scene = this;
+    const cooldown = 4000;
+    const onResize = function(){
+      scene.configScene();
+      if(scene.resizeReady){
+      let bounds = {
+        minX: scene.sceneSize.left,
+        maxX: scene.sceneSize.right,
+        minY: scene.sceneSize.top,
+        maxY: scene.sceneSize.bottom
+      };
+      scene.moveShapes(bounds, true);
+      scene.resizeReady = false;
+      setTimeout(function(){
+        scene.resizeReady = true;
+      }, cooldown);
+      }
+    };
+    debounce(onResize(), 100);
+  }
+  // Click
+  handleClick(){
+    console.log('click!');
+    // const scene = this;
+    // const props = {
+    //   x: scene.mouseX,
+    //   y: scene.mouseY,
+    //   width: 200
+    // };
+    // scene.createShapes(scene.shapes_click, props, true);
+  }
+  initEvents(){
+    // let scene = this;
 
     // Mousemove event:
     // Update mouseX mouseY position
-    const handleMouseMove = throttle(function(e){
+    // const handleMouseMove = throttle(function(e){
       // if scene is interactable, update the mouse and camera locations
-      if(scene.interactive){
+      // if(scene.interactive){
         // scene.mouseY = e.clientY;
-        scene.updateMouseXY(e.clientX, e.clientY);
+        // scene.updateMouseXY(e.clientX, e.clientY);
         // scene.camera.updateLoc(e.clientX, e.clientY);
-      }
-    }, 50);
-    window.addEventListener('mousemove', handleMouseMove);
+      // }
+    // }, 50);
+    window.addEventListener('mousemove', this.handleMouseMove);
 
     // Resize event:
-    const handleResize = debounce(function() {
-      scene.configScene();
-    }, 100);
-    window.addEventListener('resize', handleResize);
+    // const handleResize = debounce(function() {
+    //   scene.configScene();
+    // }, 100);
+    window.addEventListener('resize', this.handleResize);
 
     // Click event:
-    const handleClick = function(e){
-      if (scene.ready) {
-        if (scene.interactive) {
-          console.log("clicking! create some shapes!!!!!!!!!");
-          // scene.createShapes();
-        }
-      }
-    }
-    window.addEventListener('click', handleClick);
+    // const handleClick = function(e){
+    //   if (scene.ready) {
+    //     if (scene.interactive) {
+    //       console.log("clicking! create some shapes!!!!!!!!!");
+    //       // scene.createShapes();
+    //     }
+    //   }
+    // }
+    window.addEventListener('click', this.handleClick);
   }
-
+  unInitEvents(){
+    window.removeEventListener('mousemove', this.handleMouseMove);
+    window.removeEventListener('resize', this.handleResize);
+    window.removeEventListener('click', this.handleClick);
+  }
 
 
 
@@ -396,15 +465,7 @@ class Scene { // #scene
 
 
 
-  mouseUpdated(){
-    let mouse_updated = false;
-    if(this.mouseX_update != this.mouseX && this.mouseY_update != this.mouseX){
-      this.mouseX_update = this.mouseX;
-      this.mouseY_update = this.mouseY;
-      mouse_updated = true;
-    }
-    return mouse_updated;
-  }
+
   update(){
     // if stop, stop loop
     if (this.stop) {
@@ -426,28 +487,23 @@ class Scene { // #scene
 
       }
 
-
-
       // Get ready for next frame by setting then=now, but...
       // Also, adjust for fpsInterval not being multiple of 16.67
       this.then = this.now - (this.elapsed % this.fpsInterval);
       let sinceStart = this.now - this.startTime;
       let currentFps = Math.round(1000 / (sinceStart / ++this.frameCount) * 100) / 100;
-      // if(this.devmode) console.log(currentFps);
     }
   }
   playScene() {
     console.log('playing scene');
-    // var callback = function(){
-    //   console.log('fuuuuuuuuuck!!!!');
-    // }
+    this.stop = false;
     let bounds = {
       minX: this.sceneSize.left,
       maxX: this.sceneSize.right,
       minY: this.sceneSize.top,
       maxY: this.sceneSize.bottom
     };
-    this.moveShapes(bounds, true, this.toggleScene);
+    this.moveShapes(bounds, true);
 
     // move to toggle interactive
     // toggle interactive will be a callback function
@@ -456,41 +512,25 @@ class Scene { // #scene
     this.then = Date.now();
     this.startTime = this.then;
     this.update();
-
-
-  }
-  animationCompleted(){
-    if(this.devmode) console.log('Animation Complete');
-    this.name.shapes.forEach(function(shape, i){
-      // console.log("created: "+i);
-      shape.getsetTransform();
-    });
-    this.toggleScene();
-  }
-  toggleInteractive() {
-    this.interactive = !this.interactive;
-    if (this.interactive) {
-      window.focus();
-    } else {
-      window.blur();
-    }
-    console.log(`SCENE INTERACTIVE: ${this.interactive}`);
-  }
-  toggleScene(){
-    this.toggleInteractive();
-    this.ready = !this.ready;
-    console.log(`SCENE READY: ${this.ready}`);
   }
 
-  destroyShapes(shapes){
-    for (var s = shapes.length; s > 0; s -= 1){
-      let shape = this.shapes[shapes.length - s];
-      console.log('destroy this SHAPE!!!!!!');
-      console.log(shape);
-      // shape.el.outerHTML = '';
-      // shape = null;
-    }
-  }
+  // toggleInteractive() {
+  //   this.interactive = !this.interactive;
+  //   if (this.interactive) {
+  //     window.focus();
+  //   } else {
+  //     window.blur();
+  //   }
+  //   console.log(`SCENE INTERACTIVE: ${this.interactive}`);
+  // }
+  // toggleScene(){
+  //   console.log('ready!');
+  //   // this.toggleInteractive();
+  //   // this.ready = !this.ready;
+  //   // console.log(`SCENE READY: ${this.ready}`);
+  // }
+
+
 }
 
 
@@ -498,10 +538,12 @@ class Scene { // #scene
 class Shape {
   constructor(scene, props) {
     /*----------< props >----------
-    x: coordinate of shape,
-    y: coordinate of shape,
-    size: represents percentage of scene's width (Number 1-100)
-
+      x: coordinate of shape (Number),
+      y: coordinate of shape (Number),
+      width: Number,
+      height: Number,
+      size: represents percentage of scene's width (Number),
+      moveDur: seconds (Number)
     */
     this.scene = scene;
     this.scene_sizedWidth = undefined;
@@ -543,7 +585,7 @@ class Shape {
     // this.colors = scene.shapes_colors;
     this.color = scene.shapes_colors[randomIndex(scene.shapes_colors.length)];
     this.color_rgba = this.getRgbaColor(this.color, this.z, scene.camera.maxZ*scene.camera.perspective, this.minOpacity);
-
+    this.type = undefined;
     this.types = [
       {
         el: 'circle',
@@ -582,6 +624,15 @@ class Shape {
     this.x = x;
     this.y = y;
     // console.log(this.x+', '+this.y);
+  }
+  setAttr(attr, val){
+    this.el.setAttribute(attr, val);
+  }
+  setScale(){
+    this.width = this.scene.width*this.scale;
+    this.height = this.scene.width*this.scale;
+    if(this.type == 'polygon') this.setAttr('points', this.getPoints(this.x, this.y-(this.height/2), this.width));
+    else if(this.type == 'circle') this.setAttr('r', this.width/2);
   }
   setSizedScene(){
     this.scene_sizedWidth = Math.abs(this.scene.sceneSize.left - this.scene.sceneSize.right);
@@ -629,7 +680,7 @@ class Shape {
   init() {
     // shape is randomly selected from the array of different shapes (this.types)
     let shape = this.types[randomIndex(this.types.length)];
-
+    this.type = shape.el;
     // Shape element is created and assigned attributes
     // corresponding to the props of the type of shape
     // if a prop is undefined it is not added to the element
@@ -687,10 +738,11 @@ class Shape {
   }
 
   updateShape(){
-    if(this.scene.ready){
+    // if(this.scene.ready){
       this.setSizedScene();
       let newX = this.sceneX*this.scene_sizedWidth;
       let newY = this.sceneY*this.scene_sizedHeight;
+      this.setScale();
       this.move(newX, newY, 0, true, null);
 
 
@@ -723,7 +775,7 @@ class Shape {
         this.getsetTransform([0, 0]);
       }
     }*/
-  }
+  // }
     // else{
     //   if(this.devmode) console.log("ERROR: Scene not ready");
     // }
@@ -791,7 +843,7 @@ class Shape {
   // }
 }
 
-exports.Shapes = function(config) {
+exports.Scene = function(config) {
   return new Scene(config);
 }
 

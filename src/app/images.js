@@ -1,3 +1,7 @@
+import batman_sm_jpg from '../images/batman@sm.jpg';
+import batman_md_jpg from '../images/batman@md.jpg';
+import batman_lg_jpg from '../images/batman@lg.jpg';
+
 import career_areas_xl from '../images/career-areas-mobile.png';
 
 import careers_screens_sm_png from '../images/careers_screens@sm.png';
@@ -21,6 +25,14 @@ import cycles_lg_jpg from '../images/cyclesTile@lg.jpg';
 
 
 var images = [
+  {
+    name: 'batman',
+    src: {
+      sm: batman_sm_jpg,
+      md: batman_md_jpg,
+      lg: batman_lg_jpg,
+    }
+  },
   {
     name: 'careers_screens',
     src: {

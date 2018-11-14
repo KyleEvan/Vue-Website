@@ -1,14 +1,36 @@
 /*
    Color Palette
 
-   Saturated Colors
-   https://coolors.co/616163-44ffd2-ffbfa0-87f6ff-f69296
+   https://coolors.co/cad2c5-84a98c-52796f-354f52-2f3e46
 
-   Light Colors
-   https://coolors.co/9a9a9b-88ffe2-ffd6c2-b2f9ff-f9b9bc
 */
 
 exports.colors = {
+  // Main palette
+  'mainBg': '#FFF',
+  'mainColor': '#2E2C2D',
+  'offWhite': '#CAD2C5',
+  'lightGreen':'#84A98C',
+  'mediumGreen': '#52796F',
+  'darkGreen': '#354F52',
+  'darkestGreen': '#2F3E46',
+
+  // Work template default colors
+  'templateDefaultLightc1': '#EFECCA',
+  'templateDefaultMediumc1': '#DAD7B8',
+  'templateDefaultMediumc2': '#A9CBB7',
+
+  // Work/Projects
+  'projectBlue': '#B2DBCC',
+  'projectLightBlue': '#DCEEE7',
+  'projectMediumBlue': '#CEE8DE',
+
+  'projectOrange': '#ECBA82',
+  'projectLightOrange': '#F2D3AF',
+  'projectMediumOrange': '#EABE94',
+
+
+
   jet: '#616163',
   darkJet: '#353536',
 

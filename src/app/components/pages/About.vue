@@ -5,7 +5,7 @@
         <h1>About</h1>
         <div class="inner_content">
           <p>
-            Aspiring creative developer from Rochester, New York studied New Media &amp; Interactive Development at RIT. I enjoy the challenge of developing solutions for the web while turning designs into full fledged interactions. I'm most curious about how cool websites work, development workflows, and experimental front end technologies like web VR.
+            Rochester, New York based aspiring creative developer, studied New Media &amp; Interactive Development earning a bachelors of science undergraduate degree at RIT. I enjoy the challenge of developing solutions for the web, turning designs into full fledged interactions. I'm curious about how cool websites work, the future of the web experience, and experimental front end technologies like web vr. 
           </p>
         </div>
 
@@ -39,12 +39,12 @@
     h1{
       font-family: 'InterUI', sans-serif;
       font-weight: 700;
-      font-size: 5vw;
+      font-size: 3.75vw;
       line-height: 1;
     }
     div{
       // width: 60%;
-      margin: 0 15% 0 25%;
+      margin: 0 15% 0 20%;
       // text-align: center;
       // margin: 0 auto;
       // user-select: none;

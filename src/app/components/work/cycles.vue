@@ -1,6 +1,6 @@
 <template>
 
-  <work-template :project="project">
+  <work-template :project="project" :events="events">
 
     <template slot="slides">
       <div class="carousel-cell" v-for="image in project_images">
@@ -9,33 +9,45 @@
     </template>
 
 
-    <h2 slot="title">
+    <template slot="title">
     <!-- Title: -->
       Cycles
-    </h2>
+    </template>
     <template slot="description">
       <!-- Project Description -->
-      <!-- Synopsis -->
+      <!-- Summary -->
       <section>
         <p>
-          A fast paced educational game pitting the player against the computer to see who can last the longest before crashing. It's a math learning game at it's core targetting primary school audience. It relies on the player's ability to readily calculate rudimentary arithmetic
+          The first game I ever developed <i>Cycles</i> is a simple desktop web game designed to help users practice and learn rudementary multiplication skills. It has an 8-bit theme and is a throwback to the scifi film Tron and old computer games. I worked on this as a personal project for my Rich Media in Web Applications class. It uses no libraries, has no dependencies and was created with plain Javascript, Canvas API, HTML, and CSS.
+        </p>
+        <p>
+          Basically, the player must survive longer than the computer driving a vehicle(cycle) without crashing. The trails from the cycles create colored boundaries that quickly limit the available space for the computer and player as they navigate the map. Solving basic arithmetic problems controls the direction of the player's cycle.
+        </p>
+        <p>
+          For more in depth how-to-play instructions, or to play the game go visit my github.
         </p>
       </section>
 
-      <!-- Skills -->
       <section>
+        <h2>Challenges</h2>
+      </section>
+      <section>
+        <h2>What I learned</h2>
+      </section>
+      <!-- Skills -->
+      <!-- <section>
         <ul>
           <li>JS</li>
           <li>More JS</li>
         </ul>
-      </section>
+      </section> -->
 
       <!-- Links -->
       <section>
         <ul>
-          <a href="#">A Link</a>
-          <a href="#">A Link</a>
-          <a href="#">A Link</a>
+          <a href="#">Instructions</a>
+          <a href="#">github</a>
+          <a href="#" class="showDesktop">play the game</a>
         </ul>
       </section>
 
@@ -63,10 +75,10 @@
 </template>
 
 <script>
-  import Work_Template from './Work_Template.vue';
+  import workTemplate from './work-template.vue';
 
   export default {
-    props: ['project', 'images'],
+    props: ['project', 'images', 'events'],
     data () {
       return {
         gitHubLink: 'https://github.com/KyleEvan/Cycles',
@@ -74,7 +86,7 @@
       }
     },
     components:{
-      'work-template': Work_Template
+      'work-template': workTemplate
     },
     computed:{
       project_images: function(){

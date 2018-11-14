@@ -138,8 +138,8 @@
 	      display: flex;
 	      text-decoration: none;
 				// padding: .1rem 1rem;
-				color: #000;
-        font-weight: 400;
+				color: $mainColor;
+        font-weight: 600;
 				pointer-events: visible;
 
 				&:hover{
@@ -190,6 +190,7 @@
 					// height: 10vw;
 					// min-width: 5rem;
 					// min-height: 5rem;
+					margin: 0 -1rem 0 0;
 	        padding:10px;
 	        z-index: 1;
 

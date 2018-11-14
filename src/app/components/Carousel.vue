@@ -57,6 +57,7 @@
         this.animateProgressBar(progress*this.progressBar.width);
       },
       configProgressBar: function(){
+        console.log('configuring progressbar')
         let container = this.getContainerWH();
         container = Object.assign(this.$refs.carouselContainer.getBoundingClientRect(), container);
         this.setViewBox(container.width, container.height);
@@ -91,8 +92,10 @@
     mounted(){
 
       this.initFlickity();
-      this.configProgressBar();
-
+      let carousel = this;
+      setTimeout(function(){
+        carousel.configProgressBar();
+      }, 200);
     },
     created(){
       window.addEventListener('resize', this.handleResize)

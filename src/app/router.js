@@ -82,8 +82,17 @@ export default new Router({
     }
   ],
   scrollBehavior (to, from, savedPosition) {
-    return new Promise((resolve, reject) => {
-      resolve({ x: 0, y: 0 })
-    })
+    // return new Promise((resolve, reject) => {
+      // resolve({ x: 0, y: 0 })
+      // console.log(to.meta.scroll);
+      // if (to.meta.scroll) {
+      //   console.log('scroll');
+      //   // return { x: 0, y: to.meta.scroll};
+      // } else {
+      //   console.log('restore');
+      //
+        return { x: 0, y: 0 };
+      // }
+    // })
   }
 })

@@ -29,11 +29,13 @@
 </script>
 
 <style lang="scss" scoped>
+  @import '../../style/global.scss';
+
   footer{
     position: relative;
-    background: #2F3E46;
+    background: $offWhite;
     padding: 3rem;
-    color: #84A98C;
+    // color: #84A98C;
     font-weight: 600;
     z-index: 1;
 
@@ -48,6 +50,7 @@
         width: 40%;
         span{
           display: block;
+          opacity: .5;
         }
       }
     }

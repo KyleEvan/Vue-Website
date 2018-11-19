@@ -23,26 +23,28 @@
 
 
 
-$primary-gray: #63676C;
+/* $primary-gray: #63676C;
 $primary-white: #F9FFF9;
 $primary-red: #FF9393;
 $primary-blue: #7EDAD4;
-$primary-yellow: #FFEC94;
+$primary-yellow: #FFEC94; */
 
 
 // Main Palette must be in sync with colors.js
 $mainBg: #FFF;
-$mainColor: #2E2C2D;
+$mainColor: #514943;
 $darkestGreen: #2F3E46;
 $darkGreen: #354F52;
 $mediumGreen: #52796F;
 $lightGreen: #84A98C;
 $offWhite: #CAD2C5;
+// variations of main palette
+$lightOffWhite: #F0F2EF;
+$offDarkGreen: #475F61;
 
 
 
-
-$break-small: 200px;
+$break-small: 500px;
 $break-medium: 800px;
 $break-large: 1300px;
 $break-xl: 1600px;

@@ -40,14 +40,15 @@ JS
        this.scene = new Scene({
          scene: this.$refs.scene,
          devmode: this.devmode,
-         totalShapes: 8,
-         shapes_size: [.0075, .75],
+         totalShapes: 12,
+         shapes_size: [.0075, .35],
          shapes_colors: [
            '#CDDCD1',
            '#BAC9C5',
            '#AEB9BA'
          ],
-         shapes_delay: .003,
+         shapes_moveDur: 4,
+         shapes_delay: .013,
        })
      },
      init: function(){
@@ -63,7 +64,7 @@ JS
        const mainScene = new ScrollMagic.Scene({
          triggerElement: app,
          triggerHook: 0,
-         duration: app.clientHeight*.35,
+         duration: app.clientHeight*.5,
          reverse: true
        })
        .on("progress", (event) => {
@@ -82,9 +83,9 @@ JS
          opacity: 1
        },
        {
-         y: '-10%',
-         opacity: 0,
-         ease: Power2.easeIn
+         y: '-5%',
+         opacity: .15,
+         ease: Power3.easeIn
        })
      },
 
@@ -132,14 +133,15 @@ JS
      svg {
          position: absolute;
          width: 100%;
-         height: 130%;
+         height: 100%;
          top: 0;
          left: 0;
-         overflow: auto;
-
-         * {
-             opacity: 0;
-         }
+         overflow: unset;
+         transform: scale(.01, .01);
+         opacity: 0;
+         // * {
+             // opacity: 0;
+         // }
      }
 
  }

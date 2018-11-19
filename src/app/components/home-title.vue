@@ -27,7 +27,7 @@
     data(){
       return {
         init: false,
-        init_delay: .35,
+        init_delay: 1.6,
         init_dur: .6,
         charmedName: undefined,
       }
@@ -51,6 +51,8 @@
         return title;
       },
       animateIn: function(els){
+        let delay;
+        console.log(this.init);
         console.log('animate in');
         let inc = .052;
         for(var i = 0; i < els.length; i++){
@@ -60,7 +62,7 @@
             opacity: 1,
             y: '0%',
             ease: Power4.easeOut,
-            delay: this.init_delay,
+            delay: delay,
           });
           this.init_dur += inc;
         }
@@ -102,9 +104,10 @@
 
       li{
         &:nth-child(-n+2){
-          font-family: 'Eksell Display';
-          font-size: 34px;
-          line-height: 40px;
+          // font-family: 'Eksell Display';
+          font-size: 46px;
+          line-height: 55px;
+          font-weight: 900;
           @include md {
             font-size: 7vw;
             line-height: 8vw;

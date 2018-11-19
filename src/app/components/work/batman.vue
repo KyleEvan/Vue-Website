@@ -20,24 +20,24 @@
       <!-- Synopsis -->
       <section>
         <p>
-          UI and UX redesign for the member and careers sections of corporate healthcare websites (Excellus BCBS and Univera Healthcare). This project overhauled the entire front-end of these sites adding responsiveness, accessibility, and overall a better flow of content for a more consitent modern web experience accross devices.
+          Final project for Elements of Graphic Design in Media class. The subject was ours to choose and reguired us incorporated principles of 2D graphic design we had learned during the semester. I chose to create a poster advertisement for a comic book store. I used Adobe Illustrator for the vector graphics, characters and text. Characters were based off of images from old batman comic books I recreated and arranged into a cohesive retro display. After I post processed the image in photoshop with filters and played with the coloring. Finally printed the high resolution images on 11x18 foamcore.
         </p>
       </section>
 
       <!-- Skills -->
-      <section>
+      <!-- <section>
         <p>
           For the main sections of content pages our team used bootstrap 3 for layout of elements, Javascript for API calls, handling data, conditional rendering, etc..
         </p>
-      </section>
+      </section> -->
 
       <!-- Links -->
-      <section>
+      <!-- <section>
         <ul>
           <li><a :href="link_excellus_home">Excellus Careers Home</a></li>
           <li><a :href="link_univera_home">Univera Careers Home</a></li>
         </ul>
-      </section>
+      </section> -->
     </template>
 
     <!-- Main Content -->
@@ -46,7 +46,7 @@
         {{saying}}
       </p> -->
       <!-- <img :class="" :src="images.sized.career_areas" :alt="" /> -->
-      <p>
+      <!-- <p>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Praesent mauris. Fusce nec tellus sed augue semper porta. Mauris massa. Vestibulum lacinia arcu eget nulla. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur sodales ligula in libero. Sed dignissim lacinia nunc.
       </p>
       <p>
@@ -54,7 +54,7 @@
       </p>
       <p>
         Sed lacinia, urna non tincidunt mattis, tortor neque adipiscing diam, a cursus ipsum ante quis turpis. Nulla facilisi. Ut fringilla. Suspendisse potenti. Nunc feugiat mi a tellus consequat imperdiet. Vestibulum sapien. Proin quam. Etiam ultrices. Suspendisse in justo eu magna luctus suscipit. Sed lectus. Integer euismod lacus luctus magna. Quisque cursus, metus vitae pharetra auctor, sem massa mattis sem, at interdum magna augue eget diam.
-      </p>
+      </p> -->
     </template>
   </work-template>
 
@@ -67,9 +67,7 @@
     props: ['project', 'images', 'events'],
     data () {
       return {
-        link_excellus_home: 'https://www.excellusbcbs.com/wps/portal/xl/careers/',
-        link_univera_home: 'https://www.univerahealthcare.com/wps/portal/uv/careers/',
-        link_univera_events: 'https://www.univerahealthcare.com/wps/portal/uv/careers/hiring-process/recruitment-events',
+
       }
     },
     components:{

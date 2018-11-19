@@ -5,7 +5,7 @@ var work = [
   {
     // align: 'rtl',
     name: 'Member Redesign',
-    caption: 'Complete UX/UI overhaul of member and careers sections of Excellus BCBS and Univera Healthcare',
+    // caption: 'Complete UX/UI overhaul of member and careers sections of Excellus BCBS and Univera Healthcare',
     tags: ['JavaScript', 'CSS', 'HTML'],
     href: 'Careers-Redesign',
     image:{
@@ -22,7 +22,7 @@ var work = [
   {
     // align: 'rtl',
     name: 'Liferay Migration',
-    caption: 'Lorem ipsum dolor sit',
+    // caption: 'Lorem ipsum dolor sit',
     tags: ['JavaScript', 'CSS', 'HTML'],
     href: 'ComboSmash',
     image:{

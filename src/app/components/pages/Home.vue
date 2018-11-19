@@ -6,36 +6,38 @@
     <div class="container">
 
 
-      <div v-for="(works, section) in sections">
+      <div v-for="(works, section) in sections" :class="section.toLowerCase()">
         <h2>{{section}}</h2>
         <div class="content projects">
-          <a
-            :href="work.href"
-            @click.prevent="handleClick"
-            v-for="work in works"
-            :style="{background: work.lightColor}"
-            class="project">
-            <div class="bg"></div>
+          <div v-for="work in works" class="project-container">
+            <a
+              :href="work.href"
+              @click.prevent="handleClick"
+              class="project">
+              <div class="bg" :style="{background: work.lightColor}"></div>
 
-            <div class="image">
-              <img :style="{transform: `translateY(${work.image.offsetY})`}" :src="images.sized[work.image.src]" />
-            </div>
+              <div class="image">
+                <img :style="{transform: `translateY(${work.image.offsetY})`}" :src="images.sized[work.image.src]" />
+              </div>
+
+            </a>
             <div class="info">
               <div class="name">{{work.name}}</div>
               <div class="tags">
                 <span v-for="tag in work.tags" :class="tag.toLowerCase()">{{tag}}</span>
               </div>
+              <div v-if="work.date" class="date">{{work.date}}</div>
               <!-- <p>
                 {{trimCaption(project.caption)}}
                 <span>...Read more »</span>
               </p> -->
             </div>
-          </a>
+          </div>
         </div>
       </div>
 
 
-    </div>
+    </div><!-- End of works container -->
 
 
   </div>
@@ -61,7 +63,7 @@
     data(){
       return{
         sections: {Work: work, Projects: projects},
-        projects: projects,
+        projects: work.concat(projects),
         projects_el_arr: [],
         project: undefined,
 
@@ -116,7 +118,7 @@
         const href = e.target.getAttribute("href");
         if(href){
           // Cleanup transitionLayer
-          console.log(background.parentNode);
+          console.log(project);
           background.parentNode.outerHTML = "";
           background = null;
           this.$router.push({
@@ -188,11 +190,11 @@
       },
       getProjectData: function(target){
         // const projects = document.querySelectorAll('.project');
-        console.log(target);
         for (let i = this.projects_el_arr.length-1; i >= 0; i--){
           let project = this.projects_el_arr[i];
 
           if(project == target){
+            console.log(target);
             console.log(project);
 
             return {
@@ -248,9 +250,11 @@
         let transitionBg = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
         // let w = this.viewport.width; // viewport & height
         // let h = this.viewport.cHeight;
-        transitionBg.setAttribute('points', this.getPoints(this.viewport.width, 0, this.viewport.width*2, this.viewport.cHeight));
+        transitionBg.setAttribute('points', this.getPoints(-this.viewport.width, 0, 0, this.viewport.cHeight));
+        // transitionBg.setAttribute('points', this.getPoints(this.viewport.width, 0, this.viewport.width*2, this.viewport.cHeight));
         // transitionBg.setAttribute('fill', project.data.mainColor);
-        transitionBg.setAttribute('fill', '#fff');
+        transitionBg.setAttribute('fill', project.data.lightColor);
+        // transitionBg.setAttribute('fill', '#fff');
         transitionLayer.appendChild(transitionBg);
         let transitionBgObj = {
           el: transitionBg,
@@ -323,7 +327,7 @@
         });
         // transition Bg, cover screen swipe left to right
         TweenLite.to(transitionBgObj.el, this.animate_projectTransition, {
-          x: -transitionBgObj.width,
+          x: transitionBgObj.width,
           ease: Power2.easeIn
         });
 
@@ -336,6 +340,7 @@
           // Disable scroll
           this.bodyNoScroll();
           // Get project data
+          console.log(e.target);
           this.project = this.getProjectData(e.target);
           this.project.data = Object.assign(this.getViewportData(), this.project.data);
           // console.log(this.project);
@@ -399,47 +404,77 @@
 
 .main{
   // padding-top: 120vh;
+  .content{
+    margin: 0 10% 0% 16%;
+  }
+  .container{
+
+    div{
+      &.work{
+        background: $lightOffWhite;
+      }
+      &.projects{
+
+      }
+
+
+
+
+
   h2{
     display: inline-block;
     margin-left: 5%;
     padding: 3% 0;
-    font-size: 2.25vw;
+    font-size: 2.65em;
     line-height: 1;
+    color: $mainColor;
     // font-family: 'Eksell Display';
     font-weight: 900;
   }
-  .content{
-    margin: 0 10% 0% 16%;
-  }
+
   .projects{
-    padding-bottom: 12vh;
+    padding-bottom: 10vh;
     display: flex;
     align-items: flex-start;
     flex-flow: row wrap;
-    justify-content: space-between;
+    justify-content: flex-start;
+    .project-container {
+      margin-bottom: 2.75em;
+      margin-right: 1.25em;
+      @include sm {
+        margin-right: 10%;
 
+      }
     .project{
       position: relative;
       display: flex;
       flex-flow: column;
-      width: 92%;
-      border-radius: 3px;
+      // width: 100%;
+      // height: 100%;
+      width: 74vw;
+      height: 64vw;
+      @include sm {
+        width: 32vw;
+        height: 32vw;
+      }
+      @include md {
+        width: 232px;
+        height: 216px;
+      }
+      @include lg {
+        width: 22.33%;
+        height: 270px;
+      }
+      // border-radius: 3px;
       overflow: hidden;
-      border: 1px solid $offWhite;
-      margin-bottom: 1.75em;
+      // border: 1px solid $offWhite;
       text-decoration: none;
       opacity: 0;
       transform: translateY(15%);
       &>div{
         pointer-events: none;
       }
-      @include md{
-        width: 48%;
-        margin-bottom: 2.75em;
-      }
-      @include lg{
-        width: 30.33%;
-      }
+
 
       .bg{
         position: absolute;
@@ -447,19 +482,19 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background: #fff;
-        opacity: 1;
+        background: transparent;
+        opacity: 0;
       }
-      &:hover{
+      &:hover, &:active{
         .bg{
           // background: #CAD2C5;
-          opacity: 0;
+          opacity: 1;
         }
       }
 
       .image{
         padding: 1.5em;
-        position: absolute;
+        position: relative;
         overflow: hidden;
         top: 0;
         left: 0;
@@ -481,44 +516,50 @@
           // max-height: 100%;
         }
       }
-      .info{
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        // padding: 1em;
-        border-top: 1px solid $offWhite;
-        margin-top: 70%;
-        z-index: 1;
-        color: $mainColor;
-        // background: #fff;
+    }
+    .info{
+      display: flex;
+      justify-content: flex-start;
+      align-items: flex-start;
+      flex-flow: column;
+      // padding: 1em;
+      border-top: 1px solid $offWhite;
+      // border-top: none;
+      // margin-top: 70%;
+      z-index: 1;
+      // color: $mainColor;
+      // background: #fff;
 
-        .name{
-          // width: 70%;
-          padding: .5em;
-          font-weight: 700;
-          opacity: 1;
+      .name{
+        // width: 70%;
+        color: $darkGreen;
+
+        padding: .5em 0;
+        font-weight: 700;
+      }
+      .tags, .date {
+        color: $mediumGreen;
+        font-size: .8em;
+      }
+      .tags{
+        // text-align: right;
+        margin-left: -.5em;
+        span{
+          display: inline-block;
+          line-height: .7em;
+          padding: 0 .5rem;
+          float: left;
         }
-        .tags{
-          // text-align: right;
-          color: $mediumGreen;
-          position: absolute;
-          top: 0;
-          right: 0;
-
-          span{
-            // background: #f4f4f4;
-            display: inline-block;
-            padding: .5em;
-            font-size: .7em;
-            line-height: .7em;
-            // margin: .5em;
-            float: right;
-          }
-        }
-
+      }
+      .date{
+        padding: .5rem 0;
       }
     }
   }
+
+  }
+}
+}
 }
 
 </style>

@@ -86,11 +86,14 @@
         });
       },
       async loadImages(images){
-        console.log(images);
+        const app = this;
+        const wait = 1000;
         const assets = await load.any(images, (progress) => {
           if(progress.count >= progress.total){
-            console.log('All images loaded');
-            this.doneLoading();
+            setTimeout( function(){
+              console.log('All images loaded');
+              app.doneLoading();
+            }, wait)
           }
         });
       },

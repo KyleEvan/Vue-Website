@@ -168,6 +168,7 @@
         position: absolute;
         bottom: 0;
 
+
         svg{
           fill: #f9fff9;
           height: 3rem;
@@ -176,12 +177,12 @@
       .flickity-prev-next-button{
         position: absolute;
         top: 0;
-        width: 6%;
+        width: 15%;
         height: 100%;
         background: none;
         outline: none;
         border: none;
-        padding: 0;
+        padding: 1em;
         display: flex;
         align-items: center;
         justify-content: center;

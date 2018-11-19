@@ -17,6 +17,8 @@ import comboSmash_horde_sm_jpg from '../images/comboSmash-horde@sm.jpg';
 import comboSmash_horde_md_jpg from '../images/comboSmash-horde@md.jpg';
 import comboSmash_horde_lg_jpg from '../images/comboSmash-horde@lg.jpg';
 
+import comboSmash_preview_sm_jpg from '../images/comboSmash-preview@sm.jpg';
+import comboSmash_preview_md_jpg from '../images/comboSmash-preview@md.jpg';
 import comboSmash_preview_lg_jpg from '../images/comboSmash-preview@lg.jpg';
 
 import cycles_sm_jpg from '../images/cyclesTile@sm.jpg';
@@ -69,7 +71,9 @@ var images = [
   {
     name: 'comboSmash_preview',
     src: {
-      lg: comboSmash_preview_lg_jpg
+      sm: comboSmash_preview_sm_jpg,
+      md: comboSmash_preview_md_jpg,
+      lg: comboSmash_preview_lg_jpg,
     }
   },
   {

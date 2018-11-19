@@ -8,6 +8,7 @@ const About = () => import('./components/pages/About.vue');
 const Contact = () => import('./components/pages/Contact.vue');
 const NotFound = () => import('./components/pages/NotFound.vue');
 
+import WorkBatman from './components/work/batman.vue';
 import WorkCareers from './components/work/careers.vue';
 import WorkCycles from './components/work/cycles.vue';
 import WorkComboSmash from './components/work/combosmash.vue';
@@ -43,6 +44,13 @@ export default new Router({
     },
 
     //--------------------< Work/Projects >-----------------------
+    {
+      path: '/batman-poster',
+      name: 'Batman-Poster',
+      component: WorkBatman,
+      props: true,
+      meta: { title: 'Batman | Kyle P' }
+    },
     {
       path: '/careers-redesign',
       name: 'Careers-Redesign',

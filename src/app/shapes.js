@@ -129,7 +129,7 @@ class Scene { // #scene
     // DIMENSIONS
     // size is relative to window size ( 1 = window size )
     this.sceneSize = {};
-    this.size = 1;
+    this.size = .5;
 
     // EVENT vars
     this.mouseX = undefined;
@@ -154,7 +154,7 @@ class Scene { // #scene
     this.handleClick = this.handleClick.bind(this);
     this.resizeReady = true;
     // this.toggleScene = this.toggleScene.bind(this);
-    
+
 
     //-------------------< Shapes >---------------------
     // Shapes Properties
@@ -163,7 +163,7 @@ class Scene { // #scene
     this.shapes_size = config.shapes_size || [.04, .1];
     this.shapes_colors = config.shapes_colors || ['#000'];
     this.shapes_delay = config.shapes_delay || 0;
-    this.shapes_moveDur = 4;
+    this.shapes_moveDur = config.shapes_moveDur || 4;
     this.shapes_click = [];
     this.shapes_click.length = 10;
 
@@ -173,7 +173,7 @@ class Scene { // #scene
     // used to calculate 3d location of each shape
     this.camera = {
       scene: this,
-      maxZ: .9, // % of perspective
+      maxZ: .999, // % of perspective
       perspective: 10,
       fov: {
         width: undefined,
@@ -512,8 +512,16 @@ class Scene { // #scene
     this.then = Date.now();
     this.startTime = this.then;
     this.update();
+    this.animateInShapes();
   }
-
+  animateInShapes() {
+    TweenLite.to(this.svg, this.shapes_moveDur, {
+      scaleX: 1,
+      scaleY: 1,
+      opacity: 1,
+      ease: Power4.easeOut
+    });
+  }
   // toggleInteractive() {
   //   this.interactive = !this.interactive;
   //   if (this.interactive) {
@@ -561,7 +569,8 @@ class Shape {
     this.sceneX = props.x/scene.width;
     this.sceneY = props.y/scene.height;
 
-    this.minOpacity = .35;
+    this.minOpacity = .05;
+    this.maxOpacity = .25;
     this.moveX = 0;
     this.moveY = 0;
     this.moveDur = props.moveDur;
@@ -584,7 +593,7 @@ class Shape {
     // }
     // this.colors = scene.shapes_colors;
     this.color = scene.shapes_colors[randomIndex(scene.shapes_colors.length)];
-    this.color_rgba = this.getRgbaColor(this.color, this.z, scene.camera.maxZ*scene.camera.perspective, this.minOpacity);
+    this.color_rgba = this.getRgbaColor(this.color, this.z, scene.camera.maxZ*scene.camera.perspective, this.minOpacity, this.maxOpacity);
     this.type = undefined;
     this.types = [
       {
@@ -785,15 +794,16 @@ class Shape {
     let points = `${x} ${y} ${x + width * .5} ${y + width} ${x - width * .5} ${y + width}`;
     return points;
   }
-  getRgbaColor(hex, z, maxZ, minOpacity){
+  getRgbaColor(hex, z, maxZ, minOpacity, maxOpacity){
     let rgb, a, rgba;
     rgb = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    a = (1-(z/maxZ))*(1-minOpacity) + minOpacity;
+    // a = (1-(z/maxZ))*(1-minOpacity) + minOpacity;
     rgba = {
         r: parseInt(rgb[1], 16),
         g: parseInt(rgb[2], 16),
         b: parseInt(rgb[3], 16),
-        a: a
+        a: (1-(z/maxZ))*(maxOpacity-minOpacity) + minOpacity
+
     };
     return `rgba(${rgba.r},${rgba.g},${rgba.b},${rgba.a})`;
   }

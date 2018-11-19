@@ -191,7 +191,7 @@
 					// min-width: 5rem;
 					// min-height: 5rem;
 					margin: 0 -1rem 0 0;
-	        padding:10px;
+	        padding: 10px;
 	        z-index: 1;
 
 	      }
@@ -202,7 +202,7 @@
 					flex-direction: column;
 					justify-content: center;
 					align-items: unset;
-	        background: #FFA69E;
+	        background: $offDarkGreen;
 					padding-left: 2.5rem;
     			font-size: 30px;
 	        position:absolute;
@@ -222,7 +222,7 @@
 					li{
             margin: 1rem 0;
 						a{
-							color: #fff;
+							color: $lightOffWhite;
 						}
 					}
 				}

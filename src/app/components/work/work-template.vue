@@ -8,7 +8,7 @@
     <div :style="{background: lightColor}" class="template_bg">
       <div class="template_main">
         <!-- main work info -->
-        <!-- <div v-if="project" ref="aside_curtain" class="aside_curtain" :style="{background: mainColor}"></div> -->
+        <!-- <div v-if="project" ref="aside_curtain" class="aside_curtain" style="#fff" ></div> -->
         <div class="template_aside" >
           <div ref="carouselAside">
             <h1 :style="{color: mainColor}" class="template_title">
@@ -128,37 +128,43 @@
         return  this.viewport.cWidth < this.breakpoints.md ? 'mobile' : 'desktop';
       },
       animateContent: function(){
-        TweenLite.to(this.$refs.carouselAside, .45,
+        let dur = this.$props.project ? .6 : 0;
+        let aside = document.querySelector('.template_aside');
+        TweenLite.to(aside, dur,
+        {
+          x: '0',
+          ease: Power3.easeOut
+        });
+        TweenLite.to(this.$refs.carouselAside, dur*1.25,
         {
           x: '0',
           opacity: 1,
-          delay: .3,
           ease: Power2.easeInOut
         });
       },
-      animateCurtain: function(func){
-        TweenLite.to(this.$refs.aside_curtain, .6,
-        {
-          x: '-100%',
-          ease: Power4.easeIn,
-          delay: .3,
-          onComplete: () => {
-            if(func) func();
-          }
-        });
-      },
+      // animateCurtain: function(func){
+      //   TweenLite.to(aside, .45,
+      //   {
+      //     x: '0%',
+      //     ease: Power4.easeIn,
+      //     delay: .3,
+      //     onComplete: () => {
+      //       if(func) func();
+      //     }
+      //   });
+      // },
       initPage: function(){
-        if(this.$props.project) {
-          if(this.determineViewport() == 'mobile') this.$refs.aside_curtain.classList.add('mobile');
-          this.animateContent();
+        // if(this.$props.project) {
+          // if(this.determineViewport() == 'mobile') this.$refs.aside_curtain.classList.add('mobile');
+        this.animateContent();
           // this.animateCurtain(this.animateContent);
-        }
+        // }
       }
     },
     created(){
         this.events.$on('app-loaded', () => {
           console.log('init work template');
-          this.animateContent();
+          this.initPage();
         });
     },
     mounted(){
@@ -195,30 +201,31 @@
       @include md{
         flex-direction: row;
       }
-      .aside_curtain{
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 50%;
-        height: 100vh;
-        z-index: 99;
-        &.mobile{
-          width: 100%;
-          height: 50vh;
-          top: 400px;
-        }
-      }
+      // .aside_curtain{
+      //   position: absolute;
+      //   top: 0;
+      //   left: 0;
+      //   width: 50%;
+      //   height: 100vh;
+      //   z-index: 99;
+      //   &.mobile{
+      //     width: 100%;
+      //     height: 50vh;
+      //     top: 400px;
+      //   }
+      // }
 
       .template_aside{
         position: relative;
         width: 100%;
         height: auto;
-        padding: 3%;
+        padding: 2em;
         z-index: 2;
+        transform: translateX(-100%);
 
         &>div{
           opacity: 0;
-          transform: translateX(10%);
+          transform: translateX(-10%);
         }
 
         // &>*{
@@ -232,7 +239,7 @@
         }
 
         .template_title{
-          font-size: 3.25vw;
+          font-size: 1.8em;
         }
 
         section{

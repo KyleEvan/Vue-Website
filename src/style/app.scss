@@ -167,6 +167,7 @@ body {
             transform: translateX(33%) scale(.33);
             animation-name: size;
             transform-origin: 50% 50%;
+            border-radius: 50%;
             animation-duration: $loadingDuration*1s;
             animation-timing-function: cubic-bezier(.15,.6,.93,.5);
             animation-iteration-count: infinite;
@@ -207,6 +208,7 @@ body {
           &:nth-child(4)>span.polygon{
             border-bottom-color: $loadingColor4;
           }
+          /* @inlcude md {} */
         }
         &>span,
         &>span>span{

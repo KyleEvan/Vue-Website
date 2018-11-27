@@ -30,8 +30,9 @@ JS
    data(){
      return{
        scene: undefined,
-       shapes: undefined,
-       tl: new TimelineLite({paused: true})
+       // shapes: undefined,
+       tl: new TimelineLite({paused: true}),
+       // init: undefined
      }
    },
 
@@ -47,24 +48,30 @@ JS
            '#BAC9C5',
            '#AEB9BA'
          ],
-         shapes_moveDur: 4,
+         shapes_moveDur: 3,
          shapes_delay: .013,
        })
      },
-     init: function(){
-       console.log('init scene.vue');
-       this.createShapes();
-       this.scene.init();
-       this.initScrollMagic();
+     animateScene: function(){
+       const scene = this.$refs.scene;
+       this.tl.fromTo(scene, 1,
+       {
+         y: '0%',
+         opacity: 1
+       },
+       {
+         y: '-10%',
+         opacity: 0,
+         ease: Power1.easeInOut
+       })
      },
-
      initScrollMagic: function(){
        const app = document.getElementById('app');
        const controller = new ScrollMagic.Controller();
        const mainScene = new ScrollMagic.Scene({
          triggerElement: app,
          triggerHook: 0,
-         duration: app.clientHeight*.5,
+         duration: app.clientHeight*.2,
          reverse: true
        })
        .on("progress", (event) => {
@@ -75,24 +82,19 @@ JS
        .addTo(controller);
        this.animateScene();
      },
-     animateScene: function(){
-       const scene = this.$refs.scene;
-       this.tl.fromTo(scene, 1,
-       {
-         y: '0%',
-         opacity: 1
-       },
-       {
-         y: '-5%',
-         opacity: .15,
-         ease: Power3.easeIn
-       })
+
+     init: function(){
+       this.dev('init scene.vue');
+       this.scene.init()
+       this.initScrollMagic();
      },
 
    },
    created(){
+
      const scene = this;
-     this.events.$on('app-loaded', () => {
+     this.events.$on('title-loaded', () => {
+       console.log('title-loaded in scene.vue');
        scene.init();
      });
    },
@@ -100,7 +102,10 @@ JS
 
    },
    mounted(){
-
+     // this.createShapes = this.createShapes.bind(this);
+     this.createShapes();
+     // this.init = this.init.bind(this);
+     // this.scene = this.scene.bind(this);
    },
    updated(){
 

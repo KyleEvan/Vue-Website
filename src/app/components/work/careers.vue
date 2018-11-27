@@ -1,9 +1,9 @@
 <template>
 
-  <work-template :project="project" :events="events">
+  <work-template :project="project" :events="events" class="member-redesign">
 
     <template slot="slides">
-      <div class="carousel-cell" v-for="image in project_images">
+      <div class="carousel-cell" v-for="image in carousel_images">
         <img :src="image" alt="" />
       </div>
     </template>
@@ -11,82 +11,178 @@
 
     <!-- Title -->
     <template slot="title">
-      Careers Redesign
+      {{title}}
     </template>
 
     <!-- Project Description -->
     <template slot="description">
 
-      <!-- Synopsis -->
+      <!-- Quick Summary -->
       <section>
         <p>
-          UI and UX redesign for the member and careers sections of corporate healthcare websites (Excellus BCBS and Univera Healthcare). This project overhauled the entire front-end of these sites adding responsiveness, accessibility, and overall a better flow of content for a more consitent modern web experience accross devices.
+          Complete UI UX overhaul of Excellus BCBS and Univera Healthcare member experience. This was a massive redesign project manually switching over to a responsive theme introducing new coding and design standards to ensure a cohesive intuitive experience. In its previous state, the websites were static fixed width with a totally separate mobile website with its own source. The redesign solved many of these issues, it facilitated the creation and maintenance of content, increased user usability accross all platforms, and updated the look and feel to a more modern progressive design.
         </p>
-      </section>
-
-      <!-- Skills -->
-      <section>
         <p>
-          For the main sections of content pages our team used bootstrap 3 for layout of elements, Javascript for API calls, handling data, conditional rendering, etc..
+          I worked on migrating ui components and content, adding responsive functionality and accessibility according to modern WAI-ARIA specification standards. Bootstrap 3 was adopted as part of our responsive theme to handle layout and ui for the updated sections.
+        </p>
+        <img role="presentation" :src="careerAreas_image" alt="multiple mobile screens: redesigned excellus pages" class="image-a"/>
+      </section>
+      <section>
+        <h2>Careers</h2>
+        <p>
+          As part of the member redesign, the Human Resources department was looking to update the careers section of both websites. I worked with a small team as only developer alognside a content creator and a ux designer. I created all the ui components and styling for the content of these sections.
         </p>
       </section>
 
       <!-- Links -->
-      <section>
-        <ul>
-          <li><a :href="link_excellus_home">Excellus Careers Home</a></li>
-          <li><a :href="link_univera_home">Univera Careers Home</a></li>
-        </ul>
-      </section>
+
     </template>
 
-    <!-- Main Content -->
+    <!-- Extra Content -->
     <template slot="extra">
-      <!-- <p>
-        {{saying}}
-      </p> -->
-      <!-- <img :class="" :src="images.sized.career_areas" :alt="" /> -->
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Praesent mauris. Fusce nec tellus sed augue semper porta. Mauris massa. Vestibulum lacinia arcu eget nulla. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur sodales ligula in libero. Sed dignissim lacinia nunc.
-      </p>
-      <p>
-        Curabitur tortor. Pellentesque nibh. Aenean quam. In scelerisque sem at dolor. Maecenas mattis. Sed convallis tristique sem. Proin ut ligula vel nunc egestas porttitor. Morbi lectus risus, iaculis vel, suscipit quis, luctus non, massa. Fusce ac turpis quis ligula lacinia aliquet. Mauris ipsum. Nulla metus metus, ullamcorper vel, tincidunt sed, euismod in, nibh. Quisque volutpat condimentum velit. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Nam nec ante.
-      </p>
-      <p>
-        Sed lacinia, urna non tincidunt mattis, tortor neque adipiscing diam, a cursus ipsum ante quis turpis. Nulla facilisi. Ut fringilla. Suspendisse potenti. Nunc feugiat mi a tellus consequat imperdiet. Vestibulum sapien. Proin quam. Etiam ultrices. Suspendisse in justo eu magna luctus suscipit. Sed lectus. Integer euismod lacus luctus magna. Quisque cursus, metus vitae pharetra auctor, sem massa mattis sem, at interdum magna augue eget diam.
-      </p>
-    </template>
+      <section>
+        <h2>Code Samples</h2>
+        <p>Custom components and other misc samples from this project.</p>
+
+
+        <div class="sample">
+          <div>
+            <h3>Recruitment events calendar</h3>
+            <p>some extra little details about this fabulous project</p>
+          </div>
+
+          <div v-for="sample in codeSamples">
+          <code-sample :samples="sample">
+            <!-- <template slot="html">
+              <pre class="html" v-html="calendarApp_sample[0].html"></pre>
+            </template>
+            <template slot="css">
+              <pre class="css" v-html="calendarApp_sample[1].css"></pre>
+            </template>
+            <template slot="js">
+              <pre class="js" v-html="calendarApp_sample[2].js"></pre>
+            </template> -->
+          </code-sample>
+        </div>
+
+        </div>
+
+
+
+        <ul>
+          <li>Wordpress blog feed</li>
+        </ul>
+      </section>
+      <section>
+        <h2>View the redesigned websites</h2>
+        <ul>
+          <li>
+            <a target="_blank" :href="links.excellusHome">Excellus Careers Home</a>
+          </li>
+          <li>
+            <a target="_blank" :href="links.univeraHome">Univera Careers Home</a>
+          </li>
+        </ul>
+      </section>
+
+    </template><!-- End of extra template content -->
   </work-template>
 
 </template>
 
 <script>
   import workTemplate from './work-template.vue';
+  import codeSample from '../code-sample.vue';
+
+  // code samples
+  import {calendarApp} from '../../../samples/calendarApp.js';
 
   export default {
     props: ['project', 'images', 'events'],
     data () {
       return {
-        link_excellus_home: 'https://www.excellusbcbs.com/wps/portal/xl/careers/',
-        link_univera_home: 'https://www.univerahealthcare.com/wps/portal/uv/careers/',
-        link_univera_events: 'https://www.univerahealthcare.com/wps/portal/uv/careers/hiring-process/recruitment-events',
+        title: 'Member Redesign',
+
+        links: {
+          excellusHome: 'https://www.excellusbcbs.com/wps/portal/xl/careers/',
+          univeraHome: 'https://www.univerahealthcare.com/wps/portal/uv/careers/',
+        },
+
+        // code samples are an array of objects containing file info
+        codeSamples: {
+          calendarApp,
+        }
       }
     },
     components:{
-      'work-template': workTemplate
+      'work-template': workTemplate,
+      'code-sample': codeSample
     },
     computed: {
-      project_images: function(){
+
+      carousel_images: function(){
         let images = this.$props.images.sized;
         return [
           images.careers_screens,
           images.careers_screens,
           images.careers_screens,
         ]
+      },
+      careerAreas_image: function(){
+        return this.$props.images.all.career_areas.xl;
       }
+      // fixTags: function(el){
+      //   var text, openTag, date;
+      //   text = String(el.textContent);
+      //   // openTag = text.match(/<*<\s/g);
+      //   // parenthesis ? date = isDate(parenthesis[1]) : date = 0;
+      //   // return {
+      //   //   el: el,
+      //   //   date: date
+      //   // };
+      // }
+    },
+    methods: {
+      // renderHTML: function(){
+        // console.log(this.calendarApp_sample);
+        // return this.html;
+        // return String.raw[this.html];
+      // },
+      fixTags: function(string){
+        console.log(this.calendarApp_sample[0].html);
+        // console.log(this.calendarApp_sample[0].html.match(/\n/))
+        // const html = this.$refs.code_sample.querySelector('pre[html]');
+        // // let htmlText = html.textContent;
+        // let rawHTML = String.raw`${string}`;
+        // console.log(rawHTML);
+        //
+        // // let htmlText = html.getAttribute('html');
+        // // let openTags = rawHTML.match();
+        // // let openTags = RegExp(/</g);
+        // let openTag = [/</g, '&lt;'];
+        // let closeTag = [/>/g, '&gt;'];
+        // let replaceCharacters = [openTag, closeTag];
+        // for(var i = 0; i < replaceCharacters.length; i++){
+        //   let character = replaceCharacters[i];
+        //   rawHTML = rawHTML.replace(character[0], character[1]);
+        // }
+        // // console.log(openTags);
+        // console.log(rawHTML);
+        // // html.innerHTML = rawHTML;
+        // return rawHTML;
+        // let parsedHTML = htmlText.match(/<\/?/);
+        // console.log(parsedHTML);
+        // return 'message text test';
+
+      },
     },
     created(){
+
       // console.log(this.$props.images);
+    },
+    mounted(){
+      console.log('mounted careers vue.');
+      // this.fixTags();
     }
   }
 </script>
@@ -95,6 +191,11 @@
 
 <style lang="scss">
   // @import '../../style/global.scss';
+  .member-redesign{
+    .image-a{
+      width: 100%;
+    }
+  }
   .carousel-cell{
     &:nth-child(1){
       img{
@@ -107,4 +208,6 @@
       height: 30vw;
     }
   }
+
+
 </style>

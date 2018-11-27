@@ -3,7 +3,21 @@ import {colors} from './colors.js';
 
 var projects = [
   {
-    // align: 'rtl',
+    name: 'React Dashboard',
+    tags: ['Javascript', 'HTML', 'CSS'],
+    date: 2017,
+    href: 'Cycles',
+    image:{
+      newHeight: .3,
+      offsetY: '0%',
+      src: 'react_view_today'
+    },
+    mainColor: colors.turquoise,
+    lightColor: colors.lightTurquoise,
+    mediumColor: colors.mediumTurquoise,
+    darkColor: colors.darkTurquoise
+  },
+  {
     name: 'Combo Smash',
     tags: ['JavaScript', 'CSS', 'HTML'],
     date: 2014,
@@ -16,22 +30,6 @@ var projects = [
     mainColor: colors.projectOrange,
     lightColor: colors.projectLightOrange,
     mediumColor: colors.projectMediumOrange,
-  },
-  {
-    // align: 'rtl',
-    name: 'Batman Poster',
-    tags: ['Illustrator', 'Photoshop'],
-    date: 2013,
-    href: 'Batman',
-    image:{
-      newHeight: .3,
-      offsetY: '0%',
-      src: 'batman'
-    },
-    mainColor: colors.peach,
-    lightColor: colors.lightPeach,
-    mediumColor: colors.mediumPeach,
-    darkColor: colors.darkPeach
   },
   {
     name: 'Cycles',
@@ -49,21 +47,20 @@ var projects = [
     darkColor: colors.darkTurquoise
   },
   {
-    // align: 'rtl',
-    name: 'React Dashboard',
-    tags: ['Javascript', 'HTML', 'CSS'],
-    date: 2017,
-    href: 'Cycles',
+    name: 'Batman Poster',
+    tags: ['Illustrator', 'Photoshop'],
+    date: 2013,
+    href: 'BatmanPoster',
     image:{
       newHeight: .3,
       offsetY: '0%',
-      src: 'cycles'
+      src: 'batman'
     },
-    mainColor: colors.turquoise,
-    lightColor: colors.lightTurquoise,
-    mediumColor: colors.mediumTurquoise,
-    darkColor: colors.darkTurquoise
-  }
+    mainColor: colors.orange,
+    lightColor: colors.orange,
+    mediumColor: colors.mediumPeach,
+    // darkColor: colors.darkPeach
+  },
 ];
 
 export { projects };

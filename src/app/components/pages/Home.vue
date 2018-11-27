@@ -1,14 +1,14 @@
 <template>
   <div>
 
-    <home-title class="content" :events="events" />
+    <!-- <home-title class="content" :events="events" /> -->
 
     <div class="container">
 
 
-      <div v-for="(works, section) in sections" :class="section.toLowerCase()">
+      <div v-for="(works, section) in sections" :id="section.toLowerCase()">
         <h2>{{section}}</h2>
-        <div class="content projects">
+        <div class="content left works">
           <div v-for="work in works" class="project-container">
             <a
               :href="work.href"
@@ -49,7 +49,7 @@
   import {projects} from '../../projects.js';
 
   // Components
-  import home_title from '../home-title.vue';
+  // import home_title from '../home-title.vue';
 
   // JS Libraries
   import ScrollMagic from "scrollmagic";
@@ -103,7 +103,7 @@
       }
     },
     components: {
-      'home-title': home_title
+      // 'home-title': home_title
     },
     methods:{
       //---------------< Helper Functions >---------------
@@ -118,7 +118,6 @@
         const href = e.target.getAttribute("href");
         if(href){
           // Cleanup transitionLayer
-          console.log(project);
           background.parentNode.outerHTML = "";
           background = null;
           this.$router.push({
@@ -194,8 +193,6 @@
           let project = this.projects_el_arr[i];
 
           if(project == target){
-            console.log(target);
-            console.log(project);
 
             return {
               el: project,
@@ -410,11 +407,11 @@
   .container{
 
     div{
-      &.work{
+      &#work{
         background: $lightOffWhite;
       }
-      &.projects{
-
+      &#projects{
+        background: $lightOffGreen;
       }
 
 
@@ -427,23 +424,34 @@
     padding: 3% 0;
     font-size: 2.65em;
     line-height: 1;
-    color: $mainColor;
+    // color: $mainColor;
     // font-family: 'Eksell Display';
     font-weight: 900;
   }
 
-  .projects{
+  .works{
     padding-bottom: 10vh;
     display: flex;
     align-items: flex-start;
     flex-flow: row wrap;
     justify-content: flex-start;
+
     .project-container {
       margin-bottom: 2.75em;
       margin-right: 1.25em;
       @include sm {
         margin-right: 10%;
-
+        // &:nth-child(2n + 2){
+        //   margin-right: 0;
+        // }
+      }
+      @include md {
+        // &:nth-child(2n + 2){
+        //   margin-right: unset;
+        // }
+        // &:nth-child(3n + 3){
+        //   margin-right: 0;
+        // }
       }
     .project{
       position: relative;
@@ -454,12 +462,16 @@
       width: 74vw;
       height: 64vw;
       @include sm {
-        width: 32vw;
-        height: 32vw;
+        width: 34vw;
+        height: 34vw;
       }
+      // @include smmd {
+      //   width: 40vw;
+      //   height: 40vw;
+      // }
       @include md {
-        width: 232px;
-        height: 216px;
+        width: 20vw;
+        height: 20vw;
       }
       @include lg {
         width: 22.33%;
@@ -532,13 +544,13 @@
 
       .name{
         // width: 70%;
-        color: $darkGreen;
+        // color: $darkGreen;
 
         padding: .5em 0;
         font-weight: 700;
       }
       .tags, .date {
-        color: $mediumGreen;
+        // color: $mediumGreen;
         font-size: .8em;
       }
       .tags{

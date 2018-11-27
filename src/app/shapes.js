@@ -123,8 +123,8 @@ class Scene { // #scene
     // STATES
     // Scene is ready after initial animation
     // When scene is interactive it responds to mouse events
-    this.ready = false;
-    this.interactive = false;
+    // this.ready = false;
+    // this.interactive = false;
 
     // DIMENSIONS
     // size is relative to window size ( 1 = window size )
@@ -140,7 +140,7 @@ class Scene { // #scene
     // RAF update loop properties
     this.stop = undefined;
     this.frameCount = 0;
-    this.fps = 18;
+    this.fps = 25;
     this.fpsInterval = undefined;
     this.startTime = undefined;
     this.now = undefined;

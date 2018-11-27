@@ -1,13 +1,13 @@
 <template>
   <div><!-- Main Container -->
     <div class="container">
-      <div class="content">
+      <div class="content contained">
         <h1>About</h1>
-        <div class="inner_content">
-          <p>
-            Rochester, New York based aspiring creative developer, studied New Media &amp; Interactive Development earning a bachelors of science undergraduate degree at RIT. I enjoy the challenge of developing solutions for the web, turning designs into full fledged interactions. I'm curious about how cool websites work, the future of the web experience, and experimental front end technologies like web vr. 
-          </p>
-        </div>
+
+        <p>
+          Rochester, New York based aspiring creative developer, studied New Media &amp; Interactive Development earning a bachelors of science undergraduate degree at RIT. I enjoy the challenge of developing solutions for the web, turning designs into full fledged interactions. I'm curious about how cool websites work, the future of the web experience, and experimental front end technologies like web vr.
+        </p>
+
 
       </div>
     </div>
@@ -41,13 +41,6 @@
       font-weight: 700;
       font-size: 3.75vw;
       line-height: 1;
-    }
-    div{
-      // width: 60%;
-      margin: 0 15% 0 20%;
-      // text-align: center;
-      // margin: 0 auto;
-      // user-select: none;
     }
   }
 }

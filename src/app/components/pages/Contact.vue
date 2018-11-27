@@ -1,7 +1,7 @@
 <template>
   <div><!-- Main Container -->
     <div class="container">
-      <div class="content">
+      <div class="content contained">
         <h1>Contact</h1>
         <div class="inner_content">
           <ul>

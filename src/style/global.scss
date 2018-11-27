@@ -38,19 +38,27 @@ $darkGreen: #354F52;
 $mediumGreen: #52796F;
 $lightGreen: #84A98C;
 $offWhite: #CAD2C5;
+
 // variations of main palette
 $lightOffWhite: #F0F2EF;
+$lightOffGreen: #DDE7DF;
 $offDarkGreen: #475F61;
-
+$hoverGreen: #89999A;
 
 
 $break-small: 500px;
-$break-medium: 800px;
+$break-smallMed: 800px;
+$break-medium: 1000px;
 $break-large: 1300px;
 $break-xl: 1600px;
 
 @mixin sm{
   @media (min-width: #{$break-small}){
+    @content;
+  }
+}
+@mixin smmd{
+  @media (min-width: #{$break-smallMed}){
     @content;
   }
 }

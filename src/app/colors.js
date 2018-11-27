@@ -14,6 +14,7 @@ exports.colors = {
   'mediumGreen': '#52796F',
   'darkGreen': '#354F52',
   'darkestGreen': '#2F3E46',
+  lightOffGreen: '#DDE7DF',
 
   // Work template default colors
   'templateDefaultLightc1': '#EFECCA',
@@ -21,6 +22,8 @@ exports.colors = {
   'templateDefaultMediumc2': '#A9CBB7',
 
   // Work/Projects
+  orange: '#FFD1BA',
+  
   'projectBlue': '#B2DBCC',
   'projectLightBlue': '#DCEEE7',
   'projectMediumBlue': '#CEE8DE',

@@ -2,15 +2,21 @@
   <div id="app">
 
     <nav-content/>
+    <home-title class="content left" :events="eventBus"/>
 
     <transition mode="in-out"
       v-on:before-enter="beforeEnter"
       v-on:enter="enter"
+      v-on:after-enter="afterEnter"
       v-on:before-leave="beforeLeave"
       v-on:leave="leave"
       v-bind:css="false"
     >
+
+      <!-- <home-title  class="content" /> -->
+
       <router-view class="main" ref="main" :images="images" :events="eventBus">
+
       <!-- Main View -->
       </router-view>
     </transition>
@@ -36,6 +42,7 @@
   import nav from './nav.vue';
   import footer from './footer.vue';
   import scene from './scene.vue';
+  import home_title from './home-title.vue';
 
 
   export default {
@@ -44,50 +51,77 @@
     name: 'app',
     data(){
       return {
+        init: false,
         loading_el: document.querySelector('.loading'),
-        tl: new TimelineLite({ paused: true }),
+        // tl: new TimelineLite({ paused: true }),
         eventBus: new Vue()
       }
     },
     components:{
       'nav-content': nav,
       'footer-content': footer,
+      'home-title': home_title,
       scene: scene
     },
+    // computed: {
+    //   scene(){
+    //     return scene;
+    //   }
+    // },
     methods:{
-      setPageTitle: function(){
-        document.title = this.$route.meta.title;
-      },
-      appLoaded: function(){
-        this.eventBus.$emit('app-loaded');
-      },
       destroyLoader: function(){
-        // while (this.el.firstChild) {
+        // while (this.loading_el.firstChild) {
         //   this.el.removeChild(this.el.firstChild);
         // }
         this.body.removeChild(this.loading_el);
       },
-      doneLoading: function(){
+      animateOutLoader: function(callback){
         const spinner = this.loading_el.querySelector('.spinner');
-        TweenLite.to(spinner, .3, {
+        TweenLite.to(spinner, .6, {
           scale: .25,
           opacity: 0,
           ease: Power2.easeOut
         });
-        TweenLite.to(this.loading_el, .3, {
+        TweenLite.to(this.loading_el, .6, {
           opacity: 0,
           ease: Power2.easeIn,
           // delay: 999,
           onComplete: () => {
             console.log('done loading images');
             this.destroyLoader();
-            this.initApp();
+            // this.initApp();
+            callback();
           }
         });
+      },
+      setPageTitle: function(){
+        document.title = this.$route.meta.title;
+      },
+      appLoaded: function(){
+        this.eventBus.$emit('app-loaded');
+        this.init = true;
+        console.log('app loaded');
+      },
+      pageTransitioned: function(){
+        if(this.init) {
+          this.eventBus.$emit('page-transitioned');
+          console.log('page transitioned');
+        }
+      },
+
+      doneLoading: function(){
+        // 1. animate out the loading screen and then remove elements from dom to clean it up
+        // 2. initialize app and fire app-loaded event keying off child element animations
+        //    - animate in title text and navigation synchronously
+        // 3. child vue components fire event after animating
+        //    - title-loaded keys off the scene initialization
+        this.animateOutLoader(this.initApp);
+
       },
       async loadImages(images){
         const app = this;
         const wait = 1000;
+        console.log(images);
         const assets = await load.any(images, (progress) => {
           if(progress.count >= progress.total){
             setTimeout( function(){
@@ -99,31 +133,48 @@
       },
 
       preInitApp: function(){
-        console.log('getting app.vue ready');
-        // Disable Scroll while app loads assets
-        this.bodyNoScroll();
+        this.dev('getting things reading in App.vue ...');
+
         // Initially set title when app is first created
         this.setPageTitle();
+
+        // Add event listeners to recieve signals from child components
+        this.eventBus.$on('title-loaded', () => {
+          console.log('title loaded listener in App.vue');
+        });
+
+        // Disable Scroll while app loads assets
+        this.bodyNoScroll();
+        // being loading sized images
         this.loadImages(this.$props.images.sources);
       },
       initApp: function(){
         // Emits custom event handled by page component in router view
         this.appLoaded();
+        // console.log(this.initScene);
         this.bodyRestoreScroll();
       },
       beforeEnter: function(el){
 
       },
       enter: function(el, done){
+          // console.log(el);
           this.bodyRestoreScroll();
-          if(this.$route.meta.scroll){
-            let app = this;
-            setTimeout(function(){
-              console.log('enter');
-              document.documentElement.scrollTop = app.$route.meta.scroll;
-            }, 5);
-          }
-          done();
+          // if(this.$route.meta.scroll){
+          //   let app = this;
+          //   setTimeout(function(){
+          //     console.log('enter');
+          //     document.documentElement.scrollTop = app.$route.meta.scroll;
+          //     app.pageTransitioned();
+          //     done();
+          //   }, 5);
+          // }else {
+            done();
+          // }
+      },
+      afterEnter: function(el){
+        this.pageTransitioned();
+
       },
       beforeLeave: function(el){
 

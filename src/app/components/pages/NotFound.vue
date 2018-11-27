@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>
-      Oops!
+      Page not found
     </h1>
     <p>
       Something went wrong
@@ -32,7 +32,7 @@
 
   h1{
     font-size: 6vw;
-  }  
+  }
 
 
 </style>

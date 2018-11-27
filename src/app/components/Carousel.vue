@@ -168,37 +168,36 @@
         position: absolute;
         bottom: 0;
 
-
         svg{
-          fill: #f9fff9;
+          fill: #000000;
           height: 3rem;
         }
       }
       .flickity-prev-next-button{
         position: absolute;
-        top: 0;
-        width: 15%;
-        height: 100%;
+        bottom: 0;
+        width: 17%;
+        height: 45%;
         background: none;
         outline: none;
         border: none;
-        padding: 1em;
+        padding: 2em;
         display: flex;
         align-items: center;
         justify-content: center;
-        opacity: .4;
+        opacity: .2;
         cursor: pointer;
 
         &:hover{
-          opacity: 1;
+          opacity: .45;
         }
       }
 
       .flickity-button.previous{
-        left: 0;
+        left: 5%;
       }
       .flickity-button.next{
-        right: 0;
+        right: 5%;
       }
       .flickity-page-dots{
         position: absolute;

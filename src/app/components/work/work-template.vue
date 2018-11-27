@@ -24,8 +24,8 @@
       </div>
 
       <!-- extra work info -->
-      <div v-if="extraSlotPassed" class="template_extra" >
-        <div>
+      <div v-if="extraSlotPassed" class="template_extra content">
+        <div class="nav-padding">
           <slot name="extra"></slot>
         </div>
       </div>
@@ -56,6 +56,8 @@
 		props:['project', 'events'],
     data(){
       return{
+        tl: new TimelineLite({paused: true}),
+
         defaultLightColor: colors.templateDefaultLightc1,
         defaultMediumColor: colors.templateDefaultMediumc1,
         defaultMainColor: colors.templateDefaultMediumc2,
@@ -84,12 +86,13 @@
     },
     methods:{
       // initScrollMagic: function(){
-      //   const mainContainer = document.querySelector('.main-container');
+      //   const app = document.getElementById('app');
+      //
       //   const controller = new ScrollMagic.Controller();
       //   const workScene = new ScrollMagic.Scene({
-      //     triggerElement: mainContainer,
+      //     triggerElement: app,
       //     triggerHook: 0,
-      //     duration: '100%',
+      //     duration: app.clientHeight,
       //     reverse: true
       //   })
       //   .on("progress", (event) => {
@@ -98,32 +101,33 @@
       //     this.tl.progress(event.progress);
       //   })
       //   .addTo(controller);
+      //   this.animateScroll();
       // },
       // animateScroll: function(){
       //   // const tl = new TimelineLite({paused: true});
       //   const flickity = document.getElementById('flickityContainer');
-      //   this.tl.fromTo(flickity, .3,
+      //   this.tl.fromTo(flickity, 1,
       //   {
       //     y: '0%',
       //     opacity: 1
       //   },
       //   {
-      //     y: '5%',
-      //     opacity: 0,
-      //     ease: Power4.easeOut
+      //     y: '0%',
+      //     opacity: .35,
+      //     ease: Power0.easeIn
       //   });
       //   // return tl;
       // },
-      initEvents: function(){
-        // const template = this;
-        // const handleResize = this.debounce(function() {
-        //   this.images = globals.getImages();
-        //   console.log(this.images);
-
-          // te.setProgressBar();
-        // }, 30);
-        // window.addEventListener('resize', handleResize);
-      },
+      // initEvents: function(){
+      //   // const template = this;
+      //   // const handleResize = this.debounce(function() {
+      //   //   this.images = globals.getImages();
+      //   //   console.log(this.images);
+      //
+      //     // te.setProgressBar();
+      //   // }, 30);
+      //   // window.addEventListener('resize', handleResize);
+      // },
       determineViewport: function(){
         return  this.viewport.cWidth < this.breakpoints.md ? 'mobile' : 'desktop';
       },
@@ -157,6 +161,7 @@
         // if(this.$props.project) {
           // if(this.determineViewport() == 'mobile') this.$refs.aside_curtain.classList.add('mobile');
         this.animateContent();
+        // this.initScrollMagic();
           // this.animateCurtain(this.animateContent);
         // }
       }
@@ -172,7 +177,7 @@
       // this.initScrollMagic();
       this.initPage();
       console.log('init work template');
-      console.log(this.$props.project);
+      // console.log(this.$props.project);
 
     }
   }
@@ -190,6 +195,10 @@
   .template_extra{
     color: rgba(66, 58, 47, .65);
     background: #fff;
+  }
+
+  .nav-padding{
+    padding: 2em 10% 0 3em;
   }
 
   .template_bg{
@@ -219,7 +228,7 @@
         position: relative;
         width: 100%;
         height: auto;
-        padding: 2em;
+        padding: 2em 3em;
         z-index: 2;
         transform: translateX(-100%);
 
@@ -234,7 +243,6 @@
         // }
         @include md{
           width: 50%;
-          height: 60vh;
           min-height: 100vh;
         }
 
@@ -250,8 +258,7 @@
     .template_extra{
       position: relative;
       z-index: 1;
-      div {
-        padding: 3% 3% 10% 3%;
+      & > div {
       }
     }
   }

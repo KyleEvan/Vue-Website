@@ -9,7 +9,7 @@
 	    <li>
 	      <a href="Home" @click.prevent="handleClick">
 	        work
-	      </router-link>
+	      </a>
 	    </li>
 	    <li>
 				<a href="About" @click.prevent="handleClick">
@@ -83,22 +83,30 @@
 				this.toggleMenu();
 		  },
 			animateMenu: function(){
+				let x;
 				const navItems = this.$refs.navItems;
         const staggerDelay = .1;
-				if(this.expanded){
-					TweenLite.to(navItems, this.expand_duration,
-					{
-						x: '-100%',
-						ease: Power3.easeOut
-					})
-				}
-				else{
-					TweenLite.to(navItems, this.expand_duration,
-					{
-						x: '0%',
-						ease: Power3.easeOut
-					})
-				}
+				this.expanded ? x = '-100%' : x = '0%';
+				TweenLite.to(navItems, this.expand_duration,
+				{
+					x: x,
+					ease: Power3.easeOut
+				});
+
+				// if(this.expanded){
+				// 	TweenLite.to(navItems, this.expand_duration,
+				// 	{
+				// 		x: '-100%',
+				// 		ease: Power3.easeOut
+				// 	})
+				// }
+				// else{
+				// 	TweenLite.to(navItems, this.expand_duration,
+				// 	{
+				// 		x: '0%',
+				// 		ease: Power3.easeOut
+				// 	})
+				// }
 			},
 		},
 		mounted(){
@@ -143,10 +151,10 @@
 				pointer-events: visible;
 
 				&:hover{
-					color: #F69296;
+					color: $hoverGreen;
 				}
 				&.router-link-exact-active{
-					color: #F69296;
+					color: $hoverGreen;
 				}
 	    }
 			.nav-menu{

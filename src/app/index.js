@@ -9,10 +9,13 @@ import App from './components/App.vue';
 import { globals } from './globals.js';
 import { images } from './images.js';
 
+import { TimelineLite } from 'gsap';
+import charming from 'charming';
+
 import fontawesome from '@fortawesome/fontawesome';
 import solid from '@fortawesome/fontawesome-free-solid';
-import faBars from '@fortawesome/fontawesome-free-solid/faBars'
-fontawesome.library.add(solid, faBars);
+// import faBars from '@fortawesome/fontawesome-free-solid/faBars'
+// fontawesome.library.add(solid, faBars);
 
 
 // Vue.config.productionTip = false
@@ -36,6 +39,33 @@ Vue.mixin({
     }
   },
   methods:{
+    // Log messages to console if app is in development mode
+    dev: function(message) {
+      if(this.devmode === true) {
+        console.log(message);
+      }
+    },
+    
+    initEventListeners: function(callback){
+      // let vm = this;
+      this.events.$on('app-loaded', () => {
+        callback();
+      });
+      this.events.$on('page-transitioned', () => {
+        if(this.devmode) console.log('page transitioned to' + this.$route.name);
+        callback();
+      });
+    },
+    charmWords: function(elements){
+      let charm = [];
+      for(var i = 0; i < elements.length; i++){
+        charming(elements[i], {classPrefix: 'letter'});
+        let letters = [].slice.call(elements[i].childNodes);
+        charm = charm.concat(letters);
+      }
+      return charm;
+    },
+
     bodyNoScroll: function(){
       this.body.style.top = `${-(window.scrollY || window.pageYOffset || document.body.scrollTop + (document.documentElement && document.documentElement.scrollTop || 0))}px`;
       this.body.style.position = 'fixed';
@@ -94,7 +124,7 @@ new Vue({
     // Used to determine current breakpoint,
     // returns breakpoint level in pixels
     // if no breakpoint is determined, lowest level breakpoint is returned
-    current_breakpoint(){
+    currentBreakpoint(){
       let breakpoint = null;
       let bp_Sizes = null;
       bp_Sizes = Object.keys(this.breakpoints);
@@ -113,10 +143,10 @@ new Vue({
     // Then the viewport has broken the current breakpoint threshold
     // setImages is called to update the images mixin with appropriately sized images
     checkBreakpoint(){
-      if(this.current_breakpoint() !== this.last_breakpoint){
+      if(this.currentBreakpoint() !== this.last_breakpoint){
         this.setImages();
       }
-      this.last_breakpoint = this.current_breakpoint();
+      this.last_breakpoint = this.currentBreakpoint();
     },
     handleResize: function(){
       this.debounce(this.checkBreakpoint(), 500, false);

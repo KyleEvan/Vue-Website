@@ -65,13 +65,25 @@ body {
   width: 100%;
   margin: 0;
   background: $mainBg;
-  color: #423A2F;
+  color: $mainColor;
   overflow-x: hidden;
   font-family: 'InterUI', sans-serif;
 
   #app{
+    .content{
+      width: 100%;
+      max-width: $break-large;
+      /* z-index: 0; */
 
-    .content, .footer_content{
+      &.left{
+        margin: 0 0 0 8%;
+      }
+      &.contained{
+        margin: 0 8%;
+      }
+
+    }
+    /* .content, .footer_content{
       max-width: $break-large;
       margin: 0 8%;
       z-index: 0;
@@ -79,7 +91,7 @@ body {
       @include xl{
         margin: 0 auto 0 auto;
       }
-    }
+    } */
 
     .transition_overlay{
       position: fixed;

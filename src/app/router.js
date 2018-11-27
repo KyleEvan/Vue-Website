@@ -46,7 +46,7 @@ export default new Router({
     //--------------------< Work/Projects >-----------------------
     {
       path: '/batman-poster',
-      name: 'Batman-Poster',
+      name: 'BatmanPoster',
       component: WorkBatman,
       props: true,
       meta: { title: 'Batman | Kyle P' }
@@ -73,7 +73,7 @@ export default new Router({
       meta: { title: 'Combo Smash | Kyle P' }
     },
 
-    //-----------------------< Other Pages >---------------------------
+    //-----------------------< Testing Pages >---------------------------
     {
       path: '/test',
       name: 'Test',
@@ -81,7 +81,7 @@ export default new Router({
       meta: { title: 'Testing | Kyle P' }
     },
 
-    //-----------------------< Test Pages >---------------------------
+    //-----------------------< Other Pages >---------------------------
     {
       path: '*',
       name: 'NotFound',
@@ -90,8 +90,8 @@ export default new Router({
     }
   ],
   scrollBehavior (to, from, savedPosition) {
-    // return new Promise((resolve, reject) => {
-      // resolve({ x: 0, y: 0 })
+    return new Promise((resolve, reject) => {
+      resolve({ x: 0, y: 0 });
       // console.log(to.meta.scroll);
       // if (to.meta.scroll) {
       //   console.log('scroll');
@@ -99,8 +99,8 @@ export default new Router({
       // } else {
       //   console.log('restore');
       //
-        return { x: 0, y: 0 };
+        // return { x: 0, y: 0 };
       // }
-    // })
+    })
   }
 })

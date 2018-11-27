@@ -25,6 +25,9 @@ import cycles_sm_jpg from '../images/cyclesTile@sm.jpg';
 import cycles_md_jpg from '../images/cyclesTile@md.jpg';
 import cycles_lg_jpg from '../images/cyclesTile@lg.jpg';
 
+import react_dashboard_lg_png from '../images/react-dashboard@lg.png';
+import react_view_today_png from '../images/react-view-today@lg.png';
+
 
 var images = [
   {
@@ -81,6 +84,18 @@ var images = [
     src: {
       xl: career_areas_xl
     }
+  },
+  {
+    name: 'react_dashboard',
+    src: {
+      lg: react_dashboard_lg_png
+    }
+  },
+  {
+    name: 'react_view_today',
+    src: {
+      lg: react_view_today_png
+    }
   }
 ]
 
@@ -89,6 +104,8 @@ exports.images = function(breakpoints, window){
   let imageSize;
   let imagesSized = {};
   let imagesSrc = [];
+  let imagesAll = {};
+
   let size = Object.keys(breakpoints);
   for(let i = 0; i < images.length; i++){
     let image = images[i];
@@ -101,9 +118,11 @@ exports.images = function(breakpoints, window){
         }
       }
     }
+    imagesAll[image.name] = image.src;
   }
   return {
     sized: imagesSized,
-    sources: imagesSrc
+    sources: imagesSrc,
+    all: imagesAll
   }
 }

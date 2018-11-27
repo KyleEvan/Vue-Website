@@ -20,24 +20,10 @@
       <!-- Synopsis -->
       <section>
         <p>
-          Final project for Elements of Graphic Design in Media class. The subject was ours to choose and reguired us incorporated principles of 2D graphic design we had learned during the semester. I chose to create a poster advertisement for a comic book store. I used Adobe Illustrator for the vector graphics, characters and text. Characters were based off of images from old batman comic books I recreated and arranged into a cohesive retro display. After I post processed the image in photoshop with filters and played with the coloring. Finally printed the high resolution images on 11x18 foamcore.
+          Final project for Elements of Graphic Design in Media class. The subject was ours to choose, the main objective was to incorporate some principles of 2D graphic design we had learned during the semester. I chose to create a poster advertisement for a comic book store. I used Adobe Illustrator for the vector graphics, characters and text. Characters were created from reference images of old batman comic book panels. After, I made small adjustments in Photoshop to the color and layered a texture filter to give it the old retro finishing. Finally, the high resolution composition was printed on 11x18 foamcore.
         </p>
       </section>
 
-      <!-- Skills -->
-      <!-- <section>
-        <p>
-          For the main sections of content pages our team used bootstrap 3 for layout of elements, Javascript for API calls, handling data, conditional rendering, etc..
-        </p>
-      </section> -->
-
-      <!-- Links -->
-      <!-- <section>
-        <ul>
-          <li><a :href="link_excellus_home">Excellus Careers Home</a></li>
-          <li><a :href="link_univera_home">Univera Careers Home</a></li>
-        </ul>
-      </section> -->
     </template>
 
     <!-- Main Content -->

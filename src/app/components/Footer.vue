@@ -2,16 +2,18 @@
   <footer>
     <div class="footer_content">
       <div>
-        <span>Made from scratch with Vue &#10084;</span>
-        <span>See the source on my <a href="#">github</a></span>
+        <span>Made with Vue &#10084;</span>
+        <span>See the project on my <a href="#">github</a></span>
       </div>
-      <div>
-        <span><span>༼ つ ͡◕ _ ͡◕ ༽つ</span> Thank you for visiting!</span>
-      </div>
+
       <div>
         <span>Made by</span>
         <span>Kyle Peterson</span>
         <span>Rochester, NY</span>
+      </div>
+
+      <div>
+        <span><span>༼ つ ͡◕ _ ͡◕ ༽つ</span> Thank you for visiting!</span>
       </div>
 
     </div>
@@ -25,9 +27,6 @@
         // message: false,
       }
     },
-    methods:{
-
-    }
   }
 </script>
 
@@ -37,9 +36,10 @@
   footer{
     position: relative;
     background: $offWhite;
-    padding: 4rem;
+    padding: 4em;
     // color: #84A98C;
     font-weight: 600;
+    font-size: .85em;
     z-index: 1;
     .footer_content{
       z-index: 0;
@@ -55,7 +55,7 @@
         }
         & > span{
           display: block;
-          opacity: .5;
+          opacity: .3;
           span{
             margin-right: .5em;
           }

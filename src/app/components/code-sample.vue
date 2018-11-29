@@ -4,29 +4,17 @@
 
     <div class="code-sample" ref="code_sample">
 
-        <a role="button" href=".html">HTML</a>
-        <a role="button" href=".css">CSS</a>
-        <a role="button" href=".js">JavaScript</a>
+        <a :id="`tab-${index}`" :aria-controls="`file-${index}-${fileType(file)}`" v-for="(file, index) in files" role="tab" class="tab-button" :href="`#file-${index}-${fileType(file)}`">{{fileType(file)}}</a>
         <div class="code-view">
-          <div v-for="(file, index) in files" class="file">
-            <div class="numbers">{{numbers()}}</div>
+          <div :id="`file-${index}-${fileType(file)}`" :aria-labelledby="`tab-${index}`" v-for="(file, index) in files"  :class="`file ${fileType(file)}`">
             <pre>
-              <code :class="" v-html="file[Object.keys(file)[0]]"></code>
+              <ol class="line-numbers">{{numbers()}}</ol>
+              <code v-html="file[fileType(file)]"></code>
             </pre>
-            <!-- <slot name="html"></slot> -->
-            <!-- <pre class="html" v-html="calendarApp_sample[0].html"></pre> -->
           </div>
+        </div>
 
-
-
-      <!-- <div class="file">
-        <slot name="css"></slot>
-      </div>
-      <div class="file">
-        <slot name="js"></slot>
-      </div> -->
     </div>
-  </div>
 
 
 
@@ -41,7 +29,7 @@
     props: ['samples'],
     data(){
       return {
-        // files: undefined,
+        activeTab: 0,
       }
     },
     computed: {
@@ -54,6 +42,9 @@
         console.log(this.files);
         console.log(this);
         return 1;
+      },
+      fileType: function(file){
+        return Object.keys(file)[0];
       }
     },
     created(){
@@ -69,17 +60,24 @@
 <style lang="scss">
   .code-sample{
 
-    .code-view{
-      width: 100%;
 
+    .code-view{
+      position: relative;
+      width: 100%;
+      height: 300px;
+      overflow: scroll;
       border: 1px solid rgba(66, 58, 47, 0.35);
       background: #F5F6F4;
 
     }
     .file{
-      max-height: 300px;
+      position: absolute;
+      top: 0;
+      left: 0;
       padding: 2em 2em 0 0;
-      overflow: scroll;
+      .tab-button{
+
+      }
       pre{
         margin: 0;
         color: rgba(66, 58, 47, 0.5);

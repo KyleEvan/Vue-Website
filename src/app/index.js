@@ -11,6 +11,7 @@ import { images } from './images.js';
 
 import { TimelineLite } from 'gsap';
 import charming from 'charming';
+import load from 'load-asset';
 
 import fontawesome from '@fortawesome/fontawesome';
 import solid from '@fortawesome/fontawesome-free-solid';
@@ -45,16 +46,19 @@ Vue.mixin({
         console.log(message);
       }
     },
-    
-    initEventListeners: function(callback){
-      // let vm = this;
-      this.events.$on('app-loaded', () => {
-        callback();
+    async loadImages(imagesArr, func, wait){
+      console.log(imagesArr);
+      load.any(imagesArr, (progress) => {
+        this.dev(`${(progress.count/progress.total)*100}%`);
+        // if(progress.count >= progress.total){
+        // }
+      }).then(assets => {
+        if(func){
+          console.log(assets);
+          func(assets);
+        }
       });
-      this.events.$on('page-transitioned', () => {
-        if(this.devmode) console.log('page transitioned to' + this.$route.name);
-        callback();
-      });
+      // return assets;
     },
     charmWords: function(elements){
       let charm = [];
@@ -65,7 +69,6 @@ Vue.mixin({
       }
       return charm;
     },
-
     bodyNoScroll: function(){
       this.body.style.top = `${-(window.scrollY || window.pageYOffset || document.body.scrollTop + (document.documentElement && document.documentElement.scrollTop || 0))}px`;
       this.body.style.position = 'fixed';

@@ -5,7 +5,7 @@
       <slot></slot>
     </div>
     <svg id="progressBar" :style="{backgroundColor: progressBar.background}" :width="progressBar.width" :height="progressBar.height" :viewBox="viewBox" >
-      <polygon ref="progressBar" :fill="progressColor" :points="points"></polygon>
+      <polygon class="progress" ref="progressBar" :fill="progressColor" :points="points"></polygon>
     </svg>
   </div>
 
@@ -19,6 +19,7 @@
     props: ['progressColor'],
     data(){
       return {
+        flckty: undefined,
         flickityInit: false,
         minHeight: {
           'min-height': '400px'
@@ -47,7 +48,8 @@
         this.viewBox = `0 0 ${width} ${height}`;
       },
       animateProgressBar(x){
-        TweenLite.to(this.$refs.progressBar, 0,
+        let progress = document.querySelector('.progress');
+        TweenLite.to(progress, 0,
         {
           x: x,
           ease: Power0.easeNone
@@ -66,8 +68,9 @@
         this.points = this.getPoints(container.left, container.top, container.right, container.bottom);
       },
       initFlickity: function(){
-        if(this.devmode) console.log('Init Flickity');
-        const flkty = new Flickity( this.$refs.carousel, {
+        this.dev('Init Flickity');
+
+        this.flkty = new Flickity( this.$refs.carousel, {
           imagesLoaded: true,
           draggable: true,
           freeScroll: true,
@@ -75,7 +78,7 @@
           setGallerySize: false
         });
         const carousel = this;
-        flkty.on( 'scroll', ( progress ) => {
+        this.flkty.on( 'scroll', ( progress ) => {
           progress = Math.max( 0, Math.min( 1, progress ) );
           carousel.updateProgress(progress);
         });
@@ -83,13 +86,12 @@
 
       handleResize: function(){
         const carousel = this;
-        const resize = this.debounce(function() {
-          carousel.configProgressBar();
-        }, 100);
-        resize();
+        this.debounce(carousel.configProgressBar(), 40);
+        // resize();
       }
     },
     mounted(){
+      window.addEventListener('resize', this.handleResize)
 
       this.initFlickity();
       let carousel = this;
@@ -98,10 +100,11 @@
       }, 200);
     },
     created(){
-      window.addEventListener('resize', this.handleResize)
     },
     beforeDestroy(){
-      window.removeEventListener('resize', this.handleResize)
+      console.log('before destory fired!!!*@*(@!(*@(*@S)))');
+      this.flkty.destroy();
+      window.removeEventListener('resize', this.handleResize);
     }
   }
 
@@ -134,6 +137,9 @@
         left: 50%;
         height: 100vh;
         width: 50%;
+      }
+      @include lg{
+        width: $break-large/2;
       }
 
       .flickity-viewport{

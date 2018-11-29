@@ -23,7 +23,7 @@ exports.colors = {
 
   // Work/Projects
   orange: '#FFD1BA',
-  
+
   'projectBlue': '#B2DBCC',
   'projectLightBlue': '#DCEEE7',
   'projectMediumBlue': '#CEE8DE',
@@ -32,6 +32,14 @@ exports.colors = {
   'projectLightOrange': '#F2D3AF',
   'projectMediumOrange': '#EABE94',
 
+  //
+  //
+  // Finalized collors
+  //
+  //
+  templateMainColor: '#B2DBCC',
+  templateMedColor: '#CEE8DE',
+  templateLightColor: '#DCEEE7',
 
 
   jet: '#616163',

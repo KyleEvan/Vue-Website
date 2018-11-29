@@ -43,6 +43,7 @@
 
 
 	export default{
+		props: ['events'],
 		data(){
       return {
 				tl: new TimelineLite(),
@@ -50,7 +51,8 @@
 				exitIcon: ['fas', 'times'],
         expanded: false,
 				expand_duration: 1,
-				close_duration: .75
+				close_duration: .85,
+				scroll: 0
       }
     },
 		computed:{
@@ -61,22 +63,27 @@
     methods:{
 			toggleMenu: function(){
 				this.expanded = !this.expanded;
+				if(this.expanded){
+					this.scroll = document.documentElement.scrollTop;
+					this.bodyNoScroll();
+				} else {
+					setTimeout(()=>{
+						this.bodyRestoreScroll();
+						document.documentElement.scrollTop = this.scroll;
+					}, this.close_duration);
+				}
 				this.animateMenu();
 			},
 			navigate: function(e){
         const href = e.target.getAttribute("href");
         if(href){
+					this.scroll = 0;
           this.$router.push({
             name: href
           });
-					if(this.expanded) this.toggleMenu();
         }
-				setTimeout(()=>{
-					this.bodyRestoreScroll();
-				}, this.close_duration)
       },
       handleClick: function(e){
-				this.bodyNoScroll();
 				this.navigate(e);
 			},
 			handleMenuClick: function(e){
@@ -92,28 +99,15 @@
 					x: x,
 					ease: Power3.easeOut
 				});
-
-				// if(this.expanded){
-				// 	TweenLite.to(navItems, this.expand_duration,
-				// 	{
-				// 		x: '-100%',
-				// 		ease: Power3.easeOut
-				// 	})
-				// }
-				// else{
-				// 	TweenLite.to(navItems, this.expand_duration,
-				// 	{
-				// 		x: '0%',
-				// 		ease: Power3.easeOut
-				// 	})
-				// }
 			},
-		},
-		mounted(){
-
 		},
 		components:{
 			FontAwesomeIcon
+		},
+		created(){
+			this.events.$on('page-transitioned', () => {
+				if(this.expanded) this.toggleMenu();
+			});
 		}
 	}
 </script>

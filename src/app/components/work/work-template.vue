@@ -4,17 +4,17 @@
 
 -->
 <template>
-  <div>
+  <div class="content">
     <div :style="{background: lightColor}" class="template_bg">
       <div class="template_main">
         <!-- main work info -->
         <!-- <div v-if="project" ref="aside_curtain" class="aside_curtain" style="#fff" ></div> -->
         <div class="template_aside" >
-          <div ref="carouselAside">
+          <div ref="carouselAside" class="inner-content">
             <h1 :style="{color: mainColor}" class="template_title">
               <slot name="title"></slot>
             </h1>
-            <slot name="description"></slot>
+            <slot name="asideContent"></slot>
           </div>
         </div>
         <!-- main work images -->
@@ -24,8 +24,8 @@
       </div>
 
       <!-- extra work info -->
-      <div v-if="extraSlotPassed" class="template_extra content">
-        <div class="nav-padding">
+      <div v-if="extraSlotPassed" class="template_extra inner-content">
+        <div>
           <slot name="extra"></slot>
         </div>
       </div>
@@ -58,10 +58,9 @@
       return{
         tl: new TimelineLite({paused: true}),
 
-        defaultLightColor: colors.templateDefaultLightc1,
-        defaultMediumColor: colors.templateDefaultMediumc1,
-        defaultMainColor: colors.templateDefaultMediumc2,
-        defaultDarkColor: colors.lightRed,
+        defaultLightColor: colors.templateLightColor,
+        defaultMediumColor: colors.templateMedColor,
+        defaultMainColor: colors.templateMainColor,
       }
     },
     components:{
@@ -71,15 +70,13 @@
       mainColor: function(){
         return this.$props.project ? this.$props.project.mainColor : this.defaultMainColor;
       },
-      lightColor: function(){
-        return this.$props.project ? this.$props.project.lightColor : this.defaultLightColor;
-      },
       mediumColor: function(){
         return this.$props.project ? this.$props.project.mediumColor : this.defaultMediumColor;
       },
-      darkColor: function(){
-        return this.$props.project ? this.$props.project.darkColor : this.defaultDarkColor;
+      lightColor: function(){
+        return this.$props.project ? this.$props.project.lightColor : this.defaultLightColor;
       },
+
       extraSlotPassed: function(){
         return !!this.$slots['extra'];
       }
@@ -128,22 +125,23 @@
       //   // }, 30);
       //   // window.addEventListener('resize', handleResize);
       // },
-      determineViewport: function(){
-        return  this.viewport.cWidth < this.breakpoints.md ? 'mobile' : 'desktop';
-      },
+      // determineViewport: function(){
+      //   return  this.viewport.cWidth < this.breakpoints.md ? 'mobile' : 'desktop';
+      // },
       animateContent: function(){
-        let dur = this.$props.project ? .6 : 0;
+        let dur = this.$props.project ? .8 : 0;
         let aside = document.querySelector('.template_aside');
-        TweenLite.to(aside, dur,
+        // TweenLite.to(aside, dur,
+        // {
+        //   x: '0',
+        //   ease: Power2.easeOut
+        // });
+        TweenLite.to(this.$refs.carouselAside, dur,
         {
-          x: '0',
-          ease: Power3.easeOut
-        });
-        TweenLite.to(this.$refs.carouselAside, dur*1.25,
-        {
-          x: '0',
+          x: 0,
+          y: 0,
           opacity: 1,
-          ease: Power2.easeInOut
+          ease: Power2.easeOut
         });
       },
       // animateCurtain: function(func){
@@ -191,18 +189,19 @@
 <style lang="scss" scoped>
   @import '../../../style/global.scss';
 
-  .template_aside,
-  .template_extra{
-    color: rgba(66, 58, 47, .65);
-    background: #fff;
+
+  section{
+    padding: 2em 0;
   }
 
-  .nav-padding{
-    padding: 2em 10% 0 3em;
+  .template_aside,
+  .template_extra{
+    color: $mainColorLight;
+    background: $mainBg;
   }
 
   .template_bg{
-    background: #F69296;
+    // background: #F69296;
 
     .template_main{
       display: flex;
@@ -228,13 +227,19 @@
         position: relative;
         width: 100%;
         height: auto;
-        padding: 2em 3em;
-        z-index: 2;
-        transform: translateX(-100%);
+        // padding: 2em 12% 2em 3em;
+        // @include md{
+        //   padding: 2em 3em;
+        // }
+        // z-index: 2;
+        // transform: translateX(-100%);
 
         &>div{
           opacity: 0;
-          transform: translateX(-10%);
+          transform: translateY(10%);
+          @include md {
+            transform: translateX(-20%);
+          }
         }
 
         // &>*{
@@ -247,19 +252,23 @@
         }
 
         .template_title{
-          font-size: 1.8em;
+          font-size: 2em;
+          padding-top: 2em;
+          margin: 0;
         }
 
-        section{
-          margin: 2em 0;
-        }
+
       }
     }
     .template_extra{
       position: relative;
-      z-index: 1;
-      & > div {
-      }
+      // padding: 2em 12% 2em 3em;
+      // @include md{
+      //   padding: 2em 0;
+      // }
+      // @include lg{
+      //
+      // }
     }
   }
 

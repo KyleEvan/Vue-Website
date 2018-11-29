@@ -1,7 +1,7 @@
 var globals = {
   breakpoints:{
-    sm: 200,
-    md: 800,
+    sm: 0,
+    md: 1000,
     lg: 1300,
     xl: 1600
   }

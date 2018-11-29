@@ -8,7 +8,6 @@ var projects = [
     date: 2017,
     href: 'Cycles',
     image:{
-      newHeight: .3,
       offsetY: '0%',
       src: 'react_view_today'
     },
@@ -23,7 +22,6 @@ var projects = [
     date: 2014,
     href: 'ComboSmash',
     image:{
-      newHeight: .3,
       offsetY: '0%',
       src: 'comboSmash_preview'
     },
@@ -37,7 +35,6 @@ var projects = [
     date: 2013,
     href: 'Cycles',
     image:{
-      newHeight: .3,
       offsetY: '0%',
       src: 'cycles'
     },
@@ -52,7 +49,6 @@ var projects = [
     date: 2013,
     href: 'BatmanPoster',
     image:{
-      newHeight: .3,
       offsetY: '0%',
       src: 'batman'
     },

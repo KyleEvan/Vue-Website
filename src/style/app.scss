@@ -71,15 +71,37 @@ body {
 
   #app{
     .content{
-      width: 100%;
-      max-width: $break-large;
-      /* z-index: 0; */
 
-      &.left{
+      min-width: 300px;
+      max-width: $break-large;
+      margin: 0 auto;
+
+
+      /* &.left{
         margin: 0 0 0 8%;
       }
       &.contained{
         margin: 0 8%;
+      } */
+      /* @include xl{
+        margin: 0 auto;
+      } */
+      &.inner-content,
+      .inner-content{
+        padding: 0 12% 0 2em;
+
+        @include md{
+          padding: 0 12% 0 3em;
+        }
+        @include lg{
+          padding: 0 3em;
+        }
+        /* &.top{
+          padding-top: 3em;
+        }
+        @include md{
+          padding: 3em;
+        } */
       }
 
     }
@@ -93,14 +115,7 @@ body {
       }
     } */
 
-    .transition_overlay{
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 1;
-    }
+
 
     /* global classes */
     .showDesktop{
@@ -112,7 +127,14 @@ body {
       }
     }
   }
-
+  .transition-overlay{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+  }
 
 
 

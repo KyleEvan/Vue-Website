@@ -3,8 +3,8 @@
 
 
 
-    <div v-show="active" class="home_title" ref="home_title">
-      <ul>
+    <div v-show="active" class="home-title" ref="home_title">
+      <ul class="">
         <li>Kyle</li>
         <li>Peterson</li>
         <li>New Media</li>
@@ -82,7 +82,8 @@
         }
       },
       animateTitle: function(name){
-        const title = document.querySelector('.home_title');
+        // const title = document.querySelector('.home_title');
+        const title = this.el;
         const subhead = Array.prototype.slice.call(title.querySelectorAll('li:nth-child(n+3)'));
         this.animateIn(name, .052, this.init_duration, this.init_delay);
         this.animateIn(subhead, .1, this.init_duration+.2, this.init_delay, this.events, this.eventName);
@@ -90,22 +91,27 @@
       initTitle: function(){
         if(this.active) {
           if(!this.init){
-          this.charmedName = this.charmWords(this.getName());
-          this.animateTitle(this.charmedName);
-          this.init = true;
-          console.log(this.init)
-          }
-          else {
-             // console.log(this.el.clientHeight);
-             // document.documentElement.scrollTop = this.el.clientHeight;
+            this.animateTitle(this.charmedName);
+            this.init = true;
           }
         }
-      }
+      },
+      initEventListeners: function(callback){
+        this.events.$on('app-loaded', () => {
+          callback();
+        });
+        this.events.$on('page-transitioned', () => {
+          if(this.devmode) console.log('page transitioned to' + this.$route.name);
+          callback();
+        });
+      },
     },
     created(){
       this.initEventListeners(this.initTitle);
     },
     mounted(){
+      this.charmedName = this.charmWords(this.getName());
+
       // if(this.active) this.charmedName = this.charmWords(this.getName());
       // this.initTitle();
     },
@@ -116,11 +122,11 @@
 <style lang="scss">
   @import '../../style/global.scss';
 
-  .home_title{
+  .home-title{
     display: flex;
     align-items: center;
     width: 100%;
-    height: 100vh;
+    height: 90vh;
     position: relative;
     user-select: none;
 
@@ -140,8 +146,8 @@
             line-height: 8vw;
           }
           @include lg{
-            font-size: 5em;
-            line-height: 6rem;
+            font-size: 4em;
+            line-height: 1.4em;
           }
           span{
             display: inline-block;
@@ -160,7 +166,7 @@
           transform: translateY(-60%);
 
           @include md {
-            line-height: 3vw;
+            line-height: 2em;
           }
         }
 

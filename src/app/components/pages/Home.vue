@@ -7,8 +7,9 @@
 
 
       <div v-for="(works, section) in sections" :id="section.toLowerCase()">
+        <div class="content inner-content">
         <h2>{{section}}</h2>
-        <div class="content left works">
+        <div class="works">
           <div v-for="work in works" class="project-container">
             <a
               :href="work.href"
@@ -17,7 +18,7 @@
               <div class="bg" :style="{background: work.lightColor}"></div>
 
               <div class="image">
-                <img :style="{transform: `translateY(${work.image.offsetY})`}" :src="images.sized[work.image.src]" />
+                <img :data-src="work.image.src" class="img-placeholder"/>
               </div>
 
             </a>
@@ -27,12 +28,9 @@
                 <span v-for="tag in work.tags" :class="tag.toLowerCase()">{{tag}}</span>
               </div>
               <div v-if="work.date" class="date">{{work.date}}</div>
-              <!-- <p>
-                {{trimCaption(project.caption)}}
-                <span>...Read more »</span>
-              </p> -->
             </div>
           </div>
+        </div>
         </div>
       </div>
 
@@ -44,6 +42,7 @@
 </template>
 
 <script>
+  import {colors} from '../../colors.js';
   // Project Data
   import {work} from '../../work.js';
   import {projects} from '../../projects.js';
@@ -64,7 +63,10 @@
       return{
         sections: {Work: work, Projects: projects},
         projects: work.concat(projects),
-        projects_el_arr: [],
+
+        pageImages: [],
+        projectsElArr: [],
+
         project: undefined,
 
 
@@ -74,25 +76,42 @@
 
 
 
-        tl: new TimelineLite(),
+        // tl: new TimelineLite(),
 
         imageMaxHeight: .7, // 70% of vh
 
-        carousel_mobile: {
-          height: .5,
-          minHeight: 400,
-          width: 1,
-          offsetX: 0,
-          offsetY: 0
-        },
-        carousel_desktop: {
-          height: 1,
-          minHeight: 0,
-          width: .5,
-          offsetX: .5,
-          offsetY: 0
+        carouselTransitionConfig: {
+          mobile: {
+            width: 1,
+            height: .5,
+            minHeight: 400,
+            width: 1,
+            offsetX: 0,
+            offsetY: 0,
+            imageHeight: .3,
+            iamgeMaxHeight: .7
+          },
+          tablet: {
+            width: .5,
+            height: 1,
+            minHeight: 0,
+            offsetX: .5,
+            offsetY: 0,
+            imageHeight: .3,
+            iamgeMaxHeight: .7
+          },
+          desktop: {
+            width: .5,
+            height: 1,
+            minHeight: 0,
+            offsetX: .5,
+            offsetY: 0,
+            imageHeight: .3,
+            iamgeMaxHeight: .7
+          },
         },
 
+        transitionBgColor: colors.mainBg,
         transforms: undefined,
         transition:{
           bgPoints: '0 0 0 0 0 0 0 0',
@@ -102,22 +121,32 @@
         // transitionedProject: undefined
       }
     },
-    components: {
+    computed: {
+
       // 'home-title': home_title
     },
     methods:{
       //---------------< Helper Functions >---------------
-      trimCaption: function(caption){
-        let word_limit = 16;
-        caption = caption.split(" ").splice(0, word_limit).join(" ");
-        return caption;
+      // trimCaption: function(caption){
+      //   let word_limit = 16;
+      //   caption = caption.split(" ").splice(0, word_limit).join(" ");
+      //   return caption;
+      // },
+      smallImage: function(src){
+        var output;
+        if(src){
+          src['md'] ? output = src['md'] : output = 'no sm image';
+        } else {
+          output = 'no src image'
+        }
+        return output;
       },
 
 
       navigate: function(e, project, background){
         const href = e.target.getAttribute("href");
         if(href){
-          // Cleanup transitionLayer
+          // Cleanup transitionContainer
           background.parentNode.outerHTML = "";
           background = null;
           this.$router.push({
@@ -129,13 +158,17 @@
       getPoints: function(l, t, r, b){
         return `${l} ${t} ${r} ${t} ${r} ${b} ${l} ${b}`;
       },
+      // Helper for calcProjectTransforms
       getImageScale: function(project, container){
-        let imageHeight = project.image.clientHeight;
-        let imageWidth = project.image.clientWidth;
-        let height = window.innerWidth*project.data.image.newHeight;
-        let maxHeight = window.innerHeight*this.imageMaxHeight;
-        let newHeight = height > maxHeight? maxHeight : height;
-        let scale = newHeight/imageHeight;
+        let imageH, maxHeight, newHeight, scale, finalImageHeight;
+        imageH = project.image.clientHeight;
+        // max-height is defined by vh units
+        maxHeight = window.innerHeight*project.data.config.imageMaxHeight;
+        // height is defined by vw units
+        newHeight = window.innerWidth*project.data.config.imageHeight;
+        // if new height of project is greater than the allowed max
+        finalImageHeight = (newHeight > maxHeight ? maxHeight : newHeight);
+        scale = finalImageHeight/imageH;
         return scale;
       },
       animateOut: function(targets){
@@ -153,12 +186,11 @@
         hide_els = [];
         current_info = target.querySelector('.info');
         hide_els.push(current_info);
-        filtered_projects = this.projects_el_arr.filter( (el) => {
+        filtered_projects = this.projectsElArr.filter( (el) => {
           return (el !== target);
         });
         hide_els = hide_els.concat(filtered_projects);
         this.animateOut(hide_els);
-
       },
       animateCenterProject: function(target){
         let img = target.querySelector('img');
@@ -167,13 +199,48 @@
           ease: Power2.easeInOut,
         });
       },
-      getViewportData: function(){
-        let carousel, width, height;
-        carousel = this.carousel_mobile;
-        if(this.viewport.cWidth >= this.breakpoints.md) carousel = this.carousel_desktop;
-        width = carousel.width*this.viewport.cWidth;
-        height = (carousel.height*this.viewport.cHeight) >= carousel.minHeight ? (carousel.height*this.viewport.cHeight) : carousel.minHeight;
+
+
+      // 1.)  Get the selected project,
+      //      create and return object containing:
+      //      - project element,
+      //      - project image element,
+      //      - project.js data object
+      getProjectData: function(target){
+        for (let i = this.projectsElArr.length-1; i >= 0; i--){
+          let project = this.projectsElArr[i];
+          if(project === target){
+            return {
+              el: project,
+              image: project.querySelector('img'),
+              data: this.projects[i]
+            }
+          }
+        }
+      },
+
+      // 2.)  Get the configuration for the project transition
+      //      determined by viewport size and future layout of carousel in project page
+      //      return object containing values (width, height, center, offset, ...)
+      //      these values define the layout config/position of the project at the end transition
+      getConfig: function(){
+        const config = this.carouselTransitionConfig;
+        let carousel, width, height, containerW, containerH;
+        containerW = this.viewport.cWidth;
+        containerH = this.viewport.cHeight;
+        // depending on viewport set config
+        carousel = config.mobile;
+        if(this.viewport.width >= this.breakpoints.md){
+          carousel = config.tablet;
+        }
+        else if(this.viewport.width >= this.breakpoints.lg) {
+          containerW = this.breakpoints.lg;
+          carousel = config.desktop;
+        }
+        width = carousel.width*containerW;
+        height = (carousel.height*containerH) >= carousel.minHeight ? (carousel.height*containerH) : carousel.minHeight;
         return {
+          config: carousel,
           width: width,
           height: height,
           offset: {
@@ -184,85 +251,69 @@
             x: (width/2) + (carousel.offsetX*this.viewport.cWidth),
             y: (height/2) + (carousel.offsetY*this.viewport.cHeight)
           },
-          points: this.getPoints(carousel.offsetX*this.viewport.cWidth, carousel.offsetY*this.viewport.cHeight, this.viewport.cWidth, height)
+          points: this.getPoints(carousel.offsetX*containerW, carousel.offsetY*containerH, this.viewport.cWidth, height)
         };
       },
-      getProjectData: function(target){
-        // const projects = document.querySelectorAll('.project');
-        for (let i = this.projects_el_arr.length-1; i >= 0; i--){
-          let project = this.projects_el_arr[i];
 
-          if(project == target){
-
-            return {
-              el: project,
-              image: project.querySelector('img'),
-              data: this.projects[i]
-            }
-          }
-        }
-      },
+      // 3.)  Calculate transformation values for project
+      //      using the current project bounding rect properties
+      //      and new layout config properties.
+      //      return values as object
       calcProjectTransforms: function(project){
-        let container = project.el.getBoundingClientRect();
-        let container_center = {
-          x: container.left + container.width/2,
-          y: container.top + container.height/2
+        let projectEl = project.el.getBoundingClientRect();
+        let projectCenter = {
+          x: projectEl.left + projectEl.width/2,
+          y: projectEl.top + projectEl.height/2
         };
-        let new_center = project.data.center;
+        let newProjectCenter = project.data.center;
         return {
-          scale: this.getImageScale(project, container),
-          translateX: new_center.x - container_center.x,
-          translateY: new_center.y - container_center.y,
+          scale: this.getImageScale(project, projectEl),
+          translateX: newProjectCenter.x - projectCenter.x,
+          translateY: newProjectCenter.y - projectCenter.y,
           newPoints: project.data.points
         };
       },
-      createTransitionLayer: function(){
+
+
+
+      createTransitionContainer: function(){
         let transition_el = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-        let classname = 'transition_overlay';
+        let classname = 'transition-overlay';
         transition_el.setAttribute('viewBox', `${0} ${0} ${this.viewport.cWidth} ${this.viewport.cHeight}`);
         transition_el.classList.add(classname);
         this.app.appendChild(transition_el);
         return transition_el;
       },
-      createProjectBg: function(project, transitionLayer){
-        let container = project.el.getBoundingClientRect();
-        let color_bg = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
-        // let overlay_bg = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
-        let points = this.getPoints(container.left, container.top, container.right, container.bottom);
-
-        color_bg.setAttribute('fill', project.data.lightColor);
-        // overlay_bg.setAttribute('fill', '#fff');
-        color_bg.setAttribute('points', points);
-        // overlay_bg.setAttribute('points', points);
-
-        transitionLayer.appendChild(color_bg);
-        // transitionLayer.appendChild(overlay_bg);
-        this.app.appendChild(transitionLayer);
-
-        // Hide original background
-        project.el.style.background = 'transparent';
-        return color_bg;
-      },
-      createTransitionBgObj: function(project, transitionLayer){
+      createTransitionBg: function(project, transitionContainer){
         let transitionBg = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
-        // let w = this.viewport.width; // viewport & height
-        // let h = this.viewport.cHeight;
         transitionBg.setAttribute('points', this.getPoints(-this.viewport.width, 0, 0, this.viewport.cHeight));
-        // transitionBg.setAttribute('points', this.getPoints(this.viewport.width, 0, this.viewport.width*2, this.viewport.cHeight));
-        // transitionBg.setAttribute('fill', project.data.mainColor);
-        transitionBg.setAttribute('fill', project.data.lightColor);
-        // transitionBg.setAttribute('fill', '#fff');
-        transitionLayer.appendChild(transitionBg);
+        transitionBg.setAttribute('fill', this.transitionBgColor);
+        transitionContainer.appendChild(transitionBg);
         let transitionBgObj = {
           el: transitionBg,
           width: this.viewport.width
         }
         return transitionBgObj;
       },
+      createProjectBg: function(project, transitionContainer){
+        let container = project.el.getBoundingClientRect();
+        let color_bg = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+        let points = this.getPoints(container.left, container.top, container.right, container.bottom);
+
+        color_bg.setAttribute('fill', project.data.lightColor);
+        color_bg.setAttribute('points', points);
+
+        transitionContainer.appendChild(color_bg);
+        this.app.appendChild(transitionContainer);
+
+        // Hide original background
+        // project.el.style.background = 'transparent';
+        return color_bg;
+      },
+
       animateTransition: function(e, project, transforms){
-        console.log(transforms);
-        const transitionLayer = this.createTransitionLayer();
-        const transitionBgObj = this.createTransitionBgObj(project, transitionLayer);
+        const transitionContainer = this.createTransitionContainer();
+        const transitionBgObj = this.createTransitionBg(project, transitionContainer);
         const imageBgAnimDuration = 400;
         const projectAnimDuration = .7;
         const transitionBgAnimDur = 1.3;
@@ -276,9 +327,16 @@
         this.animateCenterProject(e.target);
 
 
+
+        // Translate Project
+        let background = project.el.querySelector('.bg');
+
         // Animate Image Background
         const morphImageBg = () => {
-          const project_bg = this.createProjectBg(project, transitionLayer);
+          const project_bg = this.createProjectBg(project, transitionContainer);
+          TweenLite.set(background, {
+            opacity: 0,
+          });
           // console.log(project_bg);
           anime({
             targets: project_bg,
@@ -297,12 +355,15 @@
           });
         };
 
-        // Translate Project
-        let background = project.el.querySelector('.bg');
+
         // increase z index val to bring project to top layer
         TweenLite.set(project.el, {
           zIndex: 3,
-          borderColor: 'transparent',
+          // borderColor: 'transparent',
+        });
+        // fade neutral background to colored bg
+        TweenLite.set(background, {
+          opacity: 1,
         });
         TweenLite.to(project.el, this.animate_projectTransition, {
           x: transforms.translateX,
@@ -318,10 +379,10 @@
           }
         });
         // fade neutral background to colored bg
-        TweenLite.to(background, this.animate_projectTransition, {
-          opacity: 0,
-          ease: Power3.easeInOut
-        });
+        // TweenLite.to(background, this.animate_projectTransition, {
+        //   opacity: 0,
+        //   ease: Power3.easeOut
+        // });
         // transition Bg, cover screen swipe left to right
         TweenLite.to(transitionBgObj.el, this.animate_projectTransition, {
           x: transitionBgObj.width,
@@ -333,14 +394,15 @@
         if(!this.transitioning){
           // Starting transition, transitioning = true
           this.transitioning = true;
-          this.$route.meta.scroll = document.documentElement.scrollTop;
+
+          // this.$route.meta.scroll = document.documentElement.scrollTop;
           // Disable scroll
           this.bodyNoScroll();
           // Get project data
-          console.log(e.target);
           this.project = this.getProjectData(e.target);
-          this.project.data = Object.assign(this.getViewportData(), this.project.data);
-          // console.log(this.project);
+
+
+          this.project.data = Object.assign(this.getConfig(), this.project.data);
           this.transforms = this.calcProjectTransforms(this.project);
           this.animateTransition(e, this.project, this.transforms);
         }
@@ -348,32 +410,58 @@
           return;
         }
       },
-      initScrollMagic: function(){
-        // ScrollMagic Scene
-        const controller = new ScrollMagic.Controller();
-        const projectsContainer = document.querySelector('.projects');
-        let offset = .065;
-        let appearDur = .8;
-          for(let i = 0; i < this.projects_el_arr.length; i++){
-            let project = this.projects_el_arr[i];
-            let image = project.querySelector('.image > img');
-            let info = project.querySelector('.info');
-            let projectScene = new ScrollMagic.Scene({
-              triggerElement: projectsContainer,
-              triggerHook: .6,
-              reverse: false
-            })
-            .on('enter', () => {
-              this.tl.to(project, appearDur+=offset,
-              {
-                y: '0',
-                opacity: 1,
-                ease: Power3.easeOut
-              }, 0)
-            })
-            .addTo(controller);
+
+
+      // Gives placeholder imgs a src
+      loadPageImages: function(){
+        let size = 'sm';
+        let imgNames = [];
+        let placeholders = [].slice.call(document.querySelectorAll('.img-placeholder'));
+        for(var i = 0; i < placeholders.length; i++){
+          imgNames[i] = placeholders[i].getAttribute('data-src');
+          this.pageImages[i] = this.$props.images.all[imgNames[i]][size];
+          if(i >= placeholders.length-1){
+            let replacePlaceholders = function(images){
+              for(var j = 0; j < images.length; j++){
+                let img = placeholders[j];
+                img.src = images[j].src;
+                img.removeAttribute('class');
+                img.removeAttribute('data-src');
+              }
+            }
+            this.loadImages(this.pageImages, replacePlaceholders);
           }
+        }
       }
+
+      // Will add later if I have time
+
+      // initScrollMagic: function(){
+      //   // ScrollMagic Scene
+      //   const controller = new ScrollMagic.Controller();
+      //   const projectsContainer = document.querySelector('.projects');
+      //   let offset = .065;
+      //   let appearDur = .8;
+      //     for(let i = 0; i < this.projectsElArr.length; i++){
+      //       let project = this.projectsElArr[i];
+      //       let image = project.querySelector('.image > img');
+      //       let info = project.querySelector('.info');
+      //       let projectScene = new ScrollMagic.Scene({
+      //         triggerElement: projectsContainer,
+      //         triggerHook: .6,
+      //         reverse: false
+      //       })
+      //       .on('enter', () => {
+      //         this.tl.to(project, appearDur+=offset,
+      //         {
+      //           y: '0',
+      //           opacity: 1,
+      //           ease: Power3.easeOut
+      //         }, 0)
+      //       })
+      //       .addTo(controller);
+      //     }
+      // }
     },
 
     created(){
@@ -383,9 +471,10 @@
       });
     },
     mounted(){
+      this.loadPageImages();
+      this.projectsElArr = Array.from(document.querySelectorAll('.project'));
 
-      this.projects_el_arr = Array.from(document.querySelectorAll('.project'));
-      this.initScrollMagic();
+      // this.initScrollMagic();
 
 
     },
@@ -401,9 +490,9 @@
 
 .main{
   // padding-top: 120vh;
-  .content{
-    margin: 0 10% 0% 16%;
-  }
+  // .content{
+  //   margin: 0 10% 0% 16%;
+  // }
   .container{
 
     div{
@@ -420,8 +509,8 @@
 
   h2{
     display: inline-block;
-    margin-left: 5%;
     padding: 3% 0;
+    margin: 3em 0 1em 0;
     font-size: 2.65em;
     line-height: 1;
     // color: $mainColor;
@@ -437,9 +526,18 @@
     justify-content: flex-start;
 
     .project-container {
+      display: flex;
+      flex-flow: column;
+      flex-direction: column-reverse;
+      border: 1px solid $offWhite;
+
+
       margin-bottom: 2.75em;
       margin-right: 1.25em;
       @include sm {
+        flex-flow: row;
+        flex-direction: row-reverse;
+
         margin-right: 10%;
         // &:nth-child(2n + 2){
         //   margin-right: 0;
@@ -456,7 +554,7 @@
     .project{
       position: relative;
       display: flex;
-      flex-flow: column;
+      // flex-flow: column;
       // width: 100%;
       // height: 100%;
       width: 74vw;
@@ -474,15 +572,15 @@
         height: 20vw;
       }
       @include lg {
-        width: 22.33%;
-        height: 270px;
+        width: 10em;
+        height: 10em;
       }
       // border-radius: 3px;
       overflow: hidden;
       // border: 1px solid $offWhite;
       text-decoration: none;
-      opacity: 0;
-      transform: translateY(15%);
+      // opacity: 0;
+      // transform: translateY(15%);
       &>div{
         pointer-events: none;
       }
@@ -516,7 +614,8 @@
         align-items: center;
         justify-content: center;
 
-        img{
+        &>img,
+        &.div{
           // transform: translateY(-20%);
           position: relative;
           width: auto;
@@ -531,14 +630,20 @@
     }
     .info{
       display: flex;
-      justify-content: flex-start;
+      justify-content: center;
       align-items: flex-start;
       flex-flow: column;
       // padding: 1em;
-      border-top: 1px solid $offWhite;
+      color: $mainColorLight;
+      border-bottom: 1px solid $offWhite;
+      padding: 1em;
+      @include sm{
+        border-right: 1px solid $offWhite;
+        border-bottom: none;
+      }
       // border-top: none;
       // margin-top: 70%;
-      z-index: 1;
+      // z-index: 1;
       // color: $mainColor;
       // background: #fff;
 

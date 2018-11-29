@@ -1,8 +1,8 @@
 <template>
   <div id="app">
 
-    <nav-content/>
-    <home-title class="content left" :events="eventBus"/>
+    <nav-content :events="eventBus"/>
+    <home-title class="content inner-content" :events="eventBus"/>
 
     <transition mode="in-out"
       v-on:before-enter="beforeEnter"
@@ -21,7 +21,7 @@
       </router-view>
     </transition>
 
-    <scene ref="scene" :events="eventBus" />
+    <!-- <scene ref="scene" :events="eventBus" /> -->
 
     <footer-content/>
 
@@ -36,13 +36,13 @@
 
   // Libraries
   import { TimelineLite } from "gsap";
-  import load from 'load-asset';
+  // import load from 'load-asset';
 
   // Components
   import nav from './nav.vue';
   import footer from './footer.vue';
-  import scene from './scene.vue';
-  import home_title from './home-title.vue';
+  // import scene from './scene.vue';
+  import homeTitle from './home-title.vue';
 
 
   export default {
@@ -60,8 +60,8 @@
     components:{
       'nav-content': nav,
       'footer-content': footer,
-      'home-title': home_title,
-      scene: scene
+      'home-title': homeTitle,
+      // scene: scene
     },
     // computed: {
     //   scene(){
@@ -76,7 +76,7 @@
         this.body.removeChild(this.loading_el);
       },
       animateOutLoader: function(callback){
-        const spinner = this.loading_el.querySelector('.spinner');
+        const spinner = document.querySelector('.spinner');
         TweenLite.to(spinner, .6, {
           scale: .25,
           opacity: 0,
@@ -118,19 +118,20 @@
         this.animateOutLoader(this.initApp);
 
       },
-      async loadImages(images){
-        const app = this;
-        const wait = 1000;
-        console.log(images);
-        const assets = await load.any(images, (progress) => {
-          if(progress.count >= progress.total){
-            setTimeout( function(){
-              console.log('All images loaded');
-              app.doneLoading();
-            }, wait)
-          }
-        });
-      },
+      // async loadImages(images){
+      //   const app = this;
+      //   const wait = 1000;
+      //   console.log(images);
+      //   const assets = await load.any(images, (progress) => {
+      //     if(progress.count >= progress.total){
+      //       setTimeout( function(){
+      //         console.log('All images loaded');
+      //         app.doneLoading();
+      //       }, wait)
+      //     }
+      //   });
+      //   console.log(assets);
+      // },
 
       preInitApp: function(){
         this.dev('getting things reading in App.vue ...');
@@ -145,8 +146,8 @@
 
         // Disable Scroll while app loads assets
         this.bodyNoScroll();
-        // being loading sized images
-        this.loadImages(this.$props.images.sources);
+        // loading sized images
+        this.loadImages(this.$props.images.sources, this.doneLoading);
       },
       initApp: function(){
         // Emits custom event handled by page component in router view
@@ -155,11 +156,11 @@
         this.bodyRestoreScroll();
       },
       beforeEnter: function(el){
+        this.bodyRestoreScroll();
 
       },
       enter: function(el, done){
           // console.log(el);
-          this.bodyRestoreScroll();
           // if(this.$route.meta.scroll){
           //   let app = this;
           //   setTimeout(function(){
@@ -177,7 +178,7 @@
 
       },
       beforeLeave: function(el){
-
+        console.log('this should happen before anything pretty mch');
       },
       leave: function(el, done){
           done();

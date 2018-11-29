@@ -2,7 +2,10 @@ import batman_sm_jpg from '../images/batman@sm.jpg';
 import batman_md_jpg from '../images/batman@md.jpg';
 import batman_lg_jpg from '../images/batman@lg.jpg';
 
-import career_areas_xl from '../images/career-areas-mobile.png';
+import career_areas_sm_png from '../images/career-areas-mobile@sm.png';
+import career_areas_md_png from '../images/career-areas-mobile@md.png';
+import career_areas_lg_png from '../images/career-areas-mobile@lg.png';
+import career_areas_xl_png from '../images/career-areas-mobile@xl.png';
 
 import careers_screens_sm_png from '../images/careers_screens@sm.png';
 import careers_screens_md_png from '../images/careers_screens@md.png';
@@ -26,7 +29,10 @@ import cycles_md_jpg from '../images/cyclesTile@md.jpg';
 import cycles_lg_jpg from '../images/cyclesTile@lg.jpg';
 
 import react_dashboard_lg_png from '../images/react-dashboard@lg.png';
-import react_view_today_png from '../images/react-view-today@lg.png';
+
+import react_view_today_sm_png from '../images/react-view-today@sm.png';
+import react_view_today_md_png from '../images/react-view-today@md.png';
+import react_view_today_lg_png from '../images/react-view-today@lg.png';
 
 
 var images = [
@@ -36,6 +42,15 @@ var images = [
       sm: batman_sm_jpg,
       md: batman_md_jpg,
       lg: batman_lg_jpg,
+    }
+  },
+  {
+    name: 'career_areas',
+    src: {
+      sm: career_areas_sm_png,
+      md: career_areas_md_png,
+      lg: career_areas_lg_png,
+      xl: career_areas_xl_png
     }
   },
   {
@@ -79,12 +94,7 @@ var images = [
       lg: comboSmash_preview_lg_jpg,
     }
   },
-  {
-    name: 'career_areas',
-    src: {
-      xl: career_areas_xl
-    }
-  },
+
   {
     name: 'react_dashboard',
     src: {
@@ -94,7 +104,9 @@ var images = [
   {
     name: 'react_view_today',
     src: {
-      lg: react_view_today_png
+      sm: react_view_today_sm_png,
+      md: react_view_today_md_png,
+      lg: react_view_today_lg_png
     }
   }
 ]

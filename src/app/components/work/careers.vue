@@ -18,14 +18,9 @@
         <p>
           I worked on migrating ui components and content, adding responsive functionality and accessibility according to modern WAI-ARIA specification standards. Bootstrap 3 was adopted as part of our responsive theme to handle layout and ui for the updated sections.
         </p>
-        <img :style="{background: lightColor}" role="presentation" :src="careerAreas_image" alt="multiple mobile screens: redesigned excellus pages" class="image-a"/>
       </section>
-      <section>
-        <h2>Careers</h2>
-        <p>
-          As part of the member redesign, the Human Resources department was looking to update the careers section of both websites. I worked with a small team as only developer alognside a content creator and a ux designer. I created all the ui components and styling for the content of these sections.
-        </p>
-      </section>
+
+
     </template>
 
     <!-- Carousel aside & slides -->
@@ -37,6 +32,17 @@
 
     <!-- Extra lower content -->
     <template slot="extra">
+
+      <section class="content-image">
+        <div>
+          <h2>Careers</h2>
+          <p>
+            As part of the member redesign, the Human Resources department was looking to update the careers section of both websites. I worked with a small team as only developer alognside a content creator and a ux designer. I created all the ui components and styling for the content of these sections.
+          </p>
+        </div>
+        <img :style="{background: lightColor}" role="presentation" :src="careerAreas_image"  alt="multiple mobile screens: redesigned excellus pages" class="image-a show-desktop"/>
+
+      </section>
       <section>
         <h2>Code Samples</h2>
         <p>Custom components and other misc samples from my work at Excellus.</p>
@@ -137,24 +143,34 @@ import {colors} from '../../colors.js';
 
 
 <style lang="scss">
-  // @import '../../style/global.scss';
+  @import '../../../style/global.scss';
   .member-redesign{
     .image-a{
-      width: 100%;
+      width: 40%;
     }
-  }
-  .carousel-cell{
-    &:nth-child(1){
-      img{
-        width: auto;
-        height: 30vw;
-        max-height: 70vh;
+    .content-image{
+      display: flex;
+      align-items: center;
+      &>div{
+        @include lg{
+          padding: $lg-padding;
+        }
       }
     }
-    img{
-      height: 40vh;
-    }
   }
+
+  // .carousel-cell{
+  //   &:nth-child(1){
+  //     img{
+  //       width: auto;
+  //       height: 30vw;
+  //       max-height: 40vh;
+  //     }
+  //   }
+  //   img{
+  //     height: 40vh;
+  //   }
+  // }
 
 
 </style>

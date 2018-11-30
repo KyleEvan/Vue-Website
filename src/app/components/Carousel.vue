@@ -1,7 +1,7 @@
 <template>
 
   <div ref="carouselContainer" id="carousel">
-    <div id="flickityContainer" ref="carousel" :style="minHeight">
+    <div id="flickityContainer" ref="carousel">
       <slot></slot>
     </div>
     <svg id="progressBar" :style="{backgroundColor: progressBar.background}" :width="progressBar.width" :height="progressBar.height" :viewBox="viewBox" >
@@ -21,9 +21,9 @@
       return {
         flckty: undefined,
         flickityInit: false,
-        minHeight: {
-          'min-height': '400px'
-        },
+        // minHeight: {
+        //   'min-height': '400px'
+        // },
         progressBar: {
           width: 0,
           height: 80,
@@ -65,7 +65,7 @@
         this.setViewBox(container.width, container.height);
         this.progressBar.width = container.width;
         this.progressBar.height = container.height;
-        this.points = this.getPoints(container.left, container.top, container.right, container.bottom);
+        this.points = this.getPoints(container.left, 0, container.right, container.bottom - container.top);
       },
       initFlickity: function(){
         this.dev('Init Flickity');
@@ -75,7 +75,10 @@
           draggable: true,
           freeScroll: true,
           contain: true,
-          setGallerySize: false
+          setGallerySize: false,
+          accessibility: true,
+          pageDots: false,
+          prevNextButtons: false
         });
         const carousel = this;
         this.flkty.on( 'scroll', ( progress ) => {
@@ -112,14 +115,19 @@
 
 <style lang="scss">
   @import '../../style/global.scss';
-
   #carousel{
     position: relative;
+    align-self: flex-start;
     width: 100%;
+    height: 50vh;
     z-index: 0;
 
     @include md{
       width: 50%;
+      height: 100vh;
+    }
+    @include lg{
+      height: calc(100vh - 6em);
     }
 
     #flickityContainer{
@@ -128,18 +136,20 @@
       align-items: center;
       position: relative;
       width: 100%;
-      height: 50vh;
+      height: inherit;
       z-index: 1;
+      min-height: 400px;
 
       @include md{
         position: fixed;
         top: 0;
         left: 50%;
-        height: 100vh;
+        // height: inherit;
         width: 50%;
       }
       @include lg{
         width: $break-large/2;
+        margin-top: $lg-padding;
       }
 
       .flickity-viewport{
@@ -165,8 +175,19 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            padding: 2em;
             width: 100%;
             height: 100%;
+
+            @include lg{
+              padding: $lg-padding;
+            }
+            &>img{
+              width: auto;
+              height: auto;
+              max-height: 100%;
+              max-width: 100%;
+            }
           }
         }
       }

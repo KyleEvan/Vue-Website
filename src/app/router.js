@@ -12,6 +12,7 @@ import WorkBatman from './components/work/batman.vue';
 import WorkCareers from './components/work/careers.vue';
 import WorkCycles from './components/work/cycles.vue';
 import WorkComboSmash from './components/work/combosmash.vue';
+import WorkReactDashboard from './components/work/react-dashboard.vue';
 
 const Test = () => import('./components/test/test.vue');
 
@@ -72,6 +73,13 @@ export default new Router({
       props: true,
       meta: { title: 'Combo Smash | Kyle P' }
     },
+    {
+      path: '/react-dashboard',
+      name: 'React-Dashboard',
+      component: WorkReactDashboard,
+      props: true,
+      meta: { title: 'React Dashboard App | Kyle P'}
+    },
 
     //-----------------------< Testing Pages >---------------------------
     {
@@ -92,15 +100,6 @@ export default new Router({
   scrollBehavior (to, from, savedPosition) {
     return new Promise((resolve, reject) => {
       resolve({ x: 0, y: 0 });
-      // console.log(to.meta.scroll);
-      // if (to.meta.scroll) {
-      //   console.log('scroll');
-      //   // return { x: 0, y: to.meta.scroll};
-      // } else {
-      //   console.log('restore');
-      //
-        // return { x: 0, y: 0 };
-      // }
-    })
+    });
   }
 })

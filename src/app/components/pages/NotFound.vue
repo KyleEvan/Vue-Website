@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>
-      Page not found
+      {{title[0]}}
     </h1>
     <p>
       Something went wrong
@@ -20,6 +20,7 @@
     data () {
       return {
         messages:{
+          title: ['Page not found', 'Browser not supported'],
           default: "The page you've requested does not exist.",
           pageNotFound: "404 page not found"
         }

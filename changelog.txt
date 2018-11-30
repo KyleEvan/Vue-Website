@@ -1,4 +1,7 @@
-﻿Completed:
+
+
+
+Completed:
 ✔ create a works.js and split projects and work into separate files
 ✔ (in Progress) Need to add responsive shape behavior, add click events, on/off functionality
 ---- scaling and repositioning on resize working, still need to implement click event
@@ -7,11 +10,13 @@
 ✔ Rewriting shapes.js to work without name
 
 
+
 Current tasks:
 - working on Careers.vue to set example for other projects
 - (in progress) New Home title animation
 ---- Mostly done, working on animation for sub heading
 - (needs tweaks) New animation before site loads (spinning wheel)
+
 
 
 Must do:
@@ -24,18 +29,25 @@ Must do:
 ---- finalize styles
 - if(i can figure it out) Enable compression of assets
 - Google Analytics
-
 - ie11+ browser testing
 
 
-Nice to haves/Future state:
+
+Outstanding Issues/Bugs:
+- Every page scrolls to top when navigated to
+
+
+
+'Nice to Haves'/Future state:
 - Cut out uneccesary code (get it reviewed)
+---- will review all files when I have the time
 - Optimize production assets, watch size limit
 - service workers to serve offline page
 - caching static assets
 - Transition from project page back to home
 - Make globals.js master single source of truth for breakpoints, functions, colors, fonts. To be shared between js and scss files accross the app
-
+- possibly use vuex to manage app states
+---- not sure if my web app is complex enough to require this
 
 
 

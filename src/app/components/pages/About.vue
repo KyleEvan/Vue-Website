@@ -16,7 +16,7 @@
 
 <script>
   export default {
-    name: 'about',
+    name: 'About',
     data(){
       return {
         msg: 'about me and stuff'

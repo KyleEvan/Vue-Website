@@ -10,11 +10,13 @@
         <div class="content inner-content">
         <h2>{{section}}</h2>
         <div class="works">
-          <div v-for="work in works" class="project-container">
+          <div role="link" tabindex="0" v-for="work in works" class="project-container">
             <a
               :href="work.href"
               @click.prevent="handleClick"
-              class="project">
+              class="project"
+              tabindex="-1"
+              >
               <div class="bg" :style="{background: work.lightColor}"></div>
 
               <div class="image">
@@ -78,7 +80,7 @@
 
         // tl: new TimelineLite(),
 
-        imageMaxHeight: .7, // 70% of vh
+        // imageMaxHeight: .7, // 70% of vh
 
         carouselTransitionConfig: {
           mobile: {
@@ -89,7 +91,8 @@
             offsetX: 0,
             offsetY: 0,
             imageHeight: .3,
-            iamgeMaxHeight: .7
+            iamgeMaxHeight: .7,
+            padding: '3em'
           },
           tablet: {
             width: .5,
@@ -98,22 +101,24 @@
             offsetX: .5,
             offsetY: 0,
             imageHeight: .3,
-            iamgeMaxHeight: .7
+            iamgeMaxHeight: .7,
+            padding: '3em'
           },
           desktop: {
             width: .5,
             height: 1,
             minHeight: 0,
             offsetX: .5,
-            offsetY: 0,
+            offsetY: '3em',
             imageHeight: .3,
-            iamgeMaxHeight: .7
+            iamgeMaxHeight: .4,
+            padding: '3em'
           },
         },
 
         transitionBgColor: colors.mainBg,
         transforms: undefined,
-        transition:{
+        transition: {
           bgPoints: '0 0 0 0 0 0 0 0',
           bgFill: 'transparent'
         },
@@ -132,15 +137,15 @@
       //   caption = caption.split(" ").splice(0, word_limit).join(" ");
       //   return caption;
       // },
-      smallImage: function(src){
-        var output;
-        if(src){
-          src['md'] ? output = src['md'] : output = 'no sm image';
-        } else {
-          output = 'no src image'
-        }
-        return output;
-      },
+      // smallImage: function(src){
+      //   var output;
+      //   if(src){
+      //     src['md'] ? output = src['md'] : output = 'no sm image';
+      //   } else {
+      //     output = 'no src image'
+      //   }
+      //   return output;
+      // },
 
 
       navigate: function(e, project, background){
@@ -160,17 +165,42 @@
       },
       // Helper for calcProjectTransforms
       getImageScale: function(project, container){
-        let imageH, maxHeight, newHeight, scale, finalImageHeight;
+        let imageW, imageH, maxHeight, newHeight, scale, finalImageHeight;
+        imageW = project.image.clientWidth;
         imageH = project.image.clientHeight;
         // max-height is defined by vh units
-        maxHeight = window.innerHeight*project.data.config.imageMaxHeight;
+        // maxHeight = window.innerHeight*project.data.config.imageMaxHeight;
         // height is defined by vw units
-        newHeight = window.innerWidth*project.data.config.imageHeight;
+        // newHeight = window.innerHeight*project.data.config.imageHeight;
+
+        if(imageW >= imageH){
+          let newWidth = project.data.width - (project.data.slidePadding*2);
+          scale = newWidth/imageW;
+        } else {
+          let newHeight = project.data.height - (project.data.slidePadding*2);
+          scale = newHeight/imageH;
+        }
+
+
         // if new height of project is greater than the allowed max
-        finalImageHeight = (newHeight > maxHeight ? maxHeight : newHeight);
-        scale = finalImageHeight/imageH;
+        // finalImageHeight = (newHeight > maxHeight ? maxHeight : newHeight);
+        // scale = finalImageHeight/imageH;
         return scale;
       },
+
+
+      getOffset: function(el, val){
+        if(typeof val === 'number') { return val*this.viewport.cWidth }
+        else {
+          if(typeof val === 'string') {
+            let multiple = parseInt(val);
+            let em = parseInt(getComputedStyle(el).fontSize);
+            return multiple*em;
+          }
+        }
+      },
+
+
       animateOut: function(targets){
         TweenLite.to(targets, this.animate_hideElements,
         {
@@ -225,33 +255,43 @@
       //      these values define the layout config/position of the project at the end transition
       getConfig: function(){
         const config = this.carouselTransitionConfig;
-        let carousel, width, height, containerW, containerH;
+        let carousel, width, height, left, right, offsetX, offsetY, containerW, containerH;
         containerW = this.viewport.cWidth;
         containerH = this.viewport.cHeight;
         // depending on viewport set config
         carousel = config.mobile;
-        if(this.viewport.width >= this.breakpoints.md){
-          carousel = config.tablet;
-        }
-        else if(this.viewport.width >= this.breakpoints.lg) {
+        if(this.viewport.width >= this.breakpoints.lg) {
           containerW = this.breakpoints.lg;
           carousel = config.desktop;
         }
+        else if(this.viewport.width >= this.breakpoints.md){
+          carousel = config.tablet;
+        }
+
+        offsetX = this.getOffset(this.project.el, carousel.offsetX);
+        offsetY = this.getOffset(this.project.el, carousel.offsetY);
+
         width = carousel.width*containerW;
         height = (carousel.height*containerH) >= carousel.minHeight ? (carousel.height*containerH) : carousel.minHeight;
+        height = height - offsetY;
+
+        left = offsetX;
+        right = offsetX + width;
+
         return {
           config: carousel,
           width: width,
           height: height,
           offset: {
-            x: carousel.offsetX*this.viewport.cWidth,
-            y: carousel.offsetY*this.viewport.cHeight
+            x: offsetX,
+            y: offsetY
           },
           center: {
-            x: (width/2) + (carousel.offsetX*this.viewport.cWidth),
-            y: (height/2) + (carousel.offsetY*this.viewport.cHeight)
+            x: (width/2) + offsetX,
+            y: (height/2) + offsetY
           },
-          points: this.getPoints(carousel.offsetX*containerW, carousel.offsetY*containerH, this.viewport.cWidth, height)
+          points: this.getPoints(left, offsetY, right, height),
+          slidePadding: this.getOffset(this.project.image, carousel.padding)
         };
       },
 
@@ -271,7 +311,7 @@
           translateX: newProjectCenter.x - projectCenter.x,
           translateY: newProjectCenter.y - projectCenter.y,
           newPoints: project.data.points
-        };
+        }
       },
 
 
@@ -311,6 +351,10 @@
         return color_bg;
       },
 
+      // 4.) Animates project to future location.
+      //     transition container
+      //     - transition background
+      //
       animateTransition: function(e, project, transforms){
         const transitionContainer = this.createTransitionContainer();
         const transitionBgObj = this.createTransitionBg(project, transitionContainer);
@@ -333,13 +377,13 @@
 
         // Animate Image Background
         const morphImageBg = () => {
-          const project_bg = this.createProjectBg(project, transitionContainer);
+          const projectBg = this.createProjectBg(project, transitionContainer);
           TweenLite.set(background, {
             opacity: 0,
           });
-          // console.log(project_bg);
+          // console.log(projectBg);
           anime({
-            targets: project_bg,
+            targets: projectBg,
             points: [
               { value: transforms.newPoints }
             ],
@@ -349,7 +393,7 @@
               console.log("Transition Completed");
               this.transitioning = false;
               // this.bodyRestoreScroll();
-              this.navigate(e, project.data, project_bg);
+              this.navigate(e, project.data, projectBg);
 
             }
           });
@@ -400,10 +444,9 @@
           this.bodyNoScroll();
           // Get project data
           this.project = this.getProjectData(e.target);
-
-
           this.project.data = Object.assign(this.getConfig(), this.project.data);
           this.transforms = this.calcProjectTransforms(this.project);
+
           this.animateTransition(e, this.project, this.transforms);
         }
         else{
@@ -414,6 +457,7 @@
 
       // Gives placeholder imgs a src
       loadPageImages: function(){
+        console.log(this.pageImages);
         let size = 'sm';
         let imgNames = [];
         let placeholders = [].slice.call(document.querySelectorAll('.img-placeholder'));
@@ -530,10 +574,26 @@
       flex-flow: column;
       flex-direction: column-reverse;
       border: 1px solid $offWhite;
-
-
       margin-bottom: 2.75em;
       margin-right: 1.25em;
+      &:hover, &:active, &:focus{
+        border: 1px solid $mainColor;
+        .bg{
+          opacity: 1;
+        }
+        &>div{
+          cursor: pointer;
+          color: $mainColor;
+          border-bottom: 1px solid $mainColor;
+          @include sm{
+            border-bottom: none;
+            border-right: 1px solid $mainColor;
+          }
+        }
+      }
+      // &:hover > div{
+      //
+      // }
       @include sm {
         flex-flow: row;
         flex-direction: row-reverse;
@@ -595,12 +655,12 @@
         background: transparent;
         opacity: 0;
       }
-      &:hover, &:active{
-        .bg{
-          // background: #CAD2C5;
-          opacity: 1;
-        }
-      }
+      // &:hover, &:active{
+      //   .bg{
+      //     // background: #CAD2C5;
+      //     opacity: 1;
+      //   }
+      // }
 
       .image{
         padding: 1.5em;

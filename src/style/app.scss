@@ -88,13 +88,15 @@ body {
       } */
       &.inner-content,
       .inner-content{
-        padding: 0 12% 0 2em;
+        padding-left: 2em;
+        padding-right: 12%;
 
-        @include md{
-          padding: 0 12% 0 3em;
+        @include sm{
+          padding-left: $lg-padding;
         }
         @include lg{
-          padding: 0 3em;
+          padding-left: $lg-padding;
+          padding-right: $lg-padding;
         }
         /* &.top{
           padding-top: 3em;
@@ -118,7 +120,7 @@ body {
 
 
     /* global classes */
-    .showDesktop{
+    .show-desktop{
       display: none;
       visibility: hidden;
       @include lg{

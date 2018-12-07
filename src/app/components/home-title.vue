@@ -4,7 +4,7 @@
 
 
     <display-content :events="events" :config="animationConfig" id="home-title" ref="home_title">
-      <ul class="">
+      <ul>
         <li class="header">Kyle</li>
         <li class="header">Peterson</li>
         <li><!--- --></li>

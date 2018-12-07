@@ -22,6 +22,7 @@
     */
     data(){
       return {
+        charmedName: undefined,
         mainContent: [],
       }
     },
@@ -67,7 +68,7 @@
         this.animateIn(this.mainContent, this.$props.config.increment+.25, this.$props.config.duration+.15, this.$props.config.delay + .1, this.$props.config.eventName);
       },
       initTitle: function(){
-        let header = Array.from(this.$el.querySelectorAll('.header'));
+        let header = [].slice.call(this.$refs.container.querySelectorAll('.header'));
         if(header[0]) {
           let sibling = header[header.length-1].nextElementSibling;
           while(sibling){
@@ -75,6 +76,7 @@
             sibling = sibling.nextElementSibling;
           }
           this.charmedName = this.charmWords(header);
+          console.log(chrmedName);
           this.animateContent();
         }
       },

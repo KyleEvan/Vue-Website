@@ -1,5 +1,6 @@
 import "babel-polyfill";
 import "classlist-polyfill";
+import 'es7-object-polyfill';
 import '../style/app.scss';
 
 import Vue from 'vue';

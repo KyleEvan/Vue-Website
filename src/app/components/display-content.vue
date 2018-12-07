@@ -76,7 +76,7 @@
             sibling = sibling.nextElementSibling;
           }
           this.charmedName = this.charmWords(header);
-          console.log(chrmedName);
+          console.log(this.charmedName);
           this.animateContent();
         }
       },

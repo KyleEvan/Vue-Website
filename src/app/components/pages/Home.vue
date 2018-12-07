@@ -484,15 +484,15 @@
       // }
     },
 
-    created(){
+    // created(){
       // listen for app to load
-      this.events.$on('app-loaded', () => {
-        console.log('init home.vue');
-      });
-    },
+      // this.events.$on('app-loaded', () => {
+        // console.log('init home.vue');
+      // });
+    // },
     mounted(){
       this.loadPageImages();
-      this.projectsElArr = Array.from(document.querySelectorAll('.project'));
+      this.projectsElArr = [].slice.call(document.querySelectorAll('.project'));
 
 
 

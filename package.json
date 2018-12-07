@@ -46,6 +46,7 @@
     "charming": "^2.0.1",
     "classlist-polyfill": "^1.2.0",
     "element-closest": "^2.0.2",
+    "es7-object-polyfill": "^0.0.7",
     "flickity": "^2.1.1",
     "load-asset": "^1.2.0",
     "scrollmagic": "^2.0.5",

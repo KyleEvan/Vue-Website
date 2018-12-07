@@ -9,7 +9,7 @@
   ],
   "scripts": {
     "start": "webpack-dev-server --inline --progress --watch --hot --config webpack.dev.js",
-    "prod": "webpack --config webpack.prod.js"
+    "prod": "set NODE_ENV=production && webpack --config webpack.prod.js"
   },
   "author": "Kyle Peterson",
   "license": "ISC",

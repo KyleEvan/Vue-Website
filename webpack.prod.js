@@ -41,7 +41,7 @@ module.exports = merge(common, {
       new webpack.DefinePlugin({
         'process.env.NODE_ENV': JSON.stringify('production')
       }),
-      new CleanWebpackPlugin(['dist'], {
+      new CleanWebpackPlugin(['docs'], {
         // root:     _dirname,
         verbose:  true,
         dry:      false

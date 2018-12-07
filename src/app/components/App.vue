@@ -43,7 +43,7 @@
     data(){
       return {
         init: false,
-        loading_el: document.querySelector('.loading'),
+        loadingEl: document.querySelector('.loading'),
         assets: undefined,
         eventBus: new Vue()
       }
@@ -54,19 +54,19 @@
     },
     methods:{
       destroyLoader: function(){
-        // while (this.loading_el.firstChild) {
+        // while (this.loadingEl.firstChild) {
         //   this.el.removeChild(this.el.firstChild);
         // }
-        this.body.removeChild(this.loading_el);
+        this.body.removeChild(this.loadingEl);
       },
       animateOutLoader: function(callback){
-        const spinner = document.querySelector('.spinner');
-        TweenLite.to(spinner, .6, {
+        // const spinner = document.querySelector('.spinner');
+        TweenLite.to(this.loadingEl.firstChild, .6, {
           scale: .25,
           opacity: 0,
           ease: Power2.easeOut
         });
-        TweenLite.to(this.loading_el, .6, {
+        TweenLite.to(this.loadingEl, .6, {
           opacity: 0,
           ease: Power2.easeIn,
           delay: 1,

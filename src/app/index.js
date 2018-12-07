@@ -30,7 +30,7 @@ if(!compatibleBrowser){
   }
   document.body.removeChild(loader);
 }
-else {
+
 
 Vue.mixin({
   data: function(){
@@ -181,5 +181,3 @@ new Vue({
     window.removeEventListener('resize', this.handleResize);
   }
 });
-
-}

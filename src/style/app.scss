@@ -160,11 +160,11 @@ body {
 
 
 /*---------------< Loading spinner >----------------*/
-    $loadingDuration: .73;
-    $loadingOffset1: 0s;
+    /* $loadingDuration: .73; */
+    /* $loadingOffset1: 0s;
     $loadingOffset2: $loadingDuration*.125s;
     $loadingOffset3: $loadingDuration*.225s;
-    $loadingOffset4: $loadingDuration*.375s;
+    $loadingOffset4: $loadingDuration*.375s; */
     $loadingColor1: $darkestGreen;
     $loadingColor2: $darkGreen;
     $loadingColor3: $mediumGreen;
@@ -194,6 +194,26 @@ body {
         transform: translateX(18%) scale(0.1);
       }
     }
+
+    $loadingDuration: .95s;
+
+    @keyframes jump {
+      0% {
+        opacity: 0;
+        transform: translateY(0%) scale(1);
+      }
+      80% {
+        opacity: 1;
+
+        transform: translateY(-40%) scale(1.2);
+
+      }
+      100%{
+        opacity: .1;
+        /* transform: translateY(3%); */
+      }
+    }
+
     .loading{
       position: fixed;
       width: 100%;
@@ -205,7 +225,28 @@ body {
       top: 0;
       z-index: 999;
       background: #fff;
-      .spinner-container{
+      svg{
+        width: 10%;
+        max-width: 90px;
+        circle{
+          fill: $mainColor;
+          opacity: 0;
+          transform-origin: 50% 50%;
+          animation: jump;
+          animation-duration: $loadingDuration;
+          animation-timing-function: cubic-bezier(.55,.22,.47,.94);
+          animation-iteration-count: infinite;
+          animation-direction: reverse;
+          &:nth-child(2){
+            animation-delay: .15s;
+          }
+          &:nth-child(3){
+            animation-delay: .3s;
+
+          }
+        }
+      }
+      /* .spinner-container{
       .spinner{
         overflow: unset;
         width: 140px;
@@ -288,7 +329,7 @@ body {
           animation-delay: $loadingOffset4;
         }
       }
-      }
+      } */
     }
 
 

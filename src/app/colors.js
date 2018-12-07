@@ -7,30 +7,14 @@
 
 exports.colors = {
   // Main palette
-  'mainBg': '#FFF',
-  'mainColor': '#2E2C2D',
-  'offWhite': '#CAD2C5',
-  'lightGreen':'#84A98C',
-  'mediumGreen': '#52796F',
-  'darkGreen': '#354F52',
-  'darkestGreen': '#2F3E46',
-  lightOffGreen: '#DDE7DF',
-
-  // Work template default colors
-  'templateDefaultLightc1': '#EFECCA',
-  'templateDefaultMediumc1': '#DAD7B8',
-  'templateDefaultMediumc2': '#A9CBB7',
-
-  // Work/Projects
-  orange: '#FFD1BA',
-
-  'projectBlue': '#B2DBCC',
-  'projectLightBlue': '#DCEEE7',
-  'projectMediumBlue': '#CEE8DE',
-
-  'projectOrange': '#ECBA82',
-  'projectLightOrange': '#F2D3AF',
-  'projectMediumOrange': '#EABE94',
+  mainBg: '#FFF',
+  mainColor: '#2E2C2D',
+  offWhite: '#CAD2C5',
+  lightGreen:'#84A98C',
+  mediumGreen: '#52796F',
+  darkGreen: '#354F52',
+  darkestGreen: '#2F3E46',
+  lightOffGreen: '#E9EFEA',
 
   //
   //
@@ -40,28 +24,18 @@ exports.colors = {
   templateMainColor: '#B2DBCC',
   templateMedColor: '#CEE8DE',
   templateLightColor: '#DCEEE7',
-
-
-  jet: '#616163',
-  darkJet: '#353536',
-
-  red: '#F9B9BC',
-  lightRed: '#FCDFE0',
-  mediumRed: '#E3A9AB',
-  darkRed: '#CC989A',
-
-  turquoise: '#88FFE2',
-  lightTurquoise: '#C8FFF1',
-  mediumTurquoise: '#7CE8CE',
-  darkTurquoise: '#70D1B9',
-
-  peach: '#FFD6C2',
-  lightPeach: '#FFECE3',
-  mediumPeach: '#E8C3B1',
-  darkPeach: '#D1B09F',
-
-  blue: '#B2F9FF',
-  lightBlue: '#DCFCFF',
-  mediumBlue: '#A2E3E8',
-  darkBlue: '#92CCD1'
+  // member redesign
+  lightCyan: '#D1F5FF',
+  diamond: '#BBF0FF',
+  // react template
+  azureishWhite: '#D6F2ED',
+  powderBlue: '#AEE5DC',
+  // batman poster
+  lemonChiffon: '#FDF9CD',
+  // cycles
+  manatee: '#A09DAE',
+  rhythm: '#7A768E',
+  // comboSmash
+  lemonMeringue: '#FAE9BD',
+  peachYellow: '#F8E1A3',
 };

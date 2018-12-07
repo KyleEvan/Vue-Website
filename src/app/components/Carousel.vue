@@ -1,12 +1,21 @@
 <template>
 
   <div ref="carouselContainer" id="carousel">
-    <div id="flickityContainer" ref="carousel">
+    <div id="fixed-container" ref="carousel">
       <slot></slot>
     </div>
     <svg id="progressBar" :style="{backgroundColor: progressBar.background}" :width="progressBar.width" :height="progressBar.height" :viewBox="viewBox" >
       <polygon class="progress" ref="progressBar" :fill="progressColor" :points="points"></polygon>
     </svg>
+    <div v-show="!oneSlide" class="btn-group" @mouseover="handleMouseOver" @mouseleave="handleMouseLeave">
+      <a role="button" class="prev" href="#" @click.prevent="nextPrevSlide">
+        <font-awesome-icon :icon="['fas', 'chevron-left']" />
+      </a>
+      <a role="button" class="next" href="#" @click.prevent="nextPrevSlide">
+        <font-awesome-icon :icon="['fas', 'chevron-right']" />
+      </a>
+    </div>
+
   </div>
 
 </template>
@@ -14,6 +23,8 @@
 <script>
   import { TimelineLite } from "gsap";
   import Flickity from 'flickity';
+  import FontAwesomeIcon from '@fortawesome/vue-fontawesome';
+
 
   export default {
     props: ['progressColor'],
@@ -21,9 +32,6 @@
       return {
         flckty: undefined,
         flickityInit: false,
-        // minHeight: {
-        //   'min-height': '400px'
-        // },
         progressBar: {
           width: 0,
           height: 80,
@@ -31,10 +39,23 @@
           background: 'transparent'
         },
         points: undefined,
-        viewBox: undefined
+        viewBox: undefined,
+        oneSlide: false
       }
     },
+    components: {
+      FontAwesomeIcon
+    },
     methods: {
+      handleMouseLeave:function(){
+        this.flkty.unpausePlayer();
+      },
+      handleMouseOver: function(){
+        this.flkty.pausePlayer();
+      },
+      nextPrevSlide: function(e){
+        e.target.classList.contains('next') ? this.flkty.next(true, false) : this.flkty.previous(true, false);
+      },
       getContainerWH: function(){
         return{
           width: this.$refs.carouselContainer.clientWidth,
@@ -48,18 +69,29 @@
         this.viewBox = `0 0 ${width} ${height}`;
       },
       animateProgressBar(x){
-        let progress = document.querySelector('.progress');
-        TweenLite.to(progress, 0,
-        {
-          x: x,
-          ease: Power0.easeNone
-        });
+        let progress = this.$refs.progressBar;
+        if(progress){
+          TweenLite.to(progress, 0,
+          {
+            x: x,
+            ease: Power0.easeNone
+          });
+        }
+      },
+      configCarousel: function(func){
+        let slidesLength = this.$refs.carousel.querySelector('.flickity-slider').children.length;
+        if(slidesLength > 1){
+          window.addEventListener('resize', this.handleResize)
+          func();
+        } else {
+          this.oneSlide = true;
+        }
       },
       updateProgress: function(progress){
         this.animateProgressBar(progress*this.progressBar.width);
       },
       configProgressBar: function(){
-        console.log('configuring progressbar')
+        this.dev('configuring progressbar');
         let container = this.getContainerWH();
         container = Object.assign(this.$refs.carouselContainer.getBoundingClientRect(), container);
         this.setViewBox(container.width, container.height);
@@ -69,6 +101,7 @@
       },
       initFlickity: function(){
         this.dev('Init Flickity');
+        const carousel = this;
 
         this.flkty = new Flickity( this.$refs.carousel, {
           imagesLoaded: true,
@@ -78,36 +111,31 @@
           setGallerySize: false,
           accessibility: true,
           pageDots: false,
-          prevNextButtons: false
+          prevNextButtons: false,
+          autoPlay: 2300,
+          on: {
+           ready: function() {
+             carousel.dev('Flickity ready');
+             carousel.configCarousel(carousel.configProgressBar);
+           }
+          }
         });
-        const carousel = this;
         this.flkty.on( 'scroll', ( progress ) => {
           progress = Math.max( 0, Math.min( 1, progress ) );
           carousel.updateProgress(progress);
         });
       },
-
       handleResize: function(){
         const carousel = this;
         this.debounce(carousel.configProgressBar(), 40);
-        // resize();
       }
     },
     mounted(){
-      window.addEventListener('resize', this.handleResize)
-
       this.initFlickity();
-      let carousel = this;
-      setTimeout(function(){
-        carousel.configProgressBar();
-      }, 200);
-    },
-    created(){
     },
     beforeDestroy(){
-      console.log('before destory fired!!!*@*(@!(*@(*@S)))');
       this.flkty.destroy();
-      window.removeEventListener('resize', this.handleResize);
+      if(!this.oneSlide) window.removeEventListener('resize', this.handleResize);
     }
   }
 
@@ -120,6 +148,7 @@
     align-self: flex-start;
     width: 100%;
     height: 50vh;
+    min-height: 400px;
     z-index: 0;
 
     @include md{
@@ -127,29 +156,28 @@
       height: 100vh;
     }
     @include lg{
-      height: calc(100vh - 6em);
+      height: $main-height;
+      max-height: $main-maxHeight;
     }
 
-    #flickityContainer{
+    #fixed-container{
       display: flex;
       justify-content: center;
       align-items: center;
-      position: relative;
+      position: fixed;
       width: 100%;
       height: inherit;
       z-index: 1;
-      min-height: 400px;
+      min-height: inherit;
 
       @include md{
-        position: fixed;
         top: 0;
         left: 50%;
-        // height: inherit;
         width: 50%;
       }
       @include lg{
-        width: $break-large/2;
-        margin-top: $lg-padding;
+        width: $carousel-width;
+        margin-top: $main-topBotPad;
       }
 
       .flickity-viewport{
@@ -191,67 +219,6 @@
           }
         }
       }
-      .flickity-button{
-        position: absolute;
-        bottom: 0;
-
-        svg{
-          fill: #000000;
-          height: 3rem;
-        }
-      }
-      .flickity-prev-next-button{
-        position: absolute;
-        bottom: 0;
-        width: 17%;
-        height: 45%;
-        background: none;
-        outline: none;
-        border: none;
-        padding: 2em;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        opacity: .2;
-        cursor: pointer;
-
-        &:hover{
-          opacity: .45;
-        }
-      }
-
-      .flickity-button.previous{
-        left: 5%;
-      }
-      .flickity-button.next{
-        right: 5%;
-      }
-      .flickity-page-dots{
-        position: absolute;
-        bottom: -50px;
-        padding: 0;
-        margin: 0;
-        display: flex;
-        align-items: center;
-        height: auto;
-      }
-      .flickity-page-dots{
-        .dot{
-          display: inline-block;
-          width: .5rem;
-          height: .5rem;
-          margin: .5rem;
-          background: #E3E8E3;
-          border-radius: 50%;
-          z-index: 5;
-          position: relative;
-          cursor: pointer;
-          transition: transform 0.5s cubic-bezier(0.52, 2, 0.33, 0.915);
-        }
-        .dot.is-selected{
-          transform: scale(1.8);
-        }
-      }
     }
 
     #progressBar, .debug.progressBar.progress{
@@ -261,6 +228,43 @@
       left: 0;
       top: 0;
       z-index: 0;
+    }
+    /* Prev next buttons */
+    .btn-group{
+      position: absolute;
+      bottom: 0;
+      display: flex;
+      left: 0;
+      width: 100%;
+      justify-content: space-between;
+      z-index: 1;
+      font-size: 2em;
+      @include md {
+        font-size: 2.5em;
+      }
+
+      a, a:active{
+        padding: 1em 0;
+        width: 50%;
+        color: $mainColorLight;
+        opacity: .35;
+
+        &.next{
+          padding-right: 1em;
+          svg{
+            float: right;
+          }
+        }
+        &.prev{
+          padding-left: 1em;
+        }
+        svg{
+          pointer-events: none;
+        }
+      }
+      a:hover, a:focus{
+        opacity: .75;
+      }
     }
   }
 

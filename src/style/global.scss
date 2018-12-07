@@ -4,51 +4,6 @@
 
 */
 
-// old color palettes
-// https://coolors.co/7edad4-ff9393-ffec94-f9fff9-63676c
-// https://coolors.co/7edad4-ff9393-ffec94-f9fff9-63676c
-// https://coolors.co/7edad4-ffa69e-ffec94-707c89-f9fff9
-// https://coolors.co/85e5e0-ffa69e-ffeb93-7b8a96-ffe5e5
-
-
-
-// Saturated Colors
-// https://coolors.co/616163-44ffd2-ffbfa0-87f6ff-f69296
-
-// Light Colors
-// https://coolors.co/9a9a9b-88ffe2-ffd6c2-b2f9ff-f9b9bc
-
-
-
-
-
-
-/* $primary-gray: #63676C;
-$primary-white: #F9FFF9;
-$primary-red: #FF9393;
-$primary-blue: #7EDAD4;
-$primary-yellow: #FFEC94; */
-
-
-// Main Palette must be in sync with colors.js
-$mainBg: #FFF;
-$mainColor: #514943;
-$darkestGreen: #2F3E46;
-$darkGreen: #354F52;
-$mediumGreen: #52796F;
-$lightGreen: #84A98C;
-$offWhite: #CAD2C5;
-
-$mainColorLight: rgba(66, 58, 47, 0.65);
-
-// variations of main palette
-$lightOffWhite: #F0F2EF;
-$lightOffGreen: #DDE7DF;
-$offDarkGreen: #475F61;
-$hoverGreen: #89999A;
-
-$lg-padding: 3em;
-
 $break-small: 500px;
 $break-smallMed: 800px;
 $break-medium: 1000px;
@@ -80,3 +35,32 @@ $break-xl: 1600px;
      @content
   }
 }
+
+
+
+
+// Main Palette must be in sync with colors.js
+$mainBg: #FFF;
+/* $mainColor: #514943; */
+$mainColor: rgba(66, 58, 47, 0.8);
+$darkestGreen: #2F3E46;
+$darkGreen: #354F52;
+$mediumGreen: #52796F;
+$lightGreen: #84A98C;
+$offWhite: #CAD2C5;
+
+$mainColorLight: rgba(66, 58, 47, 0.65);
+
+// variations of main palette
+$lightOffWhite: #F0F2EF;
+$lightOffGreen: #DDE7DF;
+$offDarkGreen: #475F61;
+$hoverGreen: #89999A;
+
+$sm-header-fontSize: 2.25em;
+$lg-padding: 3em;
+// carousel template vars
+$carousel-width: $break-large/2;
+$main-topBotPad: 5em;
+$main-height: calc(100vh - #{$main-topBotPad*2});
+$main-maxHeight: calc(#{$break-large} - #{$main-topBotPad*2});

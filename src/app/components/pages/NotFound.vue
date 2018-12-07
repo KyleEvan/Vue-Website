@@ -1,11 +1,8 @@
 <template>
-  <div>
+  <div class="site-message">
     <h1>
-      {{title[0]}}
+      {{messages.title[0]}}
     </h1>
-    <p>
-      Something went wrong
-    </p>
     <p>
       {{messages.default}}
     </p>
@@ -31,9 +28,7 @@
 
 <style lang="scss" scoped>
 
-  h1{
-    font-size: 6vw;
-  }
+
 
 
 </style>

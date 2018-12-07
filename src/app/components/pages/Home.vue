@@ -2,6 +2,7 @@
   <div>
 
     <!-- <home-title class="content" :events="events" /> -->
+    <home-title class="content inner-content" :events="events"/>
 
     <div class="container">
 
@@ -12,6 +13,7 @@
         <div class="works">
           <div role="link" tabindex="0" v-for="work in works" class="project-container">
             <a
+              role="link"
               :href="work.href"
               @click.prevent="handleClick"
               class="project"
@@ -20,11 +22,11 @@
               <div class="bg" :style="{background: work.lightColor}"></div>
 
               <div class="image">
-                <img :data-src="work.image.src" class="img-placeholder"/>
+                <img :data-image-src="work.image.src" class="img-placeholder"/>
               </div>
 
             </a>
-            <div class="info">
+            <div role="link" class="info" @click.prevent="redirectClick">
               <div class="name">{{work.name}}</div>
               <div class="tags">
                 <span v-for="tag in work.tags" :class="tag.toLowerCase()">{{tag}}</span>
@@ -45,43 +47,35 @@
 
 <script>
   import {colors} from '../../colors.js';
-  // Project Data
   import {work} from '../../work.js';
   import {projects} from '../../projects.js';
 
-  // Components
-  // import home_title from '../home-title.vue';
+  import homeTitle from '../home-title.vue';
 
-  // JS Libraries
-  import ScrollMagic from "scrollmagic";
-  import { TimelineLite } from "gsap";
   import anime from 'animejs';
 
   export default {
-    props: ['images', 'events'],
+    props: ['images', 'events', 'assets'],
     name: 'home',
 
     data(){
       return{
         sections: {Work: work, Projects: projects},
         projects: work.concat(projects),
-
         pageImages: [],
         projectsElArr: [],
-
         project: undefined,
-
-
-        animate_hideElements: .35,
-        animate_centerProject: .75,
-        animate_projectTransition: 1,
-
-
-
-        // tl: new TimelineLite(),
-
-        // imageMaxHeight: .7, // 70% of vh
-
+        hideAnimDuration: .35,
+        projectAnimDuration: 1,
+        imageBgAnimDuration: 800,
+        // animate_centerProject: .75,
+        transitionBgColor: colors.mainBg,
+        transforms: undefined,
+        transition: {
+          bgPoints: '0 0 0 0 0 0 0 0',
+          bgFill: 'transparent'
+        },
+        transitioning: false,
         carouselTransitionConfig: {
           mobile: {
             width: 1,
@@ -90,9 +84,7 @@
             width: 1,
             offsetX: 0,
             offsetY: 0,
-            imageHeight: .3,
-            iamgeMaxHeight: .7,
-            padding: '3em'
+            padding: '2em'
           },
           tablet: {
             width: .5,
@@ -100,35 +92,23 @@
             minHeight: 0,
             offsetX: .5,
             offsetY: 0,
-            imageHeight: .3,
-            iamgeMaxHeight: .7,
-            padding: '3em'
+            padding: '2em'
           },
           desktop: {
             width: .5,
             height: 1,
             minHeight: 0,
             offsetX: .5,
-            offsetY: '3em',
-            imageHeight: .3,
-            iamgeMaxHeight: .4,
+            offsetY: '5em',
             padding: '3em'
           },
         },
 
-        transitionBgColor: colors.mainBg,
-        transforms: undefined,
-        transition: {
-          bgPoints: '0 0 0 0 0 0 0 0',
-          bgFill: 'transparent'
-        },
-        transitioning: false,
-        // transitionedProject: undefined
       }
     },
-    computed: {
+    components: {
 
-      // 'home-title': home_title
+      'home-title': homeTitle
     },
     methods:{
       //---------------< Helper Functions >---------------
@@ -137,16 +117,10 @@
       //   caption = caption.split(" ").splice(0, word_limit).join(" ");
       //   return caption;
       // },
-      // smallImage: function(src){
-      //   var output;
-      //   if(src){
-      //     src['md'] ? output = src['md'] : output = 'no sm image';
-      //   } else {
-      //     output = 'no src image'
-      //   }
-      //   return output;
-      // },
 
+      redirectClick: function(e){
+        e.target.previousElementSibling.click();
+      },
 
       navigate: function(e, project, background){
         const href = e.target.getAttribute("href");
@@ -165,22 +139,28 @@
       },
       // Helper for calcProjectTransforms
       getImageScale: function(project, container){
-        let imageW, imageH, maxHeight, newHeight, scale, finalImageHeight;
-        imageW = project.image.clientWidth;
-        imageH = project.image.clientHeight;
+        let pageImg, newImg, maxHeight, newHeight, scale, finalImageHeight;
+        pageImg = {
+          width: project.image.clientWidth,
+          height: project.image.clientHeight
+        };
+        newImg = {
+          width: project.newImage.width,
+          height: project.newImage.height
+        };
         // max-height is defined by vh units
         // maxHeight = window.innerHeight*project.data.config.imageMaxHeight;
         // height is defined by vw units
         // newHeight = window.innerHeight*project.data.config.imageHeight;
-
-        if(imageW >= imageH){
+        if(pageImg.width >= pageImg.height){
           let newWidth = project.data.width - (project.data.slidePadding*2);
-          scale = newWidth/imageW;
+          if(newWidth > newImg.width) newWidth = newImg.width;
+          scale = newWidth/pageImg.width;
         } else {
           let newHeight = project.data.height - (project.data.slidePadding*2);
-          scale = newHeight/imageH;
+          if(newHeight > newImg.height) newHeight = newImg.height;
+          scale = newHeight/pageImg.height;
         }
-
 
         // if new height of project is greater than the allowed max
         // finalImageHeight = (newHeight > maxHeight ? maxHeight : newHeight);
@@ -201,48 +181,54 @@
       },
 
 
-      animateOut: function(targets){
-        TweenLite.to(targets, this.animate_hideElements,
-        {
-          scale: .25,
-          opacity: 0,
-          ease: Expo.easeIn,
-          delay: .05,
-          transformOrigin: '50% 50%'
-        });
+      animateOut: function(inactiveProjects, info, container){
+        TweenLite.set(container, {borderColor: 'transparent', boxShadow: 'none'});
+        TweenLite.to(inactiveProjects, this.hideAnimDuration, { opacity: 0, ease: Power2.easeIn });
+        TweenLite.to(info, this.hideAnimDuration, {transformOrigin: '50% 50%', y: '30%', opacity: 0, ease: Power2.easeIn});
       },
-      animateHideElements: function(target){
-        let hide_els, current_info, filtered_projects;
-        hide_els = [];
-        current_info = target.querySelector('.info');
-        hide_els.push(current_info);
-        filtered_projects = this.projectsElArr.filter( (el) => {
-          return (el !== target);
+      animateOutElements: function(target){
+        let infoElsArr, parentClassName, info, inactiveProjects, activeProject, projectContainers;
+        activeProject = target;
+        parentClassName = 'project-container';
+        projectContainers = [].slice.call(this.$el.querySelectorAll(`.${parentClassName}`));
+        infoElsArr = [];
+
+        while ((activeProject = activeProject.parentNode) && activeProject.className.indexOf(parentClassName) < 0);
+        info = activeProject.querySelector('.info');
+        infoElsArr = [].slice.call(info.children);
+        inactiveProjects = projectContainers.filter( (el) => {
+          infoElsArr.push([].slice.call(el.querySelector('.info').children));
+          return (el.querySelector('.project') !== target);
         });
-        hide_els = hide_els.concat(filtered_projects);
-        this.animateOut(hide_els);
+        inactiveProjects.push(info);
+        // hideElsArr = hideElsArr.concat(inactiveProjects);
+        this.animateOut(inactiveProjects, infoElsArr, activeProject);
       },
-      animateCenterProject: function(target){
-        let img = target.querySelector('img');
-        TweenLite.to(img, this.animate_centerProject, {
-          y: 0,
-          ease: Power2.easeInOut,
-        });
-      },
+      // animateCenterProject: function(target){
+      //   let img = target.querySelector('img');
+      //   TweenLite.to(img, this.animate_centerProject, {
+      //     y: 0,
+      //     ease: Power2.easeInOut,
+      //   });
+      // },
 
 
       // 1.)  Get the selected project,
       //      create and return object containing:
       //      - project element,
       //      - project image element,
+      //      - sized img element used in template,
       //      - project.js data object
       getProjectData: function(target){
         for (let i = this.projectsElArr.length-1; i >= 0; i--){
           let project = this.projectsElArr[i];
           if(project === target){
+            let newImage = this.$props.assets[this.projects[i].image.src];
+            // console.log(newImage);
             return {
               el: project,
               image: project.querySelector('img'),
+              newImage: newImage,
               data: this.projects[i]
             }
           }
@@ -270,11 +256,9 @@
 
         offsetX = this.getOffset(this.project.el, carousel.offsetX);
         offsetY = this.getOffset(this.project.el, carousel.offsetY);
-
         width = carousel.width*containerW;
+        containerH = containerH-(offsetY*2);
         height = (carousel.height*containerH) >= carousel.minHeight ? (carousel.height*containerH) : carousel.minHeight;
-        height = height - offsetY;
-
         left = offsetX;
         right = offsetX + width;
 
@@ -290,7 +274,7 @@
             x: (width/2) + offsetX,
             y: (height/2) + offsetY
           },
-          points: this.getPoints(left, offsetY, right, height),
+          points: this.getPoints(left, offsetY, right, height+offsetY),
           slidePadding: this.getOffset(this.project.image, carousel.padding)
         };
       },
@@ -325,30 +309,25 @@
         return transition_el;
       },
       createTransitionBg: function(project, transitionContainer){
-        let transitionBg = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
-        transitionBg.setAttribute('points', this.getPoints(-this.viewport.width, 0, 0, this.viewport.cHeight));
-        transitionBg.setAttribute('fill', this.transitionBgColor);
-        transitionContainer.appendChild(transitionBg);
-        let transitionBgObj = {
-          el: transitionBg,
+        let transitionBgEl = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+        transitionBgEl.setAttribute('points', this.getPoints(-this.viewport.width, 0, 0, this.viewport.cHeight));
+        transitionBgEl.setAttribute('fill', this.transitionBgColor);
+        transitionContainer.appendChild(transitionBgEl);
+        let transitionBg = {
+          el: transitionBgEl,
           width: this.viewport.width
         }
-        return transitionBgObj;
+        return transitionBg;
       },
       createProjectBg: function(project, transitionContainer){
         let container = project.el.getBoundingClientRect();
-        let color_bg = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+        let colorBg = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
         let points = this.getPoints(container.left, container.top, container.right, container.bottom);
-
-        color_bg.setAttribute('fill', project.data.lightColor);
-        color_bg.setAttribute('points', points);
-
-        transitionContainer.appendChild(color_bg);
+        colorBg.setAttribute('fill', project.data.lightColor);
+        colorBg.setAttribute('points', points);
+        transitionContainer.appendChild(colorBg);
         this.app.appendChild(transitionContainer);
-
-        // Hide original background
-        // project.el.style.background = 'transparent';
-        return color_bg;
+        return colorBg;
       },
 
       // 4.) Animates project to future location.
@@ -356,113 +335,110 @@
       //     - transition background
       //
       animateTransition: function(e, project, transforms){
+        let app = this;
+        let background = project.el.querySelector('.bg');
+        let tl = new TimelineLite();
+        let delay = this.hideAnimDuration*1.05;
+
         const transitionContainer = this.createTransitionContainer();
-        const transitionBgObj = this.createTransitionBg(project, transitionContainer);
-        const imageBgAnimDuration = 400;
-        const projectAnimDuration = .7;
-        const transitionBgAnimDur = 1.3;
-
-        const animate_hideElements = .3;
-
+        const transitionBg = this.createTransitionBg(project, transitionContainer);
+        const projectBg = this.createProjectBg(project, transitionContainer);
 
         // Animate and hide other projects
-        this.animateHideElements(e.target);
-        // Vertically center the current project
-        this.animateCenterProject(e.target);
+        this.animateOutElements(e.target);
 
-
-
-        // Translate Project
-        let background = project.el.querySelector('.bg');
-
-        // Animate Image Background
         const morphImageBg = () => {
-          const projectBg = this.createProjectBg(project, transitionContainer);
-          TweenLite.set(background, {
-            opacity: 0,
-          });
-          // console.log(projectBg);
           anime({
             targets: projectBg,
             points: [
               { value: transforms.newPoints }
             ],
-            easing: 'easeInQuad',
-            duration: imageBgAnimDuration,
+            easing: 'easeOutQuad',
+            duration: app.imageBgAnimDuration,
             complete: () => {
-              console.log("Transition Completed");
-              this.transitioning = false;
-              // this.bodyRestoreScroll();
-              this.navigate(e, project.data, projectBg);
-
+              this.dev('Transition Completed');
+              app.transitioning = false;
+              app.navigate(e, project.data, projectBg);
             }
           });
-        };
+        }
 
-
-        // increase z index val to bring project to top layer
-        TweenLite.set(project.el, {
-          zIndex: 3,
-          // borderColor: 'transparent',
-        });
-        // fade neutral background to colored bg
-        TweenLite.set(background, {
-          opacity: 1,
-        });
-        TweenLite.to(project.el, this.animate_projectTransition, {
+        // position active project above other elements
+        tl.add( TweenLite.set(project.el, {zIndex: 3}) );
+        tl.add( TweenLite.set(background, {opacity: 0}) );
+        tl.add( TweenLite.to(project.el, this.projectAnimDuration, {
           x: transforms.translateX,
           y: transforms.translateY,
           scale: transforms.scale,
-          ease: Power3.easeInOut,
+          ease: Power2.easeOut,
+          delay: delay,
           transformOrigin: '50% 50%',
-          // onStart: () => {
-          //   ...
-          // },
-          onComplete: () => {
+          onStart: () => {
             morphImageBg();
           }
-        });
+        }), 0 );
+        tl.add( TweenLite.to(transitionBg.el, this.projectAnimDuration, {x: transitionBg.width, delay: delay, ease: Power1.easeOut }), 0);
+
+
+        // TweenLite.to(project.el, this.projectAnimDuration, {
+        //   x: transforms.translateX,
+        //   y: transforms.translateY,
+        //   scale: transforms.scale,
+        //   ease: Power2.easeOut,
+        //   transformOrigin: '50% 50%',
+        //   // onStart: () => {
+        //   //   ...
+        //   // },
+        //   // onComplete: () => {
+        //     // morphImageBg();
+        //   // }
+        // });
+
         // fade neutral background to colored bg
-        // TweenLite.to(background, this.animate_projectTransition, {
+        // TweenLite.to(background, this.projectAnimDuration, {
         //   opacity: 0,
         //   ease: Power3.easeOut
         // });
         // transition Bg, cover screen swipe left to right
-        TweenLite.to(transitionBgObj.el, this.animate_projectTransition, {
-          x: transitionBgObj.width,
-          ease: Power2.easeIn
-        });
+        // TweenLite.to(transitionBg.el, this.projectAnimDuration, {
+        //   x: transitionBg.width,
+        //   ease: Power1.easeOut
+        // });
+
 
       },
       handleClick: function(e){
         if(!this.transitioning){
-          // Starting transition, transitioning = true
+          // Starting transition
+          // set transitioning to true to prevent being called again
           this.transitioning = true;
 
           // this.$route.meta.scroll = document.documentElement.scrollTop;
+
           // Disable scroll
           this.bodyNoScroll();
-          // Get project data
+
+          // Get project data:
+          // - project el,
+          // - current img el,
+          // - new sized img el,
+          // - relevent project data from project.js
           this.project = this.getProjectData(e.target);
           this.project.data = Object.assign(this.getConfig(), this.project.data);
           this.transforms = this.calcProjectTransforms(this.project);
-
           this.animateTransition(e, this.project, this.transforms);
-        }
-        else{
-          return;
         }
       },
 
 
       // Gives placeholder imgs a src
       loadPageImages: function(){
-        console.log(this.pageImages);
+        // console.log(this.pageImages);
         let size = 'sm';
         let imgNames = [];
         let placeholders = [].slice.call(document.querySelectorAll('.img-placeholder'));
         for(var i = 0; i < placeholders.length; i++){
-          imgNames[i] = placeholders[i].getAttribute('data-src');
+          imgNames[i] = placeholders[i].getAttribute('data-image-src');
           this.pageImages[i] = this.$props.images.all[imgNames[i]][size];
           if(i >= placeholders.length-1){
             let replacePlaceholders = function(images){
@@ -470,7 +446,7 @@
                 let img = placeholders[j];
                 img.src = images[j].src;
                 img.removeAttribute('class');
-                img.removeAttribute('data-src');
+                img.removeAttribute('data-image-src');
               }
             }
             this.loadImages(this.pageImages, replacePlaceholders);
@@ -518,7 +494,6 @@
       this.loadPageImages();
       this.projectsElArr = Array.from(document.querySelectorAll('.project'));
 
-      // this.initScrollMagic();
 
 
     },
@@ -531,212 +506,260 @@
 
 <style lang="scss" scoped>
 @import '../../../style/global.scss';
-
-.main{
-  // padding-top: 120vh;
-  // .content{
-  //   margin: 0 10% 0% 16%;
-  // }
-  .container{
-
-    div{
-      &#work{
+.main {
+  .container {
+    div {
+      &#work {
         background: $lightOffWhite;
       }
-      &#projects{
+      &#projects {
         background: $lightOffGreen;
       }
-
-
-
-
-
-  h2{
-    display: inline-block;
-    padding: 3% 0;
-    margin: 3em 0 1em 0;
-    font-size: 2.65em;
-    line-height: 1;
-    // color: $mainColor;
-    // font-family: 'Eksell Display';
-    font-weight: 900;
-  }
-
-  .works{
-    padding-bottom: 10vh;
-    display: flex;
-    align-items: flex-start;
-    flex-flow: row wrap;
-    justify-content: flex-start;
-
-    .project-container {
-      display: flex;
-      flex-flow: column;
-      flex-direction: column-reverse;
-      border: 1px solid $offWhite;
-      margin-bottom: 2.75em;
-      margin-right: 1.25em;
-      &:hover, &:active, &:focus{
-        border: 1px solid $mainColor;
-        .bg{
-          opacity: 1;
+      h2 {
+        display: inline-block;
+        padding: 3% 0;
+        margin: 3em 0 1em 0;
+        font-size: $sm-header-fontSize;
+        line-height: 1;
+        // color: $mainColor;
+        // font-family: 'Eksell Display';
+        font-weight: 900;
+        opacity: .5;
+      }
+      .works {
+        padding-bottom: 10vh;
+        display: flex;
+        align-items: flex-start;
+        flex-flow: row wrap;
+        justify-content: flex-start;
+        width: 100%;
+        @include smmd {
+          justify-content: space-between;
         }
-        &>div{
-          cursor: pointer;
-          color: $mainColor;
-          border-bottom: 1px solid $mainColor;
-          @include sm{
-            border-bottom: none;
-            border-right: 1px solid $mainColor;
+        .project-container {
+          display: flex;
+          flex-flow: column;
+          flex-direction: column-reverse;
+          border: 1px solid $offWhite;
+          margin-bottom: 2.75em;
+          max-width: 100%;
+          // overflow: hidden;
+          // margin-right: 1.25em;
+          // &:hover > div{
+          //
+          // }
+          @include sm {
+            flex-flow: row;
+            flex-direction: row-reverse;
+            // &:nth-child(2n + 2){
+            //   margin-right: 0;
+            // }
+          }
+          @include smmd {
+            flex-flow: column;
+            // flex-direction: column-reverse;
+          }
+          @include md {
+            // margin-right: 10%;
+          }
+          @include lg {
+            flex-flow: row;
+            flex-direction: row-reverse;
+            width: 31%;
+            // &:nth-child(2n + 2){
+            //   margin-right: unset;
+            // }
+            // &:nth-child(3n + 3){
+            //   margin-right: 0;
+            // }
+          }
+          .project {
+            position: relative;
+            display: flex;
+            // flex-flow: column;
+            // width: 100%;
+            // height: 100%;
+            width: 75vw;
+            height: 75vw;
+            max-width: 100%;
+            &:hover,
+            &:focus,
+            &:active {
+              outline: 0;
+            }
+            @include sm {
+              width: 60vw;
+              height: 44vw;
+            }
+            @include smmd {
+              width: 38vw;
+              height: 38vw;
+            }
+            @include md {
+              width: 25vw;
+              height: 25vw;
+            }
+            @include lg {
+              width: 180px;
+              height: 190px;
+            }
+            // border-radius: 3px;
+            overflow: hidden;
+            // border: 1px solid $offWhite;
+            text-decoration: none;
+            // opacity: 0;
+            // transform: translateY(15%);
+            &>div {
+              pointer-events: none;
+            }
+            .bg {
+              position: absolute;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              background: transparent;
+              opacity: 0;
+            }
+            // &:hover, &:active{
+            //   .bg{
+            //     // background: #CAD2C5;
+            //     opacity: 1;
+            //   }
+            // }
+            .image {
+              padding: 1.5em;
+              position: relative;
+              overflow: hidden;
+              top: 0;
+              left: 0;
+              height: 100%;
+              width: 100%;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              @include lg {
+                padding: .75em;
+              }
+              &>img,
+              &.div {
+                // transform: translateY(-20%);
+                position: relative;
+                width: auto;
+                height: auto;
+                max-width: 100%;
+                max-height: 100%;
+                // height: 70%;
+                // max-width: 100%;
+                // max-height: 100%;
+              }
+            }
+          }
+          .info {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            flex-flow: column;
+            // padding: 1em;
+            color: $mainColorLight;
+            border-bottom: 1px solid $offWhite;
+            padding: 1em;
+            width: 100%;
+            font-size: 1.2em;
+            @include sm {
+              font-size: 1.4em;
+              width: 50%;
+              border-right: 1px solid $offWhite;
+              border-bottom: none;
+            }
+            @include smmd {
+              width: 100%;
+              border-right: none;
+              border-top: 1px solid $offWhite;
+              padding: 1.2em;
+            }
+            @include md {
+              font-size: 1em;
+            }
+            @include lg {
+              border-right: 1px solid $offWhite;
+              border-top: none;
+              width: 52%;
+              font-size: .9em;
+            }
+            // border-top: none;
+            // margin-top: 70%;
+            // z-index: 1;
+            // color: $mainColor;
+            // background: #fff;
+            &>div {
+              pointer-events: none;
+            }
+            .name {
+              // width: 70%;
+              // color: $darkGreen;
+              padding: 0 0 .5em 0;
+              font-weight: 700;
+              line-height: 1.5;
+            }
+            .tags,
+            .date {
+              // color: $mediumGreen;
+              font-size: .75em;
+              line-height: .75em;
+              @include sm {
+                font-size: .65em;
+                line-height: .5em;
+              }
+            }
+            .tags {
+              // text-align: right;
+              margin-left: -.75em;
+              span {
+                display: inline-block;
+                // line-height: 1;
+                padding: .75em;
+                // margin-right: .5em;
+                float: left;
+                // border-radius: 4px;
+                // border: 1px solid $offWhite;
+              }
+            }
+            .date {
+              padding: 1em 0;
+            }
+          }
+        }
+        .project-container {
+          // transition: transform .2s ease-in-out;
+          &:hover,
+          &:active,
+          &:focus {
+            // border: 1px solid $mainColor;
+            box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.08);
+            // border-width: 0px;
+            border-color: transparent;
+            outline: none;
+            // transform: scale(1.008);
+            & .bg {
+              opacity: 1;
+            }
+            &>div {
+              cursor: pointer;
+              // color: $mainColor;
+              background: $mainBg;
+              // border-bottom: 1px solid $mainColor;
+              border-color: transparent;
+              @include sm {
+                border-bottom: none;
+                // border-right: 1px solid $mainColor;
+              }
+            }
           }
         }
       }
-      // &:hover > div{
-      //
-      // }
-      @include sm {
-        flex-flow: row;
-        flex-direction: row-reverse;
-
-        margin-right: 10%;
-        // &:nth-child(2n + 2){
-        //   margin-right: 0;
-        // }
-      }
-      @include md {
-        // &:nth-child(2n + 2){
-        //   margin-right: unset;
-        // }
-        // &:nth-child(3n + 3){
-        //   margin-right: 0;
-        // }
-      }
-    .project{
-      position: relative;
-      display: flex;
-      // flex-flow: column;
-      // width: 100%;
-      // height: 100%;
-      width: 74vw;
-      height: 64vw;
-      @include sm {
-        width: 34vw;
-        height: 34vw;
-      }
-      // @include smmd {
-      //   width: 40vw;
-      //   height: 40vw;
-      // }
-      @include md {
-        width: 20vw;
-        height: 20vw;
-      }
-      @include lg {
-        width: 10em;
-        height: 10em;
-      }
-      // border-radius: 3px;
-      overflow: hidden;
-      // border: 1px solid $offWhite;
-      text-decoration: none;
-      // opacity: 0;
-      // transform: translateY(15%);
-      &>div{
-        pointer-events: none;
-      }
-
-
-      .bg{
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: transparent;
-        opacity: 0;
-      }
-      // &:hover, &:active{
-      //   .bg{
-      //     // background: #CAD2C5;
-      //     opacity: 1;
-      //   }
-      // }
-
-      .image{
-        padding: 1.5em;
-        position: relative;
-        overflow: hidden;
-        top: 0;
-        left: 0;
-        height: 100%;
-        width: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        &>img,
-        &.div{
-          // transform: translateY(-20%);
-          position: relative;
-          width: auto;
-          height: auto;
-          max-width: 100%;
-          max-height: 100%;
-          // height: 70%;
-          // max-width: 100%;
-          // max-height: 100%;
-        }
-      }
-    }
-    .info{
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      flex-flow: column;
-      // padding: 1em;
-      color: $mainColorLight;
-      border-bottom: 1px solid $offWhite;
-      padding: 1em;
-      @include sm{
-        border-right: 1px solid $offWhite;
-        border-bottom: none;
-      }
-      // border-top: none;
-      // margin-top: 70%;
-      // z-index: 1;
-      // color: $mainColor;
-      // background: #fff;
-
-      .name{
-        // width: 70%;
-        // color: $darkGreen;
-
-        padding: .5em 0;
-        font-weight: 700;
-      }
-      .tags, .date {
-        // color: $mediumGreen;
-        font-size: .8em;
-      }
-      .tags{
-        // text-align: right;
-        margin-left: -.5em;
-        span{
-          display: inline-block;
-          line-height: .7em;
-          padding: 0 .5rem;
-          float: left;
-        }
-      }
-      .date{
-        padding: .5rem 0;
-      }
     }
   }
-
-  }
-}
-}
 }
 
 </style>

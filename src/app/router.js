@@ -9,7 +9,7 @@ const Contact = () => import('./components/pages/Contact.vue');
 const NotFound = () => import('./components/pages/NotFound.vue');
 
 import WorkBatman from './components/work/batman.vue';
-import WorkCareers from './components/work/careers.vue';
+import WorkMember from './components/work/member-redesign.vue';
 import WorkCycles from './components/work/cycles.vue';
 import WorkComboSmash from './components/work/combosmash.vue';
 import WorkReactDashboard from './components/work/react-dashboard.vue';
@@ -53,11 +53,11 @@ export default new Router({
       meta: { title: 'Batman | Kyle P' }
     },
     {
-      path: '/careers-redesign',
-      name: 'Careers-Redesign',
-      component: WorkCareers,
+      path: '/member-redesign',
+      name: 'MemberRedesign',
+      component: WorkMember,
       props: true,
-      meta: { title: 'Careers Redesign | Kyle P' }
+      meta: { title: 'Member Redesign | Kyle P' }
     },
     {
       path: '/cycles',
@@ -75,7 +75,7 @@ export default new Router({
     },
     {
       path: '/react-dashboard',
-      name: 'React-Dashboard',
+      name: 'ReactDashboard',
       component: WorkReactDashboard,
       props: true,
       meta: { title: 'React Dashboard App | Kyle P'}

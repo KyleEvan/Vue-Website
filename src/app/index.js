@@ -13,18 +13,29 @@ import { TimelineLite } from 'gsap';
 import charming from 'charming';
 import load from 'load-asset';
 
-import fontawesome from '@fortawesome/fontawesome';
+// import fontawesome from '@fortawesome/fontawesome';
 import solid from '@fortawesome/fontawesome-free-solid';
-// import faBars from '@fortawesome/fontawesome-free-solid/faBars'
 // fontawesome.library.add(solid, faBars);
 
 
-// Vue.config.productionTip = false
+Vue.config.productionTip = false;
+
+var compatibleBrowser = typeof Object['__defineSetter__'] === 'function';
+
+if(!compatibleBrowser){
+  console.warn('Browser not compatible with this website :(');
+  var loader = document.querySelector('.loading');
+  while (loader.firstChild) {
+    loader.removeChild(loader.firstChild);
+  }
+  document.body.removeChild(loader);
+}
+else {
 
 Vue.mixin({
   data: function(){
     return {
-      devmode: true,
+      devmode: false,
       body: document.body,
       app: document.getElementById('app'),
       breakpoints: globals.breakpoints,
@@ -47,25 +58,32 @@ Vue.mixin({
       }
     },
     async loadImages(imagesArr, func, wait){
-      console.log(imagesArr);
-      load.any(imagesArr, (progress) => {
+      // console.log(imagesArr);
+      return load.any(imagesArr, (progress) => {
         this.dev(`${(progress.count/progress.total)*100}%`);
         // if(progress.count >= progress.total){
         // }
       }).then(assets => {
         if(func){
-          console.log(assets);
+          // console.log(assets);
           func(assets);
         }
       });
-      // return assets;
     },
     charmWords: function(elements){
       let charm = [];
-      for(var i = 0; i < elements.length; i++){
-        charming(elements[i], {classPrefix: 'letter'});
-        let letters = [].slice.call(elements[i].childNodes);
+      let func = function(el){
+        charming(el, {classPrefix: 'letter'});
+        let letters = [].slice.call(el.childNodes);
         charm = charm.concat(letters);
+      }
+      if(Array.isArray(elements)){
+        for(var i = 0; i < elements.length; i++){
+          func(elements[i]);
+        }
+      }
+      else {
+        func(elements);
       }
       return charm;
     },
@@ -107,21 +125,19 @@ new Vue({
     last_breakpoint: undefined
   },
   methods:{
+    // get and set for images used throughout app
     getImages(arg){
       if(!arg){
         return this.images;
       }
       else{
         if(this.images.sized[arg]) return this.images.sized[arg];
-        else if(this.devmode) console.log('image not in app');
+        // else this.dev('image not in app');
       }
     },
     setImages(){
       this.images = images(this.breakpoints, window.innerWidth);
-      if(this.devmode){
-        console.log("App images updated");
-        console.log(this.images);
-      }
+      this.dev("App images updated");
     },
 
     // Used to determine current breakpoint,
@@ -151,14 +167,19 @@ new Vue({
       }
       this.last_breakpoint = this.currentBreakpoint();
     },
-    handleResize: function(){
+    handleResize(){
       this.debounce(this.checkBreakpoint(), 500, false);
     },
   },
   created(){
-    if(this.devmode) console.log('Initializing app');
+    this.dev('Initializing app');
     this.setImages();
     // Add resize event handler to main Vue
     window.addEventListener('resize', this.handleResize);
+  },
+  beforeDestroy(){
+    window.removeEventListener('resize', this.handleResize);
   }
 });
+
+}

@@ -13,20 +13,13 @@
     <template slot="asideContent">
       <section>
         <p>
-          A proof of concept for an administrator dashboard developed from scratch using React, babel, webpack, and Chart js.  This was my first personal project using a popular MVC framework.  This is an example for a sleep/energy monitoring application. In a real world use case this might integrate with a fitbit or apple watch.<br />
-          Data is simulated for demonstration purposes.
+          A proof of concept for an administrator dashboard developed from scratch using React, babel, webpack, and Chart js. My first personal project using one of the big three ui frameworks. After taking some Codeacademy courses on React, I wanted to familiarize myself a bit more with node and React to really understand how these tools facilitate the development process of an application. This application is purely for demonstration purposes and the data is static. It is a concept for a browser application that could integrate with a fitbit or apple watch.
         </p>
         <p>
           View the project on github
         </p>
-        <ul>
-          <li>
-            <a target="_blank" :href="links.github">github</a>
-          </li>
-          <li>
-            <a target="_blank" :href="links.demo">demo</a>
-          </li>
-        </ul>
+        <a target="_blank" :href="links.github" class="link-btn">GitHub</a>
+        <a target="_blank" :href="links.demo" class="link-btn">Live Demo</a>
       </section>
     </template>
 
@@ -38,8 +31,12 @@
     </template>
 
     <!-- Extra lower content -->
-    <template slot="extra"></template>
-    
+    <template slot="extra">
+      <section class="img-center">
+        <img :src="dashboard_image" alt="React dashboard mobile full screen"/>
+      </section>
+    </template>
+
 
   </work-template>
   <!-- End of Template -->
@@ -70,6 +67,9 @@
         return [
           images.react_view_today,
         ]
+      },
+      dashboard_image: function(){
+        return this.$props.images.all.react_dashboard[this.$props.images.currentBreakpoint];
       }
     }
   }
@@ -78,16 +78,10 @@
 
 <style lang="scss">
   // @import '../../style/global.scss';
-  .carousel-cell{
-    &:nth-child(1){
-      img{
-        width: auto;
-        height: 30vw;
-        max-height: 70vh;
-      }
-    }
-    img{
-      height: 30vw;
+  .react-dashboard{
+    .template-aside{
+      min-height: 50vh;
     }
   }
+
 </style>

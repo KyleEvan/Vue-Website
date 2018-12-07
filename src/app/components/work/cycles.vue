@@ -1,53 +1,64 @@
 <template>
 
-  <work-template :project="project" :events="events">
+  <work-template :project="project" :events="events" :class="`${className}`">
 
+
+    <!-- Title: -->
+    <template slot="title">
+      {{title}}
+    </template>
+
+    <!-- Aside Main Content -->
+    <template slot="asideContent">
+      <section>
+        <p>
+          The first game I ever developed <i>Cycles</i> is a simple 2D desktop web game designed to help users practice and learn basic multiplication skills. It has an 8-bit theme and was inspired by old computer games. I worked on this as a personal project for my Rich Media in Web Applications class. It uses no libraries, has no dependencies and was created with plain Javascript, Canvas API, HTML, and CSS.
+        </p>
+
+      </section>
+    </template>
+
+    <!-- Carousel slides -->
     <template slot="slides">
       <div class="carousel-cell" v-for="image in project_images">
         <img :src="image" alt="" />
       </div>
     </template>
 
+    <template slot="extra">
 
-    <template slot="title">
-    <!-- Title: -->
-      Cycles
-    </template>
-    <template slot="description">
-      <!-- Project Description -->
-      <!-- Summary -->
-      <section>
-        <p>
-          The first game I ever developed <i>Cycles</i> is a simple desktop web game designed to help users practice and learn rudementary multiplication skills. It has an 8-bit theme and is a throwback to the scifi film Tron and old computer games. I worked on this as a personal project for my Rich Media in Web Applications class. It uses no libraries, has no dependencies and was created with plain Javascript, Canvas API, HTML, and CSS.
-        </p>
-        <p>
-          Basically, the player must survive longer than the computer driving a vehicle(cycle) without crashing. The trails from the cycles create colored boundaries that quickly limit the available space for the computer and player as they navigate the map. Solving basic arithmetic problems controls the direction of the player's cycle.
-        </p>
-        <p>
-          For more in depth how-to-play instructions, or to play the game go visit my github.
-        </p>
+      <!-- Gameplay -->
+      <section class="split">
+        <div>
+          <h2>Gameplay</h2>
+          <p>
+            The player must survive longer than the computer driving a vehicle(cycle) without crashing. Colored lines are drawn in the wake of each cycle and those lines create new barriers for the player and the computer. Cycles accelerate on their own, it only requires the player to change the direction (up, down, left, right) by solving an arithmatic problem. Math operations in the center of the screen are positioned respective to the direction the cycle will be turned.
+          </p>
+        </div>
+        <div class="gif">
+          <img :src="gameplay_gif" alt="Cycles gameplay preview"/>
+        </div>
       </section>
 
-      <section>
-        <h2>Challenges</h2>
-      </section>
-      <section>
-        <h2>What I learned</h2>
-      </section>
-      <!-- Skills -->
-      <!-- <section>
-        <ul>
-          <li>JS</li>
-          <li>More JS</li>
-        </ul>
-      </section> -->
 
       <!-- Links -->
       <section>
-        <ul>
-          <a href="#">Instructions</a>
-          <a href="#">github</a>
-          <a href="#" class="showDesktop">play the game</a>
+        <h2>Links</h2>
+        <ul class="links-list">
+          <li>
+            <h3>GitHub Project</h3>
+            <p>
+              Contains more detailed instructions on how to play the game.
+            </p>
+            <a target="_blank" :href="links.github" class="link-btn">Cycles</a>
+          </li>
+          <li class="show-desktop">
+            <h3>Play the Game</h3>
+            <p>
+              (WARNING: This game does not work on mobile or tablet. Requires keyboard)
+            </p>
+            <a target="_blank" :href="links.game" class="link-btn">Play Cycles</a>
+          </li>
         </ul>
       </section>
 
@@ -55,23 +66,7 @@
 
 
 
-
-    <!-- Main Content -->
-    <!-- <p>
-      HTML5 canvas web game.
-    </p>
-    <p>
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Praesent mauris. Fusce nec tellus sed augue semper porta. Mauris massa. Vestibulum lacinia arcu eget nulla. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur sodales ligula in libero. Sed dignissim lacinia nunc.
-    </p>
-    <p>
-      Curabitur tortor. Pellentesque nibh. Aenean quam. In scelerisque sem at dolor. Maecenas mattis. Sed convallis tristique sem. Proin ut ligula vel nunc egestas porttitor. Morbi lectus risus, iaculis vel, suscipit quis, luctus non, massa. Fusce ac turpis quis ligula lacinia aliquet. Mauris ipsum. Nulla metus metus, ullamcorper vel, tincidunt sed, euismod in, nibh. Quisque volutpat condimentum velit. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Nam nec ante.
-    </p>
-    <p>
-      Sed lacinia, urna non tincidunt mattis, tortor neque adipiscing diam, a cursus ipsum ante quis turpis. Nulla facilisi. Ut fringilla. Suspendisse potenti. Nunc feugiat mi a tellus consequat imperdiet. Vestibulum sapien. Proin quam. Etiam ultrices. Suspendisse in justo eu magna luctus suscipit. Sed lectus. Integer euismod lacus luctus magna. Quisque cursus, metus vitae pharetra auctor, sem massa mattis sem, at interdum magna augue eget diam.
-    </p> -->
   </work-template>
-
-
 </template>
 
 <script>
@@ -81,8 +76,12 @@
     props: ['project', 'images', 'events'],
     data () {
       return {
-        gitHubLink: 'https://github.com/KyleEvan/Cycles',
-        gitHubPagesLink: 'https://kyleevan.github.io/Cycles/'
+        title: 'Cycles',
+        className: 'cycles',
+        links: {
+          github: 'https://github.com/KyleEvan/Cycles',
+          game: 'https://kyleevan.github.io/Cycles/'
+        },
       }
     },
     components:{
@@ -92,10 +91,13 @@
       project_images: function(){
         let images = this.$props.images.sized;
         return [
+          images.cycles_start,
           images.cycles,
-          images.cycles,
-          images.cycles,
+          images.cycles_gameover,
         ];
+      },
+      gameplay_gif: function(){
+        return this.$props.images.all.cycles_gameplay[this.$props.images.currentBreakpoint];
       }
 
     }
@@ -105,18 +107,5 @@
 
 
 <style lang="scss">
-  // @import '../../style/global.scss';
-  .carousel-cell{
 
-    &:nth-child(1){
-      img{
-        width: auto;
-        height: 30vw;
-        max-height: 70vh;
-      }
-    }
-    img{
-      height: 30vw;
-    }
-  }
 </style>

@@ -13,7 +13,7 @@
     <template slot="asideContent">
       <section>
         <p>
-          Final project for Elements of Graphic Design in Media class. The subject was ours to choose, the main objective was to incorporate some principles of 2D graphic design we had learned during the semester. I chose to create a poster advertisement for a comic book store. I used Adobe Illustrator for the vector graphics, characters and text. Characters were created from reference images of old batman comic book panels. After, I made small adjustments in Photoshop to the color and layered a texture filter to give it the old retro finishing. Finally, the high resolution composition was printed on 11x18 foamcore.
+          A final project for my Elements of Graphic Design in Media class. The subject was ours to choose and the main objective was to incorporate some principles of 2D graphic design learned during the semester. I chose to create a poster advertisement for a comic book store. I used Adobe Illustrator for the vector graphics, characters and text. Characters were created from reference images of old batman comic book covers. I post processed the result in Photoshop adjustmenting colors and layering a texture filter to create the distressed old finishing. At the end, the high resolution composition was printed on 11x18 foamcore.
         </p>
       </section>
     </template>
@@ -62,16 +62,9 @@
 
 <style lang="scss">
   // @import '../../style/global.scss';
-  .carousel-cell{
-    &:nth-child(1){
-      img{
-        width: auto;
-        height: 30vw;
-        max-height: 70vh;
-      }
-    }
-    img{
-      height: 30vw;
+  .batman-poster{
+    .template-aside{
+      min-height: 50vh;
     }
   }
 </style>

@@ -6,14 +6,13 @@ var work = [
     name: 'Member Redesign',
     tags: ['JavaScript', 'CSS', 'HTML'],
     date: 2017,
-    href: 'Careers-Redesign',
+    href: 'MemberRedesign',
     image:{
       offsetY: '0%',
-      src: 'careers_screens'
+      src: 'excellusbcbs_member'
     },
-    mainColor: colors.projectBlue,
-    lightColor: colors.projectLightBlue,
-    mediumColor: colors.projectMediumBlue,
+    lightColor: colors.lightCyan,
+    mediumColor: colors.diamond,
   },
   // {
   //   name: 'Liferay Migration',

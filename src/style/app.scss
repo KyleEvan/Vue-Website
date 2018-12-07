@@ -2,10 +2,7 @@
 
 
 
-@font-face {
-  font-family: "Eksell Display";
-  src: url("../fonts/EksellDisplay-Medium.woff") format("woff");
-}
+
 
 
 @font-face {
@@ -32,13 +29,16 @@
     font-weight: 700;
     font-style: normal;
 }
-
+/*
+@font-face {
+  font-family: "Eksell Display";
+  src: url("../fonts/EksellDisplay-Medium.woff") format("woff");
+}
 @font-face {
   font-family: "Circular";
   src: url("../fonts/lineto-circular-pro-medium.ttf") format("truetype");
 }
-
-
+*/
 
 
 
@@ -61,6 +61,7 @@ html{
     line-height: 30px;
   }
 }
+
 body {
   width: 100%;
   margin: 0;
@@ -71,62 +72,63 @@ body {
 
   #app{
     .content{
-
+      position: relative;
       min-width: 300px;
+      width: 100%;
       max-width: $break-large;
       margin: 0 auto;
 
-
-      /* &.left{
-        margin: 0 0 0 8%;
-      }
-      &.contained{
-        margin: 0 8%;
-      } */
-      /* @include xl{
-        margin: 0 auto;
-      } */
       &.inner-content,
       .inner-content{
-        padding-left: 2em;
-        padding-right: 12%;
-
+        padding-left: 1em;
+        padding-right: 14%;
+        @media (min-width: 340px){
+          padding-left: 2em;
+        }
         @include sm{
+          padding-right: 12%;
           padding-left: $lg-padding;
         }
         @include lg{
           padding-left: $lg-padding;
           padding-right: $lg-padding;
         }
-        /* &.top{
-          padding-top: 3em;
-        }
-        @include md{
-          padding: 3em;
-        } */
       }
-
     }
-    /* .content, .footer_content{
-      max-width: $break-large;
-      margin: 0 8%;
-      z-index: 0;
+  } // End of #app
 
-      @include xl{
-        margin: 0 auto 0 auto;
-      }
-    } */
-
-
-
-    /* global classes */
-    .show-desktop{
-      display: none;
-      visibility: hidden;
-      @include lg{
-        display: inline-block;
-        visibility: visible;
-      }
+  /* global classes */
+  .show-desktop{
+    display: none;
+    visibility: hidden;
+    @include lg{
+      display: inline-block;
+      visibility: visible;
+    }
+  }
+  .link-btn{
+    font-size: .9em;
+    line-height: .9em;
+    border: 1px solid $lightGreen;
+    color: $lightGreen;
+    border-radius: 10px;
+    padding: .75em;
+    display: inline-block;
+    text-decoration: none;
+    margin-right: 1em;
+    margin-bottom: 1.5em;
+    &:hover, &:focus, &:active{
+      background: $lightGreen;
+      color: $mainBg;
+    }
+    @include smmd {
+      font-size: .85em;
+      line-height: .85em;
+    }
+    &[disabled]{
+      opacity: .6;
+      pointer-events: none;
+      user-select: none;
     }
   }
   .transition-overlay{
@@ -137,7 +139,24 @@ body {
     height: 100%;
     z-index: 1;
   }
+  .site-message{
+      width: 100%;
+      height: auto;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-flow: column;
+      padding: $main-topBotPad 0;
 
+        h1{
+          font-family: 'InterUI', sans-serif;
+          font-weight: 700;
+          font-size: $sm-header-fontSize;
+          line-height: 1;
+          margin-top: 0;
+        }
+  }
 
 
 /*---------------< Loading spinner >----------------*/
@@ -244,7 +263,6 @@ body {
           &:nth-child(4)>span.polygon{
             border-bottom-color: $loadingColor4;
           }
-          /* @inlcude md {} */
         }
         &>span,
         &>span>span{
@@ -276,5 +294,4 @@ body {
 
 
 
-  /* end of app */
 }/* end of body */

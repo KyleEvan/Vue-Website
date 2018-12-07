@@ -5,12 +5,13 @@
 -->
 <template>
   <div class="content">
-    <!-- <div :style="{background: lightColor}" class="template-bg"> -->
+    <div class="border"></div>
+
       <div class="template-main" :style="{background: lightColor}">
         <!-- main work info -->
         <div class="template-aside" >
           <div ref="carouselAside" class="inner-content">
-            <h1 :style="{color: mainColor}" class="template-title">
+            <h1 class="template-title">
               <slot name="title"></slot>
             </h1>
             <slot name="asideContent"></slot>
@@ -23,12 +24,11 @@
       </div>
 
       <!-- extra work info -->
-      <div v-if="extraSlotPassed" class="template-extra inner-content">
+      <div v-if="extraSlotPassed" class="template-extra inner-content" ref="extraContent">
         <div>
           <slot name="extra"></slot>
         </div>
       </div>
-    <!-- </div> -->
   </div>
 </template>
 
@@ -41,13 +41,8 @@
   // Color Palettes
   import {colors} from '../../colors.js';
 
-  // Libraries
-  import ScrollMagic from "scrollmagic";
-  import { TimelineLite } from "gsap";
-
   // Components
   import carousel from '../carousel.vue';
-
 
 	export default{
 		props:['project', 'events'],
@@ -79,76 +74,29 @@
     },
     methods:{
       animateContent: function(){
-        let dur = this.$props.project ? .8 : 0;
-        let aside = document.querySelector('.template-aside');
-        TweenLite.to(this.$refs.carouselAside, dur,
-        {
+        let dur = this.$props.project ? .6 : 0;
+        const aside = this.$refs.carouselAside;
+        const extra = this.$refs.extraContent;
+        let tweenConfig = {
           x: 0,
           y: 0,
           opacity: 1,
-          ease: Power2.easeOut
-        });
+          ease: Circ.easeOut
+        };
+        TweenLite.to(aside, dur, tweenConfig);
+        if(extra) TweenLite.to(extra, dur+.25, tweenConfig);
       },
       initPage: function(){
         this.animateContent();
       }
-      // initScrollMagic: function(){
-      //   const app = document.getElementById('app');
-      //
-      //   const controller = new ScrollMagic.Controller();
-      //   const workScene = new ScrollMagic.Scene({
-      //     triggerElement: app,
-      //     triggerHook: 0,
-      //     duration: app.clientHeight,
-      //     reverse: true
-      //   })
-      //   .on("progress", (event) => {
-      //     let progress = event.progress;
-      //     this.tl.progress(progress);
-      //     this.tl.progress(event.progress);
-      //   })
-      //   .addTo(controller);
-      //   this.animateScroll();
-      // },
-      // animateScroll: function(){
-      //   // const tl = new TimelineLite({paused: true});
-      //   const flickity = document.getElementById('flickityContainer');
-      //   this.tl.fromTo(flickity, 1,
-      //   {
-      //     y: '0%',
-      //     opacity: 1
-      //   },
-      //   {
-      //     y: '0%',
-      //     opacity: .35,
-      //     ease: Power0.easeIn
-      //   });
-      //   // return tl;
-      // },
-      // initEvents: function(){
-      //   // const template = this;
-      //   // const handleResize = this.debounce(function() {
-      //   //   this.images = globals.getImages();
-      //   //   console.log(this.images);
-      //
-      //     // te.setProgressBar();
-      //   // }, 30);
-      //   // window.addEventListener('resize', handleResize);
-      // },
     },
     created(){
         this.events.$on('app-loaded', () => {
-          console.log('init work template');
           this.initPage();
         });
     },
     mounted(){
-      // this.animateScroll();
-      // this.initScrollMagic();
       this.initPage();
-      console.log('init work template');
-      // console.log(this.$props.project);
-
     }
   }
 </script>
@@ -162,72 +110,192 @@
   @import '../../../style/global.scss';
 
 
-  section{
-    padding: $lg-padding 0;
-  }
 
   .template-aside,
   .template-extra{
     color: $mainColorLight;
     background: $mainBg;
+    z-index: 2;
   }
 
-  // .template-bg{
-  //   @include md{
-  //     margin: $lg-padding 0;
-  //   }
+
+  section{
+    padding: 2em 0;
+
+    @include md{
+      padding: 4em 0;
+    }
+    &.split{
+      display: flex;
+      flex-flow: column;
+      flex-direction: column-reverse;
+      align-items: center;
+      @include md{
+        flex-flow: row;
+      }
+      &>div:first-child{
+          padding-top: $lg-padding;
+          @include md{
+            padding-top: 0;
+            padding-right: 5em;
+          }
+      }
+    }
+    &.img-center{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      &>img{
+        width: auto;
+        height: auto;
+        max-width: 100%;
+      }
+    }
+    div.gif{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      @include md {
+        min-width: 50%;
+      }
+      img{
+        width: auto;
+        height: auto;
+        max-width: 100%;
+      }
+    }
+  }
+  .links-list{
+    list-style: none;
+    li{
+      margin-bottom: $lg-padding;
+      padding-top: 1em;
+      &:last-child{
+        border-bottom: none;
+      }
+    }
+  }
+
+
+
+
+
+
+
+  .border{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+
+    @include lg{
+      &::before{
+        content: '';
+        width: 100%;
+        height: 100vh;
+        position: absolute;
+        top: 0;
+        left: 0;
+        box-sizing: border-box;
+        border-top: solid 5em $mainBg;
+        border-left: solid 650px $mainBg;
+        border-bottom: solid 5em $mainBg;
+      }
+    }
+  }
 
     .template-main{
       display: flex;
       flex-direction: column-reverse;
+
       @include md{
         flex-direction: row;
-        margin: $lg-padding 0;
 
+      }
+      @include lg{
+        padding: $main-topBotPad 0;
       }
 
       .template-aside{
         position: relative;
         width: 100%;
         height: auto;
-        // padding: 2em 12% 2em 3em;
-        // @include md{
-        //   padding: 2em 3em;
-        // }
-        // z-index: 2;
-        // transform: translateX(-100%);
+
+        @include md{
+          display: flex;
+          align-items: center;
+        }
+        @include lg{
+          align-items: flex-start;
+        }
 
         &>div{
           opacity: 0;
-          transform: translateY(10%);
+          transform: translateY(8%);
           @include md {
-            transform: translateX(-10%);
+            transform: translateX(-8%);
           }
         }
 
 
         @include md{
           width: 50%;
-          height: calc(100vh - 6em);
+          height: 100vh;
         }
-
+        @include lg{
+          height: $main-height;
+          max-height: $main-maxHeight;
+        }
         .template-title{
           font-size: 2em;
+          line-height: 1.5;
           margin-top: 2em;
+          margin-bottom: 0;
+          @include smmd{
+            font-size: 2.5em;
+          }
           @include md{
+            // line-height: 1.5;
             margin-top: 0;
+
+          }
+          @include lg{
+            margin-top: 0;
+            line-height: 1;
+
           }
         }
 
 
       }
     }
+
+
+
     .template-extra{
       position: relative;
+      padding: 2em;
       margin-top: -$lg-padding;
-      padding: $lg-padding;
+      opacity: 0;
+      transform: translateY(8%);
+
+      @include md {
+        margin-top: 0;
+      }
+      @include lg{
+        margin-top: -$main-topBotPad;
+        padding: $main-topBotPad;
+
+      }
+      &>div {
+        @include md{
+          margin-top: $main-topBotPad;
+        }
+      }
     }
-  // }
 
 
 </style>

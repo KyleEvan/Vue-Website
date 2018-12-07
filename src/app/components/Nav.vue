@@ -131,10 +131,16 @@
       align-items: center;
 			z-index: 99;
       justify-content: flex-end;
-      padding: 3%;
+      padding: 1em 4%;
       font-size: 90%;
       font-family: 'InterUI', sans-serif;
 			pointer-events: none;
+			@include smmd{
+				padding: 2em 3%;
+			}
+			@include lg{
+				padding: $main-topBotPad 3%;
+			}
 
 			a, a:visited, a:active{
 	      display: flex;
@@ -156,12 +162,13 @@
 	      display: none;
 
 				svg{
+					pointer-events: none;
 					width: 6vw;
           height: 6vw;
-          max-width: 36px;
-          max-height: 36px;
-          min-width: 24px;
-          min-height: 24px;
+					max-width: 40px;
+					max-height: 40px;
+					min-width: 30px;
+					min-height: 30px;
 					transform: scale(1);
 					transition: transform .2s cubic-bezier(.17,.67,.59,1.23);
 				}
@@ -179,22 +186,15 @@
 	      margin: 0 -1rem 0 0;
 	      padding:0;
 	    }
-			// .nav-items a,
-	    // .nav-home {
-	    //   padding:10px;
-	    // }
+
 
 			@media (max-width: $break-medium){
 	      .nav-menu{
 	        position: relative;
 	        display: block;
-					// width: 10vw;
-					// height: 10vw;
-					// min-width: 5rem;
-					// min-height: 5rem;
 					margin: 0 -1rem 0 0;
 	        padding: 10px;
-	        z-index: 1;
+	        z-index: 99;
 
 	      }
 
@@ -214,12 +214,12 @@
 	        // transform: translateX(0%) translateZ(0);
 					// transition: visibility 0s linear 0.6s, transform .6s ease-in;
 	      }
-	      .nav-items.expanded{
+	      // .nav-items.expanded{
 	        // visibility: visible;
 	        // transform: translateX(-100%);
 					// transition: visibility 0s linear 1s, transform .6s cubic-bezier(0.230, 1.000, 0.320, 1.000);
 					// transition-delay: 0s;
-	      }
+	      // }
 				.nav-items {
 					li{
             margin: 1rem 0;

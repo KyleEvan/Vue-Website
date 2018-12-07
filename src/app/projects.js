@@ -6,15 +6,13 @@ var projects = [
     name: 'React Dashboard',
     tags: ['Javascript', 'HTML', 'CSS'],
     date: 2017,
-    href: 'Cycles',
+    href: 'ReactDashboard',
     image:{
       offsetY: '0%',
       src: 'react_view_today'
     },
-    mainColor: colors.turquoise,
-    lightColor: colors.lightTurquoise,
-    mediumColor: colors.mediumTurquoise,
-    darkColor: colors.darkTurquoise
+    lightColor: colors.azureishWhite,
+    mediumColor: colors.powderBlue,
   },
   {
     name: 'Combo Smash',
@@ -25,9 +23,8 @@ var projects = [
       offsetY: '0%',
       src: 'comboSmash_preview'
     },
-    mainColor: colors.projectOrange,
-    lightColor: colors.projectLightOrange,
-    mediumColor: colors.projectMediumOrange,
+    lightColor: colors.lemonMeringue,
+    mediumColor: colors.peachYellow,
   },
   {
     name: 'Cycles',
@@ -36,12 +33,10 @@ var projects = [
     href: 'Cycles',
     image:{
       offsetY: '0%',
-      src: 'cycles'
+      src: 'cycles_start'
     },
-    mainColor: colors.turquoise,
-    lightColor: colors.lightTurquoise,
-    mediumColor: colors.mediumTurquoise,
-    darkColor: colors.darkTurquoise
+    lightColor: colors.manatee,
+    mediumColor: colors.rhythm,
   },
   {
     name: 'Batman Poster',
@@ -52,10 +47,7 @@ var projects = [
       offsetY: '0%',
       src: 'batman'
     },
-    mainColor: colors.orange,
-    lightColor: colors.orange,
-    mediumColor: colors.mediumPeach,
-    // darkColor: colors.darkPeach
+    lightColor: colors.lemonChiffon,
   },
 ];
 

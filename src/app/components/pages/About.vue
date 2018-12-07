@@ -1,32 +1,59 @@
 <template>
   <div><!-- Main Container -->
-    <div class="container">
-      <div class="content contained">
-        <h1>About</h1>
-
-        <p>
-          Rochester, New York based aspiring creative developer, studied New Media &amp; Interactive Development earning a bachelors of science undergraduate degree at RIT. I enjoy the challenge of developing solutions for the web, turning designs into full fledged interactions. I'm curious about how cool websites work, the future of the web experience, and experimental front end technologies like web vr.
-        </p>
+    <div class="about container">
+      <div class="content inner-content">
+        <display-content :events="events" :config="animationConfig" class="display-container">
 
 
+            <h1 class="header">About</h1>
+            <div class="split">
+              <p>
+                Currently living in Rochester, New York I'm an aspiring creative developer. Graduated from RIT with a bachelors of science in  New Media &amp; Interactive Development. I enjoy the challenge of developing beautiful front end solutions for the web, turning designs into interactions. I'm interested in learning more about 3D computer graphics, bleeding edge experimental web technologies, UX and interaction design for media, and maybe another language like php or python.
+              </p>
+              <img :src="portrait_image" alt="picture of me with my diploma"/>
+            </div>
+
+
+
+        </display-content>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+  import displayContent from '../display-content.vue';
   export default {
     name: 'About',
+    props: ['events', 'images'],
+
     data(){
       return {
-        msg: 'about me and stuff'
       }
-    }
+    },
+    components: {
+      'display-content': displayContent,
+    },
+    computed: {
+      animationConfig: function(){
+        return {
+          increment: 0.1,
+          duration: .4,
+          delay: .3,
+          eventName: undefined
+        }
+      },
+      portrait_image: function(){
+        return this.$props.images.all.portrait.xs;
+      }
+    },
   }
 </script>
 
-<style lang="scss" scoped>
-.container{
+<style lang="scss">
+@import '../../../style/global.scss';
+
+.about{
   width: 100%;
   height: auto;
   min-height: 100vh;
@@ -34,14 +61,51 @@
   align-items: center;
   justify-content: center;
   flex-flow: wrap;
-  .content{
-    margin: 0 8%;
+  .display-container{
+    padding: $main-topBotPad 0;
+
     h1{
       font-family: 'InterUI', sans-serif;
       font-weight: 700;
-      font-size: 3.75vw;
+      font-size: $sm-header-fontSize;
       line-height: 1;
+      margin-top: 0;
+      span{
+        display: inline-block;
+        opacity: 0;
+        transform: translateY(60%);
+      }
     }
+
+    div.split{
+      display: flex;
+      align-items: flex-start;
+      flex-flow: column;
+      opacity: 0;
+      transform: translateY(20px);
+
+      &>p{
+        margin-bottom: $main-topBotPad;
+      }
+      @include smmd {
+        flex-flow: row;
+        &>p{
+          margin-bottom: 0;
+          padding-right: $main-topBotPad;
+        }
+      }
+    }
+
+      img{
+        max-width: 260px;
+        -webkit-filter: grayscale(100%);
+        filter: grayscale(100%);
+        align-self: center;
+        @include smmd {
+          width: 46%;
+          align-self: flex-start;
+        }
+      }
   }
 }
 </style>

@@ -8,7 +8,7 @@ const { VueLoaderPlugin } = require('vue-loader');
 module.exports = {
   entry: ["babel-polyfill", __dirname + "/src/app/index.js"], // webpack entry point. Module to start building dependency graph
   output: {
-    path: path.resolve(__dirname, 'dist'), // Folder to store generated bundle
+    path: path.resolve(__dirname, 'docs'), // Folder to store generated bundle
     filename: 'index_bundle.js'  // Name of generated bundle after build
   },
   module: {  // where we defined file patterns and their loaders
@@ -29,7 +29,7 @@ module.exports = {
           ]
         },
         {
-          test:/\.(ttf|woff|woff2)$/,
+          test: /\.(ttf|woff|woff2)$/,
           loader: "file-loader",
           options: {
             name: "fonts/[name].[ext]"
@@ -41,6 +41,13 @@ module.exports = {
           loader: "file-loader",
           options: {
             name: "images/[name]-[hash].[ext]"
+          }
+        },
+        {
+          test: /\.(pdf)(\?.*)?$/,
+          loader: "file-loader",
+          options: {
+            name: "documents/[name]-[hash].[ext]"
           }
         },
         {

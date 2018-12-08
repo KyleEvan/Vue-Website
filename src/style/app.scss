@@ -165,7 +165,7 @@ body {
     $loadingOffset2: $loadingDuration*.125s;
     $loadingOffset3: $loadingDuration*.225s;
     $loadingOffset4: $loadingDuration*.375s; */
-    $loadingColor1: $darkestGreen;
+    /* $loadingColor1: $darkestGreen;
     $loadingColor2: $darkGreen;
     $loadingColor3: $mediumGreen;
     $loadingColor4: $lightGreen;
@@ -193,9 +193,9 @@ body {
         opacity: 0;
         transform: translateX(18%) scale(0.1);
       }
-    }
+    } */
 
-    $loadingDuration: .95s;
+    $loadingDuration: .9s;
 
     @keyframes jump {
       0% {
@@ -208,10 +208,10 @@ body {
         transform: translateY(-40%) scale(1.2);
 
       }
-      100%{
-        opacity: .1;
+      /* 100%{
+        opacity: .1; */
         /* transform: translateY(3%); */
-      }
+      /* } */
     }
 
     .loading{
@@ -226,8 +226,10 @@ body {
       z-index: 999;
       background: #fff;
       svg{
+        transform-origin: 50% 50%;
+        min-width: 30px;
         width: 10%;
-        max-width: 90px;
+        max-width: 60px;
         circle{
           fill: $mainColor;
           opacity: 0;

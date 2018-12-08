@@ -122,12 +122,15 @@
         e.target.previousElementSibling.click();
       },
 
-      navigate: function(e, project, background){
+      navigate: function(e, project, container){
         const href = e.target.getAttribute("href");
         if(href){
           // Cleanup transitionContainer
-          background.parentNode.outerHTML = "";
-          background = null;
+          // background.parentNode.outerHTML = "";
+          // background = null;
+          console.log(container);
+          console.log(this.app);
+          this.app.removeChild(container);
           this.$router.push({
             name: href,
             params: {project: project}
@@ -344,9 +347,11 @@
         const transitionBg = this.createTransitionBg(project, transitionContainer);
         const projectBg = this.createProjectBg(project, transitionContainer);
 
+
         // Animate and hide other projects
         this.animateOutElements(e.target);
-
+        // if its not mobile, animate project
+        // if(this.$props.images.currentBreakpoint === 'md' || this.$props.images.currentBreakpoint === "lg"){
         const morphImageBg = () => {
           anime({
             targets: projectBg,
@@ -358,7 +363,7 @@
             complete: () => {
               this.dev('Transition Completed');
               app.transitioning = false;
-              app.navigate(e, project.data, projectBg);
+              app.navigate(e, project.data, transitionContainer);
             }
           });
         }
@@ -378,6 +383,10 @@
           }
         }), 0 );
         tl.add( TweenLite.to(transitionBg.el, this.projectAnimDuration, {x: transitionBg.width, delay: delay, ease: Power1.easeOut }), 0);
+      // }
+      // else {
+      //   app.navigate(e, project.data, transitionContainer);
+      // }
 
 
         // TweenLite.to(project.el, this.projectAnimDuration, {
@@ -565,7 +574,7 @@
           @include lg {
             flex-flow: row;
             flex-direction: row-reverse;
-            width: 31%;
+            width: 48%;
             // &:nth-child(2n + 2){
             //   margin-right: unset;
             // }
@@ -600,8 +609,8 @@
               height: 25vw;
             }
             @include lg {
-              width: 180px;
-              height: 190px;
+              width: 300px;
+              height: 300px;
             }
             // border-radius: 3px;
             overflow: hidden;
@@ -639,14 +648,17 @@
               align-items: center;
               justify-content: center;
               @include lg {
-                padding: .75em;
+                // padding: .75em;
               }
               &>img,
-              &.div {
+              &>div {
                 // transform: translateY(-20%);
                 position: relative;
+                display: flex;
                 width: auto;
                 height: auto;
+                min-width: 100px;
+                min-height: 100px;
                 max-width: 100%;
                 max-height: 100%;
                 // height: 70%;
@@ -685,7 +697,7 @@
               border-right: 1px solid $offWhite;
               border-top: none;
               width: 52%;
-              font-size: .9em;
+              font-size: 1.25em;
             }
             // border-top: none;
             // margin-top: 70%;

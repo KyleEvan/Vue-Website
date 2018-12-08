@@ -61,15 +61,15 @@
       },
       animateOutLoader: function(callback){
         // const spinner = document.querySelector('.spinner');
-        TweenLite.to(this.loadingEl.firstChild, .6, {
-          scale: .25,
+        TweenLite.to(this.loadingEl.firstElementChild, .6, {
+          scale: 0,
           opacity: 0,
           ease: Power2.easeOut
         });
         TweenLite.to(this.loadingEl, .6, {
           opacity: 0,
           ease: Power2.easeIn,
-          delay: 1,
+          delay: .6,
           onComplete: () => {
             this.dev('done loading images');
             this.destroyLoader();

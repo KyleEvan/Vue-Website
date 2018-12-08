@@ -150,6 +150,7 @@
     height: 50vh;
     min-height: 400px;
     z-index: 0;
+    overflow: hidden;
 
     @include md{
       width: 50%;
@@ -171,14 +172,15 @@
       min-height: inherit;
 
       @include md{
-        top: 0;
-        left: 50%;
-        width: 50%;
+        position: relative;
+        // top: 0;
+        // left: 50%;
+        // width: 50%;
       }
-      @include lg{
-        width: $carousel-width;
-        margin-top: $main-topBotPad;
-      }
+      // @include lg{
+        // width: $carousel-width;
+        // margin-top: $main-topBotPad;
+      // }
 
       .flickity-viewport{
         width: 100%;
@@ -213,6 +215,8 @@
             &>img{
               width: auto;
               height: auto;
+              min-width: 100px;
+              min-height: 100px;
               max-height: 100%;
               max-width: 100%;
             }

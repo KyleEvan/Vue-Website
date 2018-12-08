@@ -38,7 +38,7 @@
 <script>
   // Libraries
 	import FontAwesomeIcon from '@fortawesome/vue-fontawesome';
-	import ScrollMagic from "scrollmagic";
+	// import ScrollMagic from "scrollmagic";
   import { TimelineLite } from "gsap";
 
 
@@ -203,7 +203,7 @@
 	        height:100vh;
 					flex-direction: column;
 					justify-content: center;
-					align-items: unset;
+					align-items: flex-start;
 	        background: $offDarkGreen;
 					padding-left: 2.5rem;
     			font-size: 30px;

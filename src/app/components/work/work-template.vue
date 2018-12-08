@@ -7,7 +7,7 @@
   <div class="content">
     <div class="border"></div>
 
-      <div class="template-main" :style="{background: lightColor}">
+      <div class="template-main" >
         <!-- main work info -->
         <div class="template-aside" >
           <div ref="carouselAside" class="inner-content">
@@ -18,7 +18,7 @@
           </div>
         </div>
         <!-- main work images -->
-        <carousel :progressColor="mediumColor">
+        <carousel :progressColor="mediumColor" :style="{background: lightColor}">
           <slot name="slides"></slot>
         </carousel>
       </div>
@@ -134,6 +134,7 @@
         flex-flow: row;
       }
       &>div:first-child{
+          width: 100%;
           padding-top: $lg-padding;
           @include md{
             padding-top: 0;
@@ -149,12 +150,15 @@
         width: auto;
         height: auto;
         max-width: 100%;
+        min-width: 100px;
+        min-height: 100px;
       }
     }
     div.gif{
       display: flex;
       justify-content: center;
       align-items: center;
+      width: 100%;
       @include md {
         min-width: 50%;
       }
@@ -162,6 +166,8 @@
         width: auto;
         height: auto;
         max-width: 100%;
+        min-width: 100px;
+        min-height: 100px;
       }
     }
   }
@@ -226,11 +232,11 @@
 
         @include md{
           display: flex;
-          align-items: center;
-        }
-        @include lg{
           align-items: flex-start;
         }
+        // @include lg{
+          // align-items: flex-start;
+        // }
 
         &>div{
           opacity: 0;
@@ -259,7 +265,8 @@
           }
           @include md{
             // line-height: 1.5;
-            margin-top: 0;
+            margin-top: $lg-padding;
+            // margin-top: 0;
 
           }
           @include lg{

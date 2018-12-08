@@ -6,7 +6,7 @@ const { VueLoaderPlugin } = require('vue-loader');
 
 
 module.exports = {
-  entry: ["babel-polyfill", __dirname + "/src/app/index.js"], // webpack entry point. Module to start building dependency graph
+  entry: [ "@babel/polyfill", __dirname + "/src/app/index.js"], // webpack entry point. Module to start building dependency graph
   output: {
     path: path.resolve(__dirname, 'docs'), // Folder to store generated bundle
     filename: 'index_bundle.js'  // Name of generated bundle after build
@@ -15,10 +15,27 @@ module.exports = {
       rules: [
         {
           test: /\.js$/,
-          use: 'babel-loader',
-          exclude: [
-            /node_modules/
-          ]
+          exclude: /node_modules/,
+          use: {
+            loader: 'babel-loader',
+            options: {
+              presets: [
+                ['@babel/preset-env', {
+                  modules: 'umd',
+                  targets: {
+                    ie: "11",
+                    ios: "9",
+                    edge: "16",
+                    firefox: "60",
+                    chrome: "67",
+                    safari: "11.1",
+                  },
+                  useBuiltIns: "entry"
+                }]
+              ],
+              plugins: [['@babel/plugin-syntax-dynamic-import'],['@babel/plugin-transform-runtime']]
+            }
+          }
         },
         {
           test: /\.(sa|sc|c)ss$/,

@@ -7,9 +7,11 @@
 
             <h1 class="header">About</h1>
             <div class="split">
-              <p>
-                Currently living in Rochester, New York I'm an aspiring creative developer. Graduated from RIT with a bachelors of science in  New Media &amp; Interactive Development. I enjoy the challenge of developing beautiful front end solutions for the web, turning designs into interactions. I'm interested in learning more about 3D computer graphics, bleeding edge experimental web technologies, UX and interaction design for media, and maybe another language like php or python.
-              </p>
+              <div>
+                <p>
+                  Currently living in Rochester, New York I'm an aspiring creative developer. Graduated from RIT with a bachelors of science in  New Media &amp; Interactive Development. I enjoy the challenge of developing beautiful front end solutions for the web, turning designs into interactions. I'm interested in learning more about 3D computer graphics, bleeding edge experimental web technologies, UX and interaction design for media, and maybe another language like php or python.
+                </p>
+              </div>
               <img :src="portrait_image" alt="picture of me with my diploma"/>
             </div>
 
@@ -54,14 +56,21 @@
 @import '../../../style/global.scss';
 
 .about{
-  width: 100%;
-  height: auto;
-  min-height: 100vh;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-flow: wrap;
+  flex-direction: column;
+  height: 100%;
+  .content{
+    width: 100%;
+    height: 100%;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-flow: wrap;
   .display-container{
+    position: relative;
+    width: 100%;
+
     padding: $main-topBotPad 0;
 
     h1{
@@ -78,18 +87,24 @@
     }
 
     div.split{
+      position: relative;
       display: flex;
       align-items: flex-start;
       flex-flow: column;
+
       opacity: 0;
       transform: translateY(20px);
+      width: 100%;
 
-      &>p{
+      &>div{
+        width: 100%;
         margin-bottom: $main-topBotPad;
+        // width: 50%;
       }
       @include smmd {
         flex-flow: row;
-        &>p{
+
+        &>div{
           margin-bottom: 0;
           padding-right: $main-topBotPad;
         }
@@ -102,10 +117,11 @@
         filter: grayscale(100%);
         align-self: center;
         @include smmd {
-          width: 46%;
+          width: auto;
           align-self: flex-start;
         }
       }
+   }
   }
 }
 </style>

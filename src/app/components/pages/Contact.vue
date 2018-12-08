@@ -82,17 +82,21 @@
 @import '../../../style/global.scss';
 
 .contact{
-  width: 100%;
-  height: auto;
-  min-height: 100vh;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-flow: wrap;
+  flex-direction: column;
+  height: 100%;
+  .content{
+    width: 100%;
+    height: 100%;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-flow: wrap;
   .display-container{
     padding: $main-topBotPad 0;
-    display: flex;
-    flex-flow: column;
+    // display: flex;
+    // flex-flow: column;
     h1{
       font-family: 'InterUI', sans-serif;
       font-weight: 700;
@@ -104,10 +108,21 @@
         transform: translateY(60%);
       }
     }
+    h1+section.info{
+      margin-top: 2em;
+    }
     section.info{
+      position: relative;
       opacity: 0;
+      display: flex;
+      flex-flow: column;
+      // align-items: center;
+      justify-content: center;
       transform: translateY(20px);
       margin-top: 1em;
+      &>*:first-child{
+        margin-top:0;
+      }
       h2{
         font-size: 1.2em;
       }
@@ -121,6 +136,7 @@
       }
     }
   }
+}
 }
 
 </style>

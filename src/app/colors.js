@@ -5,7 +5,7 @@
 
 */
 
-exports.colors = {
+module.exports.colors = {
   // Main palette
   mainBg: '#FFF',
   mainColor: '#2E2C2D',

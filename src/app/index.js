@@ -1,6 +1,6 @@
-import "babel-polyfill";
+// import "@babel/polyfill";
 import "classlist-polyfill";
-import 'es7-object-polyfill';
+// import 'es7-object-polyfill';
 import '../style/app.scss';
 
 import Vue from 'vue';
@@ -58,7 +58,7 @@ Vue.mixin({
         console.log(message);
       }
     },
-    async loadImages(imagesArr, func, wait){
+    loadImages: async function(imagesArr, func, wait){
       // console.log(imagesArr);
       return load.any(imagesArr, (progress) => {
         this.dev(`${(progress.count/progress.total)*100}%`);

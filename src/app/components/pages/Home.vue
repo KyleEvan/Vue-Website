@@ -65,8 +65,8 @@
         pageImages: [],
         projectsElArr: [],
         project: undefined,
-        hideAnimDuration: .35,
-        projectAnimDuration: 1,
+        hideAnimDuration: .45,
+        projectAnimDuration: 1.1,
         imageBgAnimDuration: 800,
         // animate_centerProject: .75,
         transitionBgColor: colors.mainBg,
@@ -130,7 +130,7 @@
           // background = null;
           // console.log(container);
           // console.log(this.app);
-          this.app.removeChild(container);
+          document.getElementById('app').removeChild(container);
           this.$router.push({
             name: href,
             params: {project: project}
@@ -725,6 +725,7 @@
             // color: $mainColor;
             // background: #fff;
             &>div {
+              width: 100%;
               pointer-events: none;
             }
             .name {

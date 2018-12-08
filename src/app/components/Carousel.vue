@@ -92,8 +92,8 @@
       },
       configProgressBar: function(){
         this.dev('configuring progressbar');
-        let container = this.getContainerWH();
-        container = Object.assign(this.$refs.carouselContainer.getBoundingClientRect(), container);
+        // let container = ;
+        let container = Object.assign(this.$refs.carouselContainer.getBoundingClientRect(), this.getContainerWH());
         this.setViewBox(container.width, container.height);
         this.progressBar.width = container.width;
         this.progressBar.height = container.height;
@@ -170,6 +170,12 @@
       height: inherit;
       z-index: 1;
       min-height: inherit;
+      &,
+      &:hover,
+      &:focus,
+      &:active {
+        outline: 0;
+      }
 
       @include md{
         position: relative;

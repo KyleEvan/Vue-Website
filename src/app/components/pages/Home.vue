@@ -128,8 +128,8 @@
           // Cleanup transitionContainer
           // background.parentNode.outerHTML = "";
           // background = null;
-          console.log(container);
-          console.log(this.app);
+          // console.log(container);
+          // console.log(this.app);
           this.app.removeChild(container);
           this.$router.push({
             name: href,
@@ -142,28 +142,41 @@
       },
       // Helper for calcProjectTransforms
       getImageScale: function(project, container){
-        let pageImg, newImg, maxHeight, newHeight, scale, finalImageHeight;
+        let pageImg, newImg, scale;
         pageImg = {
           width: project.image.clientWidth,
           height: project.image.clientHeight
         };
         newImg = {
           width: project.newImage.width,
-          height: project.newImage.height
+          height: project.newImage.height,
+          aspect: project.newImage.width/project.newImage.height,
         };
-        // max-height is defined by vh units
-        // maxHeight = window.innerHeight*project.data.config.imageMaxHeight;
-        // height is defined by vw units
-        // newHeight = window.innerHeight*project.data.config.imageHeight;
-        if(pageImg.width >= pageImg.height){
+
+        // if(pageImg.width >= pageImg.height){
           let newWidth = project.data.width - (project.data.slidePadding*2);
-          if(newWidth > newImg.width) newWidth = newImg.width;
-          scale = newWidth/pageImg.width;
-        } else {
           let newHeight = project.data.height - (project.data.slidePadding*2);
-          if(newHeight > newImg.height) newHeight = newImg.height;
-          scale = newHeight/pageImg.height;
-        }
+          // console.log(newWidth);
+          // scale = newWidth/pageImg.width;
+        // } else {
+          if(newHeight > newImg.height){
+            newHeight = newImg.height;
+            let width = newHeight*newImg.aspect;
+            if(width > newWidth) scale = newWidth/pageImg.width;
+            else scale = newHeight/pageImg.height;
+          }
+          else if(newWidth > newImg.width) {
+            newWidth = newImg.width;
+            let height = newWidth/newImg.aspect;
+            if(height > newHeight) scale = newHeight/pageImg.height;
+            else scale = newWidth/pageImg.width;
+          }
+          else {
+            scale = newHeight/pageImg.height;
+          }
+          // console.log(newHeight);
+          // scale = newHeight/pageImg.height;
+        // }
 
         // if new height of project is greater than the allowed max
         // finalImageHeight = (newHeight > maxHeight ? maxHeight : newHeight);
@@ -552,6 +565,12 @@
           border: 1px solid $offWhite;
           margin-bottom: 2.75em;
           max-width: 100%;
+          &,
+          &:hover,
+          &:focus,
+          &:active {
+            outline: 0;
+          }
           // overflow: hidden;
           // margin-right: 1.25em;
           // &:hover > div{
@@ -591,6 +610,7 @@
             width: 75vw;
             height: 75vw;
             max-width: 100%;
+            &,
             &:hover,
             &:focus,
             &:active {

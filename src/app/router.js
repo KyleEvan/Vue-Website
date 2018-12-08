@@ -3,10 +3,10 @@ import Router from 'vue-router';
 
 // Below syntax dynamically imports component when requested
 // const Component = () => import('./file.ext');
-const Home = () => import('./components/pages/Home.vue');
-const About = () => import('./components/pages/About.vue');
-const Contact = () => import('./components/pages/Contact.vue');
-const NotFound = () => import('./components/pages/NotFound.vue');
+import Home from './components/pages/Home.vue';
+import About from './components/pages/About.vue';
+import Contact from './components/pages/Contact.vue';
+import NotFound from './components/pages/NotFound.vue';
 
 import WorkBatman from './components/work/batman.vue';
 import WorkMember from './components/work/member-redesign.vue';
@@ -22,7 +22,7 @@ Vue.use(Router);
 
 export default new Router({
   mode: 'history',
-  base: '/Vue-Website/',
+  // base: '/Vue-Website/',
   routes: [
     //-----------------------< Main Pages >--------------------------
     // In navigation menu

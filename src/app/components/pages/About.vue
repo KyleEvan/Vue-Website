@@ -9,7 +9,7 @@
             <div class="split">
               <div>
                 <p>
-                  Currently living in Rochester, New York I'm an aspiring creative developer. Graduated from RIT with a bachelors of science in  New Media &amp; Interactive Development. I enjoy the challenge of developing beautiful front end solutions for the web, turning designs into interactions. I'm interested in learning more about 3D computer graphics, bleeding edge experimental web technologies, UX and interaction design for media, and maybe another language like php or python.
+                  Currently living in Rochester, New York I'm an aspiring creative developer. Graduated from RIT with a bachelors of science in  New Media &amp; Interactive Development. I enjoy the challenge of developing beautiful front end solutions for the web, turning designs into interactions. I'm interested in learning more about 3D computer graphics, bleeding edge experimental web technologies, UX and interaction design for media, and some day another language like php or python.
                 </p>
               </div>
               <img :src="portrait_image" alt="picture of me with my diploma"/>
@@ -61,7 +61,7 @@
   height: 100%;
   .content{
     width: 100%;
-    height: 100%;
+    height: auto;
     min-height: 100vh;
     display: flex;
     align-items: center;
@@ -112,6 +112,8 @@
     }
 
       img{
+        width: auto;
+        height: auto;
         max-width: 260px;
         -webkit-filter: grayscale(100%);
         filter: grayscale(100%);

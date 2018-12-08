@@ -2,12 +2,6 @@
   <footer>
     <div class="footer-content content inner-content">
       <div>
-        <span>Made with Vue &#10084;</span>
-        <span>See the project on my <a target="_blank" href="https://github.com/KyleEvan/Vue-Website">GitHub</a></span>
-        <span>༼ つ ͡◕ _ ͡◕ ༽つ</span>
-      </div>
-
-      <div>
         <span>Made by</span>
         <span>Kyle Peterson</span>
         <span>Rochester, NY</span>
@@ -18,6 +12,11 @@
         <span>Thank you for visiting</span>
       </div>
 
+      <div>
+        <span>Made with Vue &#10084;</span>
+        <span>See the project on my <a target="_blank" href="https://github.com/KyleEvan/Vue-Website">GitHub</a></span>
+        <span>༼ つ ͡◕ _ ͡◕ ༽つ</span>
+      </div>
     </div>
   </footer>
 </template>

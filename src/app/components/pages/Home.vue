@@ -321,7 +321,7 @@
         let classname = 'transition-overlay';
         transition_el.setAttribute('viewBox', `${0} ${0} ${this.viewport.cWidth} ${this.viewport.cHeight}`);
         transition_el.classList.add(classname);
-        this.app.appendChild(transition_el);
+        document.getElementById('app').appendChild(transition_el);
         return transition_el;
       },
       createTransitionBg: function(project, transitionContainer){
@@ -342,7 +342,7 @@
         colorBg.setAttribute('fill', project.data.lightColor);
         colorBg.setAttribute('points', points);
         transitionContainer.appendChild(colorBg);
-        this.app.appendChild(transitionContainer);
+        // this.app.appendChild(transitionContainer);
         return colorBg;
       },
 

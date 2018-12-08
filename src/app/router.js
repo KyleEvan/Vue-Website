@@ -14,7 +14,7 @@ import WorkCycles from './components/work/cycles.vue';
 import WorkComboSmash from './components/work/combosmash.vue';
 import WorkReactDashboard from './components/work/react-dashboard.vue';
 
-const Test = () => import('./components/test/test.vue');
+import Test from './components/test/test.vue';
 
 
 

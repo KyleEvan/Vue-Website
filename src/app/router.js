@@ -22,7 +22,7 @@ Vue.use(Router);
 
 export default new Router({
   mode: 'history',
-  base: '/Vue-Website/',
+  // base: '/Vue-Website/',
   routes: [
     //-----------------------< Main Pages >--------------------------
     // In navigation menu

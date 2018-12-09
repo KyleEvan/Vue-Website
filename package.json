@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "personal website",
   "main": "index.js",
+  "homepage": "kyleevan.github.io",
   "scripts": {
     "start": "webpack-dev-server --inline --progress --watch --hot --config webpack.dev.js",
     "prod": "webpack --config webpack.prod.js"

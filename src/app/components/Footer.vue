@@ -14,7 +14,7 @@
 
       <div>
         <span>Made with Vue &#10084;</span>
-        <span>See the project on my <a target="_blank" href="https://github.com/KyleEvan/kyleevan.github.io">GitHub</a></span>
+        <span>See the project on my <a target="_blank" href="https://github.com/KyleEvan/Vue-Website">GitHub</a></span>
         <span>༼ つ ͡◕ _ ͡◕ ༽つ</span>
       </div>
     </div>

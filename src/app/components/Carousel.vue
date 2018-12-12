@@ -7,13 +7,13 @@
     <svg id="progressBar" :style="{backgroundColor: progressBar.background}" :width="progressBar.width" :height="progressBar.height" :viewBox="viewBox" >
       <polygon class="progress" ref="progressBar" :fill="progressColor" :points="points"></polygon>
     </svg>
-    <div v-show="!oneSlide" class="btn-group" @mouseover="handleMouseOver" @mouseleave="handleMouseLeave">
-      <a role="button" class="prev" href="#" @click.prevent="nextPrevSlide">
+    <div v-show="!oneSlide" class="btn-group mobile-no-highlight" @mouseover="handleMouseOver" @mouseleave="handleMouseLeave">
+      <v-touch role="button" class="prev" href="#" v-on:tap="nextPrevSlide">
         <font-awesome-icon :icon="['fas', 'chevron-left']" />
-      </a>
-      <a role="button" class="next" href="#" @click.prevent="nextPrevSlide">
+      </v-touch>
+      <v-touch role="button" class="next" href="#" v-on:tap="nextPrevSlide">
         <font-awesome-icon :icon="['fas', 'chevron-right']" />
-      </a>
+      </v-touch>
     </div>
 
   </div>
@@ -253,11 +253,12 @@
         font-size: 2.5em;
       }
 
-      a, a:active{
+      div, div:active{
         padding: 1em 0;
         width: 50%;
         color: $mainColorLight;
         opacity: .35;
+        cursor: pointer;
 
         &.next{
           padding-right: 1em;

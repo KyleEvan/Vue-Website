@@ -4,8 +4,9 @@ import "classlist-polyfill";
 import '../style/app.scss';
 
 import Vue from 'vue';
-import router from './router.js'
+import router from './router.js';
 import App from './components/App.vue';
+import VueTouch from 'vue-touch';
 
 import { globals } from './globals.js';
 import { images } from './images.js';
@@ -19,10 +20,8 @@ import solid from '@fortawesome/fontawesome-free-solid';
 // fontawesome.library.add(solid, faBars);
 
 
-Vue.config.productionTip = false;
 
 var compatibleBrowser = typeof Object['__defineSetter__'] === 'function';
-
 if(!compatibleBrowser){
   console.warn('Browser not compatible with this website :(');
   var loader = document.querySelector('.loading');
@@ -32,11 +31,14 @@ if(!compatibleBrowser){
   document.body.removeChild(loader);
 }
 
+Vue.config.productionTip = false;
+Vue.use(VueTouch, {name: 'v-touch'});
+
 
 Vue.mixin({
   data: function(){
     return {
-      devmode: false,
+      devmode: true,
       body: document.body,
       app: document.getElementById('app'),
       breakpoints: globals.breakpoints,
@@ -52,25 +54,17 @@ Vue.mixin({
     }
   },
   methods:{
-    // Log messages to console if app is in development mode
+    // Used to log messages to the console
+    // only when the app is in development mode
     dev: function(message) {
       if(this.devmode === true) {
         console.log(message);
       }
     },
-    loadImages: async function(imagesArr, func, wait){
-      // console.log(imagesArr);
-      return load.any(imagesArr, (progress) => {
-        this.dev(`${(progress.count/progress.total)*100}%`);
-        // if(progress.count >= progress.total){
-        // }
-      }).then(assets => {
-        if(func){
-          // console.log(assets);
-          func(assets);
-        }
-      });
-    },
+
+    // Transforms header element
+    // wraps each letter node in a span
+    // output: Array of span elements
     charmWords: function(elements){
       let charm = [];
       let func = function(el){
@@ -88,6 +82,50 @@ Vue.mixin({
       }
       return charm;
     },
+
+    loadImages: async function(imagesArr, func, wait){
+      // console.log(imagesArr);
+      return load.any(imagesArr, (progress) => {
+        this.dev(`${(progress.count/progress.total)*100}%`);
+        // if(progress.count >= progress.total){
+        // }
+      }).then(assets => {
+        if(func){
+          // console.log(assets);
+          func(assets);
+        }
+      });
+    },
+
+    // Working draft for loading page images mixin function
+    // to be used on any page with images, ideally for the project pages to handle
+    // fire this after page load to lazy load images to their respective locations
+    // Gives placeholder imgs a src
+
+    // Nothing is currently returned, should emit event on finish
+    // loadPageImages: function(breakpointSize, container,){
+    //   // let size = 'sm';
+    //   let pageImages = [];
+    //   let imgNames = [];
+    //   let placeholders = [].slice.call(arguments[1].querySelectorAll('.img-placeholder'));
+    //   for(var i = 0; i < placeholders.length; i++){
+    //     imgNames[i] = placeholders[i].getAttribute('data-image-src');
+    //     pageImages[i] = this.$props.images.all[imgNames[i]][arguments[0]];
+    //     // When all placeholders have been stored in pageImages array
+    //     if(i >= placeholders.length-1){
+    //       let replacePlaceholders = function(images){
+    //         for(var j = 0; j < images.length; j++){
+    //           let img = placeholders[j];
+    //           img.src = images[j].src;
+    //           img.removeAttribute('class');
+    //           img.removeAttribute('data-image-src');
+    //         }
+    //       }
+    //       this.loadImages(pageImages, replacePlaceholders);
+    //     }
+    //   }
+    // },
+
     bodyNoScroll: function(){
       this.body.style.top = `${-(window.scrollY || window.pageYOffset || document.body.scrollTop + (document.documentElement && document.documentElement.scrollTop || 0))}px`;
       this.body.style.position = 'fixed';

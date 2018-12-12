@@ -14,7 +14,7 @@ import WorkCycles from './components/work/cycles.vue';
 import WorkComboSmash from './components/work/combosmash.vue';
 import WorkReactDashboard from './components/work/react-dashboard.vue';
 
-import Test from './components/test/test.vue';
+// import Test from './components/test/test.vue';
 
 
 
@@ -83,12 +83,12 @@ export default new Router({
     },
 
     //-----------------------< Testing Pages >---------------------------
-    {
-      path: '/test',
-      name: 'Test',
-      component: Test,
-      meta: { title: 'Testing | Kyle P' }
-    },
+    // {
+    //   path: '/test',
+    //   name: 'Test',
+    //   component: Test,
+    //   meta: { title: 'Testing | Kyle P' }
+    // },
 
     //-----------------------< Other Pages >---------------------------
     {

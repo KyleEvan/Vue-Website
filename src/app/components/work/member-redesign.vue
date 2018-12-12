@@ -38,6 +38,9 @@
       <section class="img-center">
         <img id="exc-home" :src="excellus_home_image" alt="excellus bcbs home page"/>
       </section>
+      <section class="img-center">
+        <img id="exc-home" :src="excellus_wordpressFeed_image" alt="excellus bcbs home page wordpress blog feed"/>
+      </section>
 
       <section>
           <h2>Careers</h2>
@@ -143,7 +146,7 @@ import {colors} from '../../colors.js';
       carousel_images: function(){
         let images = this.$props.images.sized;
         return [
-          images.excellusbcbs_member,
+          images.excellusbcbs_app_page,
           images.univera_perks,
           images.careers_screens,
         ]
@@ -157,6 +160,9 @@ import {colors} from '../../colors.js';
       excellus_careerAreas_image: function(){
         return this.$props.images.all.career_areas[this.$props.images.currentBreakpoint];
       },
+      excellus_wordpressFeed_image: function(){
+        return this.$props.images.all.excellusbcbs_wordpressFeed[this.$props.images.currentBreakpoint];
+      }
     },
   }
 </script>

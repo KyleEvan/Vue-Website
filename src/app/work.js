@@ -9,7 +9,7 @@ var work = [
     href: 'MemberRedesign',
     image:{
       offsetY: '0%',
-      src: 'excellusbcbs_member'
+      src: 'excellusbcbs_app_page'
     },
     lightColor: colors.lightCyan,
     mediumColor: colors.diamond,

@@ -10,7 +10,7 @@
             </p>
             <ul>
                 <li>
-                  <a href="mailto:kyle.evan.p@gmail.com" class="link-btn">
+                  <a :href="links.email" class="link-btn">
                     kyle.evan.p@gmail.com
                   </a>
                 </li>
@@ -20,10 +20,7 @@
             <h2>Professional Resources</h2>
             <ul>
               <li>
-                <a target="_blank" href="#" class="link-btn" type="button" disabled>
-                  Letter of Reference
-                </a>
-                <a target="_blank" :href="resume" class="link-btn">
+                <a target="_blank" :href="links.resume" class="link-btn">
                   Resume
                 </a>
               </li>
@@ -33,7 +30,7 @@
             <h2>GitHub</h2>
             <ul>
               <li>
-                <a target="_blank" href="https://github.com/KyleEvan" class="link-btn">
+                <a target="_blank" :href="links.github" class="link-btn">
                   github.com/KyleEvan
                 </a>
               </li>
@@ -47,7 +44,7 @@
 </template>
 
 <script>
-  import resume_pdf from '../../../documents/kyle+resume_11-29-18.pdf';
+  import resume_pdf from '../../../documents/kyle+resume_12-11-18.pdf';
   import displayContent from '../display-content.vue';
 
   export default {
@@ -56,7 +53,11 @@
 
     data () {
       return {
-
+        links: {
+          email: 'mailto:kyle.evan.p@gmail.com',
+          resume: resume_pdf,
+          github: 'https://github.com/KyleEvan',
+        }
       }
     },
     components: {
@@ -68,13 +69,14 @@
           increment: 0.052,
           duration: .4,
           delay: .3,
-          eventName: undefined
+          eventName: undefined,
         }
       },
-      resume: function(){
-        return resume_pdf;
-      }
+
     },
+    mounted(){
+      console.log(this.links);
+    }
 
   }
 </script>

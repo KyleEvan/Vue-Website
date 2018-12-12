@@ -46,6 +46,11 @@ import cycles_start_xs_jpg from '../images/cycles-start@xs.jpg';
 import cycles_start_md_jpg from '../images/cycles-start@md.jpg';
 import cycles_start_lg_jpg from '../images/cycles-start@lg.jpg';
 
+import excellusbcbs_app_page_xs_jpg from '../images/excellusbcbs-app-page@xs.jpg';
+import excellusbcbs_app_page_sm_jpg from '../images/excellusbcbs-app-page@sm.jpg';
+import excellusbcbs_app_page_md_jpg from '../images/excellusbcbs-app-page@md.jpg';
+import excellusbcbs_app_page_lg_jpg from '../images/excellusbcbs-app-page@lg.jpg';
+
 import excellusbcbs_careers_calendar_xs_png from '../images/excellusbcbs-careers-calendar@xs.png';
 import excellusbcbs_careers_calendar_sm_png from '../images/excellusbcbs-careers-calendar@sm.png';
 import excellusbcbs_careers_calendar_md_png from '../images/excellusbcbs-careers-calendar@md.png';
@@ -58,6 +63,10 @@ import excellusbcbs_home_viewports_lg_png from '../images/excellusbcbs-home-view
 import excellusbcbs_member_xs_jpg from '../images/excellusbcbs-member@xs.jpg';
 import excellusbcbs_member_md_jpg from '../images/excellusbcbs-member@md.jpg';
 import excellusbcbs_member_lg_jpg from '../images/excellusbcbs-member@lg.jpg';
+
+import excellusbcbs_wordpressFeed_sm_jpg from '../images/excellusbcbs-wordpress-feed@sm.jpg';
+import excellusbcbs_wordpressFeed_md_jpg from '../images/excellusbcbs-wordpress-feed@md.jpg';
+import excellusbcbs_wordpressFeed_lg_jpg from '../images/excellusbcbs-wordpress-feed@lg.jpg';
 
 import portrait_sm_jpg from '../images/portrait-bw@sm.jpg';
 
@@ -185,6 +194,18 @@ var images = [
     },
     project: true
   },
+
+  // Excellus images
+  {
+    name: 'excellusbcbs_app_page',
+    src: {
+      xs: excellusbcbs_app_page_xs_jpg,
+      sm: excellusbcbs_app_page_sm_jpg,
+      md: excellusbcbs_app_page_md_jpg,
+      lg: excellusbcbs_app_page_lg_jpg,
+    },
+    project: true
+  },
   {
     name: 'excellusbcbs_careers_calendar',
     src: {
@@ -206,6 +227,16 @@ var images = [
     project: false
   },
   {
+    name: 'excellusbcbs_wordpressFeed',
+    src: {
+      xs: excellusbcbs_wordpressFeed_sm_jpg,
+      sm: excellusbcbs_wordpressFeed_sm_jpg,
+      md: excellusbcbs_wordpressFeed_md_jpg,
+      lg: excellusbcbs_wordpressFeed_lg_jpg,
+    },
+    project: false,
+  },
+  {
     name: 'excellusbcbs_member',
     src: {
       xs: excellusbcbs_member_xs_jpg,
@@ -213,7 +244,7 @@ var images = [
       md: excellusbcbs_member_md_jpg,
       lg: excellusbcbs_member_lg_jpg,
     },
-    project: true
+    project: false
   },
   {
     name: 'portrait',

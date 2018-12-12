@@ -44,6 +44,7 @@
     "@fortawesome/fontawesome-free-solid": "^5.0.13",
     "@fortawesome/vue-fontawesome": "0.0.22",
     "animejs": "^2.2.0",
+    "babel-loader": "^8.0.4",
     "charming": "^2.2.4",
     "classlist-polyfill": "^1.2.0",
     "es7-object-polyfill": "^0.0.7",

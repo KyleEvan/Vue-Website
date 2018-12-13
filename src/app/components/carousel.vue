@@ -8,12 +8,12 @@
       <polygon class="progress" ref="progressBar" :fill="progressColor" :points="points"></polygon>
     </svg>
     <div v-show="!oneSlide" class="btn-group mobile-no-highlight" @mouseover="handleMouseOver" @mouseleave="handleMouseLeave">
-      <v-touch role="button" class="prev" href="#" v-on:tap="nextPrevSlide">
+      <a role="button" class="prev" href="#" @click.prevent="nextPrevSlide">
         <font-awesome-icon :icon="['fas', 'chevron-left']" />
-      </v-touch>
-      <v-touch role="button" class="next" href="#" v-on:tap="nextPrevSlide">
+      </a>
+      <a role="button" class="next" href="#" @click.prevent="nextPrevSlide">
         <font-awesome-icon :icon="['fas', 'chevron-right']" />
-      </v-touch>
+      </a>
     </div>
 
   </div>
@@ -253,13 +253,14 @@
         font-size: 2.5em;
       }
 
-      div, div:active{
+      div, div:active, div:focus,
+      a, a:active, a:focus{
         padding: 1em 0;
         width: 50%;
         color: $mainColorLight;
         opacity: .35;
         cursor: pointer;
-
+        outline: none;
         &.next{
           padding-right: 1em;
           svg{

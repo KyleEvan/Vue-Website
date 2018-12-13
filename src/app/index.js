@@ -6,7 +6,7 @@ import '../style/app.scss';
 import Vue from 'vue';
 import router from './router.js';
 import App from './components/App.vue';
-var VueTouch = require('vue-touch');
+// var VueTouch = require('vue-touch');
 
 import { globals } from './globals.js';
 import { images } from './images.js';
@@ -32,7 +32,7 @@ if(!compatibleBrowser){
 }
 
 Vue.config.productionTip = false;
-Vue.use(VueTouch, {name: 'v-touch'});
+// Vue.use(VueTouch, {name: 'v-touch'});
 
 
 Vue.mixin({

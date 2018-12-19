@@ -38,10 +38,16 @@ Vue.config.productionTip = false;
 Vue.mixin({
   data: function(){
     return {
-      devmode: true,
+      devmode: false,
       body: document.body,
       app: document.getElementById('app'),
-      breakpoints: globals.breakpoints,
+      breakpoints: {
+        xs: 0,
+        sm: 500,
+        md: 1000,
+        lg: 1300,
+        xl: 1600
+      },
     }
   },
   computed:{
@@ -83,6 +89,8 @@ Vue.mixin({
       return charm;
     },
 
+
+
     loadImages: async function(imagesArr, func, wait){
       // console.log(imagesArr);
       return load.any(imagesArr, (progress) => {
@@ -97,34 +105,51 @@ Vue.mixin({
       });
     },
 
+
+    // Helpers for loadPageImages
+    imageDoneLoading: function(img){
+      img.removeAttribute('class');
+      img.removeAttribute('data-image-src');
+    },
+    removeEl: function(el){
+      el.parentElement.removeChild(el);
+    },
+
+
     // Working draft for loading page images mixin function
     // to be used on any page with images, ideally for the project pages to handle
     // fire this after page load to lazy load images to their respective locations
     // Gives placeholder imgs a src
 
     // Nothing is currently returned, should emit event on finish
-    // loadPageImages: function(breakpointSize, container,){
-    //   // let size = 'sm';
-    //   let pageImages = [];
-    //   let imgNames = [];
-    //   let placeholders = [].slice.call(arguments[1].querySelectorAll('.img-placeholder'));
-    //   for(var i = 0; i < placeholders.length; i++){
-    //     imgNames[i] = placeholders[i].getAttribute('data-image-src');
-    //     pageImages[i] = this.$props.images.all[imgNames[i]][arguments[0]];
-    //     // When all placeholders have been stored in pageImages array
-    //     if(i >= placeholders.length-1){
-    //       let replacePlaceholders = function(images){
-    //         for(var j = 0; j < images.length; j++){
-    //           let img = placeholders[j];
-    //           img.src = images[j].src;
-    //           img.removeAttribute('class');
-    //           img.removeAttribute('data-image-src');
-    //         }
-    //       }
-    //       this.loadImages(pageImages, replacePlaceholders);
-    //     }
-    //   }
-    // },
+    loadPageImages: function(breakpointSize, container){
+      let app = this;
+      let size = breakpointSize || this.$props.images.currentBreakpoint;
+      let cont = container || document.getElementById('app');
+      let pageImages = [];
+      let imgNames = [];
+      // image placeholders
+      let placeholders = [].slice.call(cont.querySelectorAll('.img-placeholder, img[data-image-src]'));
+      // image loading spinners
+      let spinners = [].slice.call(cont.querySelectorAll('.loading-spinner'));
+      // console.log(placeholders);
+      for(var i = 0; i < placeholders.length; i++){
+        imgNames[i] = placeholders[i].getAttribute('data-image-src');
+        pageImages[i] = this.$props.images.all[imgNames[i]][size];
+
+        if(i >= placeholders.length-1){
+          let replacePlaceholders = function(images){
+            for(var j = 0; j < images.length; j++){
+              let img = placeholders[j];
+              img.src = images[j].src;
+              TweenLite.to(spinners[j], .5,{ opacity: 0, scale: 0, ease: Power2.easeIn, onComplete: app.removeEl(spinners[j]) });
+              TweenLite.to(placeholders[j], 1, { opacity: 1, y: 0, ease: Power2.easeOut, onComplete: app.imageDoneLoading(img) });
+            }
+          }
+          this.loadImages(pageImages, replacePlaceholders);
+        }
+      }
+    },
 
     bodyNoScroll: function(){
       this.body.style.top = `${-(window.scrollY || window.pageYOffset || document.body.scrollTop + (document.documentElement && document.documentElement.scrollTop || 0))}px`;

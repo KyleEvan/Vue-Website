@@ -22,6 +22,7 @@
               <div class="bg" :style="{background: work.lightColor}"></div>
 
               <div class="image">
+                <spinner class="loading-spinner"/>
                 <img :data-image-src="work.image.src" class="img-placeholder"/>
               </div>
 
@@ -46,6 +47,10 @@
 </template>
 
 <script>
+  // import spinner from '../../../images/spinner.svg';
+  // var spinner = require('svg-inline-loader?classPrefix=my-prefix-!../../../images/spinner.svg');
+  import spinner from '../../../images/spinner.svg';
+
   import {colors} from '../../colors.js';
   import {work} from '../../work.js';
   import {projects} from '../../projects.js';
@@ -67,7 +72,7 @@
         project: undefined,
         hideAnimDuration: .45,
         projectAnimDuration: 1.1,
-        imageBgAnimDuration: 800,
+        imageBgAnimDuration: 1100,
         // animate_centerProject: .75,
         transitionBgColor: colors.mainBg,
         transforms: undefined,
@@ -107,7 +112,7 @@
       }
     },
     components: {
-
+      spinner,
       'home-title': homeTitle
     },
     methods:{
@@ -396,37 +401,6 @@
           }
         }), 0 );
         tl.add( TweenLite.to(transitionBg.el, this.projectAnimDuration, {x: transitionBg.width, delay: delay, ease: Power1.easeOut }), 0);
-      // }
-      // else {
-      //   app.navigate(e, project.data, transitionContainer);
-      // }
-
-
-        // TweenLite.to(project.el, this.projectAnimDuration, {
-        //   x: transforms.translateX,
-        //   y: transforms.translateY,
-        //   scale: transforms.scale,
-        //   ease: Power2.easeOut,
-        //   transformOrigin: '50% 50%',
-        //   // onStart: () => {
-        //   //   ...
-        //   // },
-        //   // onComplete: () => {
-        //     // morphImageBg();
-        //   // }
-        // });
-
-        // fade neutral background to colored bg
-        // TweenLite.to(background, this.projectAnimDuration, {
-        //   opacity: 0,
-        //   ease: Power3.easeOut
-        // });
-        // transition Bg, cover screen swipe left to right
-        // TweenLite.to(transitionBg.el, this.projectAnimDuration, {
-        //   x: transitionBg.width,
-        //   ease: Power1.easeOut
-        // });
-
 
       },
       handleClick: function(e){
@@ -452,29 +426,31 @@
         }
       },
 
-
-      // Gives placeholder imgs a src
-      loadPageImages: function(){
-        // console.log(this.pageImages);
-        let size = 'sm';
-        let imgNames = [];
-        let placeholders = [].slice.call(document.querySelectorAll('.img-placeholder'));
-        for(var i = 0; i < placeholders.length; i++){
-          imgNames[i] = placeholders[i].getAttribute('data-image-src');
-          this.pageImages[i] = this.$props.images.all[imgNames[i]][size];
-          if(i >= placeholders.length-1){
-            let replacePlaceholders = function(images){
-              for(var j = 0; j < images.length; j++){
-                let img = placeholders[j];
-                img.src = images[j].src;
-                img.removeAttribute('class');
-                img.removeAttribute('data-image-src');
-              }
-            }
-            this.loadImages(this.pageImages, replacePlaceholders);
-          }
-        }
+      loadPage: function(){
+        this.loadPageImages('sm', this.$el);
       }
+      // Gives placeholder imgs a src
+      // loadPageImages: function(){
+      //   // console.log(this.pageImages);
+      //   let size = 'sm';
+      //   let imgNames = [];
+      //   let placeholders = [].slice.call(document.querySelectorAll('.img-placeholder'));
+      //   for(var i = 0; i < placeholders.length; i++){
+      //     imgNames[i] = placeholders[i].getAttribute('data-image-src');
+      //     this.pageImages[i] = this.$props.images.all[imgNames[i]][size];
+      //     if(i >= placeholders.length-1){
+      //       let replacePlaceholders = function(images){
+      //         for(var j = 0; j < images.length; j++){
+      //           let img = placeholders[j];
+      //           img.src = images[j].src;
+      //           img.removeAttribute('class');
+      //           img.removeAttribute('data-image-src');
+      //         }
+      //       }
+      //       this.loadImages(this.pageImages, replacePlaceholders);
+      //     }
+      //   }
+      // }
 
       // Will add later if I have time
 
@@ -506,21 +482,17 @@
       // }
     },
 
-    // created(){
-      // listen for app to load
-      // this.events.$on('app-loaded', () => {
-        // console.log('init home.vue');
-      // });
-    // },
-    mounted(){
-      this.loadPageImages();
-      this.projectsElArr = [].slice.call(document.querySelectorAll('.project'));
-
-
-
+    created(){
+      this.events.$on('app-loaded', this.loadPage);
+      this.events.$on('page-transitioned', this.loadPage);
     },
-    updated(){
-
+    mounted(){
+      // console.log(spinner);
+      this.projectsElArr = [].slice.call(document.querySelectorAll('.project'));
+    },
+    beforeDestroy(){
+      this.events.$off('app-loaded', this.loadPage);
+      this.events.$off('page-transitioned', this.loadPage);
     }
   }
 

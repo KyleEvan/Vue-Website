@@ -95,7 +95,7 @@ body {
         }
       }
     }
-
+    // remove mobile background highlighting on buttons and links
     a, a:hover, a:active, a:focus, div[role='button'], div[role='button']:active, div[role='button']:hover, div[role='button']:focus,
     .mobile-no-highlight, .mobile-no-highlight:active, .mobile-no-highlight:focus, .mobile-no-highlight:hover{
       -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
@@ -136,6 +136,7 @@ body {
       user-select: none;
     }
   }
+
   .transition-overlay{
     position: fixed;
     top: 0;
@@ -163,6 +164,28 @@ body {
         }
   }
 
+  .img-placeholder{
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  @keyframes spin{
+    0% {
+      transform: rotate(0deg);
+    }
+    100%{
+      transform: rotate(-360deg);
+    }
+  }
+  .loading-spinner{
+    position: absolute;
+    max-width: 100px;
+    width: 30%;
+    opacity: .35;
+    animation-name: spin;
+    animation-timing-function: cubic-bezier(.54,.41,.54,.73);
+    animation-iteration-count: infinite;
+    animation-duration: .9s;
+  }
 
 /*---------------< Loading spinner >----------------*/
     /* $loadingDuration: .73; */

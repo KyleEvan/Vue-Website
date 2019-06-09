@@ -54,24 +54,20 @@
     },
     methods:{
       destroyLoader: function(){
-        // while (this.loadingEl.firstChild) {
-        //   this.el.removeChild(this.el.firstChild);
-        // }
-        this.body.removeChild(this.loadingEl);
+        if(this.loadingEl) this.body.removeChild(this.loadingEl);
       },
       animateOutLoader: function(callback){
-        // const spinner = document.querySelector('.spinner');
-        TweenLite.to(this.loadingEl.firstElementChild, .6, {
+        TweenLite.to(this.loadingEl.firstElementChild, .5, {
           scale: 0,
           opacity: 0,
-          ease: Power2.easeOut
+          ease: Back.easeIn
         });
-        TweenLite.to(this.loadingEl, .6, {
+        TweenLite.to(this.loadingEl, .5, {
           opacity: 0,
           ease: Power2.easeIn,
-          delay: .6,
+          delay: .5,
           onComplete: () => {
-            this.dev('done loading images');
+            if(this.dev) console.log('done loading images');
             this.destroyLoader();
             callback();
           }
@@ -106,45 +102,33 @@
             queuedImages[image] = this.$props.images.sized[image];
           }
         }
-        // update key values with returned img elements
-        let done = function(assets){
+
+        // minimum wait time
+        let waitPromise = new Promise((resolve, reject) => {
+          setTimeout(() => {
+            console.log('2s min wait time achieved!!');
+            resolve(true);
+          }, 2000);
+        });
+
+        // image assets promise
+        let imagesPromise = new Promise((resolve, reject) => {
+          resolve(this.loadImages(Object.values(queuedImages)));
+        });
+
+        Promise.all([imagesPromise, waitPromise])
+        .then((values) => {
+          console.log(values);
+          let assets = values[0];
+          // update key values with returned img elements
           Object.keys(queuedImages).map((key, index) => {
             queuedImages[key] = assets[index];
           });
           app.setAssets(queuedImages);
-          if(func) func();
-        }
-        this.loadImages(Object.values(queuedImages), done);
+          app.animateOutLoader(app.initApp);
+        });
       },
-      // doneLoading: function(){
-      //   // console.log(assets);
-      //   // Object.keys(this.preloadedImages).map((key, index) => {
-      //   //   this.preloadedImages[key] = assets[index];
-      //   // });
-      //   // console.log(this.preloadedImages);
-      //   // this.assets = this.preloadedImages;
-      //   // 1. animate out the loading screen and then remove elements from dom to clean it up
-      //   // 2. initialize app and fire app-loaded event keying off child element animations
-      //   //    - animate in title text and navigation synchronously
-      //   // 3. child vue components fire event after animating
-      //   //    - title-loaded keys off the scene initialization
-      //   this.animateOutLoader(this.initApp);
-      //
-      // },
-      // async loadImages(images){
-      //   const app = this;
-      //   const wait = 1000;
-      //   console.log(images);
-      //   const assets = await load.any(images, (progress) => {
-      //     if(progress.count >= progress.total){
-      //       setTimeout( function(){
-      //         console.log('All images loaded');
-      //         app.doneLoading();
-      //       }, wait)
-      //     }
-      //   });
-      //   console.log(assets);
-      // },
+
 
       preInitApp: function(){
         this.dev('getting things reading in App.vue ...');
@@ -162,7 +146,8 @@
 
 
         // after sized images are loaded animate out loader then init the app
-        this.loadSizedImages(this.animateOutLoader(this.initApp));
+        // this.loadSizedImages(this.animateOutLoader(this.initApp));
+        this.loadSizedImages();
       },
       initApp: function(){
         // Emits custom event handled by page component in router view

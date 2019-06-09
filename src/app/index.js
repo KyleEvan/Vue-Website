@@ -90,11 +90,10 @@ Vue.mixin({
     },
 
 
-
-    loadImages: async function(imagesArr, func, wait){
+    loadImages: async function(imagesArr, func){
       // console.log(imagesArr);
       return load.any(imagesArr, (progress) => {
-        this.dev(`${(progress.count/progress.total)*100}%`);
+        console.log(`${(progress.count/progress.total)*100}%`);
         // if(progress.count >= progress.total){
         // }
       }).then(assets => {
@@ -102,6 +101,8 @@ Vue.mixin({
           // console.log(assets);
           func(assets);
         }
+        return assets;
+
       });
     },
 

@@ -168,7 +168,7 @@ body {
     opacity: 0;
     transform: translateY(20px);
   }
-  @keyframes spin{
+  /* @keyframes spin{
     0% {
       transform: rotate(0deg);
     }
@@ -185,61 +185,23 @@ body {
     animation-timing-function: cubic-bezier(.54,.41,.54,.73);
     animation-iteration-count: infinite;
     animation-duration: .9s;
-  }
+  } */
 
-/*---------------< Loading spinner >----------------*/
-    /* $loadingDuration: .73; */
-    /* $loadingOffset1: 0s;
-    $loadingOffset2: $loadingDuration*.125s;
-    $loadingOffset3: $loadingDuration*.225s;
-    $loadingOffset4: $loadingDuration*.375s; */
-    /* $loadingColor1: $darkestGreen;
-    $loadingColor2: $darkGreen;
-    $loadingColor3: $mediumGreen;
-    $loadingColor4: $lightGreen;
-    @keyframes spin{
+/*---------------< Loading >----------------*/
+
+    @keyframes loading{
       0% {
         transform: rotate(0deg);
+        stroke-dasharray: 150;
+        stroke-dashoffset: 290;
       }
-      100%{
-        transform: rotate(360deg);
-      }
-    }
-    @keyframes size{
-      0% {
-        opacity: 0;
-        transform: translateX(18%) scale(0.22);
-      }
-      20% {
-        opacity: 1;
-      }
-      90% {
-        opacity: 1;
-        transform: translateX(18%) scale(0.25);
+      50% {
+        stroke-dasharray: 240;
+        stroke-dashoffset: 100;
       }
       100% {
-        opacity: 0;
-        transform: translateX(18%) scale(0.1);
+        transform: rotate(360deg);
       }
-    } */
-
-    $loadingDuration: .9s;
-
-    @keyframes jump {
-      0% {
-        opacity: 0;
-        transform: translateY(0%) scale(1);
-      }
-      80% {
-        opacity: 1;
-
-        transform: translateY(-40%) scale(1.2);
-
-      }
-      /* 100%{
-        opacity: .1; */
-        /* transform: translateY(3%); */
-      /* } */
     }
 
     .loading{
@@ -255,111 +217,23 @@ body {
       background: #fff;
       svg{
         transform-origin: 50% 50%;
-        min-width: 30px;
-        width: 10%;
-        max-width: 60px;
+        width: 10vw;
+        height: 10vw;
+        max-width: 80px;
+        max-height: 80px;
         circle{
-          fill: $mainColor;
-          opacity: 0;
           transform-origin: 50% 50%;
-          animation: jump;
-          animation-duration: $loadingDuration;
-          animation-timing-function: cubic-bezier(.55,.22,.47,.94);
-          animation-iteration-count: infinite;
-          animation-direction: reverse;
-          &:nth-child(2){
-            animation-delay: .15s;
-          }
-          &:nth-child(3){
-            animation-delay: .3s;
-
-          }
-        }
-      }
-      /* .spinner-container{
-      .spinner{
-        overflow: unset;
-        width: 140px;
-        height: 140px;
-
-        &>span{
-          position: absolute;
-          display: inline-block;
-          animation-name: spin;
-          opacity: .6;
-
-          &>span{
-            display: inline-block;
-            transform: translateX(33%) scale(.33);
-            animation-name: size;
-            transform-origin: 50% 50%;
-            border-radius: 50%;
-            animation-duration: $loadingDuration*1s;
-            animation-timing-function: cubic-bezier(.15,.6,.93,.5);
-            animation-iteration-count: infinite;
-            background-color: transparent;
-            opacity: 0;
-          }
-          &>span.circle{
-            border-radius: 100%;
-          }
-          &>span.polygon{
-            width: 0;
-            height: 0;
-            border-left: 70px solid transparent;
-            border-right: 70px solid transparent;
-            border-bottom: 140px solid transparent;
-          }
-          &:nth-child(1)>span.circle{
-            background-color: $loadingColor1;
-          }
-          &:nth-child(1)>span.polygon{
-            border-bottom-color: $loadingColor1;
-          }
-          &:nth-child(2)>span.circle{
-            background-color: $loadingColor2;
-          }
-          &:nth-child(2)>span.polygon{
-            border-bottom-color: $loadingColor2;
-          }
-          &:nth-child(3)>span.circle{
-            background-color: $loadingColor3;
-          }
-          &:nth-child(3)>span.polygon{
-            border-bottom-color: $loadingColor3;
-          }
-          &:nth-child(4)>span.circle{
-            background-color: $loadingColor4;
-          }
-          &:nth-child(4)>span.polygon{
-            border-bottom-color: $loadingColor4;
-          }
-        }
-        &>span,
-        &>span>span{
-          transform-origin: 50% 50%;
-          animation-duration: $loadingDuration*1s;
-          animation-timing-function: cubic-bezier(.15,.6,.93,.5);
+          fill: transparent;
+          stroke: #000;
+          stroke-width: 10px;
+          stroke-dasharray: 185;
+          stroke-dashoffset: 30;
+          animation: loading;
+          animation-duration: 2s;
+          animation-timing-function: cubic-bezier(.55,.22,.47,.4);
           animation-iteration-count: infinite;
         }
-        &>span:nth-child(1),
-        &>span:nth-child(1)>span{
-          animation-delay: $loadingOffset1;
-        }
-        &>span:nth-child(2),
-        &>span:nth-child(2)>span{
-          animation-delay: $loadingOffset2;
-        }
-        &>span:nth-child(3),
-        &>span:nth-child(3)>span{
-          animation-delay: $loadingOffset3;
-        }
-        &>span:nth-child(4),
-        &>span:nth-child(4)>span{
-          animation-delay: $loadingOffset4;
-        }
       }
-      } */
     }
 
 

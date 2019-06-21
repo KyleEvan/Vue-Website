@@ -52,20 +52,21 @@
       'nav-content': nav,
       'footer-content': footer,
     },
+
     methods:{
       destroyLoader: function(){
-        if(this.loadingEl) this.body.removeChild(this.loadingEl);
+        this.body.removeChild(this.loadingEl);
       },
       animateOutLoader: function(callback){
-        TweenLite.to(this.loadingEl.firstElementChild, .5, {
+        TweenLite.to(this.loadingEl.querySelector('svg'), .3, {
           scale: 0,
           opacity: 0,
-          ease: Back.easeIn
+          ease: Back.easeIn.config(1)
         });
-        TweenLite.to(this.loadingEl, .5, {
+        TweenLite.to(this.loadingEl, .3, {
           opacity: 0,
           ease: Power2.easeIn,
-          delay: .5,
+          delay: .3,
           onComplete: () => {
             if(this.dev) console.log('done loading images');
             this.destroyLoader();
@@ -125,13 +126,13 @@
             queuedImages[key] = assets[index];
           });
           app.setAssets(queuedImages);
-          app.animateOutLoader(app.initApp);
+          if(document.querySelector('.loading')) app.animateOutLoader(app.initApp);
         });
       },
 
 
       preInitApp: function(){
-        this.dev('getting things reading in App.vue ...');
+        console.log('getting things reading in App.vue ...');
 
         // Initially set title when app is first created
         this.setPageTitle();

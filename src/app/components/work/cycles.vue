@@ -9,14 +9,12 @@
     </template>
 
     <!-- Aside Main Content -->
-    <template slot="asideContent">
+    <!-- <template slot="asideContent">
       <section>
-        <p>
-          The first game I ever developed <i>Cycles</i> is a simple 2D desktop web game designed to help users practice and learn basic multiplication skills. It has an 8-bit theme and was inspired by old computer games. I worked on this as a personal project for my Rich Media in Web Applications class. It uses no libraries, has no dependencies and was created with plain Javascript, Canvas API, HTML, and CSS.
-        </p>
+        
 
       </section>
-    </template>
+    </template> -->
 
     <!-- Carousel slides -->
     <template slot="slides">
@@ -25,8 +23,10 @@
       </div>
     </template>
 
-    <template slot="extra">
-
+    <template slot="main-content">
+      <p>
+        The first game I ever developed <i>Cycles</i> is a simple 2D desktop web game designed to help users practice and learn basic multiplication skills. It has an 8-bit theme and was inspired by old computer games. I worked on this as a personal project for my Rich Media in Web Applications class. It uses no libraries, has no dependencies and was created with plain Javascript, Canvas API, HTML, and CSS.
+      </p>
       <!-- Gameplay -->
       <section class="split">
         <div>
@@ -42,25 +42,25 @@
 
 
       <!-- Links -->
-      <section>
-        <h2>Links</h2>
+      <!-- <section> -->
+        <!-- <h2>Links</h2> -->
         <ul class="links-list">
           <li>
-            <h3>GitHub Project</h3>
+            <h2>GitHub Project</h2>
             <p>
               Contains more detailed instructions on how to play the game.
             </p>
             <a target="_blank" :href="links.github" class="link-btn">Cycles</a>
           </li>
           <li class="show-desktop">
-            <h3>Play the Game</h3>
+            <h2>Play the Game</h2>
             <p>
               (WARNING: This game does not work on mobile or tablet. Requires keyboard)
             </p>
             <a target="_blank" :href="links.game" class="link-btn">Play Cycles</a>
           </li>
         </ul>
-      </section>
+      <!-- </section> -->
 
     </template>
 

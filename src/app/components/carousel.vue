@@ -7,15 +7,14 @@
     <svg id="progressBar" :style="{backgroundColor: progressBar.background}" :width="progressBar.width" :height="progressBar.height" :viewBox="viewBox" >
       <polygon class="progress" ref="progressBar" :fill="progressColor" :points="points"></polygon>
     </svg>
-    <div v-show="!oneSlide" class="btn-group mobile-no-highlight" @mouseover="handleMouseOver" @mouseleave="handleMouseLeave">
-      <a role="button" class="prev" href="#" @click.prevent="nextPrevSlide">
+    <!-- <div v-show="!oneSlide" class="btn-group mobile-no-highlight" @mouseover="handleMouseOver" @mouseleave="handleMouseLeave"> -->
+      <a v-show="!oneSlide" role="button" class="prev" href="#" @click.prevent="nextPrevSlide">
         <font-awesome-icon :icon="['fas', 'chevron-left']" />
       </a>
-      <a role="button" class="next" href="#" @click.prevent="nextPrevSlide">
+      <a v-show="!oneSlide" role="button" class="next" href="#" @click.prevent="nextPrevSlide">
         <font-awesome-icon :icon="['fas', 'chevron-right']" />
       </a>
-    </div>
-
+    <!-- </div> -->
   </div>
 
 </template>
@@ -69,9 +68,15 @@
         this.viewBox = `0 0 ${width} ${height}`;
       },
       animateProgressBar(x){
-        let progress = this.$refs.progressBar;
-        if(progress){
-          TweenLite.to(progress, 0,
+        let progress = Math.round(x*1000)/1000;     
+        let progressEl = this.$refs.progressBar;
+        if(progress <= 0){
+          progressEl.style.opacity = 0;
+        } else {
+          progressEl.style.opacity = 1;
+        }
+        if(progressEl){
+          TweenLite.to(progressEl, 0,
           {
             x: x,
             ease: Power0.easeNone
@@ -152,20 +157,20 @@
     z-index: 0;
     overflow: hidden;
 
-    @include md{
-      width: 50%;
-      height: 100vh;
-    }
-    @include lg{
-      height: $main-height;
-      max-height: $main-maxHeight;
-    }
+    // @include md{
+    //   width: 50%;
+    //   height: 100vh;
+    // }
+    // @include lg{
+    //   height: $main-height;
+    //   max-height: $main-maxHeight;
+    // }
 
     #fixed-container{
       display: flex;
       justify-content: center;
       align-items: center;
-      position: fixed;
+      position: relative;
       width: 100%;
       height: inherit;
       z-index: 1;
@@ -191,7 +196,7 @@
       .flickity-viewport{
         width: 100%;
         height: 100%;
-        overflow-x: hidden;
+        overflow: hidden;
         cursor: move; /* fallback if grab cursor is unsupported */
         cursor: grab;
         cursor: -moz-grab;
@@ -211,7 +216,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 2em;
+            // padding: 2em;
             width: 100%;
             height: 100%;
 
@@ -219,12 +224,13 @@
               padding: $lg-padding;
             }
             &>img{
-              width: auto;
-              height: auto;
-              min-width: 100px;
-              min-height: 100px;
-              max-height: 100%;
-              max-width: 100%;
+              position: absolute;
+              // width: auto;
+              // height: auto;
+              // min-width: 100px;
+              // min-height: 100px;
+              // max-height: 100%;
+              // max-width: 100%;
             }
           }
         }
@@ -239,45 +245,57 @@
       top: 0;
       z-index: 0;
     }
+    .progress{
+      opacity: 0;
+    }
     /* Prev next buttons */
-    .btn-group{
-      position: absolute;
-      bottom: 0;
-      display: flex;
-      left: 0;
-      width: 100%;
-      justify-content: space-between;
-      z-index: 1;
-      font-size: 2em;
-      @include md {
-        font-size: 2.5em;
-      }
+    // .btn-group{
+    //   position: absolute;
+    //   bottom: 0;
+    //   display: flex;
+    //   left: 0;
+    //   width: 100%;
+    //   justify-content: space-between;
+    //   z-index: 1;
+    //   font-size: 2em;
+    //   @include md {
+    //     font-size: 2.5em;
+    //   }
 
-      div, div:active, div:focus,
-      a, a:active, a:focus{
-        padding: 1em 0;
-        width: 50%;
+      a.next,
+      a.next:active,
+      a.next:focus,
+      a.prev,        
+      a.prev:active,
+      a.prev:focus{
+        position: absolute;
+        font-size: 2em;
+        top: 50%;
+        transform: translateY(-50%);
+        padding: 1em;
+        // width: 50%;
         color: $mainColorLight;
         opacity: .35;
         cursor: pointer;
         outline: none;
-        &.next{
-          padding-right: 1em;
-          svg{
-            float: right;
-          }
-        }
-        &.prev{
-          padding-left: 1em;
-        }
+        z-index: 2;
         svg{
           pointer-events: none;
         }
       }
-      a:hover, a:focus{
-        opacity: .75;
+      a.next{
+        right: 0;
+        // svg{
+        //   float: right;
+        // }
       }
-    }
+      a.prev{
+        left: 0;
+      }
+      // a:hover, a:focus{
+      //   opacity: .75;
+      // }
+    // }
   }
 
 

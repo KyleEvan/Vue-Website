@@ -58,10 +58,10 @@ module.exports = {
         },
         {
           // test:/\.(jpg|png|gif|svg|ico)$/,
-          test: /\.(png|jpg|gif)$/,
+          test: /\.(png|jpg|gif|mp4)$/,
           loader: "file-loader",
           options: {
-            name: "images/[name]-[hash].[ext]"
+            name: "media/[name]-[hash].[ext]"
           }
         },
         {

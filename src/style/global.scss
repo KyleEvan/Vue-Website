@@ -7,7 +7,7 @@
 $break-small: 500px;
 $break-smallMed: 800px;
 $break-medium: 1000px;
-$break-large: 1300px;
+$break-large: 1200px;
 $break-xl: 1600px;
 
 @mixin sm{
@@ -27,17 +27,23 @@ $break-xl: 1600px;
 }
 @mixin lg{
   @media (min-width: #{$break-large}){
-     @content
+     @content;
   }
 }
 @mixin xl{
   @media (min-width: #{$break-xl}){
-     @content
+     @content;
   }
 }
 
 
-
+/**
+ * New Colors
+ */
+$white: #FFFFFF;
+$black: #282A2A;
+$blue: #586BA4;
+$lightBlue: #94A0C5;
 
 // Main Palette must be in sync with colors.js
 $mainBg: #FFF;

@@ -5,30 +5,29 @@
 -->
 <template>
   <div class="content">
-    <div class="border"></div>
+    <!-- <div class="border"></div> -->
 
-      <div class="template-main" >
+      <!-- <div class="template-main" > -->
         <!-- main work info -->
-        <div class="template-aside" >
-          <div ref="carouselAside" class="inner-content">
-            <h1 class="template-title">
-              <slot name="title"></slot>
-            </h1>
-            <slot name="asideContent"></slot>
-          </div>
-        </div>
+        
         <!-- main work images -->
-        <carousel :progressColor="mediumColor" :style="{background: lightColor}">
+        <carousel :progressColor="mainColor">
           <slot name="slides"></slot>
         </carousel>
+        <!-- <div class="template-aside" >
+          <div ref="carouselAside" class="inner-content">
+            
+            <slot name="asideContent"></slot>
+          </div>
+        </div> -->
+      <!-- </div> -->
+      <div class="inner-content">
+        <h1 class="template-title">
+          <slot name="title"></slot>
+        </h1>
+        <slot name="main-content"></slot>
       </div>
 
-      <!-- extra work info -->
-      <div v-if="extraSlotPassed" class="template-extra inner-content" ref="extraContent">
-        <div>
-          <slot name="extra"></slot>
-        </div>
-      </div>
   </div>
 </template>
 
@@ -67,7 +66,6 @@
       lightColor: function(){
         return this.$props.project ? this.$props.project.lightColor : this.defaultLightColor;
       },
-
       extraSlotPassed: function(){
         return !!this.$slots['extra'];
       }
@@ -75,16 +73,16 @@
     methods:{
       animateContent: function(){
         let dur = this.$props.project ? .6 : 0;
-        const aside = this.$refs.carouselAside;
-        const extra = this.$refs.extraContent;
+        // const aside = this.$refs.carouselAside;
+        // const extra = this.$refs.extraContent;
         let tweenConfig = {
           x: 0,
           y: 0,
           opacity: 1,
           ease: Circ.easeOut
         };
-        TweenLite.to(aside, dur, tweenConfig);
-        if(extra) TweenLite.to(extra, dur+.25, tweenConfig);
+        // TweenLite.to(aside, dur, tweenConfig);
+        // if(extra) TweenLite.to(extra, dur+.25, tweenConfig);
       },
       initPage: function(){
         this.animateContent();
@@ -97,6 +95,7 @@
     },
     mounted(){
       this.initPage();
+      console.log(this.$props.project);
     }
   }
 </script>
@@ -120,10 +119,10 @@
 
 
   section{
-    padding: 2em 0;
+    // padding: 2em 0;
 
     @include md{
-      padding: 4em 0;
+      // padding: 4em 0;
     }
     &.split{
       display: flex;
@@ -173,9 +172,12 @@
   }
   .links-list{
     list-style: none;
+    padding: 0;
+    margin: 0;
+
     li{
-      margin-bottom: $lg-padding;
-      padding-top: 1em;
+      // margin-bottom: $lg-padding;
+      // padding-top: 1em;
       &:last-child{
         border-bottom: none;
       }
@@ -186,39 +188,37 @@
 
 
 
+  // .border{
+  //   position: absolute;
+  //   top: 0;
+  //   left: 0;
+  //   width: 100%;
+  //   height: 100%;
+  //   z-index: 1;
+  //   pointer-events: none;
 
-
-  .border{
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1;
-    pointer-events: none;
-
-    @include lg{
-      &::before{
-        content: '';
-        width: 100%;
-        height: 100vh;
-        position: absolute;
-        top: 0;
-        left: 0;
-        box-sizing: border-box;
-        border-top: solid 5em $mainBg;
-        border-left: solid 650px $mainBg;
-        border-bottom: solid 5em $mainBg;
-      }
-    }
-  }
+  //   @include lg{
+  //     &::before{
+  //       content: '';
+  //       width: 100%;
+  //       height: 100vh;
+  //       position: absolute;
+  //       top: 0;
+  //       left: 0;
+  //       box-sizing: border-box;
+  //       border-top: solid 5em $mainBg;
+  //       border-left: solid 650px $mainBg;
+  //       border-bottom: solid 5em $mainBg;
+  //     }
+  //   }
+  // }
 
     .template-main{
       display: flex;
       flex-direction: column-reverse;
 
       @include md{
-        flex-direction: row;
+        // flex-direction: row;
 
       }
       @include lg{
@@ -248,12 +248,12 @@
 
 
         @include md{
-          width: 50%;
-          height: 100vh;
+          // width: 50%;
+          // height: 100vh;
         }
         @include lg{
-          height: $main-height;
-          max-height: $main-maxHeight;
+          // height: $main-height;
+          // max-height: $main-maxHeight;
         }
         .template-title{
           font-size: 2em;
@@ -265,7 +265,7 @@
           }
           @include md{
             // line-height: 1.5;
-            margin-top: $lg-padding;
+            // margin-top: $lg-padding;
             // margin-top: 0;
 
           }

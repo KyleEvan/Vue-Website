@@ -78,6 +78,8 @@ import react_view_today_sm_jpg from '../images/react-view-today@sm.jpg';
 import react_view_today_md_jpg from '../images/react-view-today@md.jpg';
 import react_view_today_lg_jpg from '../images/react-view-today@lg.jpg';
 
+import shapes_preview_sm_gif from '../images/shapes-preview@sm.gif';
+
 import univera_perks_xs_jpg from '../images/univerahealthcare-perks@xs.jpg';
 import univera_perks_md_jpg from '../images/univerahealthcare-perks@md.jpg';
 import univera_perks_lg_jpg from '../images/univerahealthcare-perks@lg.jpg';
@@ -270,6 +272,13 @@ var images = [
       sm: react_view_today_sm_jpg,
       md: react_view_today_md_jpg,
       lg: react_view_today_lg_jpg
+    },
+    project: true,
+  },
+  {
+    name: 'shapes_preview',
+    src: {
+      sm: shapes_preview_sm_gif,
     },
     project: true,
   },

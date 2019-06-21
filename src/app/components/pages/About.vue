@@ -6,13 +6,13 @@
 
 
             <h1 class="header">About</h1>
-            <div class="split">
-              <div>
-                <p>
-                  Currently living in Rochester, New York I'm an aspiring creative developer. Graduated from RIT with a bachelors of science in  New Media &amp; Interactive Development. I enjoy the challenge of developing beautiful front end solutions for the web, turning designs into interactions. I'm interested in learning more about 3D computer graphics, bleeding edge experimental web technologies, UX and interaction design for media, and some day another language like php or python.
-                </p>
-              </div>
+            <div class="me">
               <img :src="portrait_image" alt="picture of me with my diploma"/>
+            </div>
+            <div class="bio">
+              <p>
+                Currently based in Rochester, New York I'm an aspiring creative developer. Graduated from RIT with a bachelors of science in  New Media &amp; Interactive Development. I enjoy the challenge of developing beautiful front end solutions for the web, turning designs into interactions. I'm interested in learning more about 3D computer graphics, bleeding edge web technologies, UX and interaction design for media.
+              </p>
             </div>
 
 
@@ -67,10 +67,14 @@
     align-items: center;
     justify-content: flex-start;
     flex-flow: wrap;
+
   .display-container{
     position: relative;
     width: 100%;
-
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    justify-content: center;
     padding: $main-topBotPad 0;
 
     h1{
@@ -85,25 +89,40 @@
         transform: translateY(60%);
       }
     }
-
-    div.split{
-      position: relative;
-      display: flex;
-      align-items: flex-start;
-      flex-flow: column;
-
+    div.me{
+      border-radius: 100%;
       opacity: 0;
       transform: translateY(20px);
-      width: 100%;
+      margin: 1em 0;
+      width: 12em;
+      height: 12em;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-start;
 
-      &>div{
+      img{
         width: 100%;
-        margin-bottom: $main-topBotPad;
-        // width: 50%;
+        height: auto;
+        max-width: 260px;
+        // @include smmd {
+        //   width: auto;
+        //   // align-self: flex-start;
+        // }
       }
+    }
+    div.bio{
+      position: relative;
+      opacity: 0;
+      transform: translateY(20px);
+      width: 90%;
+      // &>div{
+      //   width: 100%;
+      //   margin-bottom: $main-topBotPad;
+      //   // width: 50%;
+      // }
       @include smmd {
-        flex-flow: row;
-
+        width: 68%;
+        text-indent: 2em;
         &>div{
           margin-bottom: 0;
           padding-right: $main-topBotPad;
@@ -111,18 +130,7 @@
       }
     }
 
-      img{
-        width: auto;
-        height: auto;
-        max-width: 260px;
-        -webkit-filter: grayscale(100%);
-        filter: grayscale(100%);
-        align-self: center;
-        @include smmd {
-          width: auto;
-          align-self: flex-start;
-        }
-      }
+
    }
   }
 }

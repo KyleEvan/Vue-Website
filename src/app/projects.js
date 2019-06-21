@@ -2,28 +2,31 @@
 import {colors} from './colors.js';
 
 var projects = [
+    {
+    name: 'Shapes Demo',
+    tags: ['Javascript', 'HTML', 'SCSS'],
+    date: '2018',
+    href: 'ShapesDemo',
+    featuredImage: 'shapes_preview',
+    lightColor: colors.red,
+    mediumColor: colors.red,
+  },
   {
-    name: 'React Dashboard',
-    tags: ['Javascript', 'HTML', 'CSS'],
-    date: 2017,
-    href: 'ReactDashboard',
-    image:{
-      offsetY: '0%',
-      src: 'react_view_today'
-    },
-    lightColor: colors.azureishWhite,
-    mediumColor: colors.powderBlue,
+    name: 'Excellus/Univera Redesign',
+    tags: ['JavaScript', 'CSS', 'HTML'],
+    date: '2017 - 2018',
+    href: 'MemberRedesign',
+    featuredImage: 'career_areas',
+    mainColor: colors.orange,
+    mediumColor: colors.orange,
   },
   {
     name: 'Combo Smash',
     tags: ['JavaScript', 'CSS', 'HTML'],
     date: 2014,
     href: 'ComboSmash',
-    image:{
-      offsetY: '0%',
-      src: 'comboSmash_preview'
-    },
-    lightColor: colors.lemonMeringue,
+    featuredImage: 'comboSmash_preview',
+    mainColor: colors.red,
     mediumColor: colors.peachYellow,
   },
   {
@@ -31,11 +34,8 @@ var projects = [
     tags: ['Javascript', 'HTML', 'CSS'],
     date: 2013,
     href: 'Cycles',
-    image:{
-      offsetY: '0%',
-      src: 'cycles_start'
-    },
-    lightColor: colors.manatee,
+    featuredImage: 'cycles',
+    mainColor: colors.blue,
     mediumColor: colors.rhythm,
   },
   {
@@ -43,11 +43,8 @@ var projects = [
     tags: ['Illustrator', 'Photoshop'],
     date: 2013,
     href: 'BatmanPoster',
-    image:{
-      offsetY: '0%',
-      src: 'batman'
-    },
-    lightColor: colors.lemonChiffon,
+    featuredImage: 'batman',
+    lightColor: colors.yellow,
   },
 ];
 

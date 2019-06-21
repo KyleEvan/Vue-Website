@@ -2,12 +2,12 @@
   <div>
 
     <!-- <home-title class="content" :events="events" /> -->
-    <home-title class="content inner-content" :events="events"/>
+    <!-- <home-title class="content inner-content" :events="events"/> -->
 
     <div class="container">
 
 
-      <div v-for="(works, section) in sections" :id="section.toLowerCase()">
+      <!-- <div v-for="(works, section) in sections" :id="section.toLowerCase()">
         <div class="content inner-content">
         <h2>{{section}}</h2>
         <div class="works">
@@ -37,8 +37,46 @@
           </div>
         </div>
         </div>
-      </div>
+      </div> -->
 
+        <div class="content inner-content">
+          <h2>Projects</h2>
+          <div class="projects">
+            <div tabindex="0" v-for="(work, index) in projectsData" :key="index" :class="projectContainerClass">
+
+              <a
+                role="link"
+                :href="work.href"
+                @click.prevent="handleProjectClick"
+                :class="projectClass"
+                tabindex="-1"
+                >
+                <!-- <div class="bg" :style="{background: work.lightColor}"></div> -->
+
+                <div class="image">
+                  <!-- <spinner class="loading-spinner"/> -->
+                  <img :data-image-src="work.featuredImage" class="img-placeholder"/>
+                </div>
+                <div class="info">
+                  <h3 class="name">
+                    {{ work.name }}
+                  </h3>
+                  <ul class="tags">
+                    <li v-for="(tag, index) in work.tags" :key="index" :class="tag.toLowerCase()">
+                      {{ tag }}
+                    </li>
+                  </ul>
+                  <div v-if="work.date" class="date">{{work.date}}</div>
+                </div>
+              </a>
+
+            </div>
+          </div>
+        </div>
+
+      <svg id="transition-overlay">
+        <rect />
+      </svg>
 
     </div><!-- End of works container -->
 
@@ -47,16 +85,15 @@
 </template>
 
 <script>
-  // import spinner from '../../../images/spinner.svg';
   // var spinner = require('svg-inline-loader?classPrefix=my-prefix-!../../../images/spinner.svg');
-  import spinner from '../../../images/spinner.svg';
+  // import spinner from '../../../images/spinner.svg';
 
   import {colors} from '../../colors.js';
-  import {work} from '../../work.js';
+  // import {work} from '../../work.js';
   import {projects} from '../../projects.js';
 
   import homeTitle from '../home-title.vue';
-
+ 
   import anime from 'animejs';
 
   export default {
@@ -65,8 +102,12 @@
 
     data(){
       return{
-        sections: {Work: work, Projects: projects},
-        projects: work.concat(projects),
+        projectClass: 'project',
+        projectContainerClass: 'project-container',
+
+        projectsData: projects,
+        // sections: {Projects: projects},
+        projects: projects,
         pageImages: [],
         projectsElArr: [],
         project: undefined,
@@ -112,10 +153,113 @@
       }
     },
     components: {
-      spinner,
+      // spinner,
       'home-title': homeTitle
     },
     methods:{
+
+      handleProjectClick: function(e){
+        this.transitioning = true;
+        console.log(e.target);
+        this.project = this.getProjectData(e.target);
+        const id = 'transition-overlay';
+        let overlay = document.getElementById(id);
+        let rect = overlay.querySelector('rect');
+        overlay.style.display = 'block';
+        overlay.setAttribute('width', `${this.viewport.cWidth}`);
+        overlay.setAttribute('height', `${this.viewport.cHeight}`);
+        rect.setAttribute('x', -`${this.viewport.cWidth}`);
+        rect.setAttribute('y', 0);
+        rect.setAttribute('width', `${this.viewport.cWidth}`);
+        rect.setAttribute('height', `${this.viewport.cHeight}`);
+        console.log(this.project);
+        rect.setAttribute('fill', this.project.data.mainColor);
+
+        const inactiveProjects = this.filterInactiveProjects(e.target);
+        
+        this.animateToProject(rect, e.target, inactiveProjects);
+
+
+      },
+      filterInactiveProjects: function(el){
+        let projectContainers =  [].slice.call(this.$el.querySelectorAll(`.${this.projectContainerClass}`));
+        let inactiveProjects = projectContainers.filter( (projectContainer) => {
+          return (projectContainer.querySelector(`.${this.projectClass}`) !== el);
+        });
+        return inactiveProjects;
+      },
+
+      animateToProject: function(overlayRect, activeProject, inactiveProjects){
+        // activeProject.blur();
+        const tl = new TimelineLite();
+        tl.set(activeProject, {transition: 'unset'});
+        tl.add( TweenLite.to(
+          activeProject,
+          0.5,
+          {
+            y: '-20%',
+            opacity: 0,
+            ease: Back.easeIn.config(.35),
+          }
+        ));
+        tl.add( TweenLite.to(
+          inactiveProjects,
+          0.3,
+          {
+            y: '5%',
+            opacity: 0,
+            ease: Power2.easeOut,
+          }
+        ), 0);
+        tl.add( TweenLite.to(
+          overlayRect,
+          1.0,
+          {
+            x: '100%',
+            opacity: 1,
+            ease: Power2.easeOut,
+            onComplete: () => {
+              this.navigateToProject(activeProject);
+              // console.log(activeProject);
+              // this.navigate(e, project.data, transitionContainer);
+            }
+          }
+        ), '-=0.1');
+      },
+      navigateToProject: function(el){
+        console.log('navigating!!!!!');
+        console.log(el.getAttribute('href'));
+        console.log(this.project);
+        this.$router.push({
+          name: el.getAttribute('href'),
+          params: {project: this.project.data}
+        });
+      },
+
+      /**
+       * use as reference for animating out inactive projects
+       */
+      // animateOutElements: function(target){
+      //   let infoElsArr, parentClassName, info, inactiveProjects, activeProject, projectContainers;
+      //   activeProject = target;
+      //   parentClassName = 'project-container';
+      //   projectContainers = [].slice.call(this.$el.querySelectorAll(`.${parentClassName}`));
+      //   infoElsArr = [];
+      //
+      //   while ((activeProject = activeProject.parentNode) && activeProject.className.indexOf(parentClassName) < 0);
+      //   info = activeProject.querySelector('.info');
+      //   infoElsArr = [].slice.call(info.children);
+      //   inactiveProjects = projectContainers.filter( (el) => {
+      //     infoElsArr.push([].slice.call(el.querySelector('.info').children));
+      //     return (el.querySelector('.project') !== target);
+      //   });
+      //   inactiveProjects.push(info);
+      //   // hideElsArr = hideElsArr.concat(inactiveProjects);
+      //   this.animateOut(inactiveProjects, infoElsArr, activeProject);
+      // },
+
+
+
       //---------------< Helper Functions >---------------
       // trimCaption: function(caption){
       //   let word_limit = 16;
@@ -244,12 +388,12 @@
         for (let i = this.projectsElArr.length-1; i >= 0; i--){
           let project = this.projectsElArr[i];
           if(project === target){
-            let newImage = this.$props.assets[this.projects[i].image.src];
+            // let newImage = this.$props.assets[this.projects[i].image.src];
             // console.log(newImage);
             return {
               el: project,
-              image: project.querySelector('img'),
-              newImage: newImage,
+              // image: project.querySelector('img'),
+              // newImage: newImage,
               data: this.projects[i]
             }
           }
@@ -502,114 +646,118 @@
 @import '../../../style/global.scss';
 .main {
   .container {
+    #transition-overlay{
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      display: none;
+      z-index: 3;
+      // rect{
+      //   // opacity: 0;
+      // }
+    }
     div {
-      &#work {
-        background: $lightOffWhite;
-      }
-      &#projects {
-        background: $lightOffGreen;
-      }
+      // &#work {
+      //   background: $lightOffWhite;
+      // }
+      // &#projects {
+      //   background: $lightOffGreen;
+      // }
       h2 {
         display: inline-block;
-        padding: 3% 0;
-        margin: 3em 0 1em 0;
+        margin: 1em 0;
         font-size: $sm-header-fontSize;
         line-height: 1;
         // color: $mainColor;
         // font-family: 'Eksell Display';
         font-weight: 900;
-        opacity: .5;
       }
-      .works {
+      .projects {
         padding-bottom: 10vh;
         display: flex;
         align-items: flex-start;
         flex-flow: row wrap;
         justify-content: flex-start;
-        width: 100%;
-        @include smmd {
-          justify-content: space-between;
-        }
+        width: auto;
+        margin-left: -1em;
+        margin-right: -1em;
+
         .project-container {
           display: flex;
           flex-flow: column;
           flex-direction: column-reverse;
-          border: 1px solid $offWhite;
-          margin-bottom: 2.75em;
-          max-width: 100%;
+          // border: 1px solid $offWhite;
+          // margin-bottom: 2.75em;
+          margin: 1em;
+          // width: 100%;
           &,
           &:hover,
           &:focus,
           &:active {
             outline: 0;
           }
-          // overflow: hidden;
-          // margin-right: 1.25em;
-          // &:hover > div{
-          //
-          // }
           @include sm {
             flex-flow: row;
-            flex-direction: row-reverse;
-            // &:nth-child(2n + 2){
-            //   margin-right: 0;
-            // }
+            width: calc(50% - 2em);
+            // flex-direction: row-reverse;
           }
           @include smmd {
-            flex-flow: column;
-            // flex-direction: column-reverse;
+            width: calc(33.333333% - 2em);
+
+            // flex-flow: column;
           }
           @include md {
+            width: calc(25% - 2em);
+
             // margin-right: 10%;
           }
           @include lg {
             flex-flow: row;
-            flex-direction: row-reverse;
-            width: 48%;
-            // &:nth-child(2n + 2){
-            //   margin-right: unset;
-            // }
-            // &:nth-child(3n + 3){
-            //   margin-right: 0;
-            // }
+            // flex-direction: row-reverse;
+            // width: 48%;
           }
           .project {
             position: relative;
             display: flex;
-            // flex-flow: column;
-            // width: 100%;
-            // height: 100%;
-            width: 75vw;
-            height: 75vw;
-            max-width: 100%;
+            flex-flow: column;
+            width: 100%;
+            border: 1px solid $blue;
+            transition: box-shadow .3s ease-in-out, transform .3s ease-in-out;
+
             &,
             &:hover,
             &:focus,
             &:active {
               outline: 0;
             }
-            @include sm {
-              width: 60vw;
-              height: 44vw;
-            }
+            // @include sm {
+            //   width: 60vw;
+            //   height: 44vw;
+            // }
             @include smmd {
-              width: 38vw;
-              height: 38vw;
+              // border: 1px solid transparent;
+              border: none;
+              color: $black;
+              &:hover,
+              &:focus{
+                color: $blue;
+                // border: 1px solid $blue;
+                box-shadow: 0px 0px 25px rgba(40,42,42,0.4);
+                transform: scale(1.05);
+              }
             }
-            @include md {
-              width: 25vw;
-              height: 25vw;
-            }
-            @include lg {
-              width: 300px;
-              height: 300px;
-            }
-            // border-radius: 3px;
+            // @include md {
+            //   width: 25vw;
+            //   height: 25vw;
+            // }
+            // @include lg {
+            //   width: 300px;
+            //   height: 300px;
+            // }
             overflow: hidden;
-            // border: 1px solid $offWhite;
             text-decoration: none;
-            // opacity: 0;
-            // transform: translateY(15%);
             &>div {
               pointer-events: none;
             }
@@ -622,38 +770,31 @@
               background: transparent;
               opacity: 0;
             }
-            // &:hover, &:active{
-            //   .bg{
-            //     // background: #CAD2C5;
-            //     opacity: 1;
-            //   }
-            // }
             .image {
-              padding: 1.5em;
+              // padding: 1.5em;
               position: relative;
               overflow: hidden;
               top: 0;
               left: 0;
-              height: 100%;
+              height: 25vh;
               width: 100%;
               display: flex;
               align-items: center;
               justify-content: center;
-              @include lg {
+              @include md {
+                height: 20vh;
+                max-height: 240px;
                 // padding: .75em;
               }
               &>img,
               &>div {
-                // transform: translateY(-20%);
                 position: relative;
                 display: flex;
-                width: auto;
-                height: auto;
-                min-width: 100px;
-                min-height: 100px;
-                max-width: 100%;
-                max-height: 100%;
-                // height: 70%;
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                // min-width: 100px;
+                // min-height: 100px;
                 // max-width: 100%;
                 // max-height: 100%;
               }
@@ -664,87 +805,90 @@
             justify-content: center;
             align-items: flex-start;
             flex-flow: column;
+            // color: $blue;
+            z-index: 1;
             // padding: 1em;
-            color: $mainColorLight;
-            border-bottom: 1px solid $offWhite;
+            // color: $mainColorLight;
+            // border-bottom: 1px solid $offWhite;
             padding: 1em;
             width: 100%;
             font-size: 1.2em;
             @include sm {
               font-size: 1.4em;
-              width: 50%;
-              border-right: 1px solid $offWhite;
+              // width: 100%;
+              // border-right: 1px solid $offWhite;
               border-bottom: none;
             }
             @include smmd {
-              width: 100%;
+              // width: 100%;
               border-right: none;
-              border-top: 1px solid $offWhite;
+              // border-top: 1px solid $offWhite;
               padding: 1.2em;
             }
             @include md {
               font-size: 1em;
             }
             @include lg {
-              border-right: 1px solid $offWhite;
+              // border-right: 1px solid $offWhite;
               border-top: none;
-              width: 52%;
+              // width: 52%;
               font-size: 1.25em;
             }
-            // border-top: none;
-            // margin-top: 70%;
-            // z-index: 1;
-            // color: $mainColor;
-            // background: #fff;
             &>div {
               width: 100%;
               pointer-events: none;
             }
             .name {
-              // width: 70%;
-              // color: $darkGreen;
-              padding: 0 0 .5em 0;
+              // padding: 0 0 .5em 0;
               font-weight: 700;
-              line-height: 1.5;
+              line-height: 1.5;    font-size: 1em;
+              line-height: 1.3;
+              margin: 0 0 .5em 0;
+
             }
-            .tags,
-            .date {
-              // color: $mediumGreen;
-              font-size: .75em;
-              line-height: .75em;
-              @include sm {
-                font-size: .65em;
-                line-height: .5em;
-              }
-            }
-            .tags {
-              // text-align: right;
-              margin-left: -.75em;
-              span {
+            .tags{
+              list-style: none;
+              margin: 0;
+              padding: 0;
+              li{
                 display: inline-block;
-                // line-height: 1;
-                padding: .75em;
-                // margin-right: .5em;
-                float: left;
-                // border-radius: 4px;
-                // border: 1px solid $offWhite;
               }
             }
-            .date {
-              padding: 1em 0;
-            }
+            // .tags,
+            // .date {
+            //   font-size: .75em;
+            //   line-height: .75em;
+            //   @include sm {
+            //     font-size: .65em;
+            //     line-height: .5em;
+            //   }
+            // }
+            // .tags {
+            //   margin-left: -.75em;
+            //   span {
+            //     display: inline-block;
+            //     padding: .75em;
+            //     float: left;
+            //   }
+            // }
+            // .date {
+            //   padding: 1em 0;
+            // }
           }
         }
         .project-container {
-          // transition: transform .2s ease-in-out;
+          transition: all .3s ease-in-out;
           &:hover,
           &:active,
           &:focus {
             // border: 1px solid $mainColor;
-            box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.08);
+
             // border-width: 0px;
             border-color: transparent;
             outline: none;
+            @include smmd{
+              
+            }
             // transform: scale(1.008);
             & .bg {
               opacity: 1;

@@ -1,0 +1,639 @@
+
+<!DOCTYPE html>
+<html lang="en-US" prefix="og: http://ogp.me/ns#">
+<head>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-K2H7B4');</script>
+<!-- End Google Tag Manager -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="format-detection" content="telephone=no" />
+<link rel="profile" href="http://gmpg.org/xfn/11">
+<link rel="pingback" href="https://www.cyberinsurance.com/xmlrpc.php">
+<script src="https://www.cyberinsurance.com/wp-content/themes/cyber-insurance/js/jquery-2.2.2.min.js"
+		integrity="sha256-36cp2Co+/62rEAAYHLmRCPIych47CvdM+uTBJwSzWjI="
+		crossorigin="anonymous"></script>
+<title>Excellus - CyberInsurance.com</title>
+
+<!-- This site is optimized with the Yoast SEO plugin v7.3 - https://yoast.com/wordpress/plugins/seo/ -->
+<meta name="description" content="The insurance carrier, Excellus BlueCross BlueShield, was breached as early as December 2013, which resulted in approximately 10.5MM member accounts being compromised."/>
+<link rel="canonical" href="https://www.cyberinsurance.com/breaches/excellus-bluecross-blueshield-breach/" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Excellus - CyberInsurance.com" />
+<meta property="og:description" content="The insurance carrier, Excellus BlueCross BlueShield, was breached as early as December 2013, which resulted in approximately 10.5MM member accounts being compromised." />
+<meta property="og:url" content="https://www.cyberinsurance.com/breaches/excellus-bluecross-blueshield-breach/" />
+<meta property="og:site_name" content="CyberInsurance.com" />
+<meta property="article:section" content="Data Breaches" />
+<meta property="og:image" content="https://www.cyberinsurance.com/wp-content/uploads/2016/04/Excellus.jpg" />
+<meta property="og:image:secure_url" content="https://www.cyberinsurance.com/wp-content/uploads/2016/04/Excellus.jpg" />
+<meta property="og:image:width" content="1280" />
+<meta property="og:image:height" content="950" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:description" content="The insurance carrier, Excellus BlueCross BlueShield, was breached as early as December 2013, which resulted in approximately 10.5MM member accounts being compromised." />
+<meta name="twitter:title" content="Excellus - CyberInsurance.com" />
+<meta name="twitter:image" content="https://i2.wp.com/www.cyberinsurance.com/wp-content/uploads/2016/04/Excellus.jpg?fit=1280%2C950&#038;ssl=1" />
+<!-- / Yoast SEO plugin. -->
+
+<link rel='dns-prefetch' href='//s0.wp.com' />
+<link rel='dns-prefetch' href='//s.w.org' />
+<link rel="alternate" type="application/rss+xml" title="CyberInsurance.com &raquo; Feed" href="https://www.cyberinsurance.com/feed/" />
+<link rel="alternate" type="application/rss+xml" title="CyberInsurance.com &raquo; Comments Feed" href="https://www.cyberinsurance.com/comments/feed/" />
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/11\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/11\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/www.cyberinsurance.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=d98414f7581b14be5179164f0f1be078"}};
+			!function(a,b,c){function d(a,b){var c=String.fromCharCode;l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,a),0,0);var d=k.toDataURL();l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,b),0,0);var e=k.toDataURL();return d===e}function e(a){var b;if(!l||!l.fillText)return!1;switch(l.textBaseline="top",l.font="600 32px Arial",a){case"flag":return!(b=d([55356,56826,55356,56819],[55356,56826,8203,55356,56819]))&&(b=d([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]),!b);case"emoji":return b=d([55358,56760,9792,65039],[55358,56760,8203,9792,65039]),!b}return!1}function f(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var g,h,i,j,k=b.createElement("canvas"),l=k.getContext&&k.getContext("2d");for(j=Array("flag","emoji"),c.supports={everything:!0,everythingExceptFlag:!0},i=0;i<j.length;i++)c.supports[j[i]]=e(j[i]),c.supports.everything=c.supports.everything&&c.supports[j[i]],"flag"!==j[i]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[j[i]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(h=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",h,!1),a.addEventListener("load",h,!1)):(a.attachEvent("onload",h),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),g=c.source||{},g.concatemoji?f(g.concatemoji):g.wpemoji&&g.twemoji&&(f(g.twemoji),f(g.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel='stylesheet' id='jquery.prettyphoto-css'  href='https://www.cyberinsurance.com/wp-content/plugins/wp-video-lightbox/css/prettyPhoto.css?ver=d98414f7581b14be5179164f0f1be078' type='text/css' media='all' />
+<link rel='stylesheet' id='video-lightbox-css'  href='https://www.cyberinsurance.com/wp-content/plugins/wp-video-lightbox/wp-video-lightbox.css?ver=d98414f7581b14be5179164f0f1be078' type='text/css' media='all' />
+<link rel='stylesheet' id='modalcss-css'  href='https://www.cyberinsurance.com/wp-content/plugins/bootstrap-modals/css/bootstrap.css?ver=3.3.7' type='text/css' media='all' />
+<link rel='stylesheet' id='wpfront-notification-bar-css'  href='https://www.cyberinsurance.com/wp-content/plugins/wpfront-notification-bar/css/wpfront-notification-bar.css?ver=1.7' type='text/css' media='all' />
+<link rel='stylesheet' id='megamenu-css'  href='https://www.cyberinsurance.com/wp-content/uploads/maxmegamenu/style.css?ver=51e469' type='text/css' media='all' />
+<link rel='stylesheet' id='dashicons-css'  href='https://www.cyberinsurance.com/wp-includes/css/dashicons.min.css?ver=d98414f7581b14be5179164f0f1be078' type='text/css' media='all' />
+<link rel='stylesheet' id='cyber-insurance-style-css'  href='https://www.cyberinsurance.com/wp-content/themes/cyber-insurance/css/sass/style.css?ver=d98414f7581b14be5179164f0f1be078' type='text/css' media='all' />
+<link rel='stylesheet' id='jetpack-widget-social-icons-styles-css'  href='https://www.cyberinsurance.com/wp-content/plugins/jetpack/modules/widgets/social-icons/social-icons.css?ver=20170506' type='text/css' media='all' />
+<link rel='stylesheet' id='social-logos-css'  href='https://www.cyberinsurance.com/wp-content/plugins/jetpack/_inc/social-logos/social-logos.min.css?ver=1' type='text/css' media='all' />
+<link rel='stylesheet' id='jetpack_css-css'  href='https://www.cyberinsurance.com/wp-content/plugins/jetpack/css/jetpack.css?ver=6.0' type='text/css' media='all' />
+<script type='text/javascript' src='https://www.cyberinsurance.com/wp-includes/js/jquery/jquery.js?ver=1.12.4'></script>
+<script type='text/javascript' src='https://www.cyberinsurance.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=1.4.1'></script>
+<script type='text/javascript' src='https://www.cyberinsurance.com/wp-content/plugins/wp-video-lightbox/js/jquery.prettyPhoto.min.js?ver=3.1.6'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var vlpp_vars = {"prettyPhoto_rel":"wp-video-lightbox","animation_speed":"fast","slideshow":"5000","autoplay_slideshow":"false","opacity":"0.80","show_title":"true","allow_resize":"true","allow_expand":"true","default_width":"640","default_height":"480","counter_separator_label":"\/","theme":"pp_default","horizontal_padding":"20","hideflash":"false","wmode":"opaque","autoplay":"false","modal":"false","deeplinking":"false","overlay_gallery":"true","overlay_gallery_max":"30","keyboard_shortcuts":"true","ie6_fallback":"true"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://www.cyberinsurance.com/wp-content/plugins/wp-video-lightbox/js/video-lightbox.js?ver=3.1.6'></script>
+<script type='text/javascript' src='https://www.cyberinsurance.com/wp-content/plugins/wpfront-notification-bar/jquery-plugins/jquery.c.js?ver=1.4.0'></script>
+<script type='text/javascript' src='https://www.cyberinsurance.com/wp-content/plugins/wpfront-notification-bar/js/wpfront-notification-bar.js?ver=1.7'></script>
+<link rel='https://api.w.org/' href='https://www.cyberinsurance.com/wp-json/' />
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://www.cyberinsurance.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://www.cyberinsurance.com/wp-includes/wlwmanifest.xml" /> 
+
+<link rel="alternate" type="application/json+oembed" href="https://www.cyberinsurance.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fwww.cyberinsurance.com%2Fbreaches%2Fexcellus-bluecross-blueshield-breach%2F" />
+<link rel="alternate" type="text/xml+oembed" href="https://www.cyberinsurance.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fwww.cyberinsurance.com%2Fbreaches%2Fexcellus-bluecross-blueshield-breach%2F&#038;format=xml" />
+<script type="text/javascript">
+(function(url){
+	if(/(?:Chrome\/26\.0\.1410\.63 Safari\/537\.31|WordfenceTestMonBot)/.test(navigator.userAgent)){ return; }
+	var addEvent = function(evt, handler) {
+		if (window.addEventListener) {
+			document.addEventListener(evt, handler, false);
+		} else if (window.attachEvent) {
+			document.attachEvent('on' + evt, handler);
+		}
+	};
+	var removeEvent = function(evt, handler) {
+		if (window.removeEventListener) {
+			document.removeEventListener(evt, handler, false);
+		} else if (window.detachEvent) {
+			document.detachEvent('on' + evt, handler);
+		}
+	};
+	var evts = 'contextmenu dblclick drag dragend dragenter dragleave dragover dragstart drop keydown keypress keyup mousedown mousemove mouseout mouseover mouseup mousewheel scroll'.split(' ');
+	var logHuman = function() {
+		if (window.wfLogHumanRan) { return; }
+		window.wfLogHumanRan = true;
+		var wfscr = document.createElement('script');
+		wfscr.type = 'text/javascript';
+		wfscr.async = true;
+		wfscr.src = url + '&r=' + Math.random();
+		(document.getElementsByTagName('head')[0]||document.getElementsByTagName('body')[0]).appendChild(wfscr);
+		for (var i = 0; i < evts.length; i++) {
+			removeEvent(evts[i], logHuman);
+		}
+	};
+	for (var i = 0; i < evts.length; i++) {
+		addEvent(evts[i], logHuman);
+	}
+})('//www.cyberinsurance.com/?wordfence_lh=1&hid=0172706C91838FC366B52CB9560C27B6');
+</script><script>
+            WP_VIDEO_LIGHTBOX_VERSION="1.8.5";
+            WP_VID_LIGHTBOX_URL="https://www.cyberinsurance.com/wp-content/plugins/wp-video-lightbox";
+                        function wpvl_paramReplace(name, string, value) {
+                // Find the param with regex
+                // Grab the first character in the returned string (should be ? or &)
+                // Replace our href string with our new value, passing on the name and delimeter
+
+                var re = new RegExp("[\?&]" + name + "=([^&#]*)");
+                var matches = re.exec(string);
+                var newString;
+
+                if (matches === null) {
+                    // if there are no params, append the parameter
+                    newString = string + '?' + name + '=' + value;
+                } else {
+                    var delimeter = matches[0].charAt(0);
+                    newString = string.replace(re, delimeter + name + "=" + value);
+                }
+                return newString;
+            }
+            </script>
+<link rel='dns-prefetch' href='//v0.wordpress.com'/>
+<link rel='dns-prefetch' href='//i0.wp.com'/>
+<link rel='dns-prefetch' href='//i1.wp.com'/>
+<link rel='dns-prefetch' href='//i2.wp.com'/>
+<style type='text/css'>img#wpstats{display:none}</style>	<style type="text/css">
+			.site-title,
+		.site-description {
+			position: absolute;
+			clip: rect(1px, 1px, 1px, 1px);
+		}
+		</style>
+	<link rel="icon" href="https://i2.wp.com/www.cyberinsurance.com/wp-content/uploads/2016/03/cropped-cyber-insurance-icon-1-1.png?fit=32%2C32&#038;ssl=1" sizes="32x32" />
+<link rel="icon" href="https://i2.wp.com/www.cyberinsurance.com/wp-content/uploads/2016/03/cropped-cyber-insurance-icon-1-1.png?fit=192%2C192&#038;ssl=1" sizes="192x192" />
+<link rel="apple-touch-icon-precomposed" href="https://i2.wp.com/www.cyberinsurance.com/wp-content/uploads/2016/03/cropped-cyber-insurance-icon-1-1.png?fit=180%2C180&#038;ssl=1" />
+<meta name="msapplication-TileImage" content="https://i2.wp.com/www.cyberinsurance.com/wp-content/uploads/2016/03/cropped-cyber-insurance-icon-1-1.png?fit=270%2C270&#038;ssl=1" />
+<style type="text/css">/** Mega Menu CSS: fs **/</style>
+</head>
+
+<body class="breaches-template-default single single-breaches postid-325 mega-menu-primary group-blog">
+	<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K2H7B4"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div id="page" class="site">
+
+	<!-- Alerts Modal -->
+	
+<div id="alerts-modal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" type="button" data-dismiss="modal">&#215;</button>
+            </div>
+            <div class="modal-body">
+                <h4>Get Notified When Breaches Happen</h4>
+                
+    
+<form id="modalAlerts" class="single-input" onsubmit="return mySubmitFunction()">
+    <input id="modalAlertEmail" type="text" name="otherEmail" placeholder="Email Address">
+    <input type="submit" value="notify me">
+    <input id="modalAlertIp" name="ip" type="hidden" value="72.225.47.113">
+</form>
+
+<div id="modalValidationMessage" style="display: none;" class="alert alert-invalid">
+    <p class="animated shake">That email address appears to be invalid. Please try again.</p>
+</div>
+<div id="modalSuccessMessage" style="display: none;" class="alert alert-success">
+    <p class="animated fadeInUp"><span>All signed up!</span>You will be notified via email when new data breaches occur.</p>
+</div>
+                <p>We guarantee 100% privacy. Your email will not be shared.</p>
+            </div>
+            <div class="modal-footer"></div>
+            </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+	<header id="masthead" class="site-header">
+		<div class="container">
+			<div class="site-branding">
+				<a href="https://www.cyberinsurance.com" rel="home" title="Cyber Insurance" class="logo">
+                    <span>Cyber Insurance</span>
+                </a>
+			</div><!-- .site-branding -->
+
+			<nav id="site-navigation" class="main-navigation">
+				<div id="mega-menu-wrap-primary" class="mega-menu-wrap"><div class="mega-menu-toggle" tabindex="0"><div class='mega-toggle-block mega-menu-toggle-block mega-toggle-block-right mega-toggle-block-1' id='mega-toggle-block-1'></div></div><ul id="mega-menu-primary" class="mega-menu mega-menu-horizontal mega-no-js" data-event="hover_intent" data-effect="fade" data-effect-speed="200" data-effect-mobile="disabled" data-effect-speed-mobile="200" data-second-click="go" data-document-click="collapse" data-vertical-behaviour="accordion" data-breakpoint="600" data-unbind="true"><li class='mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-current_page_parent mega-menu-item-has-children mega-align-bottom-left mega-menu-megamenu mega-hide-sub-menu-on-mobile mega-menu-item-113' id='mega-menu-item-113'><a class="mega-menu-link" href="https://www.cyberinsurance.com/news/" aria-haspopup="true" tabindex="0">Cyber Issues</a>
+<ul class="mega-sub-menu">
+<li class='mega-menu-item mega-menu-item-type-widget widget_text mega-menu-columns-1-of-6 mega-menu-item-text-2' id='mega-menu-item-text-2'>			<div class="textwidget"></div>
+		</li><li class='mega-menu-item mega-menu-item-type-widget widget_nav_menu mega-menu-columns-1-of-6 mega-menu-item-nav_menu-2' id='mega-menu-item-nav_menu-2'><h4 class="mega-block-title">Personal Data Security</h4><div class="menu-personal-data-security-container"><ul id="menu-personal-data-security" class="menu"><li id="menu-item-206" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-206"><a href="https://www.cyberinsurance.com/password-theft/">Password Theft</a></li>
+<li id="menu-item-207" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-207"><a href="https://www.cyberinsurance.com/email-hacking/">What to do if your email is hacked</a></li>
+<li id="menu-item-208" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-208"><a href="https://www.cyberinsurance.com/personal-data-theft/">Personal Data Theft</a></li>
+<li id="menu-item-209" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-209"><a href="https://www.cyberinsurance.com/identity-theft/">Identity Theft</a></li>
+<li id="menu-item-210" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-210"><a href="https://www.cyberinsurance.com/credit-card-breach/">Credit Card Breach</a></li>
+<li id="menu-item-211" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-211"><a href="https://www.cyberinsurance.com/financial-information-breach/">Financial Information Breach</a></li>
+<li id="menu-item-212" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-212"><a href="https://www.cyberinsurance.com/data-breaches/">Data Security Breaches</a></li>
+<li id="menu-item-8" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-8"><a href="https://www.cyberinsurance.com/cyber-issues/personal-data-security/">View all Personal Data Topics ›</a></li>
+</ul></div></li><li class='mega-menu-item mega-menu-item-type-widget widget_nav_menu mega-menu-columns-1-of-6 mega-menu-item-nav_menu-3' id='mega-menu-item-nav_menu-3'><h4 class="mega-block-title">Social Media Security</h4><div class="menu-social-media-security-container"><ul id="menu-social-media-security" class="menu"><li id="menu-item-251" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-251"><a href="https://www.cyberinsurance.com/social-media-impersonating/">Instagram Impersonating</a></li>
+<li id="menu-item-215" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-215"><a href="https://www.cyberinsurance.com/facebook-hacking/">Facebook Hacking</a></li>
+<li id="menu-item-254" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-254"><a href="https://www.cyberinsurance.com/catfishing/">Catfishing</a></li>
+<li id="menu-item-255" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-255"><a href="https://www.cyberinsurance.com/spambots/">Spambots</a></li>
+<li id="menu-item-257" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-257"><a href="https://www.cyberinsurance.com/copyright-protection/">Copyright Protection</a></li>
+<li id="menu-item-9" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-9"><a href="https://www.cyberinsurance.com/cyber-issues/social-media-security/">View all Social Media Topics ›</a></li>
+</ul></div></li><li class='mega-menu-item mega-menu-item-type-widget widget_nav_menu mega-menu-columns-1-of-6 mega-menu-item-nav_menu-4' id='mega-menu-item-nav_menu-4'><h4 class="mega-block-title">Reputation Management</h4><div class="menu-reputation-management-container"><ul id="menu-reputation-management" class="menu"><li id="menu-item-220" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-220"><a href="https://www.cyberinsurance.com/proactive-reputation-management/">Proactive Reputation Management</a></li>
+<li id="menu-item-259" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-259"><a href="https://www.cyberinsurance.com/reputation-damage-control/">Reputation Damage Control</a></li>
+<li id="menu-item-27" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-27"><a href="https://www.cyberinsurance.com/cyber-issues/reputation-management/">View all Reputation Topics ›</a></li>
+</ul></div></li><li class='mega-menu-item mega-menu-item-type-widget widget_nav_menu mega-menu-columns-1-of-6 mega-menu-item-nav_menu-5' id='mega-menu-item-nav_menu-5'><h4 class="mega-block-title">Web-to-Lead Forms</h4><div class="menu-web-to-lead-forms-container"><ul id="menu-web-to-lead-forms" class="menu"><li id="menu-item-222" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-222"><a href="https://www.cyberinsurance.com/lead-forms-internet/">Lead Forms on the Internet</a></li>
+<li id="menu-item-261" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-261"><a href="https://www.cyberinsurance.com/information-sold-lead-forms/">Information Sold from Lead Forms</a></li>
+<li id="menu-item-28" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-28"><a href="https://www.cyberinsurance.com/cyber-issues/web-to-lead-forms/">View all Web Form Topics ›</a></li>
+</ul></div></li><li class='mega-menu-item mega-menu-item-type-widget widget_text mega-menu-columns-1-of-6 mega-menu-item-text-3' id='mega-menu-item-text-3'>			<div class="textwidget"></div>
+		</li></ul>
+</li><li class='mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-align-bottom-left mega-menu-flyout mega-menu-item-408' id='mega-menu-item-408'><a class="mega-menu-link" href="https://www.cyberinsurance.com/breaches/" tabindex="0">Breaches</a></li><li class='mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-align-bottom-left mega-menu-flyout mega-menu-item-199' id='mega-menu-item-199'><a class="mega-menu-link" href="https://www.cyberinsurance.com/best-practices/" tabindex="0">Best Practices</a></li><li class='mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-align-bottom-left mega-menu-flyout mega-menu-item-238' id='mega-menu-item-238'><a class="mega-menu-link" href="https://www.cyberinsurance.com/cyber-insurance/" tabindex="0">Cyber Insurance</a></li><li class='mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-current_page_parent mega-align-bottom-left mega-menu-flyout mega-menu-item-239' id='mega-menu-item-239'><a class="mega-menu-link" href="https://www.cyberinsurance.com/news/" tabindex="0">News</a></li></ul></div>				<a class="alert-button" href="#alerts-modal" data-toggle="modal" title="Get Notified When Data Breaches Happen">Get Alerts</a>
+			</nav><!-- #site-navigation -->
+
+		</div>
+	</header><!-- #masthead -->
+
+	<div id="content" class="site-content">
+
+	<div id="article" class="content-area">
+		<main id="main" class="site-main">
+				
+			
+<article id="data-breach">
+	<div class="entry-header">
+
+		<div class="article-meta">
+			<div class="container">
+
+				<ul class="post-categories">
+	<li><a href="https://www.cyberinsurance.com/cyber-issues/data-breaches/" rel="category tag">Data Breaches</a></li></ul><h1 class="entry-title">Excellus</h1>
+				<time>
+					<span>Breached:</span> December 2013				</time>
+
+			</div>
+		</div>
+
+		<div class="bg-img overlay">
+
+										
+			<img src="https://www.cyberinsurance.com/wp-content/uploads/2016/04/Excellus.jpg" alt="Excellus" title="Excellus" class="centered-and-cropped" width="1600" height="400"/>
+
+		</div>
+
+	</div><!-- .entry-header -->
+
+	<div class="entry-content">
+		<div class="container">
+
+			<div class="row">
+
+				<div class="col-sm-3 sidebar">
+
+											 <ul> 
+						    <li>
+						        <a href="https://www.cyberinsurance.com/breaches/21st-century-oncology-group-breach/" rel="bookmark" title="21st Century Oncology Group Breach">
+						        																				
+									<img src="https://www.cyberinsurance.com/wp-content/uploads/2018/02/21st-century-oncology.png" title="21st Century Oncology Group Breach" class="centered-and-cropped"/>
+						        	
+						        	21st Century Oncology Group Breach						        </a>
+						        <time>March 6, 2018</time>
+						    </li>
+						</ul>   
+											 <ul> 
+						    <li>
+						        <a href="https://www.cyberinsurance.com/breaches/advocate-medical-group-breach/" rel="bookmark" title="Advocate Medical Group Breach">
+						        																				
+									<img src="https://www.cyberinsurance.com/wp-content/uploads/2018/02/advocate-health-care.png" title="Advocate Medical Group Breach" class="centered-and-cropped"/>
+						        	
+						        	Advocate Medical Group Breach						        </a>
+						        <time>March 6, 2018</time>
+						    </li>
+						</ul>   
+											 <ul> 
+						    <li>
+						        <a href="https://www.cyberinsurance.com/breaches/affinity-health-plan/" rel="bookmark" title="Affinity Health Plan">
+						        																				
+									<img src="https://www.cyberinsurance.com/wp-content/uploads/2018/02/affinity-health-plan.png" title="Affinity Health Plan" class="centered-and-cropped"/>
+						        	
+						        	Affinity Health Plan						        </a>
+						        <time>March 6, 2018</time>
+						    </li>
+						</ul>   
+											 <ul> 
+						    <li>
+						        <a href="https://www.cyberinsurance.com/breaches/126-email-service/" rel="bookmark" title="126  Email Service">
+						        																				
+									<img src="https://www.cyberinsurance.com/wp-content/uploads/2018/02/126-email-service.png" title="126  Email Service" class="centered-and-cropped"/>
+						        	
+						        	126  Email Service						        </a>
+						        <time>March 6, 2018</time>
+						    </li>
+						</ul>   
+											 <ul> 
+						    <li>
+						        <a href="https://www.cyberinsurance.com/breaches/000webhost-update/" rel="bookmark" title="000webhost.com">
+						        																				
+									<img src="https://www.cyberinsurance.com/wp-content/uploads/2018/03/000webhost.png" title="000webhost.com" class="centered-and-cropped"/>
+						        	
+						        	000webhost.com						        </a>
+						        <time>March 6, 2018</time>
+						    </li>
+						</ul>   
+											 <ul> 
+						    <li>
+						        <a href="https://www.cyberinsurance.com/breaches/17-streaming-app/" rel="bookmark" title="17 Streaming App">
+						        																				
+									<img src="https://www.cyberinsurance.com/wp-content/uploads/2018/02/17-streaming-app.png" title="17 Streaming App" class="centered-and-cropped"/>
+						        	
+						        	17 Streaming App						        </a>
+						        <time>March 6, 2018</time>
+						    </li>
+						</ul>   
+											 <ul> 
+						    <li>
+						        <a href="https://www.cyberinsurance.com/breaches/7k7k/" rel="bookmark" title="7K7K">
+						        																				
+									<img src="https://www.cyberinsurance.com/wp-content/uploads/2018/02/7k7k.jpg" title="7K7K" class="centered-and-cropped"/>
+						        	
+						        	7K7K						        </a>
+						        <time>March 6, 2018</time>
+						    </li>
+						</ul>   
+											 <ul> 
+						    <li>
+						        <a href="https://www.cyberinsurance.com/breaches/equifax-data-breach/" rel="bookmark" title="Equifax Data Breach">
+						        																				
+									<img src="https://www.cyberinsurance.com/wp-content/uploads/2017/09/equifax-data-breach.jpg" title="Equifax Data Breach" class="centered-and-cropped"/>
+						        	
+						        	Equifax Data Breach						        </a>
+						        <time>September 15, 2017</time>
+						    </li>
+						</ul>   
+											 <ul> 
+						    <li>
+						        <a href="https://www.cyberinsurance.com/breaches/weebly/" rel="bookmark" title="Weebly">
+						        																				
+									<img src="https://www.cyberinsurance.com/wp-content/uploads/2016/10/weebly.png" title="Weebly" class="centered-and-cropped"/>
+						        	
+						        	Weebly						        </a>
+						        <time>October 25, 2016</time>
+						    </li>
+						</ul>   
+											 <ul> 
+						    <li>
+						        <a href="https://www.cyberinsurance.com/breaches/yahoo-breach/" rel="bookmark" title="Yahoo!">
+						        																				
+									<img src="https://www.cyberinsurance.com/wp-content/uploads/2016/09/yahoo-data-breach.jpg" title="Yahoo!" class="centered-and-cropped"/>
+						        	
+						        	Yahoo!						        </a>
+						        <time>September 23, 2016</time>
+						    </li>
+						</ul>   
+											 <ul> 
+						    <li>
+						        <a href="https://www.cyberinsurance.com/breaches/ny-times-russian-cyber-breach/" rel="bookmark" title="NY Times Russian Cyber Breach">
+						        																				
+									<img src="https://www.cyberinsurance.com/wp-content/uploads/2016/08/ny-times-russia.jpg" title="NY Times Russian Cyber Breach" class="centered-and-cropped"/>
+						        	
+						        	NY Times Russian Cyber Breach						        </a>
+						        <time>August 24, 2016</time>
+						    </li>
+						</ul>   
+											 <ul> 
+						    <li>
+						        <a href="https://www.cyberinsurance.com/breaches/vivint/" rel="bookmark" title="Vivint">
+						        																				
+									<img src="https://www.cyberinsurance.com/wp-content/uploads/2016/08/vivint.jpg" title="Vivint" class="centered-and-cropped"/>
+						        	
+						        	Vivint						        </a>
+						        <time>August 23, 2016</time>
+						    </li>
+						</ul>   
+					
+				</div>
+
+				<div class="col-sm-8 pull-right article-content">
+
+					<p>Excellus, an upstate New York health insurance carrier, released a statement that it was the latest to fall prey to cyber attackers in December 2013. After learning of the cyber attacks on Anthem, Premera and CareFirst, the Rochester based Excellus BlueCross BlueShield decided to call in the cyber security firm Mandiant to conduct an extensive investigation and analysis of its network systems.</p>
+<p>On August 5, 2015 Mandiant reported to Excellus that its IT network had in fact suffered a “sophisticated” cyber breach dating back to December 23, 2013. Excellus immediately began an internal investigation in conjunction with the FBI and Mandiant. The Rochester based health insurer announced that hackers gained access to the personal information of more than 10.5 million current and former Excellus customers, vendors of Excellus’ parent company Lifetime HealthCare as well as Lifetime subsidiaries.</p>
+<p>The breach exposed the names, addresses, Social Security numbers, medical claim records, insurance identification numbers, and financial information of Excellus current and former policy holders. However, in the two-page letter from Excellus, though it admits hackers were able to access sensitive personal data it does not state that any of the breached data has been utilized by hackers. Company spokesperson, Jim Redmond stated, “We did not find any evidence of the collection or exfiltration of sensitive data and, to date, there is no evidence that any data has been used inappropriately.” Redmond added that due to the ongoing FBI investigation he could not provide any further details at this time.</p>
+<p>But, as has become standard practice now in the wake of cyber breaches, Excellus too is offering two years of free credit monitoring and other forms of identity theft protection to the 10.5 million people whose information was stolen, not that it can actually prevent identity theft though. They are also offering free identity theft consultation and restoration for the children of customers who were affected until September 9, 2019.</p>
+<p>As time marched on and the investigation continued, at least five potential class action lawsuits were filed in the Western District Court of New York, which brought the total number of lawsuits from current and former Excellus customers who were affected by the breach to twelve. This is in stark contrast to the claims made by Jim Redmond that “there is no evidence that any data has been used inappropriately” the potential class action and private lawsuits would certainly challenge the validity of Redmond’s statement as three of the twelve suits claim they have already suffered identity theft, medical identity theft, tax fraud and/or credit card fraud as a result of the breach.</p>
+<p>All of the suits allege that Excellus did not provide adequate computer security of their personal data, negligence and failure to respond properly to a warning from the FBI in April, 2014 that illuminated the vulnerability of healthcare insurers in particular and possibly could have prevented the breach from happening had the company heeded the warning. The combined 301 pages of the complaints describe in a lengthy number of ways the array of the allegations the plaintiffs have filed suit over, this particular filing on behalf of Katie Fuller and her three children succinctly sums up what most of the plaintiffs allege:</p>
+<blockquote><p>As a direct and proximate result of Defendants’ wrongful actions, inaction and omissions, and the resulting data breach, Class members have suffered and will continue to suffer economic damages, including <em>inter alia</em> the costs of monitoring their credit, monitoring their financial accounts, and mitigating their damages, and they face an immediate and substantial risk of identity theft and fraud, as well as damage to their credit score.</p>
+<p>At best, the credit monitoring service offered by defendants may reveal new credit accounts opened with compromised information, but it does nothing to prevent unauthorized charges made to existing accounts.</p></blockquote>
+<p>Fuller, like the other Excellus members, who filed suit feel the company’s response and offer of credit monitoring for two years is not sufficient for a data breach of this nature. The financial and medical information the hackers now have access to poses a long term threat that can not only be troublesome and time consuming, but also very costly.</p>
+<p>In particular medical identity theft can cost a victim any where from $13,500 dollars to in excess of $20,000 to clean up and rectify and typically is a long and complicated process. Hackers can simply wait out the credit monitoring two year time period and then utilize the stolen information, the plaintiffs of these law suits are seeking a long term solution to the heightened risk situation they are now in due to the data breach.</p>
+<p>In the wake of all the cyber intrusions in recent years, the topic has become a political hotspot, with consumer advocates calling for strict nationwide legislation requiring adequate protections of consumer data by companies that are storing it. Perhaps they should include in these new bills that companies are required to carry adequate cyber insurance policies as well.</p>
+<p><strong>Additional Resources About This Breach:</strong></p>
+<p><a href="http://www.excellusfacts.com/">http://www.excellusfacts.com/</a></p>
+<p><a href="http://www.usatoday.com/story/tech/2015/09/10/cyber-breach-hackers-excellus-blue-cross-blue-shield/72018150/">http://www.usatoday.com/story/tech/2015/09/10/cyber-breach-hackers-excellus-blue-cross-blue-shield/72018150/</a></p>
+<p><a href="http://www.healthitoutcomes.com/doc/excellus-data-breach-undetected-nearly-two-years-0001">http://www.healthitoutcomes.com/doc/excellus-data-breach-undetected-nearly-two-years-0001</a></p>
+<p><a href="http://www.wired.com/2015/09/hack-brief-health-insurance-firm-excellus-says-attackers-breached-10m-records/">http://www.wired.com/2015/09/hack-brief-health-insurance-firm-excellus-says-attackers-breached-10m-records/</a></p>
+<p><a href="http://www.securityweek.com/excellus-data-breach-impacts-10-million">http://www.securityweek.com/excellus-data-breach-impacts-10-million</a></p>
+<p><a href="http://www.democratandchronicle.com/story/news/2015/09/19/class-action-suit-brought-against-excellus-over-hack/72429974/">http://www.democratandchronicle.com/story/news/2015/09/19/class-action-suit-brought-against-excellus-over-hack/72429974/</a></p>
+<div class="sharedaddy sd-sharing-enabled"><div class="robots-nocontent sd-block sd-social sd-social-icon sd-sharing"><div class="sd-content"><ul><li class="share-facebook"><a rel="nofollow" data-shared="sharing-facebook-325" class="share-facebook sd-button share-icon no-text" href="https://www.cyberinsurance.com/breaches/excellus-bluecross-blueshield-breach/?share=facebook" target="_blank" title="Click to share on Facebook"><span></span><span class="sharing-screen-reader-text">Click to share on Facebook (Opens in new window)</span></a></li><li class="share-twitter"><a rel="nofollow" data-shared="sharing-twitter-325" class="share-twitter sd-button share-icon no-text" href="https://www.cyberinsurance.com/breaches/excellus-bluecross-blueshield-breach/?share=twitter" target="_blank" title="Click to share on Twitter"><span></span><span class="sharing-screen-reader-text">Click to share on Twitter (Opens in new window)</span></a></li><li class="share-google-plus-1"><a rel="nofollow" data-shared="sharing-google-325" class="share-google-plus-1 sd-button share-icon no-text" href="https://www.cyberinsurance.com/breaches/excellus-bluecross-blueshield-breach/?share=google-plus-1" target="_blank" title="Click to share on Google+"><span></span><span class="sharing-screen-reader-text">Click to share on Google+ (Opens in new window)</span></a></li><li class="share-end"></li></ul></div></div></div>
+	<nav class="navigation post-navigation" role="navigation">
+		<h2 class="screen-reader-text">Post navigation</h2>
+		<div class="nav-links"><div class="nav-previous"><a href="https://www.cyberinsurance.com/breaches/experian/" rel="prev">Experian</a></div><div class="nav-next"><a href="https://www.cyberinsurance.com/breaches/forbes/" rel="next">Forbes</a></div></div>
+	</nav>
+				</div>
+			</div>
+		</div>
+	</div><!-- .entry-content -->
+
+	<footer class="entry-footer">
+		<div class="closing-cta">
+			<div class="cta-form">
+				<h4>Have You Been <span>Hacked?</span></h4>
+				
+<form id="hack-check" class="single-input" action="results" method="GET" onsubmit="return mySubmitFunction()">
+    <input id="email" type="text" name="email" placeholder="Check Your Email Address">
+    <input type="submit" value="check">
+    <input id="ip" name="ip" type="hidden" value="72.225.47.113">
+    <small id="api">*Cyber breach data provided by <a href="https://haveibeenpwned.com/" target="_blank" re="nofollow">Have I Been Pwned</a></small>
+</form>
+
+<div id="validationMessage" style="display: none;" class="alert alert-invalid">
+	<p class="animated shake">That email address appears to be invalid. Please try again.</p>
+</div>
+				<p>Enter your email or username to see if your information was compromised.</p>
+			</div>
+			<div class="bg-img">
+				<img src="https://www.cyberinsurance.com/wp-content/themes/cyber-insurance/images/have-you-been-hacked.jpg" alt="Have You Been Hacked?" class="centered-and-cropped" width="1600" height="550"/>
+			</div>
+		</div>
+	</footer><!-- .entry-footer -->
+</article><!-- #post-## -->
+
+		</main><!-- #main -->
+	</div><!-- #article -->
+
+
+	</div><!-- #content -->
+
+	<footer id="colophon" class="site-footer">
+		<div class="site-info">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-4">
+						<a href="https://www.cyberinsurance.com" rel="home" title="Cyber Insurance" class="footer-logo">
+		                    <span>Cyber Insurance</span>
+		                </a>
+                	</div>
+					<div class="col-md-4">
+						<div class="menu-footer-container"><ul id="footer-menu" class="menu"><li id="menu-item-240" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-240"><a href="https://www.cyberinsurance.com/about/">About</a></li>
+<li id="menu-item-203" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-203"><a href="https://www.cyberinsurance.com/contact/">Contact</a></li>
+<li id="menu-item-204" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-204"><a href="https://www.cyberinsurance.com/terms/">Terms</a></li>
+<li id="menu-item-205" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-205"><a href="https://www.cyberinsurance.com/privacy/">Privacy</a></li>
+</ul></div>					</div>
+					<div class="col-md-4">
+						<p>&copy;2019 Cyber Insurance. All Rights Reserved.</p>
+					</div>
+				</div>
+			</div>
+		</div><!-- .site-info -->
+	</footer><!-- #colophon -->
+</div><!-- #page -->
+
+
+<style type="text/css">
+    #wpfront-notification-bar 
+    {
+        background: #474645;
+        background: -moz-linear-gradient(top, #474645 0%, #474645 100%);
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#474645), color-stop(100%,#474645));
+        background: -webkit-linear-gradient(top, #474645 0%,#474645 100%);
+        background: -o-linear-gradient(top, #474645 0%,#474645 100%);
+        background: -ms-linear-gradient(top, #474645 0%,#474645 100%);
+        background: linear-gradient(to bottom, #474645 0%, #474645 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#474645', endColorstr='#474645',GradientType=0 );
+    }
+
+    #wpfront-notification-bar div.wpfront-message
+    {
+        color: #a5a7aa;
+    }
+
+    #wpfront-notification-bar a.wpfront-button
+    {
+        background: #474645;
+        background: -moz-linear-gradient(top, #474645 0%, #474645 100%);
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#474645), color-stop(100%,#474645));
+        background: -webkit-linear-gradient(top, #474645 0%,#474645 100%);
+        background: -o-linear-gradient(top, #474645 0%,#474645 100%);
+        background: -ms-linear-gradient(top, #474645 0%,#474645 100%);
+        background: linear-gradient(to bottom, #474645 0%, #474645 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#474645', endColorstr='#474645',GradientType=0 );
+
+        color: #ffffff;
+    }
+
+    #wpfront-notification-bar-open-button
+    {
+        background-color: #ffffff;
+    }
+
+    #wpfront-notification-bar  div.wpfront-close 
+    {
+        border: 1px solid #555555;
+        background-color: #555555;
+        color: #000000;
+    }
+
+    #wpfront-notification-bar  div.wpfront-close:hover 
+    {
+        border: 1px solid #aaaaaa;
+        background-color: #aaaaaa;
+    }
+</style>
+
+
+<div id="wpfront-notification-bar-spacer"  style="display: none;">
+    <div id="wpfront-notification-bar-open-button" class="top wpfront-bottom-shadow"></div>
+    <div id="wpfront-notification-bar" class="wpfront-fixed ">
+                <table border="0" cellspacing="0" cellpadding="0">
+            <tr>
+                <td>
+                    <div class="wpfront-message">
+                        <span>IN THE NEWS:</span> Equifax's major data breach hits 143 million Americans.                    </div>
+                    <div>
+                                                                                    <a class="wpfront-button" href="https://www.cyberinsurance.com/breaches/equifax-data-breach/"  target="_self" >Read More ›</a>
+                                                                                                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+
+<style type="text/css">
+#wpfront-notification-bar-spacer {
+border-bottom: 1px solid #474645;
+}</style>
+<script type="text/javascript">if(typeof wpfront_notification_bar == "function") wpfront_notification_bar({"position":1,"height":0,"fixed_position":"on","animate_delay":0.5,"close_button":false,"button_action_close_bar":false,"auto_close_after":0,"display_after":0,"is_admin_bar_showing":false,"display_open_button":false,"keep_closed":false,"keep_closed_for":0,"position_offset":0,"display_scroll":false,"display_scroll_offset":100});</script>	<div style="display:none">
+	</div>
+
+	<script type="text/javascript">
+		window.WPCOM_sharing_counts = {"https:\/\/www.cyberinsurance.com\/breaches\/excellus-bluecross-blueshield-breach\/":325};
+	</script>
+<script type='text/javascript' src='https://www.cyberinsurance.com/wp-content/plugins/jetpack/_inc/build/photon/photon.min.js?ver=20130122'></script>
+<script type='text/javascript' src='https://www.cyberinsurance.com/wp-content/plugins/bootstrap-modals/js/bootstrap.min.js?ver=3.3.7'></script>
+<script type='text/javascript' src='https://s0.wp.com/wp-content/js/devicepx-jetpack.js?ver=201925'></script>
+<script type='text/javascript' src='https://www.cyberinsurance.com/wp-content/themes/cyber-insurance/js/navigation.js?ver=20151215'></script>
+<script type='text/javascript' src='https://www.cyberinsurance.com/wp-content/themes/cyber-insurance/js/skip-link-focus-fix.js?ver=20151215'></script>
+<script type='text/javascript' src='https://www.cyberinsurance.com/wp-content/themes/cyber-insurance/js/validation.js?ver=d98414f7581b14be5179164f0f1be078'></script>
+<script type='text/javascript' src='https://www.cyberinsurance.com/wp-content/themes/cyber-insurance/js/materialize.min.js?ver=d98414f7581b14be5179164f0f1be078'></script>
+<script type='text/javascript' src='https://www.cyberinsurance.com/wp-content/themes/cyber-insurance/js/classie.js?ver=d98414f7581b14be5179164f0f1be078'></script>
+<script type='text/javascript' src='https://www.cyberinsurance.com/wp-content/themes/cyber-insurance/js/scripts.js?ver=d98414f7581b14be5179164f0f1be078'></script>
+<script type='text/javascript' src='https://www.cyberinsurance.com/wp-includes/js/hoverIntent.min.js?ver=1.8.1'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var megamenu = {"timeout":"300","interval":"100"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://www.cyberinsurance.com/wp-content/plugins/megamenu/js/maxmegamenu.js?ver=2.4.1.5'></script>
+<script type='text/javascript' src='https://www.cyberinsurance.com/wp-includes/js/wp-embed.min.js?ver=d98414f7581b14be5179164f0f1be078'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var sharing_js_options = {"lang":"en","counts":"1"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://www.cyberinsurance.com/wp-content/plugins/jetpack/_inc/build/sharedaddy/sharing.min.js?ver=6.0'></script>
+<script type='text/javascript'>
+var windowOpen;
+			jQuery( document.body ).on( 'click', 'a.share-facebook', function() {
+				// If there's another sharing window open, close it.
+				if ( 'undefined' !== typeof windowOpen ) {
+					windowOpen.close();
+				}
+				windowOpen = window.open( jQuery( this ).attr( 'href' ), 'wpcomfacebook', 'menubar=1,resizable=1,width=600,height=400' );
+				return false;
+			});
+var windowOpen;
+			jQuery( document.body ).on( 'click', 'a.share-twitter', function() {
+				// If there's another sharing window open, close it.
+				if ( 'undefined' !== typeof windowOpen ) {
+					windowOpen.close();
+				}
+				windowOpen = window.open( jQuery( this ).attr( 'href' ), 'wpcomtwitter', 'menubar=1,resizable=1,width=600,height=350' );
+				return false;
+			});
+var windowOpen;
+			jQuery( document.body ).on( 'click', 'a.share-google-plus-1', function() {
+				// If there's another sharing window open, close it.
+				if ( 'undefined' !== typeof windowOpen ) {
+					windowOpen.close();
+				}
+				windowOpen = window.open( jQuery( this ).attr( 'href' ), 'wpcomgoogle-plus-1', 'menubar=1,resizable=1,width=480,height=550' );
+				return false;
+			});
+</script>
+<script type='text/javascript' src='https://stats.wp.com/e-201925.js' async='async' defer='defer'></script>
+<script type='text/javascript'>
+	_stq = window._stq || [];
+	_stq.push([ 'view', {v:'ext',j:'1:6.0',blog:'108862224',post:'325',tz:'0',srv:'www.cyberinsurance.com'} ]);
+	_stq.push([ 'clickTrackerInit', '108862224', '325' ]);
+</script>
+
+<script>
+ (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+ m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+ })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ ga('create', 'UA-41564867-23', 'auto');
+ ga('send', 'pageview');
+
+</script>
+<!-- HealthNetwork Analytics -->
+<script type="text/javascript" src="https://healthnetworkpartners.com/analytics/analytics.js" async></script>
+</body>
+</html>

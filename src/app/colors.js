@@ -1,11 +1,37 @@
+/**
+ * New Colors
+ * 
+ * Main Palette
+ * https://coolors.co/586ba4-282a2a-f5dd90-f68e5f-f76c5e
+ * 
+ * Secondary Palette
+ * https://coolors.co/94a0c5-767777-f8e9b8-f9b799-f9a198
+ */
+
+
 /*
    Color Palette
 
    https://coolors.co/cad2c5-84a98c-52796f-354f52-2f3e46
 
+
 */
 
 module.exports.colors = {
+  /**
+   * New Colors
+   */
+  // Main
+  white: '#FFFFFF',
+  black: '#282A2A',
+  // Secondary
+  red: '#F9A198',
+  yellow: '#F8E9B8',
+  orange: '#F9B799',
+  blue: '#94A0C5',
+  templateMainColor: '#94A0C5',
+
+
   // Main palette
   mainBg: '#FFF',
   mainColor: '#2E2C2D',
@@ -21,7 +47,7 @@ module.exports.colors = {
   // Finalized collors
   //
   //
-  templateMainColor: '#B2DBCC',
+  // templateMainColor: '#B2DBCC',
   templateMedColor: '#CEE8DE',
   templateLightColor: '#DCEEE7',
   // member redesign

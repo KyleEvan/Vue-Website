@@ -9,26 +9,26 @@
 
 
     <!-- Aside main content -->
-    <template slot="asideContent">
+    <!-- <template slot="asideContent">
       <section>
-        <p>
-          A web browser game made with HMTL5 Canvas. It's an arcade style top down horde survival game. I wrote it with Javascript as a final project for my Rich Media &amp; Web App Dev class. I learned many lessons trying to code this as it became very hard to manage by the end. Seperation of concerns, state management, rudimentary ai in games, game loops, closures, the importance of pure and impure functions, and most importantly consideration of the information architecture and organization that facilitates maintenance and the addition of future features.
-        </p>
+        
 
       </section>
 
-    </template>
+    </template> -->
 
     <!-- carousel slides -->
     <template slot="slides">
-      <div class="carousel-cell" v-for="image in project_images">
+      <div class="carousel-cell" v-for="(image, index) in project_images" :key="index">
         <img :src="image" alt="" />
       </div>
     </template>
 
 
-    <template slot="extra">
-
+    <template slot="main-content">
+      <p>
+        A web browser game made with HMTL5 Canvas. It's an arcade style top down horde survival game. I wrote it with Javascript as a final project for my Rich Media &amp; Web App Dev class. I learned many lessons trying to code this as it became very hard to manage by the end. Seperation of concerns, state management, rudimentary ai in games, game loops, closures, the importance of pure and impure functions, and most importantly consideration of the information architecture and organization that facilitates maintenance and the addition of future features.
+      </p>
       <section class="split">
         <div>
           <h2>Gameplay</h2>
@@ -43,32 +43,32 @@
 
 
       <!-- links -->
-      <section>
-        <h2>Links</h2>
+      <!-- <section> -->
+        <!-- <h2>Links</h2> -->
         <ul class="links-list">
           <li>
-            <h3>Proof of Concept</h3>
+            <h2>Proof of Concept</h2>
             <p>
               An earlier version of the game created a proof of concept to demonstrate core mechanics and gameplay. It has all of the main controls and some combat features that didn't make it to the final game. This is a barebones demo with no assets so you can really see how it functions under the hood.
             </p>
             <a target="_blank" :href="links.github1" class="link-btn">GitHub</a>
           </li>
           <li>
-            <h3>GitHub Project</h3>
+            <h2>GitHub Project</h2>
             <p>
               For more information on the controls, gameplay, and features visit the project page on GitHub.
             </p>
             <a target="_blank" :href="links.github2" class="link-btn">Combo Smash</a>
           </li>
           <li class="show-desktop">
-            <h3>Play the Game</h3>
+            <h2>Play the Game</h2>
             <p>
               (WARNING: This game does not work on mobile or tablet. Requires pointer device and keyboard)
             </p>
             <a target="_blank" :href="links.demo2" class="link-btn">Play ComboSmash</a>
           </li>
         </ul>
-      </section>
+      <!-- </section> -->
 
     </template>
 

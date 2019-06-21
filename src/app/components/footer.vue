@@ -1,21 +1,12 @@
 <template>
   <footer>
     <div class="footer-content content inner-content">
-      <div>
-        <span>Made by</span>
-        <span>Kyle Peterson</span>
-        <span>Rochester, NY</span>
-      </div>
-
-      <div>
-        <span>Find a bug? Fork the repo or contact me!</span>
-        <span>Thank you for visiting</span>
-      </div>
 
       <div>
         <span>Made with Vue &#10084;</span>
-        <span>See the project on my <a target="_blank" href="https://github.com/KyleEvan/Vue-Website">GitHub</a></span>
-        <span>༼ つ ͡◕ _ ͡◕ ༽つ</span>
+        <span>View the project on my <a target="_blank" href="https://github.com/KyleEvan/Vue-Website">GitHub</a></span>
+        <span>Kyle Peterson</span>
+        <!-- <span>༼ つ ͡◕ _ ͡◕ ༽つ</span> -->
       </div>
     </div>
   </footer>
@@ -36,9 +27,10 @@
 
   footer{
     position: relative;
-    background: $offWhite;
-    padding: $lg-padding 0;
-    font-weight: 600;
+    background-color: $black;
+    color: $white;
+    padding: 5em 0;
+    // font-weight: 600;
     z-index: 1;
     @include lg {
       padding: $main-topBotPad 0;
@@ -47,21 +39,25 @@
       z-index: 0;
       display: flex;
       flex-flow: column;
-      text-align: left;
+      // text-align: center;
+      // font-size: .8em;
+      line-height: 1.6;
+      // opacity: .6;
+
 
       @include md{
         flex-flow: row;
-        justify-content: space-between;
-        div{
-          &:nth-child(2){
-            text-align: center;
-          }
-        }
-        div{
-          &:nth-child(3){
-            text-align: right;
-          }
-        }
+        // justify-content: center;
+        // div{
+        //   &:nth-child(2){
+        //     text-align: center;
+        //   }
+        // }
+        // div{
+        //   &:nth-child(3){
+        //     text-align: right;
+        //   }
+        // }
       }
 
       div{
@@ -73,14 +69,13 @@
         }
         & > span{
           display: block;
-          opacity: .6;
           padding: .2em 0;
           a,
           a:hover,
           a:focus,
           a:active {
             text-decoration: underline;
-            color: $mainColor;
+            color: $white;
             font-weight: 900;
           }
           @include md{

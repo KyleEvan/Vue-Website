@@ -45,7 +45,7 @@ Vue.mixin({
         xs: 0,
         sm: 500,
         md: 1000,
-        lg: 1300,
+        lg: 1200,
         xl: 1600
       },
     }
@@ -132,7 +132,7 @@ Vue.mixin({
       // image placeholders
       let placeholders = [].slice.call(cont.querySelectorAll('.img-placeholder, img[data-image-src]'));
       // image loading spinners
-      let spinners = [].slice.call(cont.querySelectorAll('.loading-spinner'));
+      // let spinners = [].slice.call(cont.querySelectorAll('.loading-spinner'));
       // console.log(placeholders);
       for(var i = 0; i < placeholders.length; i++){
         imgNames[i] = placeholders[i].getAttribute('data-image-src');
@@ -143,7 +143,7 @@ Vue.mixin({
             for(var j = 0; j < images.length; j++){
               let img = placeholders[j];
               img.src = images[j].src;
-              TweenLite.to(spinners[j], .5,{ opacity: 0, scale: 0, ease: Power2.easeIn, onComplete: app.removeEl(spinners[j]) });
+              // TweenLite.to(spinners[j], .5,{ opacity: 0, scale: 0, ease: Power2.easeIn, onComplete: app.removeEl(spinners[j]) });
               TweenLite.to(placeholders[j], 1, { opacity: 1, y: 0, ease: Power2.easeOut, onComplete: app.imageDoneLoading(img) });
             }
           }
@@ -237,10 +237,25 @@ new Vue({
     },
   },
   created(){
-    this.dev('Initializing app');
+    console.log('Initializing app');
+    /**
+     * Feature detection for object-fit css style
+     */
+    if('objectFit' in document.documentElement.style === false){
+      console.log('no object fit');
+    } else {
+      console.log('object fit exists!');
+    }
+    document.addEventListener('readystatechange', (event) => {
+      if(document.readyState == 'complete') {
+        const loadingSVG = document.querySelector('.loading svg');
+        loadingSVG.style.visibility = "visible";
+      }
+    });
+    window.addEventListener('resize', this.handleResize);
+
     this.setImages();
     // Add resize event handler to main Vue
-    window.addEventListener('resize', this.handleResize);
   },
   beforeDestroy(){
     window.removeEventListener('resize', this.handleResize);

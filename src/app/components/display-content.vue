@@ -16,7 +16,8 @@
         increment: Decimal,
         duration: Decimal,
         delay: Decimal,
-        eventName: string
+        eventName: String,
+        once: Boolean,
       }
 
     */
@@ -91,6 +92,7 @@
 
       initEventListeners: function(){
         this.events.$on('app-loaded', this.initTitle);
+        if(this.$props.config.once) return;
         this.events.$on('page-transitioned', this.initTitle);
       },
     },
@@ -104,6 +106,7 @@
     },
     beforeDestroy(){
       this.events.$off('app-loaded', this.initTitle);
+      if(this.$props.config.once) return;
       this.events.$off('page-transitioned', this.initTitle);
     }
 

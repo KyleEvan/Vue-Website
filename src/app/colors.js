@@ -25,11 +25,19 @@ module.exports.colors = {
   white: '#FFFFFF',
   black: '#282A2A',
   // Secondary
+  darkBlue: '#586BA4',
+  darkRed: '#F76C5E',
+  darkOrange: '#F68E5F',
   red: '#F9A198',
   yellow: '#F8E9B8',
   orange: '#F9B799',
   blue: '#94A0C5',
-  templateMainColor: '#94A0C5',
+  lightGray: '#F2F2F2',
+
+
+
+
+
 
 
   // Main palette

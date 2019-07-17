@@ -129,8 +129,15 @@
 
 <style lang="scss">
   @import '../../../style/global.scss';
-  .combo-smash{
-
+  div.combo-smash{
+    div.flickity-slider{
+      &>div.carousel-cell:nth-child(1) > img,
+      &>div.carousel-cell:nth-child(2) > img,
+      &>div.carousel-cell:nth-child(3) > img{
+        max-width: 90%;
+        max-height: 90%;
+      }
+    }
   }
 
 </style>

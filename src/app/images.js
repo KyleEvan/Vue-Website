@@ -79,6 +79,7 @@ import react_view_today_md_jpg from '../images/react-view-today@md.jpg';
 import react_view_today_lg_jpg from '../images/react-view-today@lg.jpg';
 
 import shapes_preview_sm_gif from '../images/shapes-preview@sm.gif';
+import shapes_preview_lg_gif from '../images/shapes-preview@lg.gif';
 
 import univera_perks_xs_jpg from '../images/univerahealthcare-perks@xs.jpg';
 import univera_perks_md_jpg from '../images/univerahealthcare-perks@md.jpg';
@@ -99,9 +100,9 @@ var images = [
   {
     name: 'career_areas',
     src: {
-      xs: career_areas_md_png,
-      sm: career_areas_lg_png,
-      md: career_areas_lg_png,
+      xs: career_areas_lg_png,
+      sm: career_areas_xl_png,
+      md: career_areas_xl_png,
       lg: career_areas_xl_png,
     },
     project: false
@@ -109,7 +110,7 @@ var images = [
   {
     name: 'careers_screens',
     src: {
-      xs: careers_screens_sm_png,
+      xs: careers_screens_md_png,
       sm: careers_screens_md_png,
       md: careers_screens_lg_png,
       lg: careers_screens_xl_png,
@@ -221,9 +222,9 @@ var images = [
   {
     name: 'excellusbcbs_home_viewports',
     src: {
-      xs: excellusbcbs_home_viewports_xs_png,
+      xs: excellusbcbs_home_viewports_md_png,
       sm: excellusbcbs_home_viewports_md_png,
-      md: excellusbcbs_home_viewports_md_png,
+      md: excellusbcbs_home_viewports_lg_png,
       lg: excellusbcbs_home_viewports_lg_png,
     },
     project: false
@@ -279,6 +280,7 @@ var images = [
     name: 'shapes_preview',
     src: {
       sm: shapes_preview_sm_gif,
+      lg: shapes_preview_lg_gif,
     },
     project: true,
   },

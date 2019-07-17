@@ -12,7 +12,7 @@ import WorkBatman from './components/work/batman.vue';
 import WorkMember from './components/work/member-redesign.vue';
 import WorkCycles from './components/work/cycles.vue';
 import WorkComboSmash from './components/work/combosmash.vue';
-import WorkReactDashboard from './components/work/react-dashboard.vue';
+import WorkShapes from './components/work/shapes.vue';
 
 // import Test from './components/test/test.vue';
 
@@ -75,11 +75,11 @@ export default new Router({
       meta: { title: 'Combo Smash | Kyle P' }
     },
     {
-      path: '/react-dashboard',
-      name: 'ReactDashboard',
-      component: WorkReactDashboard,
+      path: '/shapes',
+      name: 'Shapes',
+      component: WorkShapes,
       props: true,
-      meta: { title: 'React Dashboard App | Kyle P'}
+      meta: { title: 'Shapes | Kyle P'}
     },
 
     //-----------------------< Testing Pages >---------------------------

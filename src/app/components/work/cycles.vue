@@ -18,7 +18,7 @@
 
     <!-- Carousel slides -->
     <template slot="slides">
-      <div class="carousel-cell" v-for="image in project_images">
+      <div class="carousel-cell" v-for="(image, index) in project_images" :key="index">
         <img :src="image" alt="" />
       </div>
     </template>
@@ -55,7 +55,7 @@
           <li class="show-desktop">
             <h2>Play the Game</h2>
             <p>
-              (WARNING: This game does not work on mobile or tablet. Requires keyboard)
+              This game was developed for desktop and requires a keyboard.
             </p>
             <a target="_blank" :href="links.game" class="link-btn">Play Cycles</a>
           </li>
@@ -107,5 +107,15 @@
 
 
 <style lang="scss">
-
+  @import '../../../style/global.scss';
+  div.cycles{
+    div.flickity-slider{
+      &>div.carousel-cell:nth-child(1) > img,
+      &>div.carousel-cell:nth-child(2) > img,
+      &>div.carousel-cell:nth-child(3) > img{
+        max-width: 90%;
+        max-height: 90%;
+      }
+    }
+  }
 </style>

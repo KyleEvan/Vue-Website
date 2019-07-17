@@ -58,11 +58,13 @@
 .about{
   display: flex;
   flex-direction: column;
+  justify-content: center;
   height: 100%;
+  padding: 5em 0;
   .content{
     width: 100%;
     height: auto;
-    min-height: 100vh;
+    // min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: flex-start;
@@ -75,12 +77,12 @@
     flex-flow: column;
     align-items: center;
     justify-content: center;
-    padding: $main-topBotPad 0;
+    // padding: $main-topBotPad 0;
 
     h1{
       font-family: 'InterUI', sans-serif;
       font-weight: 700;
-      font-size: $sm-header-fontSize;
+      font-size: 1.5em;
       line-height: 1;
       margin-top: 0;
       span{
@@ -94,8 +96,10 @@
       opacity: 0;
       transform: translateY(20px);
       margin: 1em 0;
-      width: 12em;
-      height: 12em;
+      width: 9em;
+      height: 9em;
+      max-width: 50vw;
+      max-height: 50vw;
       overflow: hidden;
       display: flex;
       align-items: flex-start;
@@ -121,7 +125,7 @@
       //   // width: 50%;
       // }
       @include smmd {
-        width: 68%;
+        width: 50%;
         text-indent: 2em;
         &>div{
           margin-bottom: 0;

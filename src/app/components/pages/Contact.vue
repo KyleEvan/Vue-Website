@@ -4,38 +4,38 @@
       <div class="content inner-content">
         <display-content :events="events" :config="animationConfig" class="display-container">
           <h1 class="header">Contact</h1>
-          <section class="info">
-            <p>
+          <!-- <section class="info"> -->
+            <!-- <p>
               Feel free to reach out by email.
-            </p>
-            <ul>
-                <li>
+            </p> -->
+            <!-- <ul>
+                <li> -->
                   <a :href="links.email" class="link-btn">
                     kyle.evan.p@gmail.com
                   </a>
-                </li>
-            </ul>
-          </section>
-          <section class="info">
-            <h2>Professional Resources</h2>
+                <!-- </li>
+            </ul> -->
+          <!-- </section>
+          <section class="info"> -->
+            <!-- <h2>Professional Resources</h2>
             <ul>
-              <li>
+              <li> -->
                 <a target="_blank" :href="links.resume" class="link-btn">
                   Resume
                 </a>
-              </li>
-            </ul>
-          </section>
-          <section class="info">
-            <h2>GitHub</h2>
+              <!-- </li>
+            </ul> -->
+          <!-- </section>
+          <section class="info"> -->
+            <!-- <h2>GitHub</h2>
             <ul>
-              <li>
+              <li> -->
                 <a target="_blank" :href="links.github" class="link-btn">
                   github.com/KyleEvan
                 </a>
-              </li>
-            </ul>
-          </section>
+              <!-- </li>
+            </ul> -->
+          <!-- </section> -->
 
         </display-content>
       </div>
@@ -87,23 +87,36 @@
   display: flex;
   flex-direction: column;
   height: 100%;
+  justify-content: center;
+  
   .content{
     width: 100%;
     height: auto;
-    min-height: 100vh;
+    // min-height: 100vh;
     display: flex;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: center;
     flex-flow: wrap;
   .display-container{
     padding: $main-topBotPad 0;
-    // display: flex;
-    // flex-flow: column;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+    @include smmd {
+      flex-direction: row;
+      flex-flow: wrap;
+      align-items: center;
+      justify-content: center;
+
+    }
     h1{
       font-family: 'InterUI', sans-serif;
       font-weight: 700;
-      font-size: $sm-header-fontSize;
+      font-size: 1.5em;
       line-height: 1;
+      text-align: center;
+      width: 100%;
       span{
         display: inline-block;
         opacity: 0;
@@ -113,30 +126,39 @@
     h1+section.info{
       margin-top: 2em;
     }
-    section.info{
-      position: relative;
+    a.link-btn{
       opacity: 0;
-      display: flex;
-      flex-flow: column;
-      // align-items: center;
-      justify-content: center;
       transform: translateY(20px);
       margin-top: 1em;
-      &>*:first-child{
-        margin-top:0;
+      &:last-child{
+        margin-right: 0;
       }
-      h2{
-        font-size: 1.2em;
-      }
-      ul{
-        list-style: none;
-        margin: 0;
-        padding: 0;
-        li{
-          line-height: 2;
-        }
-      }
+      
     }
+    // section.info{
+    //   position: relative;
+    //   opacity: 0;
+    //   // display: flex;
+    //   // flex-flow: column;
+    //   // align-items: center;
+    //   justify-content: center;
+    //   transform: translateY(20px);
+    //   margin-top: 1em;
+    //   &>*:first-child{
+    //     margin-top:0;
+    //   }
+    //   h2{
+    //     font-size: 1.2em;
+    //   }
+    //   ul{
+    //     list-style: none;
+    //     margin: 0;
+    //     padding: 0;
+    //     li{
+    //       line-height: 2;
+    //     }
+    //   }
+    // }
   }
 }
 }

@@ -1,22 +1,22 @@
 <template>
-
-  <div ref="carouselContainer" id="carousel">
-    <div id="fixed-container" ref="carousel">
-      <slot></slot>
+  <div id="carouselMargin" class="inner-content">
+    <div ref="carouselContainer" id="carousel">
+      <div id="fixed-container" ref="carousel">
+        <slot></slot>
+      </div>
+      <svg id="progressBar" :style="{backgroundColor: progressBar.background}" :width="progressBar.width" :height="progressBar.height" :viewBox="viewBox" >
+        <polygon class="progress" ref="progressBar" :fill="progressColor" :points="points"></polygon>
+      </svg>
+      <!-- <div v-show="!oneSlide" class="btn-group mobile-no-highlight" @mouseover="handleMouseOver" @mouseleave="handleMouseLeave"> -->
+        <a v-show="!oneSlide" role="button" class="prev" href="#" @click.prevent="nextPrevSlide">
+          <font-awesome-icon :icon="['fas', 'chevron-left']" />
+        </a>
+        <a v-show="!oneSlide" role="button" class="next" href="#" @click.prevent="nextPrevSlide">
+          <font-awesome-icon :icon="['fas', 'chevron-right']" />
+        </a>
+      <!-- </div> -->
     </div>
-    <svg id="progressBar" :style="{backgroundColor: progressBar.background}" :width="progressBar.width" :height="progressBar.height" :viewBox="viewBox" >
-      <polygon class="progress" ref="progressBar" :fill="progressColor" :points="points"></polygon>
-    </svg>
-    <!-- <div v-show="!oneSlide" class="btn-group mobile-no-highlight" @mouseover="handleMouseOver" @mouseleave="handleMouseLeave"> -->
-      <a v-show="!oneSlide" role="button" class="prev" href="#" @click.prevent="nextPrevSlide">
-        <font-awesome-icon :icon="['fas', 'chevron-left']" />
-      </a>
-      <a v-show="!oneSlide" role="button" class="next" href="#" @click.prevent="nextPrevSlide">
-        <font-awesome-icon :icon="['fas', 'chevron-right']" />
-      </a>
-    <!-- </div> -->
   </div>
-
 </template>
 
 <script>
@@ -26,7 +26,7 @@
 
 
   export default {
-    props: ['progressColor'],
+    props: ['events', 'progressColor'],
     data(){
       return {
         flckty: undefined,
@@ -70,12 +70,12 @@
       animateProgressBar(x){
         let progress = Math.round(x*1000)/1000;     
         let progressEl = this.$refs.progressBar;
-        if(progress <= 0){
-          progressEl.style.opacity = 0;
-        } else {
-          progressEl.style.opacity = 1;
-        }
         if(progressEl){
+          if(progress <= 0){
+            progressEl.style.opacity = 0;
+          } else {
+            progressEl.style.opacity = 1;
+          }
           TweenLite.to(progressEl, 0,
           {
             x: x,
@@ -104,10 +104,13 @@
         this.progressBar.height = container.height;
         this.points = this.getPoints(container.left, 0, container.right, container.bottom - container.top);
       },
+      handleScroll: function(progress){
+        progress = Math.max( 0, Math.min( 1, progress ) );
+        this.updateProgress(progress);
+      },
       initFlickity: function(){
         this.dev('Init Flickity');
         const carousel = this;
-
         this.flkty = new Flickity( this.$refs.carousel, {
           imagesLoaded: true,
           draggable: true,
@@ -120,25 +123,33 @@
           autoPlay: 2300,
           on: {
            ready: function() {
-             carousel.dev('Flickity ready');
              carousel.configCarousel(carousel.configProgressBar);
            }
           }
         });
-        this.flkty.on( 'scroll', ( progress ) => {
-          progress = Math.max( 0, Math.min( 1, progress ) );
-          carousel.updateProgress(progress);
-        });
+        this.flkty.on( 'scroll', this.handleScroll);
+        this.flkty.stopPlayer();
       },
       handleResize: function(){
         const carousel = this;
         this.debounce(carousel.configProgressBar(), 40);
+      },
+      startCarousel: function(){
+        this.flkty.playPlayer();
+        console.log('starting carousel');    
       }
+    },
+    created(){
+      this.events.$on('nav-loaded', this.startCarousel);
+      this.events.$on('page-transitioned', this.startCarousel);
     },
     mounted(){
       this.initFlickity();
     },
     beforeDestroy(){
+      this.events.$off('nav-loaded', this.startCarousel);
+      this.events.$off('page-transitioned', this.startCarousel);
+      this.flkty.off( 'scroll', this.handleScroll);
       this.flkty.destroy();
       if(!this.oneSlide) window.removeEventListener('resize', this.handleResize);
     }
@@ -148,19 +159,23 @@
 
 <style lang="scss">
   @import '../../style/global.scss';
+  #carouselMargin{
+    opacity: 0;
+    transform: translateY(3em);
+
   #carousel{
     position: relative;
     align-self: flex-start;
     width: 100%;
-    height: 50vh;
-    min-height: 400px;
+    height: 40vh;
+    max-height: 600px;
     z-index: 0;
     overflow: hidden;
+    background-color: $lightGray;
 
-    // @include md{
-    //   width: 50%;
-    //   height: 100vh;
-    // }
+    @include md{
+      height: 50vh;
+    }
     // @include lg{
     //   height: $main-height;
     //   max-height: $main-maxHeight;
@@ -219,6 +234,7 @@
             // padding: 2em;
             width: 100%;
             height: 100%;
+            overflow: hidden;
 
             @include lg{
               padding: $lg-padding;
@@ -297,7 +313,7 @@
       // }
     // }
   }
-
+}
 
 
 

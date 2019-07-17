@@ -85,7 +85,6 @@
       pageTransitioned: function(){
         if(this.init) {
           this.eventBus.$emit('page-transitioned');
-          this.dev('page transitioned');
         }
       },
       setAssets(updatedImages){
@@ -157,11 +156,16 @@
       },
       beforeEnter: function(el){
         this.bodyRestoreScroll();
+
       },
       enter: function(el, done){
+        console.log(el);
+        this.setMainMargin(el);
+
         done();
       },
       afterEnter: function(el){
+
         this.pageTransitioned();
       },
       beforeLeave: function(el){
@@ -178,6 +182,7 @@
         this.loadSizedImages();
       },
       $route: function(to, from){
+        console.log(to);
         // Change page title on route change
         this.setPageTitle();
         // let toDepth = to.path.split('/').length;

@@ -4,7 +4,7 @@
 
       <div>
         <span>Made with Vue &#10084;</span>
-        <span>View the project on my <a target="_blank" href="https://github.com/KyleEvan/Vue-Website">GitHub</a></span>
+        <span>See the project on <a target="_blank" href="https://github.com/KyleEvan/Vue-Website">GitHub</a></span>
         <span>Kyle Peterson</span>
         <!-- <span>༼ つ ͡◕ _ ͡◕ ༽つ</span> -->
       </div>

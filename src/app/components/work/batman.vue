@@ -9,24 +9,19 @@
       {{title}}
     </template>
 
-    <!-- Aside main content -->
-    <template slot="asideContent">
-      <section>
-        <p>
-          A final project for my Elements of Graphic Design in Media class. The subject was ours to choose and the main objective was to incorporate some principles of 2D graphic design learned during the semester. I chose to create a poster advertisement for a comic book store. I used Adobe Illustrator for the vector graphics, characters and text. Characters were created from reference images of old batman comic book covers. I post processed the result in Photoshop adjustmenting colors and layering a texture filter to create the distressed old finishing. At the end, the high resolution composition was printed on 11x18 foamcore.
-        </p>
-      </section>
-    </template>
-
     <!-- Carousel aside & slides -->
     <template slot="slides">
-      <div class="carousel-cell" v-for="image in project_images">
+      <div class="carousel-cell" v-for="(image, index) in project_images" :key="index">
         <img :src="image" alt="" />
       </div>
     </template>
 
     <!-- Extra lower content -->
-    <template slot="extra"></template>
+    <template slot="main-content">
+      <p>
+        A final project for my Elements of Graphic Design in Media class. The subject was ours to choose and the main objective was to incorporate some principles of 2D graphic design learned during the semester. I chose to create a poster advertisement for a comic book store. I used Adobe Illustrator for the vector graphics, characters and text. Characters were created from reference images of old batman comic book covers. I post processed the result in Photoshop adjustmenting colors and layering a texture filter to create the distressed old finishing. At the end, the high resolution composition was printed on 11x18 foamcore.
+      </p>
+    </template>
 
   </work-template>
   <!-- End of Template -->
@@ -63,8 +58,13 @@
 <style lang="scss">
   // @import '../../style/global.scss';
   .batman-poster{
-    .template-aside{
-      min-height: 50vh;
+    div.flickity-slider{
+      &>div.carousel-cell:nth-child(1) > img{
+        width: auto;
+        height: auto;
+        max-width: 90%;
+        max-height: 90%;
+      }
     }
   }
 </style>

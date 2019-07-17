@@ -1,56 +1,40 @@
-<!--
-
-	HTML
-
--->
 <template>
-  <div class="content">
-    <!-- <div class="border"></div> -->
-
-      <!-- <div class="template-main" > -->
-        <!-- main work info -->
+  <div class="project content">
         
-        <!-- main work images -->
-        <carousel :progressColor="mainColor">
-          <slot name="slides"></slot>
-        </carousel>
-        <!-- <div class="template-aside" >
-          <div ref="carouselAside" class="inner-content">
-            
-            <slot name="asideContent"></slot>
-          </div>
-        </div> -->
-      <!-- </div> -->
-      <div class="inner-content">
-        <h1 class="template-title">
-          <slot name="title"></slot>
-        </h1>
-        <slot name="main-content"></slot>
-      </div>
+    <!-- main project images -->
+    <carousel :events="events" :progressColor="mainColor">
+      <slot name="slides"></slot>
+    </carousel>
+
+    <!-- main project content --> 
+    <div id="project-content" class="inner-content">
+      <h1 class="template-title">
+        <slot name="title"></slot>
+      </h1>
+      <slot name="main-content"></slot>
+    </div>
+    
+    <svg id="transition-overlay" class="in">
+      <rect />
+    </svg>
 
   </div>
 </template>
 
-<!--
 
-	JS
-
--->
 <script>
-  // Color Palettes
   import {colors} from '../../colors.js';
-
-  // Components
   import carousel from '../carousel.vue';
 
-	export default{
+	export default {
 		props:['project', 'events'],
     data(){
       return{
-        tl: new TimelineLite({paused: true}),
-        defaultLightColor: colors.templateLightColor,
-        defaultMediumColor: colors.templateMedColor,
-        defaultMainColor: colors.templateMainColor,
+        // defaultLightColor: colors.templateLightColor,
+        // defaultMediumColor: colors.templateMedColor,
+        defaultMainColor: colors.blue,
+        defaultDarkColor: colors.darkBlue,
+        rect: undefined,
       }
     },
     components:{
@@ -60,63 +44,112 @@
       mainColor: function(){
         return this.$props.project ? this.$props.project.mainColor : this.defaultMainColor;
       },
-      mediumColor: function(){
-        return this.$props.project ? this.$props.project.mediumColor : this.defaultMediumColor;
+      darkColor: function(){
+        return this.$props.project ? this.$props.project.darkColor : this.defaultDarkColor;
       },
-      lightColor: function(){
-        return this.$props.project ? this.$props.project.lightColor : this.defaultLightColor;
-      },
-      extraSlotPassed: function(){
-        return !!this.$slots['extra'];
-      }
+      // lightColor: function(){
+      //   return this.$props.project ? this.$props.project.lightColor : this.defaultLightColor;
+      // },
+      // extraSlotPassed: function(){
+      //   return !!this.$slots['extra'];
+      // }
     },
     methods:{
-      animateContent: function(){
-        let dur = this.$props.project ? .6 : 0;
-        // const aside = this.$refs.carouselAside;
-        // const extra = this.$refs.extraContent;
-        let tweenConfig = {
-          x: 0,
-          y: 0,
-          opacity: 1,
-          ease: Circ.easeOut
-        };
-        // TweenLite.to(aside, dur, tweenConfig);
-        // if(extra) TweenLite.to(extra, dur+.25, tweenConfig);
+      animateInProject: function(delay){
+        /**
+         * Animate out transition overlay
+         */
+        const tl = new TimelineLite();
+        if(this.rect){
+          tl.add( TweenLite.to(
+            this.rect,
+            0.5,
+            {
+              x: '100%',
+              ease: Power2.easeIn,
+            }
+          ));
+        }
+
+        /**
+         * Animate in content elements
+         */
+        let transitionEl;
+        let pageElsArray = [].slice.call(document.querySelector('.main.content').children);
+        let showPageEls = pageElsArray.filter((el) => {
+          if(el.id === 'transition-overlay') transitionEl = el;
+          return el.id !== 'transition-overlay';
+        });
+        let duration = .8;
+        let durationFactor = .8;
+        showPageEls.forEach((el, index) => {
+          tl.add( TweenLite.to(
+            el,
+            duration,
+            {
+              y: '0',
+              opacity: '1',
+              delay: 1.5,
+              ease: Expo.EaseOut,
+              onComplete: () => {
+                if(index >= (showPageEls.length-1)){
+                  transitionEl.parentNode.removeChild(transitionEl);
+                }
+              }
+            }
+          ), -duration);
+          duration *= durationFactor;
+        });
       },
       initPage: function(){
-        this.animateContent();
-      }
+        if(this.$props.project) this.rect = this.initSvgOverlay('#transition-overlay.in', this.mainColor, 0); 
+        this.animateInProject();
+      },
     },
     created(){
-        this.events.$on('app-loaded', () => {
-          this.initPage();
-        });
+      this.events.$on('nav-loaded', this.initPage);
+      this.events.$on('page-transitioned', this.initPage);
+    },
+    beforeDestroy(){
+      this.events.$off('nav-loaded', this.initPage);
+      this.events.$off('page-transitioned', this.initPage);
     },
     mounted(){
-      this.initPage();
-      console.log(this.$props.project);
+      let mainContent = document.getElementById('project-content');
+      let headings = Array.from(mainContent.querySelectorAll('h1, h2, h3'));
+      headings.forEach((el) => {
+        el.style.color = this.mainColor;
+      });
+      this.css = window.document.styleSheets[0];
+      this.css.insertRule(`
+        body a.link-btn:hover,
+        body a.link-btn:focus,
+        body a.link-btn:active{
+          background-color: ${this.darkColor};
+        }
+      `, this.css.cssRules.length);
+      this.css.insertRule(`
+        body a.link-btn{
+          border-color: ${this.darkColor};
+          color: ${this.darkColor};
+        }
+      `, this.css.cssRules.length);
+      console.log(this.css);
     }
   }
 </script>
 
-<!--
 
-	Styles
-
--->
 <style lang="scss" scoped>
   @import '../../../style/global.scss';
-
-
-
-  .template-aside,
-  .template-extra{
-    color: $mainColorLight;
-    background: $mainBg;
-    z-index: 2;
+  .project.content{
+    padding-top: 1em;
   }
-
+  #project-content{
+    opacity: 0;
+    transform: translateY(5em);
+    padding: 1em 0;
+  }
 
   section{
     // padding: 2em 0;
@@ -186,33 +219,6 @@
 
 
 
-
-
-  // .border{
-  //   position: absolute;
-  //   top: 0;
-  //   left: 0;
-  //   width: 100%;
-  //   height: 100%;
-  //   z-index: 1;
-  //   pointer-events: none;
-
-  //   @include lg{
-  //     &::before{
-  //       content: '';
-  //       width: 100%;
-  //       height: 100vh;
-  //       position: absolute;
-  //       top: 0;
-  //       left: 0;
-  //       box-sizing: border-box;
-  //       border-top: solid 5em $mainBg;
-  //       border-left: solid 650px $mainBg;
-  //       border-bottom: solid 5em $mainBg;
-  //     }
-  //   }
-  // }
-
     .template-main{
       display: flex;
       flex-direction: column-reverse;
@@ -277,30 +283,6 @@
         }
 
 
-      }
-    }
-
-
-
-    .template-extra{
-      position: relative;
-      padding: 2em;
-      margin-top: -$lg-padding;
-      opacity: 0;
-      transform: translateY(8%);
-
-      @include md {
-        margin-top: 0;
-      }
-      @include lg{
-        margin-top: -$main-topBotPad;
-        padding: $main-topBotPad;
-
-      }
-      &>div {
-        @include md{
-          margin-top: $main-topBotPad;
-        }
       }
     }
 

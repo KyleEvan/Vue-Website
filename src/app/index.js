@@ -8,7 +8,7 @@ import router from './router.js';
 import App from './components/App.vue';
 // var VueTouch = require('vue-touch');
 
-import { globals } from './globals.js';
+// import { globals } from './globals.js';
 import { images } from './images.js';
 
 import { TimelineLite } from 'gsap';
@@ -68,9 +68,52 @@ Vue.mixin({
       }
     },
 
-    // Transforms header element
-    // wraps each letter node in a span
-    // output: Array of span elements
+    
+    setMainMargin: function(el){
+      let main;
+      let marginBottom = document.querySelector('footer').offsetHeight;
+      let marginTop = document.querySelector('nav').offsetHeight;
+      if(el) main = el;
+      else main = document.querySelector('div.main');
+      let mainHeight = main.offsetHeight;
+      // console.log(main.offsetHeight);
+      // console.log(marginTop);
+      let margins = marginTop + marginBottom;
+      console.log(marginTop);
+      let minHeight = document.documentElement.clientHeight - margins;
+      console.log(minHeight)
+      if(mainHeight < minHeight) main.style.height = `${minHeight}px`;
+      main.style.marginTop = `${marginTop}px`;
+    },
+
+
+    /**
+     * Creates svg used as overlay in transitions
+     * svg element must exist on page with class 'transition-overlay'
+     */
+    initSvgOverlay: function(selector, color, direction){
+      let overlay = document.querySelector(selector);
+      let rect = overlay.querySelector('rect');
+      let dir = direction ? -1 : 0;
+      let width = this.viewport.cWidth + 17;
+      console.log('init svg overlay');
+      console.log(rect);
+      overlay.style.display = 'block';
+      overlay.setAttribute('width', `${width}`);
+      overlay.setAttribute('height', `${this.viewport.cHeight}`);
+      rect.setAttribute('x', `${width*dir}`);
+      rect.setAttribute('y', 0);
+      rect.setAttribute('width', `${width}`);
+      rect.setAttribute('height', `${this.viewport.cHeight}`);
+      rect.setAttribute('fill', color);
+      return rect;
+    },
+
+    /**
+     * Transforms header element
+     * output: Array of span elements
+     * wraps each letter in a span
+     */ 
     charmWords: function(elements){
       let charm = [];
       let func = function(el){
@@ -82,30 +125,22 @@ Vue.mixin({
         for(var i = 0; i < elements.length; i++){
           func(elements[i]);
         }
-      }
-      else {
+      } else {
         func(elements);
       }
       return charm;
     },
 
-
     loadImages: async function(imagesArr, func){
-      // console.log(imagesArr);
       return load.any(imagesArr, (progress) => {
         console.log(`${(progress.count/progress.total)*100}%`);
-        // if(progress.count >= progress.total){
-        // }
       }).then(assets => {
         if(func){
-          // console.log(assets);
           func(assets);
         }
         return assets;
-
       });
     },
-
 
     // Helpers for loadPageImages
     imageDoneLoading: function(img){
@@ -143,8 +178,9 @@ Vue.mixin({
             for(var j = 0; j < images.length; j++){
               let img = placeholders[j];
               img.src = images[j].src;
+              app.imageDoneLoading(img)
               // TweenLite.to(spinners[j], .5,{ opacity: 0, scale: 0, ease: Power2.easeIn, onComplete: app.removeEl(spinners[j]) });
-              TweenLite.to(placeholders[j], 1, { opacity: 1, y: 0, ease: Power2.easeOut, onComplete: app.imageDoneLoading(img) });
+              // TweenLite.to(placeholders[j], 1, { opacity: 1, y: 0, ease: Power2.easeOut, onComplete:  });
             }
           }
           this.loadImages(pageImages, replacePlaceholders);
@@ -177,7 +213,7 @@ Vue.mixin({
           func.apply(context, args);
       };
     }
-  }
+  },
 });
 
 new Vue({
@@ -202,7 +238,7 @@ new Vue({
     },
     setImages(){
       this.images = images(this.breakpoints, window.innerWidth);
-      this.dev("App images updated");
+      console.log("App images updated");
     },
 
     // Used to determine current breakpoint,
@@ -222,18 +258,22 @@ new Vue({
       }
       return breakpoint;
     },
-
-    // If current breakpoint is not equal to the last break point
-    // Then the viewport has broken the current breakpoint threshold
-    // setImages is called to update the images mixin with appropriately sized images
-    checkBreakpoint(){
+    
+    
+    debounceResize(){
+      this.setMainMargin();
+      /**
+       * If current breakpoint is not equal to the last break point
+       * Then the viewport has broken the current breakpoint threshold
+       * setImages is called to update the images mixin with appropriately sized images
+       */
       if(this.currentBreakpoint() !== this.last_breakpoint){
         this.setImages();
       }
       this.last_breakpoint = this.currentBreakpoint();
     },
     handleResize(){
-      this.debounce(this.checkBreakpoint(), 500, false);
+      this.debounce(this.debounceResize(), 500, false);
     },
   },
   created(){
@@ -252,10 +292,16 @@ new Vue({
         loadingSVG.style.visibility = "visible";
       }
     });
+
+    /**
+     * Add resize event handler to main Vue
+     */
     window.addEventListener('resize', this.handleResize);
 
     this.setImages();
-    // Add resize event handler to main Vue
+  },
+  mounted(){
+    this.setMainMargin();
   },
   beforeDestroy(){
     window.removeEventListener('resize', this.handleResize);

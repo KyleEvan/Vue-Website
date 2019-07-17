@@ -7,22 +7,24 @@
     <template slot="title">
       {{title}}
     </template>
+
     <!-- Carousel slides -->
     <template slot="slides">
       <div class="carousel-cell" v-for="(image, index) in carousel_images" :key="index">
         <img :src="image" alt="" />
       </div>
     </template>
+    
     <!-- Main Content -->
     <template slot="main-content">
       <p>
         The member redesign project was a complete UI and UX overhaul of Excellus BCBS and Univera Healthcare member sections. This massive project required a manual transition to a responsive theme introducing new theme and coding standards to create a fresh modern experience for our members.
       </p>
       <p>
-        Before the redesign, the websites were static fixed layout and a completely separate mobile website. This project solved many of the issues that plagued productivity by facilitating the creation and maintenance of content. It also greatly improved the website's usability, streamlined the member experience, and added new accessibility funcitonality.
+        Before the redesign, the websites were static with a fixed layout and a completely separate mobile website. This project solved many of the issues that plagued productivity by facilitating the creation and maintenance of content because it introduced one central code base. It also greatly improved the website's usability, streamlined the member experience, and added new accessibility features.
       </p>
       <p>
-        A majority of the project I worked on migrating ui components and content, adding responsive functionality and enforcing accessibility standards according section 508 technical to ensure compliance with WAI-ARIA specifications. Bootstrap 3 was the main framework we used in our responsive theme to handle layouts for different viewports. I also developed internal and external web applications trhoughout the duration of the redesign. 
+        A majority of the project I worked on migrating ui components and content, adding responsive functionality and ensuring compliance according to section 508 WAI-ARIA specifications. Bootstrap 3 was the main framework we used in our responsive theme to handle layouts for different viewports. I also developed internal and external web applications trhoughout the duration of the redesign. 
       </p>
       <h2>Careers</h2>
       <p>
@@ -180,9 +182,15 @@
         max-height: 90%;
       }      
       &>div.carousel-cell:nth-child(3) > img{
-        width: 70%;
+        // width: 90%;
         height: auto;
-        top: 4%;
+        max-width: 90%;
+        max-height: 90%;
+        // @include md{
+          // width: 70%;
+          // height: auto;
+          // top: 4%;
+        // }
       }
     }
     video{

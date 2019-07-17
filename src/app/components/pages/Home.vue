@@ -6,56 +6,20 @@
 
     <div class="container">
 
-
-      <!-- <div v-for="(works, section) in sections" :id="section.toLowerCase()">
         <div class="content inner-content">
-        <h2>{{section}}</h2>
-        <div class="works">
-          <div role="link" tabindex="0" v-for="work in works" class="project-container">
-            <a
+          <h1>Projects</h1>
+          <div class="projects">
+            <a v-for="(work, index) in projectsData" :key="index" 
               role="link"
               :href="work.href"
-              @click.prevent="handleClick"
-              class="project"
-              tabindex="-1"
-              >
-              <div class="bg" :style="{background: work.lightColor}"></div>
-
-              <div class="image">
-                <spinner class="loading-spinner"/>
-                <img :data-image-src="work.image.src" class="img-placeholder"/>
-              </div>
-
-            </a>
-            <div role="link" class="info" @click.prevent="redirectClick">
-              <div class="name">{{work.name}}</div>
-              <div class="tags">
-                <span v-for="tag in work.tags" :class="tag.toLowerCase()">{{tag}}</span>
-              </div>
-              <div v-if="work.date" class="date">{{work.date}}</div>
-            </div>
-          </div>
-        </div>
-        </div>
-      </div> -->
-
-        <div class="content inner-content">
-          <h2>Projects</h2>
-          <div class="projects">
-            <div tabindex="0" v-for="(work, index) in projectsData" :key="index" :class="projectContainerClass">
-
-              <a
-                role="link"
-                :href="work.href"
-                @click.prevent="handleProjectClick"
-                :class="projectClass"
-                tabindex="-1"
-                >
-                <!-- <div class="bg" :style="{background: work.lightColor}"></div> -->
-
+              :class="projectContainerClass"
+              @mousedown.prevent="handleProjectMousedown"
+              @mouseup.prevent="handleProjectMouseup"
+              @click.prevent
+            >
+              <div :class="projectClass" tabindex="-1">
                 <div class="image">
-                  <!-- <spinner class="loading-spinner"/> -->
-                  <img :data-image-src="work.featuredImage" class="img-placeholder"/>
+                  <img :src="work.featuredImage"/>
                 </div>
                 <div class="info">
                   <h3 class="name">
@@ -68,13 +32,13 @@
                   </ul>
                   <div v-if="work.date" class="date">{{work.date}}</div>
                 </div>
-              </a>
+              </div>
 
-            </div>
+            </a>
           </div>
         </div>
 
-      <svg id="transition-overlay">
+      <svg id="transition-overlay" class="out">
         <rect />
       </svg>
 
@@ -89,11 +53,9 @@
   // import spinner from '../../../images/spinner.svg';
 
   import {colors} from '../../colors.js';
-  // import {work} from '../../work.js';
   import {projects} from '../../projects.js';
-
   import homeTitle from '../home-title.vue';
- 
+  import charmWord from '../charm-word.vue';
   import anime from 'animejs';
 
   export default {
@@ -104,116 +66,200 @@
       return{
         projectClass: 'project',
         projectContainerClass: 'project-container',
-
+        ripples: [],
         projectsData: projects,
         // sections: {Projects: projects},
         projects: projects,
         pageImages: [],
         projectsElArr: [],
         project: undefined,
-        hideAnimDuration: .45,
-        projectAnimDuration: 1.1,
-        imageBgAnimDuration: 1100,
-        // animate_centerProject: .75,
-        transitionBgColor: colors.mainBg,
-        transforms: undefined,
-        transition: {
-          bgPoints: '0 0 0 0 0 0 0 0',
-          bgFill: 'transparent'
-        },
-        transitioning: false,
-        carouselTransitionConfig: {
-          mobile: {
-            width: 1,
-            height: .5,
-            minHeight: 400,
-            width: 1,
-            offsetX: 0,
-            offsetY: 0,
-            padding: '2em'
-          },
-          tablet: {
-            width: .5,
-            height: 1,
-            minHeight: 0,
-            offsetX: .5,
-            offsetY: 0,
-            padding: '2em'
-          },
-          desktop: {
-            width: .5,
-            height: 1,
-            minHeight: 0,
-            offsetX: .5,
-            offsetY: '5em',
-            padding: '3em'
-          },
-        },
+        // hideAnimDuration: .45,
+        // projectAnimDuration: 1.1,
+        // imageBgAnimDuration: 1100,
+        // // animate_centerProject: .75,
+        // transitionBgColor: colors.mainBg,
+        // transforms: undefined,
+        // transition: {
+        //   bgPoints: '0 0 0 0 0 0 0 0',
+        //   bgFill: 'transparent'
+        // },
+        // transitioning: false,
+        // carouselTransitionConfig: {
+        //   mobile: {
+        //     width: 1,
+        //     height: .5,
+        //     minHeight: 400,
+        //     width: 1,
+        //     offsetX: 0,
+        //     offsetY: 0,
+        //     padding: '2em'
+        //   },
+        //   tablet: {
+        //     width: .5,
+        //     height: 1,
+        //     minHeight: 0,
+        //     offsetX: .5,
+        //     offsetY: 0,
+        //     padding: '2em'
+        //   },
+        //   desktop: {
+        //     width: .5,
+        //     height: 1,
+        //     minHeight: 0,
+        //     offsetX: .5,
+        //     offsetY: '5em',
+        //     padding: '3em'
+        //   },
+        // },
 
       }
     },
     components: {
       // spinner,
-      'home-title': homeTitle
+      'home-title': homeTitle,
+      'charm-word': charmWord,
     },
     methods:{
-
-      handleProjectClick: function(e){
-        this.transitioning = true;
-        console.log(e.target);
-        this.project = this.getProjectData(e.target);
-        const id = 'transition-overlay';
-        let overlay = document.getElementById(id);
-        let rect = overlay.querySelector('rect');
-        overlay.style.display = 'block';
-        overlay.setAttribute('width', `${this.viewport.cWidth}`);
-        overlay.setAttribute('height', `${this.viewport.cHeight}`);
-        rect.setAttribute('x', -`${this.viewport.cWidth}`);
-        rect.setAttribute('y', 0);
-        rect.setAttribute('width', `${this.viewport.cWidth}`);
-        rect.setAttribute('height', `${this.viewport.cHeight}`);
-        console.log(this.project);
-        rect.setAttribute('fill', this.project.data.mainColor);
-
-        const inactiveProjects = this.filterInactiveProjects(e.target);
-        
-        this.animateToProject(rect, e.target, inactiveProjects);
-
-
+      mousemoveHandler: function(e){
+        if(e.clientX > this.selectPosition.left && e.clientX < this.selectPosition.right && e.clientY > this.selectPosition.top && e.clientY < this.selectPosition.bottom){
+          // console.log('within element!');
+          return;
+        } else {
+          // console.log('cancel select');
+          this.removeRipple();
+        }
       },
+      handleProjectMousedown: function(e){
+        let projectContainer = e.currentTarget;
+        let projectEl = projectContainer.querySelector('.project');
+        let projectImage = projectEl.querySelector('.image');
+        this.project = this.getProjectData(projectEl);
+        document.body.addEventListener('mousemove', this.mousemoveHandler);
+        console.log(this.project);
+        this.selectPosition = projectContainer.getBoundingClientRect();
+        let width = this.selectPosition.right - this.selectPosition.left;
+        let x = e.clientX - this.selectPosition.left;
+        let y = e.clientY - this.selectPosition.top;
+        let offset = 5;
+        x = (Math.round(x*10)/10) - offset;
+        y = (Math.round(y*10)/10) - offset;
+        // console.log(x +', '+ y);
+        // console.log(width);
+        // console.log(this.selectPosition.width);
+        let xmlns = 'http://www.w3.org/2000/svg';
+        let svg = document.createElementNS(xmlns, 'svg');
+        let circle = document.createElementNS(xmlns, 'circle');
+        let diameter = width*2.5;
+        svg.setAttribute('viewBox', `0 0 ${diameter} ${diameter}`);
+        svg.setAttribute('width', diameter);
+        svg.setAttribute('height', diameter);
+        circle.setAttribute('cx', diameter/2);
+        circle.setAttribute('cy', diameter/2);
+        circle.setAttribute('r', diameter/2);
+        circle.setAttribute('fill', this.project.data.mainColor);
+        svg.appendChild(circle);
+        svg.style.position = 'absolute';
+        svg.style.left = `${x - (diameter/2)}px`;
+        svg.style.top = `${y - (diameter/2)}px`;
+        svg.style.transform = 'scale(.05)';
+        svg.style.opacity = 0.5;
+        projectEl.insertBefore(svg, projectImage);
+        this.ripples.push(svg);
+        this.animateInRipple(svg);
+      },
+      handleProjectMouseup: function(e){
+        if(this.ripples[0]){
+          this.removeRipple();
+          let inactiveProjects = this.filterInactiveProjects(this.project.el);
+          let rect = this.initSvgOverlay('#transition-overlay.out', this.project.data.mainColor, 1);
+          // this.project.el.parentElement.focus();
+          this.animateToProject(rect, this.project.el.parentElement, inactiveProjects);
+        }
+      },
+      removeRipple: function(){
+        document.body.removeEventListener('mousemove', this.mousemoveHandler);
+        this.animateOutRipple(this.ripples[0]);
+        this.ripples.pop();
+      },
+
       filterInactiveProjects: function(el){
-        let projectContainers =  [].slice.call(this.$el.querySelectorAll(`.${this.projectContainerClass}`));
-        let inactiveProjects = projectContainers.filter( (projectContainer) => {
-          return (projectContainer.querySelector(`.${this.projectClass}`) !== el);
+        let inactiveProjects = this.projectContainers.filter( (projectContainer) => {
+          return (projectContainer !== el.parentElement);
         });
         return inactiveProjects;
       },
-
+      
+      animateInRipple: function(el){
+        let tl = new TimelineLite();
+        tl.add( TweenLite.to(
+          el,
+          .4,
+          {
+            opacity: .75,
+            ease: Power2.easeOut
+          }
+        ), 0);
+        tl.add( TweenLite.to(
+          el,
+          1,
+          {
+            scale: 1,
+            ease: Power2.easeOut
+          }
+        ), 0)
+      },
+      animateOutRipple: function(el){
+        let tl = new TimelineLite();
+        tl.add( TweenLite.to(
+          el,
+          1,
+          {
+            // scale: 1,
+            opacity: 0,
+            ease: Expo.easeOut,
+            onComplete: () => {
+              if(el){
+                el.parentElement.removeChild(el);
+              }
+            }
+          }
+        ));
+      },
       animateToProject: function(overlayRect, activeProject, inactiveProjects){
-        // activeProject.blur();
-        const tl = new TimelineLite();
-        tl.set(activeProject, {transition: 'unset'});
+        let tl = new TimelineLite();
+        let header = this.$el.querySelector('h1');
+        tl.set(activeProject, {transition: 'unset', zIndex: 2});
         tl.add( TweenLite.to(
           activeProject,
-          0.5,
+          1,
           {
-            y: '-20%',
+            y: '-30%',
+            // delay: 0.5,
             opacity: 0,
-            ease: Back.easeIn.config(.35),
+            ease: Power3.easeIn,
           }
         ));
         tl.add( TweenLite.to(
-          inactiveProjects,
-          0.3,
+          header,
+          0.5,
           {
-            y: '5%',
+            y: '10%',
+            opacity: 0,
+            ease: Power2.easeOut,
+          }
+        ), 0);
+        tl.add( TweenLite.to(
+          inactiveProjects,
+          0.5,
+          {
+            y: '10%',
             opacity: 0,
             ease: Power2.easeOut,
           }
         ), 0);
         tl.add( TweenLite.to(
           overlayRect,
-          1.0,
+          1,
           {
             x: '100%',
             opacity: 1,
@@ -224,8 +270,38 @@
               // this.navigate(e, project.data, transitionContainer);
             }
           }
-        ), '-=0.1');
+        ), '+=0.1');
       },
+      
+      animateInProjects: function(){
+        let tl = new TimelineLite();
+        let duration = 1;
+        let offset = duration;
+        let header = this.$el.querySelector('h1');
+        TweenLite.to(header, 1.2,
+        {
+          opacity: 1,
+          y: 0,
+          ease: Power2.eastOut
+        });
+        console.log(header);
+        this.projectContainers.forEach((el) => {
+          tl.add( TweenLite.to(
+            el,
+            offset,
+            {
+              y: 0,
+              opacity: 1,
+              ease: Power2.easeOut,
+              onComplete: () => {
+                el.classList.add('animated-in');
+              }
+            }
+          ), (duration - offset));
+          offset *= .95;
+        });
+      },
+
       navigateToProject: function(el){
         console.log('navigating!!!!!');
         console.log(el.getAttribute('href'));
@@ -235,6 +311,34 @@
           params: {project: this.project.data}
         });
       },
+      
+      getProjectData: function(target){
+        console.log(target);
+        console.log(this.projectContainers);
+        for (let i = this.projectContainers.length-1; i >= 0; i--){
+          let project = this.projectContainers[i].querySelector(`.${this.projectClass}`);
+          if(project === target){
+            return {
+              el: project,
+              data: this.projects[i]
+            }
+          }
+        }
+      },
+
+
+      // handleProjectClick: function(e){
+      //   this.transitioning = true;
+      //   this.project = this.getProjectData(e.target);
+      //   let inactiveProjects = this.filterInactiveProjects(e.target);
+
+      //   // console.log(e.clientX);
+      //   // console.log(e.clientY);
+        
+      //   // let rect = this.initSvgOverlay('#transition-overlay.out', this.project.data.mainColor, 1);
+      //   // this.animateToProject(rect, e.target, inactiveProjects);
+      // },
+
 
       /**
        * use as reference for animating out inactive projects
@@ -384,21 +488,7 @@
       //      - project image element,
       //      - sized img element used in template,
       //      - project.js data object
-      getProjectData: function(target){
-        for (let i = this.projectsElArr.length-1; i >= 0; i--){
-          let project = this.projectsElArr[i];
-          if(project === target){
-            // let newImage = this.$props.assets[this.projects[i].image.src];
-            // console.log(newImage);
-            return {
-              el: project,
-              // image: project.querySelector('img'),
-              // newImage: newImage,
-              data: this.projects[i]
-            }
-          }
-        }
-      },
+      
 
       // 2.)  Get the configuration for the project transition
       //      determined by viewport size and future layout of carousel in project page
@@ -465,113 +555,13 @@
 
 
 
-      createTransitionContainer: function(){
-        let transition_el = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-        let classname = 'transition-overlay';
-        transition_el.setAttribute('viewBox', `${0} ${0} ${this.viewport.cWidth} ${this.viewport.cHeight}`);
-        transition_el.classList.add(classname);
-        document.getElementById('app').appendChild(transition_el);
-        return transition_el;
+
+      showContent: function(){
+        console.log('showing content in home');
+        this.animateInProjects();
       },
-      createTransitionBg: function(project, transitionContainer){
-        let transitionBgEl = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
-        transitionBgEl.setAttribute('points', this.getPoints(-this.viewport.width, 0, 0, this.viewport.cHeight));
-        transitionBgEl.setAttribute('fill', this.transitionBgColor);
-        transitionContainer.appendChild(transitionBgEl);
-        let transitionBg = {
-          el: transitionBgEl,
-          width: this.viewport.width
-        }
-        return transitionBg;
-      },
-      createProjectBg: function(project, transitionContainer){
-        let container = project.el.getBoundingClientRect();
-        let colorBg = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
-        let points = this.getPoints(container.left, container.top, container.right, container.bottom);
-        colorBg.setAttribute('fill', project.data.lightColor);
-        colorBg.setAttribute('points', points);
-        transitionContainer.appendChild(colorBg);
-        // this.app.appendChild(transitionContainer);
-        return colorBg;
-      },
-
-      // 4.) Animates project to future location.
-      //     transition container
-      //     - transition background
-      //
-      animateTransition: function(e, project, transforms){
-        let app = this;
-        let background = project.el.querySelector('.bg');
-        let tl = new TimelineLite();
-        let delay = this.hideAnimDuration*1.05;
-
-        const transitionContainer = this.createTransitionContainer();
-        const transitionBg = this.createTransitionBg(project, transitionContainer);
-        const projectBg = this.createProjectBg(project, transitionContainer);
-
-
-        // Animate and hide other projects
-        this.animateOutElements(e.target);
-        // if its not mobile, animate project
-        // if(this.$props.images.currentBreakpoint === 'md' || this.$props.images.currentBreakpoint === "lg"){
-        const morphImageBg = () => {
-          anime({
-            targets: projectBg,
-            points: [
-              { value: transforms.newPoints }
-            ],
-            easing: 'easeOutQuad',
-            duration: app.imageBgAnimDuration,
-            complete: () => {
-              this.dev('Transition Completed');
-              app.transitioning = false;
-              app.navigate(e, project.data, transitionContainer);
-            }
-          });
-        }
-
-        // position active project above other elements
-        tl.add( TweenLite.set(project.el, {zIndex: 3}) );
-        tl.add( TweenLite.set(background, {opacity: 0}) );
-        tl.add( TweenLite.to(project.el, this.projectAnimDuration, {
-          x: transforms.translateX,
-          y: transforms.translateY,
-          scale: transforms.scale,
-          ease: Power2.easeOut,
-          delay: delay,
-          transformOrigin: '50% 50%',
-          onStart: () => {
-            morphImageBg();
-          }
-        }), 0 );
-        tl.add( TweenLite.to(transitionBg.el, this.projectAnimDuration, {x: transitionBg.width, delay: delay, ease: Power1.easeOut }), 0);
-
-      },
-      handleClick: function(e){
-        if(!this.transitioning){
-          // Starting transition
-          // set transitioning to true to prevent being called again
-          this.transitioning = true;
-
-          // this.$route.meta.scroll = document.documentElement.scrollTop;
-
-          // Disable scroll
-          this.bodyNoScroll();
-
-          // Get project data:
-          // - project el,
-          // - current img el,
-          // - new sized img el,
-          // - relevent project data from project.js
-          this.project = this.getProjectData(e.target);
-          this.project.data = Object.assign(this.getConfig(), this.project.data);
-          this.transforms = this.calcProjectTransforms(this.project);
-          this.animateTransition(e, this.project, this.transforms);
-        }
-      },
-
       loadPage: function(){
-        this.loadPageImages('sm', this.$el);
+        // this.loadPageImages('sm', this.$el);
       }
       // Gives placeholder imgs a src
       // loadPageImages: function(){
@@ -627,16 +617,18 @@
     },
 
     created(){
-      this.events.$on('app-loaded', this.loadPage);
-      this.events.$on('page-transitioned', this.loadPage);
+      // this.events.$on('app-loaded', this.loadPage);
+      this.events.$on('nav-loaded', this.showContent);
+      this.events.$on('page-transitioned', this.showContent);
     },
     mounted(){
-      // console.log(spinner);
-      this.projectsElArr = [].slice.call(document.querySelectorAll('.project'));
+      // this.projectsElArr = [].slice.call(document.querySelectorAll('.project'));
+      this.projectContainers = [].slice.call(this.$el.querySelectorAll(`.${this.projectContainerClass}`));
     },
     beforeDestroy(){
-      this.events.$off('app-loaded', this.loadPage);
-      this.events.$off('page-transitioned', this.loadPage);
+      // this.events.$off('app-loaded', this.loadPage);
+      this.events.$off('nav-loaded', this.showContent);
+      this.events.$off('page-transitioned', this.showContent);
     }
   }
 
@@ -645,19 +637,10 @@
 <style lang="scss" scoped>
 @import '../../../style/global.scss';
 .main {
+  // margin-top: 9em;
+  padding: 5em 0;
   .container {
-    #transition-overlay{
-      position: fixed;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      display: none;
-      z-index: 3;
-      // rect{
-      //   // opacity: 0;
-      // }
-    }
+    
     div {
       // &#work {
       //   background: $lightOffWhite;
@@ -665,14 +648,20 @@
       // &#projects {
       //   background: $lightOffGreen;
       // }
-      h2 {
-        display: inline-block;
-        margin: 1em 0;
-        font-size: $sm-header-fontSize;
+      h1 {
+        display: block;
+        // padding: 1em 0;
+        // font-size: $sm-header-fontSize;
         line-height: 1;
         // color: $mainColor;
         // font-family: 'Eksell Display';
         font-weight: 900;
+        transform: translateY(3rem) scale(1);
+        opacity: 0;
+        font-size: 1.5em;
+        @include smmd {
+          text-align: center;
+        }
       }
       .projects {
         padding-bottom: 10vh;
@@ -685,31 +674,75 @@
         margin-right: -1em;
 
         .project-container {
+          position: relative;
           display: flex;
           flex-flow: column;
           flex-direction: column-reverse;
-          // border: 1px solid $offWhite;
-          // margin-bottom: 2.75em;
+          background-color: $white;
+          // overflow: hidden;
+          flex-flow: row;
+          width: calc(50% - 1.5em);
           margin: 1em;
+          margin-top: 0;
+          height: 30vh;
+          border: 1px solid $lightGray;
+          
+          text-decoration: none;
+          transform: translateY(5em) scale(1);
+          opacity: 0;
+          &:nth-child(even){
+            margin-left: 0em;
+          }
+          // &:nth-child(odd){
+          //   margin: 0em .5em 1em 1em;
+          // }
+          // &:nth-child(even){
+          //   margin: 0em 1em 1em .5em;
+          // }
+          // width: 50%;
           // width: 100%;
-          &,
+          // &,
+          // &:hover,
+          // &:focus,
+          // &:active {
+          //   outline: 0;
+          // }
+          // 
+          
           &:hover,
           &:focus,
           &:active {
             outline: 0;
+            .project{
+              color: $darkBlue !important;
+            }
           }
+
           @include sm {
-            flex-flow: row;
-            width: calc(50% - 2em);
-            // flex-direction: row-reverse;
+            height: 34vh;
           }
+          // @include sm {
+            
+            // flex-direction: row-reverse;
+          // }
           @include smmd {
             width: calc(33.333333% - 2em);
-
+            margin-top: unset;
+            &:nth-child(even){
+              margin-left: 1em;
+            }
+            // margin: 0 !important;
+            margin: 1em;
+            // padding: 1em;
+            // width: 33.333333%;
+            height: auto;
+            border: none;
+            
             // flex-flow: column;
           }
           @include md {
             width: calc(25% - 2em);
+            // width: 25%;
 
             // margin-right: 10%;
           }
@@ -718,20 +751,29 @@
             // flex-direction: row-reverse;
             // width: 48%;
           }
+
+
           .project {
+            color: $black;
             position: relative;
             display: flex;
             flex-flow: column;
             width: 100%;
-            border: 1px solid $blue;
-            transition: box-shadow .3s ease-in-out, transform .3s ease-in-out;
+            overflow: hidden;
+            transition: box-shadow .5s ease-in-out, transform .5s ease-in-out;
+            transition-property: width, height, transform, box-shadow;
+            // transition-duration: .3s;
+            transition-timing-function: ease-in-out;
 
-            &,
-            &:hover,
-            &:focus,
-            &:active {
-              outline: 0;
-            }
+            
+            // &,
+            // &:hover,
+            // &:focus,
+            // &:active {
+            //   outline: 0;
+            // }
+
+           
             // @include sm {
             //   width: 60vw;
             //   height: 44vw;
@@ -739,13 +781,18 @@
             @include smmd {
               // border: 1px solid transparent;
               border: none;
-              color: $black;
+              
+            }
+            @include md{
               &:hover,
-              &:focus{
-                color: $blue;
+              &:focus {
                 // border: 1px solid $blue;
-                box-shadow: 0px 0px 25px rgba(40,42,42,0.4);
-                transform: scale(1.05);
+                box-shadow: 0px 12px 20px rgba(40,42,42,0.2);
+                transform: translateY(0) scale(1.05) !important;
+                z-index: 2;
+                // .image{
+                //   border-color: $lightBlue;
+                // }
               }
             }
             // @include md {
@@ -756,31 +803,33 @@
             //   width: 300px;
             //   height: 300px;
             // }
-            overflow: hidden;
+            // overflow: hidden;
             text-decoration: none;
             &>div {
               pointer-events: none;
             }
-            .bg {
-              position: absolute;
-              top: 0;
-              left: 0;
-              width: 100%;
-              height: 100%;
-              background: transparent;
-              opacity: 0;
-            }
+            // .bg {
+            //   position: absolute;
+            //   top: 0;
+            //   left: 0;
+            //   width: 100%;
+            //   height: 100%;
+            //   background: transparent;
+            //   opacity: 0;
+            // }
             .image {
               // padding: 1.5em;
               position: relative;
               overflow: hidden;
               top: 0;
               left: 0;
-              height: 25vh;
+              height: 22vh;
               width: 100%;
               display: flex;
               align-items: center;
               justify-content: center;
+              border: 1px solid $lightGray;
+              
               @include md {
                 height: 20vh;
                 max-height: 240px;
@@ -805,16 +854,18 @@
             justify-content: center;
             align-items: flex-start;
             flex-flow: column;
+            padding: 0 0 .75em 1em;
+
             // color: $blue;
             z-index: 1;
             // padding: 1em;
             // color: $mainColorLight;
             // border-bottom: 1px solid $offWhite;
-            padding: 1em;
+            // padding: 1em 0;
             width: 100%;
-            font-size: 1.2em;
+            // font-size: 1.2em;
             @include sm {
-              font-size: 1.4em;
+              // font-size: 1.4em;
               // width: 100%;
               // border-right: 1px solid $offWhite;
               border-bottom: none;
@@ -822,17 +873,18 @@
             @include smmd {
               // width: 100%;
               border-right: none;
+              // padding: 0;
               // border-top: 1px solid $offWhite;
-              padding: 1.2em;
+              // padding: 1.2em;
             }
             @include md {
-              font-size: 1em;
+              // font-size: 1em;
             }
             @include lg {
               // border-right: 1px solid $offWhite;
               border-top: none;
               // width: 52%;
-              font-size: 1.25em;
+              // font-size: 1.25em;
             }
             &>div {
               width: 100%;
@@ -841,9 +893,9 @@
             .name {
               // padding: 0 0 .5em 0;
               font-weight: 700;
-              line-height: 1.5;    font-size: 1em;
-              line-height: 1.3;
-              margin: 0 0 .5em 0;
+              font-size: 1em;
+              line-height: 1.5;
+              // margin: 0 0 .5em 0;
 
             }
             .tags{
@@ -852,7 +904,16 @@
               padding: 0;
               li{
                 display: inline-block;
+                padding: .5em;
+                line-height: 0.8;
+                font-size: 0.8em;
+                margin-right: .5em;
+                background-color: $lightGray;
               }
+            }
+            .date{
+              font-size: 0.8em;
+              padding: .5em 0;
             }
             // .tags,
             // .date {
@@ -877,26 +938,26 @@
           }
         }
         .project-container {
-          transition: all .3s ease-in-out;
+          // transition: all .3s ease-in-out;
           &:hover,
           &:active,
           &:focus {
             // border: 1px solid $mainColor;
 
             // border-width: 0px;
-            border-color: transparent;
+            // border-color: transparent;
             outline: none;
             @include smmd{
               
             }
             // transform: scale(1.008);
-            & .bg {
-              opacity: 1;
-            }
+            // & .bg {
+            //   opacity: 1;
+            // }
             &>div {
               cursor: pointer;
               // color: $mainColor;
-              background: $mainBg;
+              // background: $mainBg;
               // border-bottom: 1px solid $mainColor;
               border-color: transparent;
               @include sm {

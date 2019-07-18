@@ -638,7 +638,13 @@
 @import '../../../style/global.scss';
 .main {
   // margin-top: 9em;
-  padding: 5em 0;
+  padding: 1em 0;
+  @include smmd {
+    padding: 2em 0;
+  }
+  @include md {
+    padding: 3em 0;
+  }
   .container {
     
     div {

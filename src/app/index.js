@@ -20,6 +20,13 @@ import solid from '@fortawesome/fontawesome-free-solid';
 // fontawesome.library.add(solid, faBars);
 
 
+document.addEventListener('readystatechange', (event) => {
+  if(document.readyState == 'complete') {
+    const loadingSVG = document.querySelector('.loading svg');
+    loadingSVG.style.visibility = "visible";
+  }
+});
+
 
 var compatibleBrowser = typeof Object['__defineSetter__'] === 'function';
 if(!compatibleBrowser){
@@ -100,11 +107,11 @@ Vue.mixin({
       console.log(rect);
       overlay.style.display = 'block';
       overlay.setAttribute('width', `${width}`);
-      overlay.setAttribute('height', `${this.viewport.cHeight}`);
+      overlay.setAttribute('height', `${document.documentElement.clientHeight}`);
       rect.setAttribute('x', `${width*dir}`);
       rect.setAttribute('y', 0);
       rect.setAttribute('width', `${width}`);
-      rect.setAttribute('height', `${this.viewport.cHeight}`);
+      rect.setAttribute('height', `${document.documentElement.clientHeight}`);
       rect.setAttribute('fill', color);
       return rect;
     },
@@ -286,12 +293,7 @@ new Vue({
     } else {
       console.log('object fit exists!');
     }
-    document.addEventListener('readystatechange', (event) => {
-      if(document.readyState == 'complete') {
-        const loadingSVG = document.querySelector('.loading svg');
-        loadingSVG.style.visibility = "visible";
-      }
-    });
+    
 
     /**
      * Add resize event handler to main Vue

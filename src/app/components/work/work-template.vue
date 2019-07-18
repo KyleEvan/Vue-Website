@@ -113,6 +113,9 @@
     beforeDestroy(){
       this.events.$off('nav-loaded', this.initPage);
       this.events.$off('page-transitioned', this.initPage);
+      this.css.deleteRule(this.css.cssRules.length-1);
+      this.css.deleteRule(this.css.cssRules.length-1);
+      // this.css.deleteRule(this.css.cssRules.length-2);
     },
     mounted(){
       let mainContent = document.getElementById('project-content');

@@ -53,11 +53,14 @@
 	},
     methods:{
 	  toggleMenu: function(){
+		var navMenu = this.$el.querySelector('.nav-menu');
 	    this.expanded = !this.expanded;
 		if(this.expanded){
+		  navMenu.style.color = '#fff';
 		  this.scroll = document.documentElement.scrollTop;
 		  this.bodyNoScroll();
 		} else {
+		  navMenu.style.color = 'inherit';		  
 		  setTimeout(()=>{
 		    this.bodyRestoreScroll();
 			document.documentElement.scrollTop = this.scroll;
@@ -66,9 +69,7 @@
 		this.animateMenu();
 	  },
 	  navigate: function(e){
-		  console.log(e);
 		const href = e.target.getAttribute("href");
-		console.log(href);
         if(href){
 		  this.scroll = 0;
           this.$router.push({

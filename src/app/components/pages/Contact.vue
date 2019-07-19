@@ -44,7 +44,7 @@
 </template>
 
 <script>
-  import resume_pdf from '../../../documents/kyle+resume_12-11-18.pdf';
+  import resume_pdf from '../../../documents/kyle+resume_2019-07-15.pdf';
   import displayContent from '../display-content.vue';
 
   export default {

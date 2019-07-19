@@ -279,6 +279,7 @@ var images = [
   {
     name: 'shapes_preview',
     src: {
+      xs: shapes_preview_sm_gif,
       sm: shapes_preview_sm_gif,
       lg: shapes_preview_lg_gif,
     },

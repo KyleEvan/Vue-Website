@@ -7,7 +7,7 @@
       <ul ref="navItems" class="nav-items" :class="{expanded}">
         <li>
           <a href="Home" @click.prevent="handleClick">
-            work
+            projects
           </a>
         </li>
         <li>

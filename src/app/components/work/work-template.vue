@@ -67,6 +67,7 @@
             {
               x: '100%',
               ease: Power2.easeIn,
+              
             }
           ));
         }
@@ -94,6 +95,7 @@
               onComplete: () => {
                 if(index >= (showPageEls.length-1)){
                   transitionEl.parentNode.removeChild(transitionEl);
+                  this.bodyRestoreScroll();
                 }
               }
             }

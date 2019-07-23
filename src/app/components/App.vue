@@ -155,7 +155,7 @@
         this.bodyRestoreScroll();
       },
       beforeEnter: function(el){
-        this.bodyRestoreScroll();
+        // this.bodyRestoreScroll();
 
       },
       enter: function(el, done){
